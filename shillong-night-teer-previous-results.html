@@ -4,18 +4,21 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Shillong Day Teer Results | Advanced Search & Archive | Shillong Teer Result Today</title>
-  <meta name="description" content="Complete Shillong Day Teer Results archive with advanced search by number, date (dropdown + manual), and day. Filter, sort, and explore full history of First Round & Second Round results.">
+  <meta name="description" content="Complete Shillong Day Teer Results archive with advanced search by number, date (calendar picker), and day. Filter, sort, and explore full history of First Round & Second Round results.">
   <meta name="keywords" content="Shillong Day Teer Result, Shillong Teer Result Today, Shillong Teer Previous Result, Shillong Teer Archive, Teer Search by Number">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.teerresults.example.com/shillong-day-advanced.html">
   <meta property="og:title" content="Shillong Day Teer Results | Advanced Search & Archive">
-  <meta property="og:description" content="Search Shillong Day Teer results by number, date (dropdown selection or manual entry), or day of week. Full historical archive with powerful filtering.">
+  <meta property="og:description" content="Search Shillong Day Teer results by number, date (calendar picker), or day of week. Full historical archive with powerful filtering.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Flatpickr Calendar CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <!-- DataTables CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
@@ -192,18 +195,13 @@
       font-size: 0.85rem;
     }
 
-    .date-input-group {
-      display: flex;
-      gap: 0.5rem;
-      align-items: center;
+    .date-input-wrapper {
+      position: relative;
     }
 
-    .date-input-group select {
-      flex: 2;
-    }
-
-    .date-input-group input {
-      flex: 3;
+    .date-input-wrapper input {
+      cursor: pointer;
+      background-color: var(--bg);
     }
 
     .filter-group input:focus, .filter-group select:focus {
@@ -295,6 +293,28 @@
       opacity: 0.5;
     }
 
+    /* Flatpickr calendar dark mode support */
+    body.dark .flatpickr-calendar {
+      background: var(--surface);
+      border-color: var(--border);
+      box-shadow: 0 3px 13px rgba(0,0,0,0.3);
+    }
+    body.dark .flatpickr-day {
+      color: var(--text);
+    }
+    body.dark .flatpickr-day.selected {
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+    body.dark .flatpickr-months .flatpickr-month,
+    body.dark .flatpickr-weekdays {
+      color: var(--text);
+    }
+    body.dark .flatpickr-current-month .flatpickr-monthDropdown-months,
+    body.dark .flatpickr-current-month input.cur-year {
+      color: var(--text);
+    }
+
     .seo-content {
       background: var(--surface);
       border-radius: 1.5rem;
@@ -371,12 +391,6 @@
       .filter-group {
         width: 100%;
       }
-      .date-input-group {
-        flex-direction: column;
-      }
-      .date-input-group select, .date-input-group input {
-        width: 100%;
-      }
       .hero h1 {
         font-size: 1.5rem;
       }
@@ -402,7 +416,7 @@
   <main class="container">
     <div class="hero">
       <h1>Shillong Day Teer Results | Advanced Search & Full History Archive</h1>
-      <p>Search Shillong Day Teer results by number, date (dropdown selection or manual entry), or day of week. Our powerful archive lets you filter, sort, and explore complete historical data with ease.</p>
+      <p>Search Shillong Day Teer results by number, date (calendar picker), or day of week. Our powerful archive lets you filter, sort, and explore complete historical data with ease.</p>
     </div>
 
     <!-- Advanced Search Filters -->
@@ -412,12 +426,9 @@
         <input type="text" id="numberSearch" placeholder="Enter number (00-99)" maxlength="2">
       </div>
       <div class="filter-group">
-        <label>📅 Search by Date</label>
-        <div class="date-input-group">
-          <select id="dateDropdown">
-            <option value="">Select date from dropdown</option>
-          </select>
-          <input type="text" id="dateManual" placeholder="Or type manually (DD-MM-YYYY)">
+        <label>📅 Select Date (Calendar)</label>
+        <div class="date-input-wrapper">
+          <input type="text" id="dateCalendar" placeholder="Click to select date">
         </div>
       </div>
       <div class="filter-group">
@@ -463,7 +474,7 @@
         <tbody id="tableBody">
           <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
         </tbody>
-       </table>
+      </table>
     </div>
 
     <div class="related-links">
@@ -476,11 +487,11 @@
 
     <div class="seo-content">
       <h2>Shillong Teer Result Search: Find Any Number, Date, or Day</h2>
-      <p><strong>Search Shillong Teer Result Today</strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), exact dates (using dropdown or manual entry), or filter by day of the week (Monday to Sunday). The date dropdown automatically populates with all available dates from our database, making it easy to select a specific date without typing.</p>
+      <p><strong>Search Shillong Teer Result Today</strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.</p>
       
       <p>The <strong>Shillong Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
       
-      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the date dropdown to select a specific date from the available records, or type manually in DD-MM-YYYY format. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
+      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
       
       <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "shillong day"</strong> records. This ensures accurate and reliable search results for Shillong Day Teer enthusiasts.</p>
     </div>
@@ -504,14 +515,14 @@
     // Global variables
     let allResults = [];
     let dataTable = null;
-    let uniqueDates = [];
+    let availableDates = new Set();
+    let flatpickrInstance = null;
 
     // DOM elements
     const loadingIndicator = document.getElementById('loadingIndicator');
     const errorMessageDiv = document.getElementById('errorMessage');
     const numberSearch = document.getElementById('numberSearch');
-    const dateDropdown = document.getElementById('dateDropdown');
-    const dateManual = document.getElementById('dateManual');
+    const dateCalendar = document.getElementById('dateCalendar');
     const daySearch = document.getElementById('daySearch');
     const roundSearch = document.getElementById('roundSearch');
     const applyFiltersBtn = document.getElementById('applyFilters');
@@ -561,10 +572,10 @@
       return `${day}-${month}-${year}`;
     };
 
-    // Format date for dropdown value (YYYY-MM-DD for consistency)
-    const formatDateForValue = (dateStr) => {
+    // Format date for flatpickr value (YYYY-MM-DD)
+    const formatDateForPicker = (dateStr) => {
       const date = parseDate(dateStr);
-      if (!date) return dateStr;
+      if (!date) return '';
       const year = date.getFullYear();
       const month = (date.getMonth() + 1).toString().padStart(2, '0');
       const day = date.getDate().toString().padStart(2, '0');
@@ -598,41 +609,26 @@
       });
     };
 
-    // Populate date dropdown with unique dates
-    const populateDateDropdown = (results) => {
-      const dates = results.map(r => formatDateForValue(r.date));
-      uniqueDates = [...new Set(dates)].sort().reverse();
+    // Initialize flatpickr calendar with available dates
+    const initCalendar = () => {
+      if (flatpickrInstance) {
+        flatpickrInstance.destroy();
+      }
       
-      dateDropdown.innerHTML = '<option value="">Select date from dropdown</option>';
-      uniqueDates.forEach(date => {
-        const option = document.createElement('option');
-        option.value = date;
-        const [year, month, day] = date.split('-');
-        option.textContent = `${day}-${month}-${year}`;
-        dateDropdown.appendChild(option);
-      });
-    };
-
-    // Sync dropdown with manual input or vice versa
-    const syncDateFields = () => {
-      if (dateDropdown.value) {
-        const [year, month, day] = dateDropdown.value.split('-');
-        dateManual.value = `${day}-${month}-${year}`;
-      }
-    };
-
-    const syncManualToDropdown = () => {
-      if (dateManual.value) {
-        const parts = dateManual.value.split(/[-/]/);
-        if (parts.length === 3) {
-          const formatted = `${parts[2]}-${parts[1].padStart(2,'0')}-${parts[0].padStart(2,'0')}`;
-          if (uniqueDates.includes(formatted)) {
-            dateDropdown.value = formatted;
-          } else {
-            dateDropdown.value = '';
-          }
+      const dateStrings = Array.from(availableDates);
+      
+      flatpickrInstance = flatpickr(dateCalendar, {
+        dateFormat: "d-m-Y",
+        altFormat: "d-m-Y",
+        altInput: true,
+        allowInput: true,
+        enable: dateStrings.length > 0 ? dateStrings : undefined,
+        disableMobile: true,
+        onChange: function(selectedDates, dateStr, instance) {
+          // When date is selected, automatically apply filters
+          applyCustomFilters();
         }
-      }
+      });
     };
 
     // Apply custom filters to DataTable
@@ -640,14 +636,9 @@
       if (!dataTable) return;
       
       let numberVal = numberSearch.value.trim();
-      let dateVal = dateManual.value.trim();
+      let dateVal = dateCalendar.value.trim();
       let dayVal = daySearch.value;
       let roundVal = roundSearch.value;
-      
-      if (dateDropdown.value && !dateVal) {
-        const [year, month, day] = dateDropdown.value.split('-');
-        dateVal = `${day}-${month}-${year}`;
-      }
       
       $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
         const rowDate = data[0];
@@ -684,8 +675,9 @@
     // Reset all filters
     const resetFilters = () => {
       numberSearch.value = '';
-      dateDropdown.value = '';
-      dateManual.value = '';
+      if (flatpickrInstance) {
+        flatpickrInstance.clear();
+      }
       daySearch.value = '';
       roundSearch.value = '';
       applyCustomFilters();
@@ -775,7 +767,14 @@
         shillongResults = sortByDateDesc(shillongResults);
         allResults = shillongResults;
         
-        populateDateDropdown(allResults);
+        // Build available dates set for calendar
+        availableDates.clear();
+        allResults.forEach(result => {
+          const formatted = formatDate(result.date);
+          availableDates.add(formatted);
+        });
+        
+        initCalendar();
         initDataTable(allResults);
         
         loadingIndicator.style.display = 'none';
@@ -819,11 +818,8 @@
     // Event listeners
     applyFiltersBtn.addEventListener('click', applyCustomFilters);
     resetFiltersBtn.addEventListener('click', resetFilters);
-    dateDropdown.addEventListener('change', syncDateFields);
-    dateManual.addEventListener('input', syncManualToDropdown);
     
     numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
-    dateManual.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
     
     // Initialize
     const init = () => {
