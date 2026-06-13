@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Shillong Morning Teer Results | Complete Morning Teer History Archive</title>
+  <meta name="description" content="Complete Shillong Morning Teer Results archive. Full history of Morning First Round & Morning Second Round. Shillong Morning Teer Previous Result with latest updates. Informational database.">
+  <meta name="keywords" content="Shillong Morning Teer Result, Shillong Morning Teer Previous Result, Morning Teer Archive, Shillong Teer Morning Results, Morning Teer History">
+  <meta name="author" content="Teer Results Archive">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.teerresults.example.com/shillong-morning-results.html">
+  <meta property="og:title" content="Shillong Morning Teer Results | Complete Morning Teer History Archive">
+  <meta property="og:description" content="Access complete Shillong Morning Teer results history with Morning First Round and Morning Second Round data. Full archive of all morning results.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0f172a;
+      --accent: #22c55e;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-light: #475569;
+      --border: #e2e8f0;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+    }
+
+    body.dark {
+      --primary: #f1f5f9;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --text: #f1f5f9;
+      --text-light: #cbd5e1;
+      --border: #334155;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      transition: background-color 0.3s, color 0.2s;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 0.9rem 0;
+      gap: 0.8rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .dark-toggle {
+      background: var(--accent);
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-family: Poppins;
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .hero {
+      padding: 2rem 0 1rem;
+    }
+
+    .hero h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      margin-top: 0.5rem;
+      color: var(--text-light);
+    }
+
+    .loading-spinner {
+      text-align: center;
+      padding: 2rem;
+      color: var(--accent);
+    }
+
+    .error-message {
+      text-align: center;
+      padding: 2rem;
+      color: #ef4444;
+      background: var(--surface);
+      border-radius: 1rem;
+      margin: 1rem 0;
+    }
+
+    .stats-info {
+      font-size: 0.8rem;
+      text-align: center;
+      margin-bottom: 1rem;
+      color: var(--accent);
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      margin: 1.5rem 0;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.85rem;
+      min-width: 500px;
+    }
+
+    .results-table th, .results-table td {
+      padding: 1rem 0.8rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-table th {
+      background: var(--bg);
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .results-table tr:hover {
+      background: var(--bg);
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      margin: 1.5rem 0;
+    }
+
+    .page-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 0.5rem 1rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-family: Poppins;
+      font-weight: 500;
+      color: var(--text);
+      transition: 0.2s;
+    }
+
+    .page-btn.active {
+      background: var(--accent);
+      color: white;
+      border-color: var(--accent);
+    }
+
+    .page-btn:hover:not(.active) {
+      background: var(--accent);
+      color: white;
+    }
+
+    .seo-content {
+      background: var(--surface);
+      border-radius: 1.5rem;
+      padding: 1.8rem;
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+    }
+
+    .seo-content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .seo-content p {
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    .related-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0 2rem;
+      justify-content: center;
+    }
+
+    .related-links a {
+      background: var(--surface);
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .related-links a:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+
+    @media (max-width: 680px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="container header-inner">
+      <div class="logo">🌅 Shillong Morning Teer</div>
+      <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Common Numbers</a>
+        <a href="#">Dream Numbers</a>
+        <a href="#">Teer Formula</a>
+        <a href="#">Statistics</a>
+        <a href="#">Contact</a>
+        <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero">
+      <h1>Shillong Morning Teer Results Archive | Complete History</h1>
+      <p>Access the complete Shillong Morning Teer results history with Morning First Round (FR) and Morning Second Round (SR) data. Our archive contains all available morning results sorted by latest date. Stay informed with accurate historical data for research and reference.</p>
+    </div>
+
+    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📊 Loading Shillong Morning Teer results from data/all-results.json...</div>
+    <div id="errorMessage" class="error-message" style="display: none;"></div>
+    <div id="statsInfo" class="stats-info"></div>
+
+    <div class="table-wrapper">
+      <table class="results-table" id="resultsTable">
+        <thead>
+          <tr><th>Date</th><th>Morning First Round (FR)</th><th>Morning Second Round (SR)</th></tr>
+        </thead>
+        <tbody id="tableBody">
+          <tr><td colspan="3" style="text-align:center;">Loading data from data/all-results.json...</td></tr>
+        </tbody>
+       </table>
+    </div>
+
+    <div id="paginationContainer" class="pagination"></div>
+
+    <div class="related-links">
+      <a href="#">Shillong Day Results</a>
+      <a href="#">Shillong Night Results</a>
+      <a href="#">Khanapara Morning</a>
+      <a href="#">Juwai Morning</a>
+      <a href="#">Statistics Page</a>
+    </div>
+
+    <div class="seo-content">
+      <h2>Shillong Morning Teer Result: Complete History & Archive</h2>
+      <p><strong>Shillong Morning Teer Result</strong> is one of the most sought-after daily updates for Teer enthusiasts. The morning draws take place at specific timings: First Round (FR) around 9:00 AM and Second Round (SR) around 10:00 AM. These results are based on traditional archery events where archers shoot arrows at a target, and the number of arrows hitting the target determines the winning numbers.</p>
+      
+      <p><strong>Shillong Morning Teer Previous Result</strong> archives are crucial for those who wish to study historical patterns and trends. Our database contains a complete <strong>Morning Teer Archive</strong> with every recorded morning result, sorted with the latest entries first. Whether you are a researcher, an enthusiast, or simply curious about the game's history, this archive provides transparent, non-predictive information.</p>
+      
+      <p>The morning session of Shillong Teer follows the same principles as the day and night sessions but operates on its own schedule. Unlike gambling platforms, we do not offer predictions or guarantee future outcomes. All data presented here is strictly informational and meant for historical reference. We strongly encourage responsible engagement and remind users that Teer results are random and based on archery performance, not mathematical formulas or dream interpretations.</p>
+      
+      <p>Our paginated table allows easy navigation through thousands of records. Each entry includes the date, Morning First Round number, and Morning Second Round number. The data is fetched directly from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "shillong morning"</strong> records. This ensures that you get accurate and relevant information without any mix-up with other game variants.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+      </div>
+      <div class="disclaimer">
+        ⚠️ Informational Purpose Only: This website does not promote gambling, betting, or predictions. Shillong Morning Teer results are based on archery events and are provided as historical reference only. Always verify with official sources.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Global variables
+    let allMorningResults = [];
+    let currentPage = 1;
+    let rowsPerPage = 25;
+    let totalPages = 0;
+
+    // DOM elements
+    const tableBody = document.getElementById('tableBody');
+    const paginationContainer = document.getElementById('paginationContainer');
+    const statsInfo = document.getElementById('statsInfo');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const errorMessageDiv = document.getElementById('errorMessage');
+
+    // Helper: Parse various date formats (DD-MM-YYYY, DD/MM/YYYY, YYYY-MM-DD)
+    const parseDate = (dateStr) => {
+      if (!dateStr || dateStr === '0000-00-00') return null;
+      
+      // Handle formats like "12-06-2026" or "12/06/2026"
+      let parts = dateStr.split(/[-/]/);
+      if (parts.length === 3) {
+        // Check if first part is year (YYYY-MM-DD)
+        if (parts[0].length === 4) {
+          return new Date(parts[0], parts[1] - 1, parts[2]);
+        } else {
+          // DD-MM-YYYY format (most common in data)
+          return new Date(parts[2], parts[1] - 1, parts[0]);
+        }
+      }
+      
+      // Handle "12 June 2026" format
+      const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
+      for (let i = 0; i < monthNames.length; i++) {
+        if (dateStr.toLowerCase().includes(monthNames[i])) {
+          const match = dateStr.match(/(\d+)\s+(\w+)\s+(\d+)/);
+          if (match) {
+            return new Date(match[3], i, parseInt(match[1]));
+          }
+        }
+      }
+      
+      // Fallback
+      return new Date(dateStr);
+    };
+
+    // Filter only Shillong Morning results (game === "shillong morning")
+    const filterShillongMorning = (data) => {
+      return data.filter(item => {
+        const gameName = (item.game || '').toLowerCase();
+        // Match exactly "shillong morning"
+        return gameName === 'shillong morning';
+      }).map(item => ({
+        date: item.date || '',
+        first_round: item.fr || item.first_round || '',
+        second_round: item.sr || item.second_round || ''
+      })).filter(item => item.date && item.first_round && item.second_round && 
+              item.first_round !== 'xx' && item.first_round !== 'OFF' && item.first_round !== '—' && item.first_round !== '-' &&
+              item.second_round !== 'xx' && item.second_round !== 'OFF' && item.second_round !== '—' && item.second_round !== '-' &&
+              !isNaN(parseInt(item.first_round)) && !isNaN(parseInt(item.second_round)));
+    };
+
+    // Sort by date descending (latest first)
+    const sortByDateDesc = (results) => {
+      return results.sort((a, b) => {
+        const dateA = parseDate(a.date);
+        const dateB = parseDate(b.date);
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateB - dateA;
+      });
+    };
+
+    // Render table for given page
+    const renderTable = (page) => {
+      if (!tableBody) return;
+      
+      if (allMorningResults.length === 0) {
+        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No Shillong Morning results found in the database</td></tr>';
+        return;
+      }
+      
+      const start = (page - 1) * rowsPerPage;
+      const end = start + rowsPerPage;
+      const pageData = allMorningResults.slice(start, end);
+      
+      tableBody.innerHTML = '';
+      
+      pageData.forEach(record => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+           <td>${record.date}</td>
+           <td><strong style="color:var(--accent);">${record.first_round}</strong></td>
+           <td><strong style="color:var(--accent);">${record.second_round}</strong></td>
+        `;
+        tableBody.appendChild(row);
+      });
+      
+      // Update stats info
+      statsInfo.innerHTML = `📊 Showing ${start+1} - ${Math.min(end, allMorningResults.length)} of ${allMorningResults.length} total Shillong Morning records | Latest results first.`;
+    };
+    
+    // Create pagination buttons
+    const renderPagination = () => {
+      if (!paginationContainer) return;
+      paginationContainer.innerHTML = '';
+      totalPages = Math.ceil(allMorningResults.length / rowsPerPage);
+      
+      if (totalPages <= 1) return;
+      
+      // Previous button
+      const prevBtn = document.createElement('button');
+      prevBtn.textContent = '« Prev';
+      prevBtn.className = 'page-btn';
+      prevBtn.disabled = currentPage === 1;
+      prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+          currentPage--;
+          renderTable(currentPage);
+          renderPagination();
+          window.scrollTo({ top: document.querySelector('.table-wrapper').offsetTop - 100, behavior: 'smooth' });
+        }
+      });
+      paginationContainer.appendChild(prevBtn);
+      
+      // Page numbers
+      let startPage = Math.max(1, currentPage - 2);
+      let endPage = Math.min(totalPages, currentPage + 2);
+      if (endPage - startPage < 4) {
+        if (startPage === 1) endPage = Math.min(totalPages, startPage + 4);
+        if (endPage === totalPages) startPage = Math.max(1, endPage - 4);
+      }
+      
+      for (let i = startPage; i <= endPage; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.textContent = i;
+        pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
+        pageBtn.addEventListener('click', () => {
+          currentPage = i;
+          renderTable(currentPage);
+          renderPagination();
+          window.scrollTo({ top: document.querySelector('.table-wrapper').offsetTop - 100, behavior: 'smooth' });
+        });
+        paginationContainer.appendChild(pageBtn);
+      }
+      
+      // Next button
+      const nextBtn = document.createElement('button');
+      nextBtn.textContent = 'Next »';
+      nextBtn.className = 'page-btn';
+      nextBtn.disabled = currentPage === totalPages;
+      nextBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+          currentPage++;
+          renderTable(currentPage);
+          renderPagination();
+          window.scrollTo({ top: document.querySelector('.table-wrapper').offsetTop - 100, behavior: 'smooth' });
+        }
+      });
+      paginationContainer.appendChild(nextBtn);
+    };
+    
+    // Load data from JSON file at data/all-results.json
+    const loadDataFromJSON = async () => {
+      loadingIndicator.style.display = 'block';
+      errorMessageDiv.style.display = 'none';
+      
+      try {
+        // Try multiple possible paths for the JSON file
+        let response;
+        const paths = [
+          'data/all-results.json',
+          './data/all-results.json',
+          '../data/all-results.json',
+          'all-results.json'
+        ];
+        
+        let data = null;
+        
+        for (const path of paths) {
+          try {
+            response = await fetch(path);
+            if (response.ok) {
+              data = await response.json();
+              break;
+            }
+          } catch (err) {
+            continue;
+          }
+        }
+        
+        if (!data) {
+          throw new Error('Unable to load all-results.json. Please ensure the file exists at ./data/all-results.json');
+        }
+        
+        // Validate data structure
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid data format: Expected an array of results');
+        }
+        
+        // Filter only Shillong Morning results (game === "shillong morning")
+        let morningResults = filterShillongMorning(data);
+        
+        if (morningResults.length === 0) {
+          throw new Error('No Shillong Morning result records found in the JSON file. Looking for entries with "game": "shillong morning"');
+        }
+        
+        // Sort by date descending
+        morningResults = sortByDateDesc(morningResults);
+        
+        allMorningResults = morningResults;
+        
+        // Reset pagination
+        currentPage = 1;
+        renderTable(currentPage);
+        renderPagination();
+        
+        loadingIndicator.style.display = 'none';
+        
+        console.log(`✅ Loaded ${allMorningResults.length} Shillong Morning records`);
+        
+      } catch (error) {
+        console.error('Error loading JSON:', error);
+        loadingIndicator.style.display = 'none';
+        errorMessageDiv.style.display = 'block';
+        errorMessageDiv.innerHTML = `
+          <strong>⚠️ Unable to load data from data/all-results.json</strong><br><br>
+          ${error.message}<br><br>
+          <strong>Troubleshooting tips:</strong><br>
+          • Make sure the file exists at: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">data/all-results.json</code><br>
+          • The file should contain records with <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">"game": "shillong morning"</code><br>
+          • If running locally, start a local web server:<br>
+          <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">npx serve .</code> or <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br><br>
+          <button onclick="location.reload()" style="background: var(--accent); color: #0f172a; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-family: Poppins; font-weight: 600; margin-top: 10px;">🔄 Retry Loading</button>
+        `;
+        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#ef4444;">Failed to load Shillong Morning data. Please ensure data/all-results.json is available and start a local web server.</td></tr>';
+        statsInfo.innerHTML = '❌ Data loading failed. Please use a local web server to avoid CORS issues.';
+      }
+    };
+    
+    // Dark Mode Toggle
+    const initDarkMode = () => {
+      const toggleBtn = document.getElementById('darkModeToggle');
+      const isDark = localStorage.getItem('darkModeMorning') === 'true';
+      if (isDark) document.body.classList.add('dark');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          document.body.classList.toggle('dark');
+          const darkEnabled = document.body.classList.contains('dark');
+          localStorage.setItem('darkModeMorning', darkEnabled);
+          toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+        });
+        if (isDark) toggleBtn.textContent = '☀️ Light';
+        else toggleBtn.textContent = '🌓 Dark';
+      }
+    };
+    
+    // Initialize the page
+    const init = () => {
+      initDarkMode();
+      loadDataFromJSON();
+    };
+    
+    // Start the application
+    init();
+  </script>
+</body>
+</html>
