@@ -257,27 +257,19 @@
       color: var(--accent);
     }
 
-    .dataTables_wrapper .dataTables_length, 
-    .dataTables_wrapper .dataTables_filter,
-    .dataTables_wrapper .dataTables_info,
+    /* Hide default DataTables length and search elements */
+    .dataTables_length, .dataTables_filter {
+      display: none !important;
+    }
+
+    .dataTables_wrapper .dataTables_info {
+      color: var(--text) !important;
+      margin-top: 1rem;
+    }
+
     .dataTables_wrapper .dataTables_paginate {
       color: var(--text) !important;
-    }
-
-    .dataTables_wrapper .dataTables_filter input {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 0.5rem;
-      padding: 0.4rem 0.8rem;
-    }
-
-    .dataTables_wrapper .dataTables_length select {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      color: var(--text);
-      border-radius: 0.5rem;
-      padding: 0.2rem;
+      margin-top: 1rem;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button {
@@ -285,6 +277,7 @@
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 0.5rem;
+      margin: 0 0.2rem;
     }
 
     .dataTables_wrapper .dataTables_paginate .paginate_button.current {
@@ -296,6 +289,10 @@
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
       background: var(--accent) !important;
       color: #0f172a !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+      opacity: 0.5;
     }
 
     .seo-content {
@@ -466,7 +463,7 @@
         <tbody id="tableBody">
           <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
         </tbody>
-      </table>
+       </table>
     </div>
 
     <div class="related-links">
@@ -481,9 +478,9 @@
       <h2>Shillong Teer Result Search: Find Any Number, Date, or Day</h2>
       <p><strong>Search Shillong Teer Result Today</strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), exact dates (using dropdown or manual entry), or filter by day of the week (Monday to Sunday). The date dropdown automatically populates with all available dates from our database, making it easy to select a specific date without typing.</p>
       
-      <p>The <strong>Shillong Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, search across all fields, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
+      <p>The <strong>Shillong Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
       
-      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the date dropdown to select a specific date from the available records, or type manually in DD-MM-YYYY format. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays in March!</p>
+      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the date dropdown to select a specific date from the available records, or type manually in DD-MM-YYYY format. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
       
       <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "shillong day"</strong> records. This ensures accurate and reliable search results for Shillong Day Teer enthusiasts.</p>
     </div>
@@ -610,7 +607,6 @@
       uniqueDates.forEach(date => {
         const option = document.createElement('option');
         option.value = date;
-        // Format for display: DD-MM-YYYY
         const [year, month, day] = date.split('-');
         option.textContent = `${day}-${month}-${year}`;
         dateDropdown.appendChild(option);
@@ -648,20 +644,17 @@
       let dayVal = daySearch.value;
       let roundVal = roundSearch.value;
       
-      // If dropdown has value, use that instead
       if (dateDropdown.value && !dateVal) {
         const [year, month, day] = dateDropdown.value.split('-');
         dateVal = `${day}-${month}-${year}`;
       }
       
-      // Custom filter function for DataTables
       $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
         const rowDate = data[0];
         const rowDay = data[1];
         const rowFR = data[2];
         const rowSR = data[3];
         
-        // Number filter
         if (numberVal) {
           const num = parseInt(numberVal);
           if (roundVal === 'fr') {
@@ -673,12 +666,10 @@
           }
         }
         
-        // Date filter
         if (dateVal) {
           if (!rowDate.includes(dateVal)) return false;
         }
         
-        // Day filter
         if (dayVal) {
           if (rowDay !== dayVal) return false;
         }
@@ -687,7 +678,6 @@
       });
       
       dataTable.draw();
-      // Remove the filter after draw to avoid stacking
       $.fn.dataTable.ext.search.pop();
     };
     
@@ -701,7 +691,7 @@
       applyCustomFilters();
     };
     
-    // Initialize DataTable
+    // Initialize DataTable without length change and search box
     const initDataTable = (data) => {
       if (dataTable) {
         dataTable.destroy();
@@ -714,7 +704,7 @@
         item.second_round.padStart(2, '0')
       ]);
       
-      $('#resultsTable').DataTable({
+      dataTable = $('#resultsTable').DataTable({
         data: tableData,
         columns: [
           { title: "Date" },
@@ -724,11 +714,12 @@
         ],
         order: [[0, 'desc']],
         pageLength: 25,
-        lengthMenu: [[10, 25, 50, 100, -1], [10, 25, 50, 100, "All"]],
+        paging: true,
+        info: true,
+        searching: false,
+        lengthChange: false,
         responsive: true,
         language: {
-          search: "🔍 Quick Search:",
-          lengthMenu: "Show _MENU_ entries",
           info: "Showing _START_ to _END_ of _TOTAL_ entries",
           paginate: {
             first: "First",
@@ -738,8 +729,6 @@
           }
         }
       });
-      
-      dataTable = $('#resultsTable').DataTable();
     };
     
     // Load data from JSON file
@@ -810,7 +799,7 @@
       }
     };
     
-    // Dark Mode Toggle with DataTables restyling
+    // Dark Mode Toggle
     const initDarkMode = () => {
       const toggleBtn = document.getElementById('darkModeToggle');
       const isDark = localStorage.getItem('darkModeAdvanced') === 'true';
@@ -833,7 +822,6 @@
     dateDropdown.addEventListener('change', syncDateFields);
     dateManual.addEventListener('input', syncManualToDropdown);
     
-    // Enter key support
     numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
     dateManual.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
     
