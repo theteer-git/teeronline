@@ -3,19 +3,30 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Shillong Night Teer 2 Results | Complete Night Teer 2 History Archive | Shillong Night Teer Result Today</title>
-  <meta name="description" content="Complete Shillong Night Teer 2 Results archive. Full history of First Round & Second Round. Shillong Night Teer 2 Result with latest updates. Informational database.">
-  <meta name="keywords" content="Shillong Night Teer 2 Result, Shillong Night Teer Result Today, Night Teer 2 Previous Result, Shillong Night Teer Archive, Shillong Night Results">
+  <title>Shillong Night Teer 2 Results | Advanced Search & Archive | Night Teer 2 Result Today</title>
+  <meta name="description" content="Complete Shillong Night Teer 2 Results archive with advanced search by number, date (calendar picker), and day. Filter, sort, and explore full history of First Round & Second Round results.">
+  <meta name="keywords" content="Shillong Night Teer 2 Result, Night Teer 2 Result Today, Night Teer 2 Previous Result, Shillong Night Teer Archive, Teer Search by Number">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://www.teerresults.example.com/shillong-night-teer-2-results.html">
-  <meta property="og:title" content="Shillong Night Teer 2 Results | Complete Night Teer 2 History Archive">
-  <meta property="og:description" content="Access complete Shillong Night Teer 2 results history with First Round and Second Round data. Full archive of all Night Teer 2 results.">
+  <link rel="canonical" href="https://www.teerresults.example.com/night-teer-2-advanced.html">
+  <meta property="og:title" content="Shillong Night Teer 2 Results | Advanced Search & Archive">
+  <meta property="og:description" content="Search Shillong Night Teer 2 results by number, date (calendar picker), or day of week. Full historical archive with powerful filtering.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Flatpickr Calendar CSS & JS -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  <!-- DataTables CSS -->
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
+  <!-- jQuery -->
+  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+  <!-- DataTables JS -->
+  <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
   <style>
     * {
       margin: 0;
@@ -53,7 +64,7 @@
     }
 
     .container {
-      max-width: 1280px;
+      max-width: 1400px;
       margin: 0 auto;
       padding: 0 1.25rem;
     }
@@ -146,11 +157,78 @@
       margin: 1rem 0;
     }
 
-    .stats-info {
-      font-size: 0.8rem;
-      text-align: center;
-      margin-bottom: 1rem;
-      color: var(--accent);
+    .search-filters {
+      background: var(--surface);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin: 1rem 0;
+      border: 1px solid var(--border);
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+    }
+
+    .filter-group {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .filter-group label {
+      display: block;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-bottom: 0.25rem;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .filter-group input, .filter-group select {
+      width: 100%;
+      padding: 0.6rem 0.8rem;
+      border-radius: 0.5rem;
+      border: 1px solid var(--border);
+      background: var(--bg);
+      color: var(--text);
+      font-family: Poppins;
+      font-size: 0.85rem;
+    }
+
+    .date-input-wrapper {
+      position: relative;
+    }
+
+    .date-input-wrapper input {
+      cursor: pointer;
+      background-color: var(--bg);
+    }
+
+    .filter-group input:focus, .filter-group select:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    .search-btn {
+      background: var(--accent);
+      color: #0f172a;
+      border: none;
+      padding: 0.6rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: Poppins;
+    }
+
+    .reset-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 0.6rem 1.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-weight: 600;
+      font-family: Poppins;
     }
 
     .table-wrapper {
@@ -162,16 +240,13 @@
     }
 
     .results-table {
-      width: 100%;
-      border-collapse: collapse;
+      width: 100% !important;
       font-size: 0.85rem;
-      min-width: 500px;
     }
 
     .results-table th, .results-table td {
-      padding: 1rem 0.8rem;
+      padding: 0.8rem;
       text-align: center;
-      border-bottom: 1px solid var(--border);
     }
 
     .results-table th {
@@ -180,40 +255,64 @@
       color: var(--accent);
     }
 
-    .results-table tr:hover {
-      background: var(--bg);
+    /* Hide default DataTables length and search elements */
+    .dataTables_length, .dataTables_filter {
+      display: none !important;
     }
 
-    .pagination {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      margin: 1.5rem 0;
+    .dataTables_wrapper .dataTables_info {
+      color: var(--text) !important;
+      margin-top: 1rem;
     }
 
-    .page-btn {
+    .dataTables_wrapper .dataTables_paginate {
+      color: var(--text) !important;
+      margin-top: 1rem;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button {
+      color: var(--text) !important;
       background: var(--surface);
       border: 1px solid var(--border);
-      padding: 0.5rem 1rem;
       border-radius: 0.5rem;
-      cursor: pointer;
-      font-family: Poppins;
-      font-weight: 500;
-      color: var(--text);
-      transition: 0.2s;
+      margin: 0 0.2rem;
     }
 
-    .page-btn.active {
-      background: var(--accent);
-      color: white;
+    .dataTables_wrapper .dataTables_paginate .paginate_button.current {
+      background: var(--accent) !important;
+      color: #0f172a !important;
       border-color: var(--accent);
     }
 
-    .page-btn:hover:not(.active) {
+    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
+      background: var(--accent) !important;
+      color: #0f172a !important;
+    }
+
+    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
+      opacity: 0.5;
+    }
+
+    /* Flatpickr calendar dark mode support */
+    body.dark .flatpickr-calendar {
+      background: var(--surface);
+      border-color: var(--border);
+      box-shadow: 0 3px 13px rgba(0,0,0,0.3);
+    }
+    body.dark .flatpickr-day {
+      color: var(--text);
+    }
+    body.dark .flatpickr-day.selected {
       background: var(--accent);
-      color: white;
+      border-color: var(--accent);
+    }
+    body.dark .flatpickr-months .flatpickr-month,
+    body.dark .flatpickr-weekdays {
+      color: var(--text);
+    }
+    body.dark .flatpickr-current-month .flatpickr-monthDropdown-months,
+    body.dark .flatpickr-current-month input.cur-year {
+      color: var(--text);
     }
 
     .seo-content {
@@ -285,13 +384,12 @@
       color: var(--text-light);
     }
 
-    @media (max-width: 680px) {
-      .header-inner {
+    @media (max-width: 768px) {
+      .search-filters {
         flex-direction: column;
-        align-items: stretch;
       }
-      .nav-links {
-        justify-content: center;
+      .filter-group {
+        width: 100%;
       }
       .hero h1 {
         font-size: 1.5rem;
@@ -302,7 +400,7 @@
 <body>
   <header class="sticky-header">
     <div class="container header-inner">
-      <div class="logo">🌙 Shillong Night Teer 2</div>
+      <div class="logo">🌙 Shillong Night Teer 2 Advanced Search</div>
       <div class="nav-links">
         <a href="#">Home</a>
         <a href="#">Common Numbers</a>
@@ -317,45 +415,85 @@
 
   <main class="container">
     <div class="hero">
-      <h1>Shillong Night Teer 2 Results Archive | Complete History</h1>
-      <p>Access the complete Shillong Night Teer 2 results history with First Round (FR) and Second Round (SR) data. Our archive contains all available Night Teer 2 results sorted by latest date. Stay informed with accurate historical data for research and reference.</p>
+      <h1>Shillong Night Teer 2 Results | Advanced Search & Full History Archive</h1>
+      <p>Search Shillong Night Teer 2 results by number, date (calendar picker), or day of week. Our powerful archive lets you filter, sort, and explore complete historical data with ease.</p>
     </div>
 
-    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📊 Loading Shillong Night Teer 2 results from data/all-results.json...</div>
+    <!-- Advanced Search Filters -->
+    <div class="search-filters">
+      <div class="filter-group">
+        <label>🔢 Search by Number (FR or SR)</label>
+        <input type="text" id="numberSearch" placeholder="Enter number (00-99)" maxlength="2">
+      </div>
+      <div class="filter-group">
+        <label>📅 Select Date (Calendar)</label>
+        <div class="date-input-wrapper">
+          <input type="text" id="dateCalendar" placeholder="Click to select date">
+        </div>
+      </div>
+      <div class="filter-group">
+        <label>📆 Day of Week</label>
+        <select id="daySearch">
+          <option value="">All Days</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+          <option value="Sunday">Sunday</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <label>🎯 Filter by Round</label>
+        <select id="roundSearch">
+          <option value="">Both Rounds</option>
+          <option value="fr">First Round (FR)</option>
+          <option value="sr">Second Round (SR)</option>
+        </select>
+      </div>
+      <div>
+        <button class="search-btn" id="applyFilters">🔍 Apply Filters</button>
+        <button class="reset-btn" id="resetFilters">⟳ Reset</button>
+      </div>
+    </div>
+
+    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📊 Loading Shillong Night Teer 2 results...</div>
     <div id="errorMessage" class="error-message" style="display: none;"></div>
-    <div id="statsInfo" class="stats-info"></div>
 
     <div class="table-wrapper">
-      <table class="results-table" id="resultsTable">
+      <table id="resultsTable" class="results-table display responsive" style="width:100%">
         <thead>
-          <tr><th>Date</th><th>First Round (FR)</th><th>Second Round (SR)</th></tr>
+          <tr>
+            <th>Date</th>
+            <th>Day</th>
+            <th>First Round (FR)</th>
+            <th>Second Round (SR)</th>
+          </tr>
         </thead>
         <tbody id="tableBody">
-          <tr><td colspan="3" style="text-align:center;">Loading data from data/all-results.json...</td></tr>
+          <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
         </tbody>
       </table>
     </div>
-
-    <div id="paginationContainer" class="pagination"></div>
 
     <div class="related-links">
       <a href="#">Shillong Day Results</a>
       <a href="#">Shillong Morning Results</a>
       <a href="#">Shillong Night Results</a>
-      <a href="#">Khanapara Day Results</a>
-      <a href="#">Juwai Day Results</a>
-      <a href="#">Statistics Page</a>
+      <a href="#">Khanapara Results</a>
+      <a href="#">Juwai Results</a>
     </div>
 
     <div class="seo-content">
-      <h2>Shillong Night Teer 2 Result: Complete History & Archive</h2>
-      <p><strong>Shillong Night Teer 2 Result</strong> is a unique evening session that follows the regular Shillong Night Teer. The night draws take place at specific timings: First Round (FR) around 7:30 PM and Second Round (SR) around 8:30 PM. These results are based on traditional archery events where archers shoot arrows at a target, and the number of arrows hitting the target determines the winning numbers. Night Teer 2 offers an additional session for enthusiasts who follow the evening games.</p>
+      <h2>Shillong Night Teer 2 Result Search: Find Any Number, Date, or Day</h2>
+      <p><strong>Search Shillong Night Teer 2 Result Today</strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.</p>
       
-      <p><strong>Shillong Night Teer 2 Previous Result</strong> archives are crucial for those who wish to study historical patterns and trends specific to this night session. Our database contains a complete <strong>Shillong Night Teer Archive</strong> with every recorded Night Teer 2 result, sorted with the latest entries first. Whether you are a researcher, an enthusiast, or simply curious about the game's history, this archive provides transparent, non-predictive information about Shillong Night Teer 2 outcomes.</p>
+      <p>The <strong>Night Teer 2 Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
       
-      <p>The Night Teer 2 session follows the same principles as the day and morning sessions but operates on its own evening schedule. Unlike gambling platforms, we do not offer predictions or guarantee future outcomes. All data presented here is strictly informational and meant for historical reference. We strongly encourage responsible engagement and remind users that Teer results are random and based on archery performance, not mathematical formulas or dream interpretations.</p>
+      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
       
-      <p>Our paginated table allows easy navigation through thousands of records from the Shillong Night Teer 2 session. Each entry includes the date, First Round number, and Second Round number. The data is fetched directly from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "night teer 2"</strong> records or records where city is "Shillong Night". This ensures that you get accurate and relevant information without any mix-up with other game variants.</p>
+      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "night teer 2"</strong> records. This ensures accurate and reliable search results for Shillong Night Teer 2 enthusiasts.</p>
     </div>
   </main>
 
@@ -368,42 +506,49 @@
         <a href="#">About</a>
       </div>
       <div class="disclaimer">
-        ⚠️ Informational Purpose Only: This website does not promote gambling, betting, or predictions. Shillong Night Teer 2 results are based on archery events and are provided as historical reference only. Always verify with official sources.
+        ⚠️ Informational Purpose Only: This website does not promote gambling, betting, or predictions. Shillong Night Teer 2 results are based on archery events and are provided as historical reference only.
       </div>
     </div>
   </footer>
 
   <script>
     // Global variables
-    let allNightResults = [];
-    let currentPage = 1;
-    let rowsPerPage = 25;
-    let totalPages = 0;
+    let allResults = [];
+    let dataTable = null;
+    let availableDates = new Set();
+    let flatpickrInstance = null;
 
     // DOM elements
-    const tableBody = document.getElementById('tableBody');
-    const paginationContainer = document.getElementById('paginationContainer');
-    const statsInfo = document.getElementById('statsInfo');
     const loadingIndicator = document.getElementById('loadingIndicator');
     const errorMessageDiv = document.getElementById('errorMessage');
+    const numberSearch = document.getElementById('numberSearch');
+    const dateCalendar = document.getElementById('dateCalendar');
+    const daySearch = document.getElementById('daySearch');
+    const roundSearch = document.getElementById('roundSearch');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const resetFiltersBtn = document.getElementById('resetFilters');
 
-    // Helper: Parse various date formats (DD-MM-YYYY, DD/MM/YYYY, YYYY-MM-DD)
+    // Helper: Parse date to get day of week
+    const getDayOfWeek = (dateStr) => {
+      const date = parseDate(dateStr);
+      if (!date) return '';
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return days[date.getDay()];
+    };
+
+    // Helper: Parse various date formats
     const parseDate = (dateStr) => {
       if (!dateStr || dateStr === '0000-00-00') return null;
       
-      // Handle formats like "12-06-2026" or "12/06/2026"
       let parts = dateStr.split(/[-/]/);
       if (parts.length === 3) {
-        // Check if first part is year (YYYY-MM-DD)
         if (parts[0].length === 4) {
           return new Date(parts[0], parts[1] - 1, parts[2]);
         } else {
-          // DD-MM-YYYY format (most common in data)
           return new Date(parts[2], parts[1] - 1, parts[0]);
         }
       }
       
-      // Handle "12 June 2026" format
       const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
       for (let i = 0; i < monthNames.length; i++) {
         if (dateStr.toLowerCase().includes(monthNames[i])) {
@@ -414,19 +559,35 @@
         }
       }
       
-      // Fallback
       return new Date(dateStr);
     };
 
-    // Filter only Shillong Night Teer 2 results (game === "night teer 2")
+    // Format date for display (DD-MM-YYYY)
+    const formatDate = (dateStr) => {
+      const date = parseDate(dateStr);
+      if (!date) return dateStr;
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
+
+    // Format date for flatpickr value (YYYY-MM-DD)
+    const formatDateForPicker = (dateStr) => {
+      const date = parseDate(dateStr);
+      if (!date) return '';
+      const year = date.getFullYear();
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const day = date.getDate().toString().padStart(2, '0');
+      return `${year}-${month}-${day}`;
+    };
+
+    // Filter only Night Teer 2 results (game === "night teer 2")
     const filterNightTeer2 = (data) => {
       return data.filter(item => {
         const gameName = (item.game || '').toLowerCase();
-        // Match "night teer 2" or check city field for "Shillong Night" with game "night teer 2"
         if (gameName === 'night teer 2') return true;
-        // Also check if game includes "night teer 2" or city indicates Shillong Night with night teer
         if (gameName.includes('night teer 2')) return true;
-        // Some records might have city as "Shillong Night" and game as "night teer 2"
         const cityName = (item.city || '').toLowerCase();
         if (cityName === 'shillong night' && gameName === 'night teer 2') return true;
         return false;
@@ -440,7 +601,7 @@
               !isNaN(parseInt(item.first_round)) && !isNaN(parseInt(item.second_round)));
     };
 
-    // Sort by date descending (latest first)
+    // Sort by date descending
     const sortByDateDesc = (results) => {
       return results.sort((a, b) => {
         const dateA = parseDate(a.date);
@@ -452,103 +613,125 @@
       });
     };
 
-    // Render table for given page
-    const renderTable = (page) => {
-      if (!tableBody) return;
-      
-      if (allNightResults.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center;">No Shillong Night Teer 2 results found in the database</td></tr>';
-        return;
+    // Initialize flatpickr calendar with available dates
+    const initCalendar = () => {
+      if (flatpickrInstance) {
+        flatpickrInstance.destroy();
       }
       
-      const start = (page - 1) * rowsPerPage;
-      const end = start + rowsPerPage;
-      const pageData = allNightResults.slice(start, end);
+      const dateStrings = Array.from(availableDates);
       
-      tableBody.innerHTML = '';
-      
-      pageData.forEach(record => {
-        const row = document.createElement('tr');
-        row.innerHTML = `
-          <td>${record.date}</td>
-          <td><strong style="color:var(--accent);">${record.first_round}</strong></td>
-          <td><strong style="color:var(--accent);">${record.second_round}</strong></td>
-        `;
-        tableBody.appendChild(row);
-      });
-      
-      // Update stats info
-      statsInfo.innerHTML = `📊 Showing ${start+1} - ${Math.min(end, allNightResults.length)} of ${allNightResults.length} total Shillong Night Teer 2 records | Latest results first.`;
-    };
-    
-    // Create pagination buttons
-    const renderPagination = () => {
-      if (!paginationContainer) return;
-      paginationContainer.innerHTML = '';
-      totalPages = Math.ceil(allNightResults.length / rowsPerPage);
-      
-      if (totalPages <= 1) return;
-      
-      // Previous button
-      const prevBtn = document.createElement('button');
-      prevBtn.textContent = '« Prev';
-      prevBtn.className = 'page-btn';
-      prevBtn.disabled = currentPage === 1;
-      prevBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-          currentPage--;
-          renderTable(currentPage);
-          renderPagination();
-          window.scrollTo({ top: document.querySelector('.table-wrapper').offsetTop - 100, behavior: 'smooth' });
+      flatpickrInstance = flatpickr(dateCalendar, {
+        dateFormat: "d-m-Y",
+        altFormat: "d-m-Y",
+        altInput: true,
+        allowInput: true,
+        enable: dateStrings.length > 0 ? dateStrings : undefined,
+        disableMobile: true,
+        onChange: function(selectedDates, dateStr, instance) {
+          applyCustomFilters();
         }
       });
-      paginationContainer.appendChild(prevBtn);
+    };
+
+    // Apply custom filters to DataTable
+    const applyCustomFilters = () => {
+      if (!dataTable) return;
       
-      // Page numbers
-      let startPage = Math.max(1, currentPage - 2);
-      let endPage = Math.min(totalPages, currentPage + 2);
-      if (endPage - startPage < 4) {
-        if (startPage === 1) endPage = Math.min(totalPages, startPage + 4);
-        if (endPage === totalPages) startPage = Math.max(1, endPage - 4);
-      }
+      let numberVal = numberSearch.value.trim();
+      let dateVal = dateCalendar.value.trim();
+      let dayVal = daySearch.value;
+      let roundVal = roundSearch.value;
       
-      for (let i = startPage; i <= endPage; i++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.textContent = i;
-        pageBtn.className = `page-btn ${i === currentPage ? 'active' : ''}`;
-        pageBtn.addEventListener('click', () => {
-          currentPage = i;
-          renderTable(currentPage);
-          renderPagination();
-          window.scrollTo({ top: document.querySelector('.table-wrapper').offsetTop - 100, behavior: 'smooth' });
-        });
-        paginationContainer.appendChild(pageBtn);
-      }
-      
-      // Next button
-      const nextBtn = document.createElement('button');
-      nextBtn.textContent = 'Next »';
-      nextBtn.className = 'page-btn';
-      nextBtn.disabled = currentPage === totalPages;
-      nextBtn.addEventListener('click', () => {
-        if (currentPage < totalPages) {
-          currentPage++;
-          renderTable(currentPage);
-          renderPagination();
-          window.scrollTo({ top: document.querySelector('.table-wrapper').offsetTop - 100, behavior: 'smooth' });
+      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        const rowDate = data[0];
+        const rowDay = data[1];
+        const rowFR = data[2];
+        const rowSR = data[3];
+        
+        if (numberVal) {
+          const num = parseInt(numberVal);
+          if (roundVal === 'fr') {
+            if (parseInt(rowFR) !== num) return false;
+          } else if (roundVal === 'sr') {
+            if (parseInt(rowSR) !== num) return false;
+          } else {
+            if (parseInt(rowFR) !== num && parseInt(rowSR) !== num) return false;
+          }
         }
+        
+        if (dateVal) {
+          if (!rowDate.includes(dateVal)) return false;
+        }
+        
+        if (dayVal) {
+          if (rowDay !== dayVal) return false;
+        }
+        
+        return true;
       });
-      paginationContainer.appendChild(nextBtn);
+      
+      dataTable.draw();
+      $.fn.dataTable.ext.search.pop();
     };
     
-    // Load data from JSON file at data/all-results.json
+    // Reset all filters
+    const resetFilters = () => {
+      numberSearch.value = '';
+      if (flatpickrInstance) {
+        flatpickrInstance.clear();
+      }
+      daySearch.value = '';
+      roundSearch.value = '';
+      applyCustomFilters();
+    };
+    
+    // Initialize DataTable without length change and search box
+    const initDataTable = (data) => {
+      if (dataTable) {
+        dataTable.destroy();
+      }
+      
+      const tableData = data.map(item => [
+        formatDate(item.date),
+        getDayOfWeek(item.date),
+        item.first_round.padStart(2, '0'),
+        item.second_round.padStart(2, '0')
+      ]);
+      
+      dataTable = $('#resultsTable').DataTable({
+        data: tableData,
+        columns: [
+          { title: "Date" },
+          { title: "Day" },
+          { title: "First Round (FR)" },
+          { title: "Second Round (SR)" }
+        ],
+        order: [[0, 'desc']],
+        pageLength: 25,
+        paging: true,
+        info: true,
+        searching: false,
+        lengthChange: false,
+        responsive: true,
+        language: {
+          info: "Showing _START_ to _END_ of _TOTAL_ entries",
+          paginate: {
+            first: "First",
+            last: "Last",
+            next: "Next",
+            previous: "Previous"
+          }
+        }
+      });
+    };
+    
+    // Load data from JSON file
     const loadDataFromJSON = async () => {
       loadingIndicator.style.display = 'block';
       errorMessageDiv.style.display = 'none';
       
       try {
-        // Try multiple possible paths for the JSON file
-        let response;
         const paths = [
           'data/all-results.json',
           './data/all-results.json',
@@ -560,7 +743,7 @@
         
         for (const path of paths) {
           try {
-            response = await fetch(path);
+            const response = await fetch(path);
             if (response.ok) {
               data = await response.json();
               break;
@@ -571,34 +754,35 @@
         }
         
         if (!data) {
-          throw new Error('Unable to load all-results.json. Please ensure the file exists at ./data/all-results.json');
+          throw new Error('Unable to load all-results.json');
         }
         
-        // Validate data structure
         if (!Array.isArray(data)) {
-          throw new Error('Invalid data format: Expected an array of results');
+          throw new Error('Invalid data format');
         }
         
-        // Filter only Night Teer 2 results (game === "night teer 2")
         let nightResults = filterNightTeer2(data);
         
         if (nightResults.length === 0) {
-          throw new Error('No Shillong Night Teer 2 result records found in the JSON file. Looking for entries with "game": "night teer 2"');
+          throw new Error('No Shillong Night Teer 2 results found');
         }
         
-        // Sort by date descending
         nightResults = sortByDateDesc(nightResults);
+        allResults = nightResults;
         
-        allNightResults = nightResults;
+        // Build available dates set for calendar
+        availableDates.clear();
+        allResults.forEach(result => {
+          const formatted = formatDate(result.date);
+          availableDates.add(formatted);
+        });
         
-        // Reset pagination
-        currentPage = 1;
-        renderTable(currentPage);
-        renderPagination();
+        initCalendar();
+        initDataTable(allResults);
         
         loadingIndicator.style.display = 'none';
         
-        console.log(`✅ Loaded ${allNightResults.length} Shillong Night Teer 2 records`);
+        console.log(`✅ Loaded ${allResults.length} Shillong Night Teer 2 records`);
         
       } catch (error) {
         console.error('Error loading JSON:', error);
@@ -614,21 +798,19 @@
           <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">npx serve .</code> or <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br><br>
           <button onclick="location.reload()" style="background: var(--accent); color: #0f172a; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-family: Poppins; font-weight: 600; margin-top: 10px;">🔄 Retry Loading</button>
         `;
-        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#ef4444;">Failed to load Shillong Night Teer 2 data. Please ensure data/all-results.json is available and start a local web server.</td></tr>';
-        statsInfo.innerHTML = '❌ Data loading failed. Please use a local web server to avoid CORS issues.';
       }
     };
     
     // Dark Mode Toggle
     const initDarkMode = () => {
       const toggleBtn = document.getElementById('darkModeToggle');
-      const isDark = localStorage.getItem('darkModeNightTeer2') === 'true';
+      const isDark = localStorage.getItem('darkModeNightTeer2Advanced') === 'true';
       if (isDark) document.body.classList.add('dark');
       if (toggleBtn) {
         toggleBtn.addEventListener('click', () => {
           document.body.classList.toggle('dark');
           const darkEnabled = document.body.classList.contains('dark');
-          localStorage.setItem('darkModeNightTeer2', darkEnabled);
+          localStorage.setItem('darkModeNightTeer2Advanced', darkEnabled);
           toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
         });
         if (isDark) toggleBtn.textContent = '☀️ Light';
@@ -636,13 +818,18 @@
       }
     };
     
-    // Initialize the page
+    // Event listeners
+    applyFiltersBtn.addEventListener('click', applyCustomFilters);
+    resetFiltersBtn.addEventListener('click', resetFilters);
+    
+    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
+    
+    // Initialize
     const init = () => {
       initDarkMode();
       loadDataFromJSON();
     };
     
-    // Start the application
     init();
   </script>
 </body>
