@@ -182,6 +182,16 @@
       { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameKey: 'night teer 2' }
     ];
 
+    // Predefined 16 Teer Groups (House + Ending combinations)
+    const TEER_GROUPS = [
+      [10, 15, 50, 55], [1, 6, 10, 15, 51, 56, 60, 65], [2, 7, 20, 25, 52, 57, 70, 75],
+      [3, 8, 30, 35, 53, 58, 80, 85], [4, 9, 40, 45, 54, 59, 90, 95], [1, 6, 10, 15, 51, 56, 60, 65],
+      [11, 16, 61, 66], [12, 17, 21, 26, 62, 67, 71, 76], [13, 18, 31, 36, 63, 68, 81, 86],
+      [14, 19, 41, 46, 64, 69, 91, 96], [22, 27, 72, 77], [23, 28, 32, 37, 73, 78, 82, 87],
+      [24, 29, 42, 47, 74, 79, 92, 97], [33, 38, 83, 88], [34, 39, 43, 48, 84, 89, 93, 98],
+      [44, 49, 94, 99]
+    ];
+
     function getComplement(d) { return d <= 4 ? d + 5 : d - 5; }
 
     function generateCommonDigits(fr, sr) {
@@ -201,30 +211,50 @@
       return digits.some(d => resultDigits.includes(d));
     }
 
-    // Generate house numbers (tens digit from common digits)
-    function getHouseNumbers(digits) {
-      return digits.map(d => d * 10);
-    }
-
-    // Generate ending numbers (units digit from common digits)
-    function getEndingNumbers(digits) {
-      return digits.map(d => d);
-    }
-
-    // Generate 6 random full common numbers from combinations
-    function getRandomFullNumbers(commonDigits) {
-      const combos = [];
-      for(let i=0; i<commonDigits.length; i++){
-        for(let j=0; j<commonDigits.length; j++){
-          combos.push(commonDigits[i]*10 + commonDigits[j]);
+    // Generate 6 common numbers uniformly from Teer Groups
+    function getUniformCommonNumbers(commonDigits) {
+      if(commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
+      
+      // Collect all numbers from all 16 groups that contain at least one common digit
+      const candidateNumbers = new Set();
+      for(const group of TEER_GROUPS){
+        for(const num of group){
+          const tens = Math.floor(num / 10);
+          const units = num % 10;
+          if(commonDigits.includes(tens) || commonDigits.includes(units)){
+            candidateNumbers.add(num);
+          }
         }
       }
-      const unique = [...new Set(combos)];
-      for(let i = unique.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [unique[i], unique[j]] = [unique[j], unique[i]];
+      
+      // Also add house and ending combinations
+      for(const d of commonDigits){
+        candidateNumbers.add(d * 10); // house numbers
+        candidateNumbers.add(d); // single digit ending numbers
       }
-      return unique.slice(0, 6).sort((a,b)=>a-b);
+      
+      let candidates = Array.from(candidateNumbers).filter(n => n >= 0 && n <= 99);
+      
+      // Shuffle and pick 6
+      for(let i = candidates.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
+      }
+      
+      const selected = candidates.slice(0, 6).sort((a,b)=>a-b);
+      
+      // If less than 6, fill with some random numbers from common digits
+      if(selected.length < 6){
+        const fallbacks = [];
+        for(let i=0; i<commonDigits.length && fallbacks.length < (6-selected.length); i++){
+          for(let j=0; j<commonDigits.length && fallbacks.length < (6-selected.length); j++){
+            fallbacks.push(commonDigits[i]*10 + commonDigits[j]);
+          }
+        }
+        selected.push(...fallbacks.slice(0, 6-selected.length));
+      }
+      
+      return selected.slice(0, 6);
     }
 
     async function fetchData() {
@@ -259,11 +289,11 @@
           const commonDigits = generateCommonDigits(latest.fr, latest.sr);
           
           // Get house numbers (tens place)
-          const houseNumbers = getHouseNumbers(commonDigits);
+          const houseNumbers = commonDigits.map(d => d * 10);
           // Get ending numbers (units place)
-          const endingNumbers = getEndingNumbers(commonDigits);
-          // Get 6 random full common numbers
-          const fullNumbers = getRandomFullNumbers(commonDigits);
+          const endingNumbers = commonDigits;
+          // Get 6 uniform common numbers from Teer Groups
+          const fullNumbers = getUniformCommonNumbers(commonDigits);
           
           // Build 7-day history
           const historyRows = [];
@@ -278,7 +308,7 @@
             total++;
             const hitClass = hit ? 'win' : 'loss';
             const hitText = hit ? '✓ HIT' : '✗ MISS';
-            historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td>${currentResult.fr}</td><td>${currentResult.sr}</td><td class="${hitClass}">${hitText}</td>`);
+            historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td>${currentResult.fr}</td><td>${currentResult.sr}</td><td class="${hitClass}">${hitText}${hitText}</td>`);
           }
           const successRate = total > 0 ? Math.round((wins/total)*100) : 50;
           
@@ -309,7 +339,7 @@
                 </div>
                 <table class="history-table">
                   <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
-                  <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td></tr>'}</tbody>
+                  <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td><tr>'}</tbody>
                 </table>
                 <div class="stats-row">
                   <span>📅 Based on last ${total} days</span>
