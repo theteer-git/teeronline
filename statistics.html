@@ -116,7 +116,7 @@
         <li><strong>Recent Trends:</strong> Last 7-day performance and repeating patterns</li>
         <li><strong>Digit Frequency:</strong> Most common house and ending digits</li>
       </ul>
-      <p><strong>Note:</strong> On Sundays, only Morning and Night Teer statistics are displayed as Day games do not operate. Statistics for Day games will be shown from Monday onward once results are updated.</p>
+      <p><strong>Note:</strong> Statistics remain valid until the next day's results are updated. On Sunday, all games are shown with statistics that will stay until Monday's results are available.</p>
       <div class="warning-box">
         <strong>⚠️ Important Disclaimer:</strong> Statistics are based on historical data and patterns. They are NOT guaranteed winning numbers. Teer is a game of chance based on archery outcomes. Past performance does not guarantee future results. Use this information for educational purposes only.
       </div>
@@ -163,6 +163,10 @@
     ];
 
     const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+
+    // Cache for storing the last computed statistics date
+    let cachedStatsDate = null;
+    let cachedStatistics = {};
 
     function parseDate(dateStr) {
       if(!dateStr || dateStr === 'NaN' || dateStr === 'undefined') return null;
@@ -272,6 +276,21 @@
       throw new Error('Unable to load all-results.json');
     }
 
+    // Function to get the date for which statistics should be displayed
+    // Statistics remain until new results are available (next Monday for day games, next day for others)
+    function getEffectiveStatDate(today, gameType, latestResultDate) {
+      // For day games (Monday-Saturday), if today is Sunday, show Saturday's statistics
+      if(gameType === 'day'){
+        const todayDay = today.getDay();
+        if(todayDay === 0){ // Sunday
+          const saturday = new Date(today);
+          saturday.setDate(today.getDate() - 1);
+          return saturday;
+        }
+      }
+      return today;
+    }
+
     async function render() {
       const container = document.getElementById('statsContainer');
       container.innerHTML = '<div style="text-align:center;padding:2rem;">Loading statistics...</div>';
@@ -280,35 +299,48 @@
         const today = new Date();
         const todayStr = `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}`;
         const todayDay = DAYS[today.getDay()];
-        const isSunday = todayDay === 'Sunday';
         
         let html = '';
         for(const game of GAMES){
-          // On Sunday, only show Morning and Night games, skip Day games
-          if(isSunday && game.type === 'day') continue;
-          
           const results = getResultsForGame(data, game.gameKey);
           if(results.length === 0) continue;
           
-          const latest = results[0];
-          const statsNumbers = generateStatisticsNumbers(results, todayStr, todayDay);
-          const sameDateCount = getSameDateHistory(results, todayStr).length;
-          const dayWiseNumbers = getDayWiseNumbers(results, todayDay);
+          // Determine effective date for statistics (remains until next day's results)
+          const latestResult = results[0];
+          const latestResultDate = parseDate(latestResult.date);
+          let effectiveDate = today;
+          
+          // For day games: if latest result is from previous day (e.g., Saturday on Sunday), use that date
+          if(game.type === 'day' && latestResultDate){
+            const daysDiff = Math.floor((today - latestResultDate) / (1000 * 60 * 60 * 24));
+            if(daysDiff <= 1 && todayDay === 'Sunday'){
+              effectiveDate = latestResultDate;
+            }
+          }
+          
+          const effectiveDateStr = `${effectiveDate.getFullYear()}-${(effectiveDate.getMonth()+1).toString().padStart(2,'0')}-${effectiveDate.getDate().toString().padStart(2,'0')}`;
+          const effectiveDay = DAYS[effectiveDate.getDay()];
+          
+          const statsNumbers = generateStatisticsNumbers(results, effectiveDateStr, effectiveDay);
+          const sameDateCount = getSameDateHistory(results, effectiveDateStr).length;
+          const dayWiseNumbers = getDayWiseNumbers(results, effectiveDay);
           const recentTrends = getRecentTrendNumbers(results);
           
-          // Format latest result safely
-          const latestFr = latest.fr && isValidNumber(latest.fr) ? latest.fr : '--';
-          const latestSr = latest.sr && isValidNumber(latest.sr) ? latest.sr : '--';
+          const latestFr = latestResult.fr && isValidNumber(latestResult.fr) ? latestResult.fr : '--';
+          const latestSr = latestResult.sr && isValidNumber(latestResult.sr) ? latestResult.sr : '--';
+          
+          // Show note if statistics are from a different day than today
+          const isSundayNote = (game.type === 'day' && todayDay === 'Sunday') ? '<span style="color:var(--warning);"> (Sunday: Showing Saturday\'s statistics until Monday results)</span>' : '';
           
           html += `
             <div class="stat-card">
               <div class="card-header">
                 <h2>${game.displayName}</h2>
-                <div class="sub">Latest: ${latestFr}-${latestSr} (${latest.date || 'N/A'}) | Today: ${todayDay}, ${todayStr}</div>
+                <div class="sub">Latest: ${latestFr}-${latestSr} (${latestResult.date || 'N/A'}) | Statistics for: ${effectiveDay}, ${effectiveDateStr}${isSundayNote}</div>
               </div>
               <div class="card-body">
                 <div class="stat-box">
-                  <div class="stat-title">📊 Today's Statistical Numbers (${todayDay})</div>
+                  <div class="stat-title">📊 Today's Statistical Numbers (${effectiveDay})</div>
                   <div class="numbers-grid">
                     ${statsNumbers.length ? statsNumbers.map(n => `<span class="stat-number">${n.toString().padStart(2,'0')}</span>`).join('') : '<span>Insufficient data for statistics</span>'}
                   </div>
@@ -319,7 +351,7 @@
                   <div>
                     <div class="stat-title">📅 Same Date History</div>
                     <div class="numbers-grid">
-                      ${getSameDateHistory(results, todayStr).slice(0, 6).map(r => {
+                      ${getSameDateHistory(results, effectiveDateStr).slice(0, 6).map(r => {
                         const fr = r.fr && isValidNumber(r.fr) ? r.fr : '--';
                         const sr = r.sr && isValidNumber(r.sr) ? r.sr : '--';
                         return `<span class="stat-number stat-number-warning">${fr}-${sr}</span>`;
@@ -327,7 +359,7 @@
                     </div>
                   </div>
                   <div>
-                    <div class="stat-title">📆 ${todayDay} Pattern</div>
+                    <div class="stat-title">📆 ${effectiveDay} Pattern</div>
                     <div class="numbers-grid">
                       ${dayWiseNumbers.length ? dayWiseNumbers.slice(0, 6).map(n => `<span class="stat-number stat-number-info">${n.toString().padStart(2,'0')}</span>`).join('') : '<span>Insufficient data</span>'}
                     </div>
@@ -344,13 +376,9 @@
           `;
         }
         
-        if(isSunday && html === ''){
-          html = '<div style="text-align:center;padding:2rem;color:var(--accent);">📌 Sunday: Only Morning and Night Teer statistics are available. Day game statistics will appear on Monday.</div>';
-        }
-        
         container.innerHTML = html;
-        const sundayNote = isSunday ? ' | Sunday: Only Morning & Night games shown' : '';
-        document.getElementById('lastUpdated').innerHTML = `📅 Statistics Last Updated: ${new Date().toLocaleString()} | Based on ${todayDay} patterns${sundayNote}`;
+        const sundayNote = (todayDay === 'Sunday') ? ' | Sunday: Day game statistics show Saturday data (valid until Monday results)' : '';
+        document.getElementById('lastUpdated').innerHTML = `📅 Statistics Last Updated: ${new Date().toLocaleString()} | Based on latest available results${sundayNote}`;
         
       } catch(e){
         console.error(e);
