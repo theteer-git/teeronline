@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Teer Common Numbers | Shillong, Khanapara, Juwai | Winning Digits & Predictions</title>
-  <meta name="description" content="Daily updated common numbers for Shillong, Khanapara, Juwai Teer. Get house numbers, ending digits, and full combinations with 7-day performance tracking. Trusted by thousands of Teer enthusiasts.">
-  <meta name="keywords" content="Teer Common Numbers, Shillong Common Numbers, Khanapara Common Numbers, Juwai Common Numbers, Teer Winning Digits, Shillong Teer Common Number Today, Khanapara Teer Common Number">
+  <meta name="description" content="Daily updated common numbers for Shillong, Khanapara, Juwai Teer. Get house numbers, ending digits, and 6 common numbers with 7-day performance tracking.">
+  <meta name="keywords" content="Teer Common Numbers, Shillong Common Numbers, Khanapara Common Numbers, Juwai Common Numbers, Teer Winning Digits">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.teerresults.example.com/common-numbers.html">
@@ -60,8 +60,8 @@
     .game-body { padding: 1.2rem; }
     .numbers-section { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; text-align: center; }
     .section-title { font-weight: 600; margin-bottom: 0.8rem; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem; }
-    .common-numbers-grid { display: flex; flex-direction: column; gap: 0.6rem; align-items: center; }
-    .common-numbers-row { display: flex; flex-wrap: wrap; gap: 0.8rem; justify-content: center; }
+    .common-numbers-grid { display: flex; flex-direction: column; gap: 0.8rem; align-items: center; }
+    .common-numbers-row { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
     .common-number-box { background: var(--surface); border-radius: 0.75rem; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 1.1rem; min-width: 75px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .house-box { border: 2px solid var(--house-color); color: var(--house-color); }
     .ending-box { border: 2px solid var(--ending-color); color: var(--ending-color); }
@@ -88,7 +88,7 @@
     .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; }
     .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; }
     .refresh-btn img { width: 28px; height: 28px; }
-    @media (max-width: 768px) { .games-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } }
+    @media (max-width: 768px) { .games-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } .common-numbers-row { gap: 0.6rem; } }
   </style>
 </head>
 <body>
@@ -202,7 +202,7 @@
       return digits.some(d => resultDigits.includes(d));
     }
 
-    // Generate 6 common numbers uniformly (display as 2 rows of 3 numbers each)
+    // Generate 6 common numbers (display as 3 rows of 2 numbers each)
     function getUniformCommonNumbers(commonDigits) {
       if(commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
       
@@ -279,10 +279,10 @@
           const endingNumbers = commonDigits;
           const fullNumbers = getUniformCommonNumbers(commonDigits);
           
-          // Split 6 numbers into 2 rows of 3 numbers each (2,2,2 format)
-          const firstRow = fullNumbers.slice(0, 2);
-          const secondRow = fullNumbers.slice(2, 4);
-          const thirdRow = fullNumbers.slice(4, 6);
+          // Split 6 numbers into 3 rows of 2 numbers each (2,2,2 format)
+          const row1 = fullNumbers.slice(0, 2);
+          const row2 = fullNumbers.slice(2, 4);
+          const row3 = fullNumbers.slice(4, 6);
           
           const historyRows = [];
           let wins = 0, total = 0;
@@ -320,13 +320,13 @@
                   <div class="section-title">📊 COMMON NUMBERS</div>
                   <div class="common-numbers-grid">
                     <div class="common-numbers-row">
-                      ${firstRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
+                      ${row1.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
                     </div>
                     <div class="common-numbers-row">
-                      ${secondRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
+                      ${row2.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
                     </div>
                     <div class="common-numbers-row">
-                      ${thirdRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
+                      ${row3.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
                     </div>
                   </div>
                   <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
