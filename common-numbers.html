@@ -52,7 +52,7 @@
     .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); border-radius: 1.5rem; padding: 2rem 1.5rem; margin: 1.5rem 0; color: white; text-align: center; }
     .hero h1 { font-size: 1.9rem; font-weight: 800; margin-bottom: 0.5rem; }
     .hero p { opacity: 0.9; }
-    .games-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
     .game-card { background: var(--surface); border-radius: 1.25rem; border: 1px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; }
     .game-header { background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%); color: white; padding: 1rem 1.2rem; }
     .game-header h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
@@ -88,7 +88,8 @@
     .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; }
     .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; }
     .refresh-btn img { width: 28px; height: 28px; }
-    @media (max-width: 768px) { .games-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } .common-numbers-row { gap: 0.6rem; } }
+    @media (max-width: 900px) { .games-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } .common-numbers-row { gap: 0.6rem; } }
   </style>
 </head>
 <body>
@@ -202,7 +203,6 @@
       return digits.some(d => resultDigits.includes(d));
     }
 
-    // Generate 6 common numbers (display as 3 rows of 2 numbers each)
     function getUniformCommonNumbers(commonDigits) {
       if(commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
       
@@ -279,7 +279,6 @@
           const endingNumbers = commonDigits;
           const fullNumbers = getUniformCommonNumbers(commonDigits);
           
-          // Split 6 numbers into 3 rows of 2 numbers each (2,2,2 format)
           const row1 = fullNumbers.slice(0, 2);
           const row2 = fullNumbers.slice(2, 4);
           const row3 = fullNumbers.slice(4, 6);
@@ -307,7 +306,7 @@
             <div class="game-card">
               <div class="game-header">
                 <h2>${game.displayName}</h2>
-                <div class="date">Based on Previous Result: ${latest.fr}-${latest.sr} (${latest.date || 'N/A'})</div>
+                <div class="date">Previous Result: ${latest.fr}-${latest.sr} (${latest.date || 'N/A'})</div>
               </div>
               <div class="game-body">
                 <div class="numbers-section">
