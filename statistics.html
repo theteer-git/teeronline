@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Teer Statistics | Shillong, Khanapara, Juwai | Historical Data & Analysis</title>
-  <meta name="description" content="Comprehensive Teer statistics for Shillong, Khanapara, Juwai. Frequency analysis of digits 0-9, most common numbers, house & ending digit patterns, and 7-day performance trends. Data-driven insights from historical results.">
-  <meta name="keywords" content="Teer Statistics, Shillong Teer Statistics, Khanapara Teer Statistics, Juwai Teer Statistics, Teer Frequency Analysis, Teer Digit Analysis">
+  <title>Teer Statistics | Shillong, Khanapara, Juwai | Predictions & Analysis</title>
+  <meta name="description" content="Advanced Teer statistics with date-wise, day-wise predictions and possibilities. Get number predictions based on historical patterns for Shillong, Khanapara, Juwai Teer.">
+  <meta name="keywords" content="Teer Statistics, Teer Prediction, Shillong Teer Prediction, Khanapara Teer Prediction, Juwai Teer Prediction, Day-wise Teer Numbers">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.teerresults.example.com/statistics.html">
-  <meta property="og:title" content="Teer Statistics | Shillong, Khanapara, Juwai | Historical Data Analysis">
-  <meta property="og:description" content="Complete statistical analysis of Teer results including digit frequency, hot numbers, house & ending patterns, and performance trends.">
+  <meta property="og:title" content="Teer Statistics | Predictions & Analysis | Shillong, Khanapara, Juwai">
+  <meta property="og:description" content="Advanced statistical analysis with date-wise and day-wise predictions. Get number possibilities based on historical patterns.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -31,7 +31,6 @@
       --warning: #f59e0b;
       --danger: #ef4444;
       --info: #3b82f6;
-      --table-header-bg: #0f172a;
     }
     body.dark {
       --primary: #f1f5f9;
@@ -40,7 +39,6 @@
       --text: #f1f5f9;
       --text-light: #cbd5e1;
       --border: #334155;
-      --table-header-bg: #1e293b;
     }
     body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.5; transition: all 0.3s; }
     .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
@@ -54,35 +52,27 @@
     .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); border-radius: 1.5rem; padding: 2rem 1.5rem; margin: 1.5rem 0; color: white; text-align: center; }
     .hero h1 { font-size: 1.9rem; font-weight: 800; margin-bottom: 0.5rem; }
     .hero p { opacity: 0.9; }
-    .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(380px, 1fr)); gap: 1.5rem; margin-bottom: 2rem; }
+    .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
     .stat-card { background: var(--surface); border-radius: 1.25rem; border: 1px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; }
     .card-header { background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%); color: white; padding: 1rem 1.2rem; }
     .card-header h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
     .card-header .sub { font-size: 0.7rem; opacity: 0.8; }
     .card-body { padding: 1.2rem; }
-    .digit-bars { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.5rem; }
-    .digit-row { display: flex; align-items: center; gap: 0.8rem; }
-    .digit-label { width: 35px; font-weight: 700; font-size: 1rem; }
-    .bar-container { flex: 1; height: 28px; background: var(--bg); border-radius: 14px; overflow: hidden; }
-    .bar-fill { height: 100%; background: var(--accent); border-radius: 14px; display: flex; align-items: center; justify-content: flex-end; padding-right: 8px; color: white; font-size: 0.7rem; font-weight: 600; }
-    .digit-count { width: 45px; font-size: 0.8rem; color: var(--text-light); }
-    .numbers-grid { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; justify-content: center; }
-    .stat-number { background: var(--bg); border: 1px solid var(--border); border-radius: 0.5rem; padding: 0.4rem 0.8rem; font-weight: 600; font-size: 0.85rem; }
-    .stat-number.highlight { background: var(--accent); color: white; border-color: var(--accent); }
-    .stat-table { width: 100%; font-size: 0.75rem; border-collapse: collapse; }
-    .stat-table th, .stat-table td { padding: 0.5rem 0.3rem; text-align: center; border-bottom: 1px solid var(--border); }
-    .stat-table th { background: var(--bg); font-weight: 600; color: var(--accent); }
-    .trend-up { color: var(--success); }
-    .trend-down { color: var(--danger); }
-    .trend-neutral { color: var(--warning); }
-    .insight-box { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-top: 1rem; border-left: 4px solid var(--accent); }
-    .insight-box p { font-size: 0.8rem; margin-bottom: 0.3rem; }
+    .prediction-box { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid var(--accent); }
+    .prediction-title { font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
+    .numbers-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.5rem 0; justify-content: center; }
+    .prediction-number { background: var(--surface); border: 2px solid var(--accent); border-radius: 0.75rem; padding: 0.5rem 0.8rem; font-weight: 700; font-size: 0.9rem; min-width: 65px; text-align: center; }
+    .day-selector { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+    .day-btn { background: var(--surface); border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 2rem; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
+    .day-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
+    .stat-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
+    .stat-table th, .stat-table td { padding: 0.4rem; text-align: center; border-bottom: 1px solid var(--border); }
+    .insight-box { background: var(--bg); border-radius: 1rem; padding: 0.8rem; margin-top: 0.8rem; }
     .last-updated { text-align: center; font-size: 0.7rem; color: var(--text-light); margin: 1rem 0; }
     .seo-content { background: var(--surface); border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border); }
     .seo-content h2 { color: var(--accent); font-size: 1.6rem; margin-bottom: 1rem; }
-    .seo-content h3 { color: var(--text); font-size: 1.2rem; margin: 1rem 0 0.5rem; }
     .seo-content p { margin-bottom: 1rem; color: var(--text-light); }
-    .seo-content ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-light); }
+    .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; }
     .related-links { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; justify-content: center; }
     .related-links a { background: var(--surface); padding: 0.5rem 1.2rem; border-radius: 2rem; text-decoration: none; color: var(--accent); border: 1px solid var(--accent); font-size: 0.85rem; transition: 0.2s; }
     .related-links a:hover { background: var(--accent); color: white; }
@@ -93,13 +83,14 @@
     .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; transition: transform 0.2s; }
     .refresh-btn:hover { transform: scale(1.05); }
     .refresh-btn img { width: 28px; height: 28px; }
-    @media (max-width: 768px) { .stats-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } }
+    @media (max-width: 900px) { .stats-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } }
   </style>
 </head>
 <body>
   <header class="sticky-header">
     <div class="container header-inner">
-      <div class="logo">📊 Teer Statistics</div>
+      <div class="logo">📊 Teer Statistics & Predictions</div>
       <div class="nav-links">
         <a href="#">Home</a>
         <a href="#">Common Numbers</a>
@@ -114,30 +105,24 @@
 
   <main class="container">
     <div class="hero">
-      <h1>Teer Statistics | Shillong, Khanapara, Juwai</h1>
-      <p>Comprehensive statistical analysis of Teer results including digit frequency, hot numbers, house & ending patterns, and performance trends from historical data.</p>
+      <h1>Teer Statistics | Predictions & Possibilities</h1>
+      <p>Date-wise and day-wise number predictions based on historical patterns. Get today's most probable numbers for Shillong, Khanapara, and Juwai Teer.</p>
     </div>
 
     <div id="statsContainer" class="stats-grid"></div>
     <div id="lastUpdated" class="last-updated"></div>
 
     <div class="seo-content">
-      <h2>Teer Statistics: Data-Driven Insights from Historical Results</h2>
-      <p><strong>Shillong Teer Statistics</strong> provide valuable insights into digit frequency, number patterns, and historical trends. Our comprehensive analysis covers all major Teer games including Shillong Day, Shillong Morning, Shillong Night, Khanapara Day, Khanapara Morning, Juwai Day, and Juwai Morning.</p>
-      
-      <h3>Understanding Teer Frequency Analysis</h3>
-      <p>Frequency analysis tracks how often each digit (0-9) appears as the house digit (first digit) or ending digit (second digit) in Teer results. This data helps enthusiasts understand which digits are currently "hot" (appearing frequently) or "cold" (appearing rarely). However, remember that Teer is a game of chance based on archery outcomes - past frequency does not guarantee future results.</p>
-      
-      <h3>How to Use This Statistics Page</h3>
-      <ul>
-        <li><strong>Digit Frequency:</strong> See which digits 0-9 appear most often as house or ending numbers</li>
-        <li><strong>Most Common Numbers:</strong> Top 10 most frequently occurring two-digit numbers</li>
-        <li><strong>Hot & Cold Numbers:</strong> Numbers that appear most/least frequently in recent results</li>
-        <li><strong>House & Ending Patterns:</strong> Analysis of first and second digit distribution</li>
+      <h2>Teer Statistics & Prediction Methodology</h2>
+      <p>Our advanced statistical analysis uses historical Teer results to identify patterns and generate number possibilities. By analyzing date-wise and day-wise (Monday to Sunday) trends, we provide predictions for each game based on:</p>
+      <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
+        <li><strong>Same Date Historical Data:</strong> Numbers that appeared on the same date in previous years</li>
+        <li><strong>Day-wise Patterns:</strong> Numbers that frequently appear on specific weekdays</li>
+        <li><strong>Recent Trends:</strong> Last 7-day performance and repeating patterns</li>
+        <li><strong>Digit Frequency:</strong> Most common house and ending digits</li>
       </ul>
-      
-      <div class="warning-box" style="background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0;">
-        <strong>⚠️ Important Disclaimer:</strong> Statistics are based on historical data and are provided for informational and educational purposes only. Past performance does not guarantee future results. Teer is a game of chance based on archery outcomes. We do not encourage gambling or betting.
+      <div class="warning-box">
+        <strong>⚠️ Important Disclaimer:</strong> Predictions are based on historical data and statistical patterns. They are NOT guaranteed winning numbers. Teer is a game of chance based on archery outcomes. Past performance does not guarantee future results. Use this information for educational and entertainment purposes only.
       </div>
     </div>
 
@@ -160,7 +145,7 @@
         <a href="#">Contact</a>
         <a href="#">About</a>
       </div>
-      <div class="disclaimer">⚠️ Informational Purpose Only: Statistics are derived from historical data and provided for educational purposes. No predictions are guaranteed.</div>
+      <div class="disclaimer">⚠️ Informational Purpose Only: Predictions are statistical derivations from historical data. No guarantees of winning.</div>
       <div class="disclaimer" style="margin-top:0.5rem;">Copyright © <span id="ThisYear"></span> Teer Results Archive</div>
     </div>
   </footer>
@@ -171,103 +156,115 @@
 
   <script>
     const GAMES = [
-      { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameKey: 'juwai morning', type: 'morning' },
-      { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameKey: 'khanapara morning', type: 'morning' },
-      { id: 'shillong-morning', displayName: '🌅 Shillong Morning', gameKey: 'shillong morning', type: 'morning' },
-      { id: 'juwai-day', displayName: '🏹 Juwai Day', gameKey: 'juwai day', type: 'day' },
-      { id: 'khanapara-day', displayName: '🎯 Khanapara Day', gameKey: 'khanapara day', type: 'day' },
-      { id: 'shillong-day', displayName: '🏹 Shillong Day', gameKey: 'shillong day', type: 'day' },
-      { id: 'shillong-night', displayName: '🌙 Shillong Night', gameKey: 'shillong night', type: 'night' }
+      { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameKey: 'juwai morning' },
+      { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameKey: 'khanapara morning' },
+      { id: 'shillong-morning', displayName: '🌅 Shillong Morning', gameKey: 'shillong morning' },
+      { id: 'juwai-day', displayName: '🏹 Juwai Day', gameKey: 'juwai day' },
+      { id: 'khanapara-day', displayName: '🎯 Khanapara Day', gameKey: 'khanapara day' },
+      { id: 'shillong-day', displayName: '🏹 Shillong Day', gameKey: 'shillong day' },
+      { id: 'shillong-night', displayName: '🌙 Shillong Night', gameKey: 'shillong night' },
+      { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameKey: 'night teer 2' }
     ];
 
-    // Statistics for combined analysis
-    let combinedHouseDigits = new Array(10).fill(0);
-    let combinedEndingDigits = new Array(10).fill(0);
-    let combinedNumbers = new Array(100).fill(0);
-    let totalResults = 0;
+    const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
-    function updateCombinedStats(fr, sr) {
-      const frNum = parseInt(fr), srNum = parseInt(sr);
-      if(isNaN(frNum) || isNaN(srNum)) return;
-      const frTens = Math.floor(frNum/10);
-      const frUnits = frNum%10;
-      const srTens = Math.floor(srNum/10);
-      const srUnits = srNum%10;
-      
-      combinedHouseDigits[frTens]++;
-      combinedHouseDigits[srTens]++;
-      combinedEndingDigits[frUnits]++;
-      combinedEndingDigits[srUnits]++;
-      combinedNumbers[frNum]++;
-      combinedNumbers[srNum]++;
-      totalResults += 2;
+    function parseDate(dateStr) {
+      if(!dateStr) return null;
+      let parts = dateStr.split(/[-/]/);
+      if(parts.length === 3){
+        if(parts[0].length === 4) return new Date(parts[0], parts[1]-1, parts[2]);
+        else return new Date(parts[2], parts[1]-1, parts[0]);
+      }
+      return new Date(dateStr);
     }
 
-    function getGameResults(data, gameKey) {
+    function getDayOfWeek(dateStr) {
+      const date = parseDate(dateStr);
+      if(!date) return '';
+      return DAYS[date.getDay()];
+    }
+
+    function getResultsForGame(data, gameKey) {
       return data.filter(item => (item.game||'').toLowerCase() === gameKey.toLowerCase())
-        .map(item => ({ date: item.date, fr: item.fr, sr: item.sr }))
-        .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)));
+        .map(item => ({ date: item.date, fr: item.fr, sr: item.sr, day: getDayOfWeek(item.date) }))
+        .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)))
+        .sort((a,b) => new Date(b.date) - new Date(a.date));
     }
 
-    function calculateGameStats(results) {
-      const houseDigits = new Array(10).fill(0);
-      const endingDigits = new Array(10).fill(0);
-      const numbers = new Array(100).fill(0);
-      let count = 0;
-      
-      for(const res of results){
-        const frNum = parseInt(res.fr), srNum = parseInt(res.sr);
-        if(isNaN(frNum) || isNaN(srNum)) continue;
-        houseDigits[Math.floor(frNum/10)]++;
-        houseDigits[Math.floor(srNum/10)]++;
-        endingDigits[frNum%10]++;
-        endingDigits[srNum%10]++;
-        numbers[frNum]++;
-        numbers[srNum]++;
-        count += 2;
-      }
-      
-      // Get top 10 numbers
-      const numberList = [];
-      for(let i=0; i<100; i++) if(numbers[i]>0) numberList.push({num: i, count: numbers[i]});
-      numberList.sort((a,b)=>b.count - a.count);
-      const topNumbers = numberList.slice(0, 10).map(n => n.num.toString().padStart(2,'0'));
-      
-      // Get hot digits (house)
-      const houseList = [];
-      for(let i=0; i<10; i++) houseList.push({digit: i, count: houseDigits[i]});
-      houseList.sort((a,b)=>b.count - a.count);
-      const topHouse = houseList.slice(0, 5).map(h => h.digit);
-      const coldHouse = houseList.slice(-5).reverse().map(h => h.digit);
-      
-      // Get hot digits (ending)
-      const endingList = [];
-      for(let i=0; i<10; i++) endingList.push({digit: i, count: endingDigits[i]});
-      endingList.sort((a,b)=>b.count - a.count);
-      const topEnding = endingList.slice(0, 5).map(e => e.digit);
-      const coldEnding = endingList.slice(-5).reverse().map(e => e.digit);
-      
-      const maxCount = Math.max(...houseDigits);
-      return { houseDigits, endingDigits, topNumbers, topHouse, coldHouse, topEnding, coldEnding, maxCount, totalResults: count };
+    // Get historical numbers for same date (month-day)
+    function getSameDateHistory(results, targetDate) {
+      if(!targetDate) return [];
+      const target = parseDate(targetDate);
+      if(!target) return [];
+      const monthDay = `${target.getMonth()+1}-${target.getDate()}`;
+      return results.filter(r => {
+        const rDate = parseDate(r.date);
+        if(!rDate) return false;
+        return `${rDate.getMonth()+1}-${rDate.getDate()}` === monthDay;
+      });
     }
 
-    function renderDigitBars(digits, maxCount, title) {
-      if(maxCount === 0) return '<div>No data available</div>';
-      let html = '<div class="digit-bars">';
-      for(let i=0; i<10; i++){
-        const percent = (digits[i] / maxCount) * 100;
-        html += `
-          <div class="digit-row">
-            <span class="digit-label">${i}</span>
-            <div class="bar-container">
-              <div class="bar-fill" style="width: ${percent}%;">${digits[i] > 0 ? digits[i] : ''}</div>
-            </div>
-            <span class="digit-count">${digits[i]}</span>
-          </div>
-        `;
+    // Get day-wise statistics
+    function getDayWiseNumbers(results, targetDay) {
+      const dayResults = results.filter(r => r.day === targetDay);
+      const freq = {};
+      for(const r of dayResults){
+        const frNum = parseInt(r.fr);
+        const srNum = parseInt(r.sr);
+        if(!isNaN(frNum)) freq[frNum] = (freq[frNum] || 0) + 1;
+        if(!isNaN(srNum)) freq[srNum] = (freq[srNum] || 0) + 1;
       }
-      html += '</div>';
-      return html;
+      const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+      return sorted.slice(0, 6).map(n => parseInt(n[0]));
+    }
+
+    // Get recent trend numbers (last 7 days)
+    function getRecentTrendNumbers(results) {
+      const recent = results.slice(0, 7);
+      const freq = {};
+      for(const r of recent){
+        const frNum = parseInt(r.fr);
+        const srNum = parseInt(r.sr);
+        if(!isNaN(frNum)) freq[frNum] = (freq[frNum] || 0) + 1;
+        if(!isNaN(srNum)) freq[srNum] = (freq[srNum] || 0) + 1;
+      }
+      const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+      return sorted.slice(0, 6).map(n => parseInt(n[0]));
+    }
+
+    // Generate combined prediction numbers
+    function generatePredictions(results, targetDate, targetDay) {
+      const sameDate = getSameDateHistory(results, targetDate);
+      const dayWise = getDayWiseNumbers(results, targetDay);
+      const recentTrend = getRecentTrendNumbers(results);
+      
+      // Combine and count frequency
+      const freq = {};
+      for(const n of sameDate) freq[n] = (freq[n] || 0) + 2;
+      for(const n of dayWise) freq[n] = (freq[n] || 0) + 1;
+      for(const n of recentTrend) freq[n] = (freq[n] || 0) + 1;
+      
+      const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
+      const topPredictions = sorted.slice(0, 6).map(n => parseInt(n[0]));
+      
+      // Generate additional numbers from digit patterns
+      const allNumbers = results.slice(0, 20).flatMap(r => [parseInt(r.fr), parseInt(r.sr)]).filter(n => !isNaN(n));
+      const digitFreq = new Array(10).fill(0);
+      for(const n of allNumbers){
+        digitFreq[Math.floor(n/10)]++;
+        digitFreq[n%10]++;
+      }
+      const topDigits = digitFreq.map((c,i)=> ({digit:i, count:c})).sort((a,b)=>b.count-a.count).slice(0, 4).map(d=>d.digit);
+      const additionalNumbers = [];
+      for(let i=0; i<topDigits.length && additionalNumbers.length<3; i++){
+        for(let j=0; j<topDigits.length && additionalNumbers.length<3; j++){
+          const num = topDigits[i]*10 + topDigits[j];
+          if(!topPredictions.includes(num) && num>=0 && num<=99) additionalNumbers.push(num);
+        }
+      }
+      
+      const finalPredictions = [...topPredictions, ...additionalNumbers].slice(0, 6);
+      return finalPredictions.sort((a,b)=>a-b);
     }
 
     async function fetchData() {
@@ -280,109 +277,66 @@
 
     async function render() {
       const container = document.getElementById('statsContainer');
-      container.innerHTML = '<div style="text-align:center;padding:2rem;">Loading statistics...</div>';
+      container.innerHTML = '<div style="text-align:center;padding:2rem;">Loading statistics and predictions...</div>';
       try {
         const data = await fetchData();
+        const today = new Date();
+        const todayStr = `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}`;
+        const todayDay = DAYS[today.getDay()];
         
-        // Reset combined stats
-        combinedHouseDigits = new Array(10).fill(0);
-        combinedEndingDigits = new Array(10).fill(0);
-        combinedNumbers = new Array(100).fill(0);
-        totalResults = 0;
-        
-        let allGameStatsHtml = '';
-        let gameStatsList = [];
-        
+        let html = '';
         for(const game of GAMES){
-          const results = getGameResults(data, game.gameKey);
+          const results = getResultsForGame(data, game.gameKey);
           if(results.length === 0) continue;
           
-          // Update combined stats
-          for(const res of results) updateCombinedStats(res.fr, res.sr);
+          const latest = results[0];
+          const predictions = generatePredictions(results, todayStr, todayDay);
+          const sameDateCount = getSameDateHistory(results, todayStr).length;
+          const dayWiseNumbers = getDayWiseNumbers(results, todayDay);
+          const recentTrends = getRecentTrendNumbers(results);
           
-          const stats = calculateGameStats(results);
-          gameStatsList.push({ game, stats });
-          
-          allGameStatsHtml += `
+          html += `
             <div class="stat-card">
               <div class="card-header">
                 <h2>${game.displayName}</h2>
-                <div class="sub">Based on ${stats.totalResults} results (${results.length} days)</div>
+                <div class="sub">Latest: ${latest.fr}-${latest.sr} (${latest.date}) | Today: ${todayDay}, ${todayStr}</div>
               </div>
               <div class="card-body">
-                <div style="margin-bottom: 1rem;">
-                  <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">🔥 House Digits (First Digit) Frequency</h3>
-                  ${renderDigitBars(stats.houseDigits, stats.maxCount, 'House Digits')}
-                </div>
-                <div style="margin-bottom: 1rem;">
-                  <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">🎯 Ending Digits (Second Digit) Frequency</h3>
-                  ${renderDigitBars(stats.endingDigits, stats.maxCount, 'Ending Digits')}
-                </div>
-                <div>
-                  <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">⭐ Most Common Numbers</h3>
+                <div class="prediction-box">
+                  <div class="prediction-title">🎯 Today's Prediction (${todayDay})</div>
                   <div class="numbers-grid">
-                    ${stats.topNumbers.map(n => `<span class="stat-number highlight">${n}</span>`).join('')}
+                    ${predictions.map(n => `<span class="prediction-number">${n.toString().padStart(2,'0')}</span>`).join('')}
+                  </div>
+                  <div style="font-size:0.7rem; margin-top:0.5rem;">Based on ${sameDateCount} same-date historical records, ${dayWiseNumbers.length} day-wise patterns, and recent 7-day trends</div>
+                </div>
+                
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+                  <div>
+                    <div class="prediction-title">📅 Same Date History</div>
+                    <div class="numbers-grid">
+                      ${getSameDateHistory(results, todayStr).slice(0, 6).map(r => `<span class="prediction-number" style="border-color:var(--warning);">${r.fr}-${r.sr}</span>`).join('') || '<span>No historical data</span>'}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="prediction-title">📆 ${todayDay} Pattern</div>
+                    <div class="numbers-grid">
+                      ${dayWiseNumbers.slice(0, 6).map(n => `<span class="prediction-number" style="border-color:var(--info);">${n.toString().padStart(2,'0')}</span>`).join('') || '<span>Insufficient data</span>'}
+                    </div>
                   </div>
                 </div>
+                
                 <div class="insight-box">
-                  <p>🔥 <strong>Hot House Digits:</strong> ${stats.topHouse.join(', ')} &nbsp;&nbsp;|&nbsp;&nbsp; ❄️ <strong>Cold House Digits:</strong> ${stats.coldHouse.join(', ')}</p>
-                  <p>🔥 <strong>Hot Ending Digits:</strong> ${stats.topEnding.join(', ')} &nbsp;&nbsp;|&nbsp;&nbsp; ❄️ <strong>Cold Ending Digits:</strong> ${stats.coldEnding.join(', ')}</p>
+                  <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
+                    <span>🔥 <strong>Last 7 Days Trend:</strong> ${recentTrends.slice(0, 4).map(n => n.toString().padStart(2,'0')).join(', ')}</span>
+                    <span>📊 <strong>Total Records:</strong> ${results.length} days</span>
+                  </div>
                 </div>
               </div>
             </div>
           `;
         }
-        
-        // Overall Combined Statistics
-        const combinedMax = Math.max(...combinedHouseDigits, ...combinedEndingDigits);
-        const combinedNumberList = [];
-        for(let i=0; i<100; i++) if(combinedNumbers[i]>0) combinedNumberList.push({num: i, count: combinedNumbers[i]});
-        combinedNumberList.sort((a,b)=>b.count - a.count);
-        const overallTopNumbers = combinedNumberList.slice(0, 12).map(n => n.num.toString().padStart(2,'0'));
-        
-        const combinedHouseList = [];
-        for(let i=0; i<10; i++) combinedHouseList.push({digit: i, count: combinedHouseDigits[i]});
-        combinedHouseList.sort((a,b)=>b.count - a.count);
-        const overallTopHouse = combinedHouseList.slice(0, 5).map(h => h.digit);
-        const overallColdHouse = combinedHouseList.slice(-5).reverse().map(h => h.digit);
-        
-        const combinedEndingList = [];
-        for(let i=0; i<10; i++) combinedEndingList.push({digit: i, count: combinedEndingDigits[i]});
-        combinedEndingList.sort((a,b)=>b.count - a.count);
-        const overallTopEnding = combinedEndingList.slice(0, 5).map(e => e.digit);
-        const overallColdEnding = combinedEndingList.slice(-5).reverse().map(e => e.digit);
-        
-        const overallStatsHtml = `
-          <div class="stat-card">
-            <div class="card-header">
-              <h2>📊 Overall Statistics (All Games Combined)</h2>
-              <div class="sub">Based on ${totalResults} total results across all games</div>
-            </div>
-            <div class="card-body">
-              <div style="margin-bottom: 1rem;">
-                <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">🏠 Overall House Digits (First Digit) Frequency</h3>
-                ${renderDigitBars(combinedHouseDigits, combinedMax, 'Overall House Digits')}
-              </div>
-              <div style="margin-bottom: 1rem;">
-                <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">🔢 Overall Ending Digits (Second Digit) Frequency</h3>
-                ${renderDigitBars(combinedEndingDigits, combinedMax, 'Overall Ending Digits')}
-              </div>
-              <div>
-                <h3 style="font-size:0.9rem; margin-bottom:0.5rem;">⭐ Most Common Numbers (All Games)</h3>
-                <div class="numbers-grid">
-                  ${overallTopNumbers.map(n => `<span class="stat-number highlight">${n}</span>`).join('')}
-                </div>
-              </div>
-              <div class="insight-box">
-                <p>🔥 <strong>Overall Hot House Digits:</strong> ${overallTopHouse.join(', ')} &nbsp;&nbsp;|&nbsp;&nbsp; ❄️ <strong>Overall Cold House Digits:</strong> ${overallColdHouse.join(', ')}</p>
-                <p>🔥 <strong>Overall Hot Ending Digits:</strong> ${overallTopEnding.join(', ')} &nbsp;&nbsp;|&nbsp;&nbsp; ❄️ <strong>Overall Cold Ending Digits:</strong> ${overallColdEnding.join(', ')}</p>
-              </div>
-            </div>
-          </div>
-        `;
-        
-        container.innerHTML = overallStatsHtml + allGameStatsHtml;
-        document.getElementById('lastUpdated').innerHTML = `📅 Statistics Last Updated: ${new Date().toLocaleString()} | Based on official Teer results archive | Data refreshes when new results are added`;
+        container.innerHTML = html;
+        document.getElementById('lastUpdated').innerHTML = `📅 Predictions Last Updated: ${new Date().toLocaleString()} | Based on ${todayDay} patterns | Refresh when new results are available`;
         
       } catch(e){
         console.error(e);
