@@ -31,6 +31,7 @@
       --danger: #ef4444;
       --house-color: #f59e0b;
       --ending-color: #3b82f6;
+      --table-header-bg: #0f172a;
     }
     body.dark {
       --primary: #f1f5f9;
@@ -39,6 +40,7 @@
       --text: #f1f5f9;
       --text-light: #cbd5e1;
       --border: #334155;
+      --table-header-bg: #1e293b;
     }
     body { font-family: 'Poppins', sans-serif; background-color: var(--bg); color: var(--text); line-height: 1.5; transition: all 0.3s; }
     .container { max-width: 1400px; margin: 0 auto; padding: 0 1.5rem; }
@@ -62,15 +64,22 @@
     .section-title { font-weight: 600; margin-bottom: 0.8rem; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem; }
     .common-numbers-grid { display: flex; flex-direction: column; gap: 0.8rem; align-items: center; }
     .common-numbers-row { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-    .common-number-box { background: var(--surface); border-radius: 0.75rem; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 1.1rem; min-width: 75px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .house-box { border: 2px solid var(--house-color); color: var(--house-color); }
-    .ending-box { border: 2px solid var(--ending-color); color: var(--ending-color); }
-    .full-box { border: 2px solid var(--accent); color: var(--accent); }
+    .common-number-box { background: var(--surface); border-radius: 0.75rem; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 1.1rem; min-width: 75px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: transform 0.2s; }
+    .common-number-box:hover { transform: scale(1.05); }
+    .full-box { border: 2px solid var(--accent); color: var(--accent); background: linear-gradient(145deg, var(--surface), var(--bg)); }
     .percentage { font-size: 0.75rem; margin-top: 0.5rem; text-align: center; }
-    .history-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
-    .history-table th, .history-table td { padding: 0.5rem 0.3rem; text-align: center; border-bottom: 1px solid var(--border); }
-    .win { color: var(--success); font-weight: 600; }
-    .loss { color: var(--danger); font-weight: 600; }
+    
+    /* Enhanced History Table Styles */
+    .history-wrapper { overflow-x: auto; border-radius: 1rem; margin-top: 0.5rem; }
+    .history-table { width: 100%; font-size: 0.7rem; border-collapse: separate; border-spacing: 0; background: var(--surface); border-radius: 1rem; overflow: hidden; }
+    .history-table th { background: var(--table-header-bg); color: white; padding: 0.7rem 0.4rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.7rem; }
+    .history-table td { padding: 0.6rem 0.3rem; text-align: center; border-bottom: 1px solid var(--border); background: var(--surface); }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: var(--bg); }
+    .win-badge { background: var(--success); color: white; padding: 0.2rem 0.6rem; border-radius: 2rem; font-weight: 600; display: inline-block; font-size: 0.65rem; }
+    .loss-badge { background: var(--danger); color: white; padding: 0.2rem 0.6rem; border-radius: 2rem; font-weight: 600; display: inline-block; font-size: 0.65rem; }
+    .fr-sr-number { font-weight: 700; font-family: monospace; font-size: 0.85rem; background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.5rem; display: inline-block; }
+    
     .stats-row { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border); font-size: 0.75rem; }
     .last-updated { text-align: center; font-size: 0.7rem; color: var(--text-light); margin: 1rem 0; }
     .seo-content { background: var(--surface); border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border); }
@@ -86,10 +95,11 @@
     .footer-links a { text-decoration: none; color: var(--text-light); font-size: 0.85rem; }
     .disclaimer { text-align: center; font-size: 0.75rem; color: var(--text-light); }
     .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; }
-    .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; }
+    .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; transition: transform 0.2s; }
+    .refresh-btn:hover { transform: scale(1.05); }
     .refresh-btn img { width: 28px; height: 28px; }
     @media (max-width: 900px) { .games-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } .common-numbers-row { gap: 0.6rem; } }
+    @media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } .common-numbers-row { gap: 0.6rem; } .history-table th, .history-table td { padding: 0.4rem 0.2rem; font-size: 0.65rem; } }
   </style>
 </head>
 <body>
@@ -205,52 +215,32 @@
 
     function getUniformCommonNumbers(commonDigits) {
       if(commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
-      
       const candidateNumbers = new Set();
       for(const group of TEER_GROUPS){
         for(const num of group){
           const tens = Math.floor(num / 10);
           const units = num % 10;
-          if(commonDigits.includes(tens) || commonDigits.includes(units)){
-            candidateNumbers.add(num);
-          }
+          if(commonDigits.includes(tens) || commonDigits.includes(units)) candidateNumbers.add(num);
         }
       }
-      
-      for(const d of commonDigits){
-        candidateNumbers.add(d * 10);
-        candidateNumbers.add(d);
-      }
-      
+      for(const d of commonDigits){ candidateNumbers.add(d * 10); candidateNumbers.add(d); }
       let candidates = Array.from(candidateNumbers).filter(n => n >= 0 && n <= 99);
-      
-      for(let i = candidates.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
-      }
-      
+      for(let i = candidates.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [candidates[i], candidates[j]] = [candidates[j], candidates[i]]; }
       const selected = candidates.slice(0, 6).sort((a,b)=>a-b);
-      
       if(selected.length < 6){
         const fallbacks = [];
         for(let i=0; i<commonDigits.length && fallbacks.length < (6-selected.length); i++){
-          for(let j=0; j<commonDigits.length && fallbacks.length < (6-selected.length); j++){
-            fallbacks.push(commonDigits[i]*10 + commonDigits[j]);
-          }
+          for(let j=0; j<commonDigits.length && fallbacks.length < (6-selected.length); j++) fallbacks.push(commonDigits[i]*10 + commonDigits[j]);
         }
         selected.push(...fallbacks.slice(0, 6-selected.length));
       }
-      
       return selected.slice(0, 6);
     }
 
     async function fetchData() {
       const paths = ['data/all-results.json','./data/all-results.json','../data/all-results.json','all-results.json'];
       for(const path of paths){
-        try{
-          const res = await fetch(path);
-          if(res.ok) return await res.json();
-        }catch(e){}
+        try{ const res = await fetch(path); if(res.ok) return await res.json(); }catch(e){}
       }
       throw new Error('Unable to load all-results.json');
     }
@@ -271,14 +261,11 @@
         for(const game of GAMES){
           const results = getGameResults(data, game.gameKey);
           if(results.length === 0) continue;
-          
           const latest = results[0];
           const commonDigits = generateCommonDigits(latest.fr, latest.sr);
-          
           const houseNumbers = commonDigits.map(d => d * 10);
           const endingNumbers = commonDigits;
           const fullNumbers = getUniformCommonNumbers(commonDigits);
-          
           const row1 = fullNumbers.slice(0, 2);
           const row2 = fullNumbers.slice(2, 4);
           const row3 = fullNumbers.slice(4, 6);
@@ -293,12 +280,10 @@
             const hit = checkSuccess(predDigits, currentResult.fr, currentResult.sr);
             if(hit) wins++;
             total++;
-            const hitClass = hit ? 'win' : 'loss';
-            const hitText = hit ? '✓ HIT' : '✗ MISS';
-            historyRows.push(`<td><td style="padding:0.4rem;">${currentResult.date || 'N/A'}</td><td style="padding:0.4rem;">${currentResult.fr}</td><td style="padding:0.4rem;">${currentResult.sr}</td><td class="${hitClass}" style="padding:0.4rem;">${hitText}</td>`);
+            const badge = hit ? '<span class="win-badge">✓ HIT</span>' : '<span class="loss-badge">✗ MISS</span>';
+            historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td><span class="fr-sr-number">${currentResult.fr}</span></td><td><span class="fr-sr-number">${currentResult.sr}</span></td><td>${badge}</td>`);
           }
           const successRate = total > 0 ? Math.round((wins/total)*100) : 50;
-          
           const houseDisplay = houseNumbers.map(n => n/10).join(', ');
           const endingDisplay = endingNumbers.join(', ');
           
@@ -315,22 +300,18 @@
                 <div class="numbers-section">
                   <div class="section-title">📊 COMMON NUMBERS</div>
                   <div class="common-numbers-grid">
-                    <div class="common-numbers-row">
-                      ${row1.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
-                    </div>
-                    <div class="common-numbers-row">
-                      ${row2.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
-                    </div>
-                    <div class="common-numbers-row">
-                      ${row3.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
-                    </div>
+                    <div class="common-numbers-row">${row1.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}</div>
+                    <div class="common-numbers-row">${row2.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}</div>
+                    <div class="common-numbers-row">${row3.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}</div>
                   </div>
                   <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
                 </div>
-                <table class="history-table">
-                  <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></thead>
-                  <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td>'}</tbody>
-                </table>
+                <div class="history-wrapper">
+                  <table class="history-table">
+                    <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
+                    <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4" style="text-align:center;">No history available</td></tr>'}</tbody>
+                  </table>
+                </div>
                 <div class="stats-row">
                   <span>📅 Based on last ${total} days</span>
                   <span>🎯 Hit rate: ${successRate}%</span>
