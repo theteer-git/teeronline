@@ -4,8 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Teer Common Numbers | Shillong, Khanapara, Juwai | Winning Digits & Predictions</title>
-  <meta name="description" content="Daily updated common numbers for Shillong, Khanapara, Juwai Teer. Based on official digit complement logic (0↔5,1↔6,2↔7,3↔8,4↔9). Get house numbers, ending digits, and full combinations with success probability.">
-  <meta name="keywords" content="Teer Common Numbers, Shillong Common Numbers, Khanapara Common Numbers, Juwai Common Numbers, Teer Winning Digits, Teer Prediction">
+  <meta name="description" content="Daily updated common numbers for Shillong, Khanapara, Juwai Teer. Based on official digit complement logic (0↔5,1↔6,2↔7,3↔8,4↔9). Get common digits with 7-day performance tracking.">
+  <meta name="keywords" content="Teer Common Numbers, Shillong Common Numbers, Khanapara Common Numbers, Juwai Common Numbers, Teer Winning Digits">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.teerresults.example.com/common-numbers.html">
@@ -55,8 +55,8 @@
     .numbers-section { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; }
     .section-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
     .common-numbers { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 0.5rem 0; }
-    .common-number { background: var(--surface); border: 2px solid var(--accent); border-radius: 0.75rem; padding: 0.5rem 1rem; font-weight: 700; font-size: 1.1rem; min-width: 65px; text-align: center; }
     .common-digit { background: var(--surface); border: 2px solid var(--accent); border-radius: 0.75rem; padding: 0.5rem 1rem; font-weight: 700; font-size: 1.2rem; min-width: 55px; text-align: center; }
+    .common-number { background: var(--surface); border: 2px solid var(--accent); border-radius: 0.75rem; padding: 0.5rem 0.8rem; font-weight: 700; font-size: 0.9rem; min-width: 55px; text-align: center; }
     .percentage { font-size: 0.75rem; margin-top: 0.5rem; }
     .history-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
     .history-table th, .history-table td { padding: 0.4rem; text-align: center; border-bottom: 1px solid var(--border); }
@@ -99,71 +99,36 @@
   <main class="container">
     <div class="hero">
       <h1>Teer Common Numbers | Shillong, Khanapara, Juwai</h1>
-      <p>Mathematically derived common digits using complement logic (0↔5,1↔6,2↔7,3↔8,4↔9). Get house numbers, ending digits, and full combinations with real-time success probability.</p>
+      <p>Daily common digits derived using complement logic (0↔5,1↔6,2↔7,3↔8,4↔9). Track 7-day performance for each game.</p>
     </div>
 
     <div id="gamesContainer" class="games-grid"></div>
     <div id="lastUpdated" class="last-updated"></div>
 
-    <!-- SEO Content Section -->
     <div class="seo-content">
-      <h2>Teer Common Numbers - Mathematical Approach to Digit Prediction</h2>
-      <p><strong>Shillong Teer Common Numbers</strong> and <strong>Khanapara Teer Common Numbers</strong> are derived using a unique digit complement logic. The formula is simple: take all four digits from today's First Round (FR) and Second Round (SR) results, add their complements (0↔5, 1↔6, 2↔7, 3↔8, 4↔9), and then find the missing digits from 0-9. These missing digits become the "Common Numbers" or "Common Digits" for the next day's game.</p>
-      
-      <h3>How Does the Common Number Calculation Work?</h3>
-      <p>For example, if today's Shillong Teer result is 45-92, the digits are: 4,5,9,2. Adding complements: 4→9,5→0,9→4,2→7. So we have digits: 4,5,9,2,0,7. The missing digits from 0-9 are 1,3,6,8. These four digits become the predicted common digits for tomorrow. If any of these digits appear as the house (first digit) or ending (second digit) in tomorrow's FR or SR, the prediction is considered successful.</p>
-      
-      <h3>Why Use Common Numbers for Teer?</h3>
-      <p>Many Teer enthusiasts use common numbers to narrow down their number selection. By focusing on house numbers (tens place) and ending numbers (units place) derived from these common digits, players can reduce hundreds of possible combinations to just a handful. The <strong>Juwai Teer Common Numbers</strong> and <strong>Shillong Morning Common Numbers</strong> follow the exact same mathematical principle.</p>
-      
-      <h3>How to Interpret the Common Numbers Table</h3>
-      <p>For each game (Juwai Morning, Khanapara Morning, Shillong Morning, Juwai Day, Khanapara Day, Shillong Day, Shillong Night, Shillong Night Teer 2), we display:</p>
-      <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
-        <li><strong>Common Digits:</strong> The missing digits derived from today's result</li>
-        <li><strong>House Numbers:</strong> Two-digit numbers where the first digit is one of the common digits</li>
-        <li><strong>Ending Numbers:</strong> Single-digit common digits for the units place</li>
-        <li><strong>Full Combinations:</strong> All possible two-digit numbers using common digits</li>
-        <li><strong>Success Probability:</strong> Calculated from the last 7 days of historical results</li>
-      </ul>
-      
-      <h3>Daily Updated Common Numbers</h3>
-      <p>Our common numbers are automatically updated using the latest results from our JSON database. The page displays the most recent result for each game and calculates tomorrow's common digits accordingly. The 7-day performance history helps you understand the reliability of this mathematical approach for each specific game.</p>
-      
+      <h2>Teer Common Numbers - Mathematical Approach</h2>
+      <p><strong>Shillong Teer Common Numbers</strong> and <strong>Khanapara Teer Common Numbers</strong> are derived using complement logic. Take all four digits from today's FR and SR, add complements (0↔5,1↔6,2↔7,3↔8,4↔9), then find missing digits from 0-9. These missing digits are tomorrow's common digits. If any appears as house (tens) or ending (units) in next day's FR/SR, it's a HIT.</p>
       <div class="warning-box">
-        <strong>⚠️ Important Disclaimer for Common Numbers:</strong> Common numbers are mathematical derivations based on historical data and digit complement logic. They are NOT guaranteed predictions or winning numbers. Teer is a game of chance based on archery outcomes. Past performance does not guarantee future results. This information is provided for educational and entertainment purposes only. We do not encourage gambling or betting. Always play responsibly and within legal limits.
+        <strong>⚠️ Disclaimer:</strong> Common numbers are mathematical derivations based on historical data. NOT guaranteed predictions. Teer is a game of chance. Past performance does not guarantee future results. Informational/educational purpose only.
       </div>
     </div>
 
     <div class="related-links">
-      <a href="#">Shillong Day Results</a>
-      <a href="#">Shillong Morning Results</a>
-      <a href="#">Khanapara Results</a>
-      <a href="#">Juwai Results</a>
-      <a href="#">Teer Formula</a>
-      <a href="#">Dream Numbers</a>
+      <a href="#">Shillong Day Results</a><a href="#">Shillong Morning Results</a><a href="#">Khanapara Results</a><a href="#">Juwai Results</a><a href="#">Teer Formula</a><a href="#">Dream Numbers</a>
     </div>
   </main>
 
   <footer>
     <div class="container">
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Disclaimer</a>
-        <a href="#">Contact</a>
-        <a href="#">About</a>
-      </div>
-      <div class="disclaimer">⚠️ Informational Purpose Only: Common numbers are mathematical calculations based on historical data and digit complement logic. No predictions are guaranteed. Always verify with official sources.</div>
+      <div class="footer-links"><a href="#">Privacy Policy</a><a href="#">Terms & Conditions</a><a href="#">Disclaimer</a><a href="#">Contact</a><a href="#">About</a></div>
+      <div class="disclaimer">⚠️ Informational Only: Common numbers are mathematical calculations. No predictions guaranteed.</div>
       <div class="disclaimer" style="margin-top:0.5rem;">Copyright © <span id="ThisYear"></span> Teer Results Archive</div>
     </div>
   </footer>
 
-  <div class="refresh-btn" id="refreshPage">
-    <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E" alt="Refresh">
-  </div>
+  <div class="refresh-btn" id="refreshPage"><img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E" alt="Refresh"></div>
 
   <script>
-    // Game definitions
     const GAMES = [
       { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameKey: 'juwai morning' },
       { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameKey: 'khanapara morning' },
@@ -175,249 +140,138 @@
       { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameKey: 'night teer 2' }
     ];
 
-    // Complement mapping: 0↔5, 1↔6, 2↔7, 3↔8, 4↔9
-    function getComplement(digit) {
-      if (digit <= 4) return digit + 5;
-      else return digit - 5;
-    }
+    function getComplement(d) { return d <= 4 ? d + 5 : d - 5; }
 
-    // Generate common digits from FR and SR using the correct logic
     function generateCommonDigits(fr, sr) {
-      const frNum = parseInt(fr);
-      const srNum = parseInt(sr);
+      const frNum = parseInt(fr), srNum = parseInt(sr);
       if (isNaN(frNum) || isNaN(srNum)) return [];
-      
-      // Get all 4 digits from FR and SR
-      const digits = [
-        Math.floor(frNum / 10),
-        frNum % 10,
-        Math.floor(srNum / 10),
-        srNum % 10
-      ];
-      
-      // Add complements of each digit
-      const allDigitsWithComplements = [...digits];
-      for (let d of digits) {
-        allDigitsWithComplements.push(getComplement(d));
+      const digits = [Math.floor(frNum/10), frNum%10, Math.floor(srNum/10), srNum%10];
+      const all = [...digits];
+      for(let d of digits) all.push(getComplement(d));
+      const unique = [...new Set(all)];
+      return [0,1,2,3,4,5,6,7,8,9].filter(d => !unique.includes(d));
+    }
+
+    function checkSuccess(digits, fr, sr) {
+      const frNum = parseInt(fr), srNum = parseInt(sr);
+      if(isNaN(frNum)||isNaN(srNum)) return false;
+      const resultDigits = [Math.floor(frNum/10), frNum%10, Math.floor(srNum/10), srNum%10];
+      return digits.some(d => resultDigits.includes(d));
+    }
+
+    async function fetchData() {
+      const paths = ['data/all-results.json','./data/all-results.json','../data/all-results.json','all-results.json'];
+      for(const path of paths){
+        try{
+          const res = await fetch(path);
+          if(res.ok) return await res.json();
+        }catch(e){}
       }
-      
-      // Get unique digits
-      const uniqueDigits = [...new Set(allDigitsWithComplements)];
-      
-      // Find missing digits from 0-9
-      const allPossible = [0,1,2,3,4,5,6,7,8,9];
-      const commonDigits = allPossible.filter(d => !uniqueDigits.includes(d));
-      
-      return commonDigits.sort((a,b)=>a-b);
+      throw new Error('Unable to load all-results.json');
     }
 
-    // Generate house numbers (tens place = common digits)
-    function getHouseNumbers(digits) {
-      return digits.map(d => d * 10);
+    function getGameResults(data, gameKey) {
+      return data.filter(item => (item.game||'').toLowerCase() === gameKey.toLowerCase())
+        .map(item => ({ date: item.date, fr: item.fr, sr: item.sr }))
+        .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)))
+        .sort((a,b) => new Date(b.date) - new Date(a.date));
     }
 
-    // Generate ending numbers (units place = common digits)
-    function getEndingNumbers(digits) {
-      return [...digits];
-    }
-
-    // Generate all combinations
-    function getAllCombinations(digits) {
-      const combos = new Set();
-      for (let i = 0; i < digits.length; i++) {
-        for (let j = 0; j < digits.length; j++) {
-          combos.add(digits[i] * 10 + digits[j]);
-        }
-      }
-      return Array.from(combos).sort((a,b)=>a-b);
-    }
-
-    // Check if predicted digits appear in result (house or ending)
-    function checkSuccess(commonDigits, fr, sr) {
-      const frNum = parseInt(fr);
-      const srNum = parseInt(sr);
-      if (isNaN(frNum) || isNaN(srNum)) return false;
-      
-      const frTens = Math.floor(frNum / 10);
-      const frUnits = frNum % 10;
-      const srTens = Math.floor(srNum / 10);
-      const srUnits = srNum % 10;
-      
-      const resultDigits = [frTens, frUnits, srTens, srUnits];
-      
-      // Success if any common digit appears as house OR ending in FR or SR
-      for (let cd of commonDigits) {
-        if (resultDigits.includes(cd)) return true;
-      }
-      return false;
-    }
-
-    // Get last 7 days results for a game
-    async function getGameHistory(gameKey, allData) {
-      const filtered = allData.filter(item => {
-        const itemGame = (item.game || '').toLowerCase();
-        return itemGame === gameKey.toLowerCase();
-      }).map(item => ({ date: item.date, fr: item.fr, sr: item.sr }))
-      .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)));
-      
-      filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
-      return filtered;
-    }
-
-    // Get today's result for a game
-    async function getTodayResult(gameKey, allData) {
-      const filtered = allData.filter(item => {
-        const itemGame = (item.game || '').toLowerCase();
-        return itemGame === gameKey.toLowerCase();
-      }).map(item => ({ date: item.date, fr: item.fr, sr: item.sr }))
-      .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)));
-      
-      filtered.sort((a,b) => new Date(b.date) - new Date(a.date));
-      return filtered[0] || null;
-    }
-
-    // Calculate performance percentage
-    function calculatePerformance(history, commonDigits) {
-      if (!history || history.length === 0) return { percentage: 50, wins: 0, total: 0 };
-      let wins = 0;
-      const totalDays = Math.min(history.length, 7);
-      for (let i = 0; i < totalDays; i++) {
-        const day = history[i];
-        if (checkSuccess(commonDigits, day.fr, day.sr)) wins++;
-      }
-      const percentage = totalDays > 0 ? Math.round((wins / totalDays) * 100) : 50;
-      return { percentage, wins, total: totalDays };
-    }
-
-    // Build history rows for last 7 days
-    function buildHistoryRows(history, commonDigits) {
-      let rows = '';
-      for (let i = 0; i < Math.min(history.length, 7); i++) {
-        const day = history[i];
-        const success = checkSuccess(commonDigits, day.fr, day.sr);
-        const resultClass = success ? 'win' : 'loss';
-        const resultText = success ? '✓ Hit' : '✗ Miss';
-        rows += `<tr><td>${day.date || 'N/A'}</td><td>${day.fr}</td><td>${day.sr}</td><td class="${resultClass}">${resultText}</td></tr>`;
-      }
-      return rows;
-    }
-
-    // Render game card
-    function renderGameCard(game, commonDigits, todayResult, history, performance) {
-      const houseNumbers = getHouseNumbers(commonDigits);
-      const endingNumbers = getEndingNumbers(commonDigits);
-      const allCombinations = getAllCombinations(commonDigits);
-      const historyRows = buildHistoryRows(history, commonDigits);
-      const todayStr = todayResult ? `${todayResult.fr}-${todayResult.sr}` : 'No result yet';
-      
-      return `
-        <div class="game-card">
-          <div class="game-header">
-            <h2>${game.displayName}</h2>
-            <div class="date">Latest Result: ${todayStr}</div>
-          </div>
-          <div class="game-body">
-            <div class="numbers-section">
-              <div class="section-title">🎯 Common Digits (Missing from 0-9)</div>
-              <div class="common-numbers">
-                ${commonDigits.map(d => `<span class="common-digit">${d}</span>`).join('')}
-              </div>
-              <div class="percentage">📐 Derived from complement logic: 0↔5,1↔6,2↔7,3↔8,4↔9</div>
-            </div>
-            <div class="numbers-section">
-              <div class="section-title">🏠 House Numbers (Tens Place = Common Digits)</div>
-              <div class="common-numbers">
-                ${houseNumbers.map(n => `<span class="common-number">${n.toString().padStart(2,'0')}</span>`).join('')}
-              </div>
-            </div>
-            <div class="numbers-section">
-              <div class="section-title">🔢 Ending Numbers (Units Place = Common Digits)</div>
-              <div class="common-numbers">
-                ${endingNumbers.map(n => `<span class="common-digit">${n}</span>`).join('')}
-              </div>
-            </div>
-            <div class="numbers-section">
-              <div class="section-title">📊 Full Common Number Combinations</div>
-              <div class="common-numbers">
-                ${allCombinations.slice(0, 12).map(n => `<span class="common-number">${n.toString().padStart(2,'0')}</span>`).join('')}
-                ${allCombinations.length > 12 ? `<span class="common-number">+${allCombinations.length-12} more</span>` : ''}
-              </div>
-              <div class="percentage">📈 Success Rate (last 7 days): <strong style="color:${performance.percentage>=60?'#22c55e':'#f59e0b'}">${performance.percentage}%</strong> (${performance.wins}/${performance.total})</div>
-            </div>
-            <table class="history-table">
-              <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
-              <tbody>${historyRows || '<tr><td colspan="4">No history available</td></tr>'}</tbody>
-            </table>
-            <div class="stats-row">
-              <span>📅 Based on last ${Math.min(history.length,7)} days</span>
-              <span>🎯 Hit rate: ${performance.percentage}%</span>
-            </div>
-          </div>
-        </div>
-      `;
-    }
-
-    // Main load function
-    async function loadCommonNumbers() {
+    async function render() {
+      const container = document.getElementById('gamesContainer');
+      container.innerHTML = '<div style="text-align:center;padding:2rem;">Loading common numbers...</div>';
       try {
-        const paths = ['data/all-results.json', './data/all-results.json', '../data/all-results.json', 'all-results.json'];
-        let data = null;
-        for (const path of paths) {
-          try {
-            const response = await fetch(path);
-            if (response.ok) { data = await response.json(); break; }
-          } catch(e) { continue; }
-        }
-        if (!data) throw new Error('Unable to load all-results.json');
-        
-        const gamesContainer = document.getElementById('gamesContainer');
-        gamesContainer.innerHTML = '<div style="text-align:center;padding:2rem;">Loading common numbers...</div>';
-        
-        let allCardsHtml = '';
-        for (const game of GAMES) {
-          const todayResult = await getTodayResult(game.gameKey, data);
-          const history = await getGameHistory(game.gameKey, data);
+        const data = await fetchData();
+        let html = '';
+        for(const game of GAMES){
+          const results = getGameResults(data, game.gameKey);
+          if(results.length === 0) continue;
           
-          let commonDigits = [];
-          if (todayResult && todayResult.fr && todayResult.sr) {
-            commonDigits = generateCommonDigits(todayResult.fr, todayResult.sr);
-          } else if (history.length > 0) {
-            const latest = history[0];
-            commonDigits = generateCommonDigits(latest.fr, latest.sr);
+          // Use latest result to generate common digits for next day prediction
+          const latest = results[0];
+          const commonDigits = generateCommonDigits(latest.fr, latest.sr);
+          
+          // Build 7-day history table (each row shows: date of the day being predicted, the actual result, and whether common digits from previous day hit)
+          // We need pairs: for each day i (except first), use previous day's result to predict current day
+          const historyRows = [];
+          let wins = 0, total = 0;
+          for(let i = 1; i < Math.min(results.length, 8); i++){
+            const prevResult = results[i];
+            const currentResult = results[i-1];
+            if(!prevResult || !currentResult) continue;
+            const predDigits = generateCommonDigits(prevResult.fr, prevResult.sr);
+            const hit = checkSuccess(predDigits, currentResult.fr, currentResult.sr);
+            if(hit) wins++;
+            total++;
+            const hitClass = hit ? 'win' : 'loss';
+            const hitText = hit ? '✓ HIT' : '✗ MISS';
+            historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td>${currentResult.fr}</td><td>${currentResult.sr}</td><td class="${hitClass}">${hitText}</td></tr>`);
           }
+          const successRate = total > 0 ? Math.round((wins/total)*100) : 50;
           
-          const performance = calculatePerformance(history, commonDigits);
-          allCardsHtml += renderGameCard(game, commonDigits, todayResult, history, performance);
+          // Generate all combinations from common digits
+          const combos = [];
+          for(let i=0; i<commonDigits.length; i++){
+            for(let j=0; j<commonDigits.length; j++){
+              combos.push(commonDigits[i]*10 + commonDigits[j]);
+            }
+          }
+          const uniqueCombos = [...new Set(combos)].sort((a,b)=>a-b);
+          
+          html += `
+            <div class="game-card">
+              <div class="game-header">
+                <h2>${game.displayName}</h2>
+                <div class="date">Previous Day Result: ${latest.fr}-${latest.sr} (${latest.date || 'N/A'})</div>
+              </div>
+              <div class="game-body">
+                <div class="numbers-section">
+                  <div class="section-title">🎯 Common Digits (for next draw)</div>
+                  <div class="common-numbers">
+                    ${commonDigits.map(d => `<span class="common-digit">${d}</span>`).join('')}
+                  </div>
+                  <div class="percentage">Missing digits after complement logic (0↔5,1↔6,2↔7,3↔8,4↔9)</div>
+                </div>
+                <div class="numbers-section">
+                  <div class="section-title">📊 Full Common Number Combinations</div>
+                  <div class="common-numbers">
+                    ${uniqueCombos.slice(0, 16).map(n => `<span class="common-number">${n.toString().padStart(2,'0')}</span>`).join('')}
+                    ${uniqueCombos.length > 16 ? `<span class="common-number">+${uniqueCombos.length-16} more</span>` : ''}
+                  </div>
+                  <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
+                </div>
+                <table class="history-table">
+                  <thead><tr><th>Predicted For Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
+                  <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td></tr>'}</tbody>
+                </table>
+                <div class="stats-row"><span>📅 Based on last ${total} days</span><span>🎯 Hit rate: ${successRate}%</span></div>
+              </div>
+            </div>
+          `;
         }
-        
-        gamesContainer.innerHTML = allCardsHtml;
+        container.innerHTML = html;
         document.getElementById('lastUpdated').innerHTML = `📅 Last Updated: ${new Date().toLocaleString()} | Based on official Teer results archive`;
-        
-      } catch (error) {
-        console.error(error);
-        document.getElementById('gamesContainer').innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load data. Please ensure data/all-results.json exists.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
+      } catch(e){
+        console.error(e);
+        container.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load data. Please ensure all-results.json exists.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
       }
     }
 
-    // Dark mode
     const initDarkMode = () => {
-      const toggleBtn = document.getElementById('darkModeToggle');
+      const toggle = document.getElementById('darkModeToggle');
       const isDark = localStorage.getItem('darkModeCommon') === 'true';
-      if (isDark) document.body.classList.add('dark');
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-          document.body.classList.toggle('dark');
-          localStorage.setItem('darkModeCommon', document.body.classList.contains('dark'));
-          toggleBtn.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌓 Dark';
-        });
-        toggleBtn.textContent = isDark ? '☀️ Light' : '🌓 Dark';
-      }
+      if(isDark) document.body.classList.add('dark');
+      toggle.addEventListener('click', () => {
+        document.body.classList.toggle('dark');
+        localStorage.setItem('darkModeCommon', document.body.classList.contains('dark'));
+        toggle.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌓 Dark';
+      });
+      toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
     };
-
     document.getElementById('refreshPage')?.addEventListener('click', () => location.reload());
     document.getElementById('ThisYear').innerHTML = new Date().getFullYear();
     initDarkMode();
-    loadCommonNumbers();
+    render();
   </script>
 </body>
 </html>
