@@ -171,6 +171,12 @@
   </div>
 
   <script>
+    // ============================================================
+    // COMMON NUMBERS ARE CONSTANT FOR THE DAY
+    // They are derived from the LATEST available result for each game
+    // The JSON file will have timestamps for future updates
+    // ============================================================
+    
     const GAMES = [
       { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameKey: 'juwai morning' },
       { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameKey: 'khanapara morning' },
@@ -210,6 +216,7 @@
       return digits.some(d => resultDigits.includes(d));
     }
 
+    // Generate 6 common numbers from Teer Groups (CONSTANT for the day)
     function getUniformCommonNumbers(commonDigits) {
       if(commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
       const candidateNumbers = new Set();
@@ -222,14 +229,17 @@
       }
       for(const d of commonDigits){ candidateNumbers.add(d * 10); candidateNumbers.add(d); }
       let candidates = Array.from(candidateNumbers).filter(n => n >= 0 && n <= 99);
-      for(let i = candidates.length - 1; i > 0; i--){ const j = Math.floor(Math.random() * (i + 1)); [candidates[i], candidates[j]] = [candidates[j], candidates[i]]; }
-      const selected = candidates.slice(0, 6).sort((a,b)=>a-b);
+      // Deterministic sort to ensure same numbers throughout the day (no random)
+      candidates.sort((a,b)=>a-b);
+      // Take first 6 for consistency (constant throughout the day)
+      const selected = candidates.slice(0, 6);
       if(selected.length < 6){
-        const fallbacks = [];
-        for(let i=0; i<commonDigits.length && fallbacks.length < (6-selected.length); i++){
-          for(let j=0; j<commonDigits.length && fallbacks.length < (6-selected.length); j++) fallbacks.push(commonDigits[i]*10 + commonDigits[j]);
+        for(let i=0; i<commonDigits.length && selected.length < 6; i++){
+          for(let j=0; j<commonDigits.length && selected.length < 6; j++){
+            const num = commonDigits[i]*10 + commonDigits[j];
+            if(!selected.includes(num)) selected.push(num);
+          }
         }
-        selected.push(...fallbacks.slice(0, 6-selected.length));
       }
       return selected.slice(0, 6);
     }
@@ -244,7 +254,7 @@
 
     function getGameResults(data, gameKey) {
       return data.filter(item => (item.game||'').toLowerCase() === gameKey.toLowerCase())
-        .map(item => ({ date: item.date, fr: item.fr, sr: item.sr }))
+        .map(item => ({ date: item.date, fr: item.fr, sr: item.sr, timestamp: item.timestamp || null }))
         .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)))
         .sort((a,b) => new Date(b.date) - new Date(a.date));
     }
@@ -258,15 +268,17 @@
         for(const game of GAMES){
           const results = getGameResults(data, game.gameKey);
           if(results.length === 0) continue;
+          
+          // Use the LATEST result to generate common numbers (constant for the day)
           const latest = results[0];
           const commonDigits = generateCommonDigits(latest.fr, latest.sr);
           const houseNumbers = commonDigits.map(d => d * 10);
           const endingNumbers = commonDigits;
           const fullNumbers = getUniformCommonNumbers(commonDigits);
-          // 3 rows of 2 numbers each (3:2 format)
-          const row1 = fullNumbers.slice(0, 2);
-          const row2 = fullNumbers.slice(2, 4);
-          const row3 = fullNumbers.slice(4, 6);
+          
+          // Display format: 2 rows, each row has 3 numbers (2 divs, each with 3 numbers)
+          const firstRow = fullNumbers.slice(0, 3);
+          const secondRow = fullNumbers.slice(3, 6);
           
           const historyRows = [];
           let wins = 0, total = 0;
@@ -298,9 +310,12 @@
                 <div class="numbers-section">
                   <div class="section-title">📊 COMMON NUMBERS</div>
                   <div class="common-numbers-grid">
-                    <div class="common-numbers-row">${row1.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}</div>
-                    <div class="common-numbers-row">${row2.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}</div>
-                    <div class="common-numbers-row">${row3.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}</div>
+                    <div class="common-numbers-row">
+                      ${firstRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
+                    </div>
+                    <div class="common-numbers-row">
+                      ${secondRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
+                    </div>
                   </div>
                   <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
                 </div>
@@ -319,7 +334,7 @@
           `;
         }
         container.innerHTML = html;
-        document.getElementById('lastUpdated').innerHTML = `📅 Last Updated: ${new Date().toLocaleString()} | Based on official Teer results archive`;
+        document.getElementById('lastUpdated').innerHTML = `📅 Last Updated: ${new Date().toLocaleString()} | Common numbers are constant for the day and will refresh when new results are added with timestamps.`;
       } catch(e){
         console.error(e);
         container.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load data. Please ensure all-results.json exists.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
