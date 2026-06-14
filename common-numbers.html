@@ -295,7 +295,7 @@
             total++;
             const hitClass = hit ? 'win' : 'loss';
             const hitText = hit ? '✓ HIT' : '✗ MISS';
-            historyRows.push(`<tr><td style="padding:0.4rem;">${currentResult.date || 'N/A'}</td><td style="padding:0.4rem;">${currentResult.fr}</td><td style="padding:0.4rem;">${currentResult.sr}</td><td class="${hitClass}" style="padding:0.4rem;">${hitText}</td>`);
+            historyRows.push(`<td><td style="padding:0.4rem;">${currentResult.date || 'N/A'}</td><td style="padding:0.4rem;">${currentResult.fr}</td><td style="padding:0.4rem;">${currentResult.sr}</td><td class="${hitClass}" style="padding:0.4rem;">${hitText}</td>`);
           }
           const successRate = total > 0 ? Math.round((wins/total)*100) : 50;
           
@@ -310,10 +310,7 @@
               </div>
               <div class="game-body">
                 <div class="numbers-section">
-                  <div class="section-title">🏠 HOUSE ${houseDisplay}</div>
-                </div>
-                <div class="numbers-section">
-                  <div class="section-title">🔢 ENDING ${endingDisplay}</div>
+                  <div class="section-title">🏠 HOUSE ${houseDisplay} &nbsp;&nbsp;|&nbsp;&nbsp; 🔢 ENDING ${endingDisplay}</div>
                 </div>
                 <div class="numbers-section">
                   <div class="section-title">📊 COMMON NUMBERS</div>
@@ -331,7 +328,7 @@
                   <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
                 </div>
                 <table class="history-table">
-                  <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
+                  <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></thead>
                   <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td>'}</tbody>
                 </table>
                 <div class="stats-row">
