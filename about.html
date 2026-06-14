@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>About Us | Teer Results Archive | Shillong, Khanapara, Juwai Teer</title>
+  <meta name="description" content="Learn about Teer Results Archive - your trusted source for Shillong, Khanapara & Juwai Teer results. Our mission, values, and commitment to providing accurate, informational Teer data.">
+  <meta name="keywords" content="About Teer Results, Teer Archive, Shillong Teer, Khanapara Teer, Juwai Teer, Teer Information">
+  <meta name="author" content="Teer Results Archive">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.teerresults.example.com/about.html">
+  <meta property="og:title" content="About Us | Teer Results Archive">
+  <meta property="og:description" content="Your trusted source for authentic Shillong, Khanapara & Juwai Teer results. Read our story, mission, and commitment to informational transparency.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0f172a;
+      --accent: #22c55e;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-light: #475569;
+      --border: #e2e8f0;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+    }
+
+    body.dark {
+      --primary: #f1f5f9;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --text: #f1f5f9;
+      --text-light: #cbd5e1;
+      --border: #334155;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      transition: background-color 0.3s, color 0.2s;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 0.9rem 0;
+      gap: 0.8rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .dark-toggle {
+      background: var(--accent);
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-family: Poppins;
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .hero {
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      border-radius: 1.5rem;
+      padding: 2rem 1.5rem;
+      margin: 1.5rem 0;
+      color: white;
+    }
+
+    .hero h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      margin-bottom: 0.5rem;
+    }
+
+    .hero p {
+      opacity: 0.9;
+    }
+
+    .about-card {
+      background: var(--surface);
+      border-radius: 1.25rem;
+      padding: 1.8rem;
+      margin-bottom: 1.5rem;
+      border: 1px solid var(--border);
+      box-shadow: var(--card-shadow);
+    }
+
+    .about-card h2 {
+      color: var(--accent);
+      font-size: 1.4rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--accent);
+      padding-left: 0.75rem;
+    }
+
+    .about-card h3 {
+      font-size: 1.1rem;
+      margin: 1rem 0 0.5rem;
+      color: var(--text);
+    }
+
+    .about-card p {
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    .about-card ul {
+      margin-left: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    .about-card li {
+      margin-bottom: 0.3rem;
+    }
+
+    .mission-vision {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+      margin: 1rem 0;
+    }
+
+    .mission-card {
+      background: var(--bg);
+      border-radius: 1rem;
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid var(--border);
+    }
+
+    .mission-card .icon {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .mission-card h3 {
+      margin: 0.5rem 0;
+    }
+
+    .values-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .value-badge {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 2rem;
+      padding: 0.5rem 1.2rem;
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .related-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+      justify-content: center;
+    }
+
+    .related-links a {
+      background: var(--surface);
+      padding: 0.5rem 1.2rem;
+      border-radius: 2rem;
+      text-decoration: none;
+      color: var(--accent);
+      border: 1px solid var(--accent);
+      font-size: 0.85rem;
+      transition: 0.2s;
+    }
+
+    .related-links a:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-light);
+    }
+
+    .fixed-buttons {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      z-index: 999;
+    }
+
+    .fixed-buttons .refresh-btn {
+      background: var(--accent);
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+      transition: transform 0.2s;
+    }
+
+    .fixed-buttons .refresh-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .fixed-buttons img {
+      width: 28px;
+      height: 28px;
+    }
+
+    @media (max-width: 768px) {
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      .mission-vision {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="sticky-header">
+    <div class="container header-inner">
+      <div class="logo">📖 Teer Results Archive</div>
+      <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Common Numbers</a>
+        <a href="#">Dream Numbers</a>
+        <a href="#">Teer Formula</a>
+        <a href="#">Statistics</a>
+        <a href="#">Contact</a>
+        <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero Section -->
+    <div class="hero">
+      <h1>About Teer Results Archive</h1>
+      <p>Your trusted source for authentic Shillong, Khanapara & Juwai Teer results since 2024</p>
+    </div>
+
+    <!-- Our Story -->
+    <div class="about-card">
+      <h2>📖 Our Story</h2>
+      <p>Teer Results Archive was founded with a simple mission: to provide accurate, timely, and reliable Teer results for enthusiasts across Meghalaya. What started as a small personal project has grown into a comprehensive resource for Shillong, Khanapara, Juwai, and Night Teer results.</p>
+      <p>We understand the importance of having access to authentic Teer data. Our platform is built on the principles of transparency, accuracy, and informational integrity. We do not promote gambling or betting; instead, we serve as a historical archive and reference point for those interested in this traditional Meghalaya archery game.</p>
+    </div>
+
+    <!-- Mission & Vision -->
+    <div class="about-card">
+      <h2>🎯 Our Mission & Vision</h2>
+      <div class="mission-vision">
+        <div class="mission-card">
+          <div class="icon">🎯</div>
+          <h3>Our Mission</h3>
+          <p>To provide the most accurate, up-to-date, and easily accessible Teer results archive for Shillong, Khanapara, Juwai, and Night Teer, while maintaining strict informational and non-gambling standards.</p>
+        </div>
+        <div class="mission-card">
+          <div class="icon">👁️</div>
+          <h3>Our Vision</h3>
+          <p>To become the most trusted and comprehensive Teer results reference platform, serving as a reliable historical archive for researchers, enthusiasts, and the Teer community.</p>
+        </div>
+        <div class="mission-card">
+          <div class="icon">💡</div>
+          <h3>Our Promise</h3>
+          <p>We will never promote gambling, provide predictions, or guarantee results. Our data is purely informational, based on publicly available official declarations.</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Core Values -->
+    <div class="about-card">
+      <h2>⭐ Our Core Values</h2>
+      <div class="values-list">
+        <span class="value-badge">🔍 Transparency</span>
+        <span class="value-badge">📊 Accuracy</span>
+        <span class="value-badge">🚫 No Gambling</span>
+        <span class="value-badge">📜 Informational Only</span>
+        <span class="value-badge">🕒 Timely Updates</span>
+        <span class="value-badge">🔒 Privacy First</span>
+        <span class="value-badge">🤝 User Trust</span>
+        <span class="value-badge">🌄 Meghalaya Focus</span>
+      </div>
+    </div>
+
+    <!-- What We Offer -->
+    <div class="about-card">
+      <h2>📊 What We Offer</h2>
+      <ul>
+        <li><strong>Complete Result Archives:</strong> Full historical data for Shillong Day, Shillong Morning, Shillong Night, Shillong Night Teer 2, Khanapara Day, Khanapara Morning, Juwai Day, and Juwai Morning</li>
+        <li><strong>Advanced Search:</strong> Search results by number, date, and day of week with our powerful filtering system</li>
+        <li><strong>Teer Formula Guide:</strong> Educational resources about Groups, Points, and traditional calculation methods</li>
+        <li><strong>Dream Numbers Reference:</strong> Traditional dream interpretation guide for entertainment purposes</li>
+        <li><strong>Dark Mode Support:</strong> Comfortable viewing experience day or night</li>
+        <li><strong>Mobile-First Design:</strong> Access results seamlessly from any device</li>
+      </ul>
+    </div>
+
+    <!-- Our Commitment -->
+    <div class="about-card">
+      <h2>🤝 Our Commitment to You</h2>
+      <p><strong>Informational Integrity:</strong> We are committed to providing only informational content. We do not and will never offer predictions, guaranteed numbers, or any form of gambling advice.</p>
+      <p><strong>Accuracy:</strong> While we strive for 100% accuracy, we encourage all users to verify Teer results with official Teer associations or authorized counters.</p>
+      <p><strong>User Privacy:</strong> We respect your privacy and do not collect personal information without your consent. Our site uses minimal cookies only for functionality (like dark mode preference).</p>
+      <p><strong>Meghalaya Focus:</strong> Our platform is designed exclusively for residents of Meghalaya where Teer is legally recognized. We respect all applicable laws and regulations.</p>
+    </div>
+
+    <!-- For Enthusiasts & Researchers -->
+    <div class="about-card">
+      <h2>🔬 For Enthusiasts & Researchers</h2>
+      <p>Our archive serves as a valuable resource for those studying Teer patterns, historical trends, and statistical data. Whether you are a researcher analyzing the randomness of archery-based outcomes or an enthusiast maintaining personal records, our comprehensive database provides the data you need.</p>
+      <p>All data is sortable, searchable, and exportable through our DataTables interface. We maintain records dating back several years, allowing for meaningful historical analysis.</p>
+    </div>
+
+    <!-- Our Team -->
+    <div class="about-card">
+      <h2>👥 Our Team</h2>
+      <p>Teer Results Archive is maintained by a small team of dedicated developers and data enthusiasts who share a passion for accurate information and clean, user-friendly design. We work tirelessly to ensure that our platform remains reliable, fast, and accessible to all users.</p>
+      <p>While we remain anonymous to focus attention on the data rather than the individuals, we take our responsibility seriously and are always open to feedback, suggestions, and improvements.</p>
+    </div>
+
+    <!-- Contact & Feedback -->
+    <div class="about-card">
+      <h2>📬 Contact & Feedback</h2>
+      <p>We value your feedback! If you have suggestions for improvement, notice any discrepancies in our data, or simply want to share your experience, please reach out to us through our contact page.</p>
+      <p>Your input helps us make Teer Results Archive better for everyone in the community.</p>
+    </div>
+
+    <!-- Disclaimer Reminder -->
+    <div class="about-card" style="border-left: 4px solid #ef4444;">
+      <h2>⚠️ Important Reminder</h2>
+      <p><strong>Teer Results Archive is an informational website only.</strong> We do not promote, encourage, or facilitate any form of gambling or betting. Teer is a traditional archery-based game legal only in Meghalaya, India. If you reside outside Meghalaya, please refrain from using this site. All users must be 18 years of age or older.</p>
+      <p style="margin-top: 0.5rem;">No information on this site should be construed as financial advice or a guarantee of future outcomes. Always play responsibly and never wager more than you can afford to lose.</p>
+    </div>
+
+    <!-- Related Links -->
+    <div class="related-links">
+      <a href="#">Privacy Policy</a>
+      <a href="#">Terms & Conditions</a>
+      <a href="#">Disclaimer</a>
+      <a href="#">Contact</a>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Disclaimer</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+      </div>
+      <div class="disclaimer">
+        ⚠️ Informational Purpose Only: This website does not promote gambling, betting, or predictions. Teer results are based on archery events and are provided as historical reference only. Always verify with official sources.
+      </div>
+      <div class="disclaimer" style="margin-top: 0.5rem;">
+        <strong>Warning:</strong> Our site is only for Meghalaya users who are over 18 years of age. We do not provide any guaranteed numbers. Please consider visiting our site for informational purposes only!
+      </div>
+      <div class="disclaimer" style="margin-top: 0.5rem;">
+        Copyright © <span id="ThisYear"></span> Teer Results Archive
+      </div>
+    </div>
+  </footer>
+
+  <!-- Fixed Buttons -->
+  <div class="fixed-buttons">
+    <div class="refresh-btn" id="refreshPage">
+      <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'%3E%3Cpath d='M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z'/%3E%3C/svg%3E" alt="Refresh">
+    </div>
+  </div>
+
+  <script>
+    // Dark Mode Toggle
+    const initDarkMode = () => {
+      const toggleBtn = document.getElementById('darkModeToggle');
+      const isDark = localStorage.getItem('darkModeAbout') === 'true';
+      if (isDark) document.body.classList.add('dark');
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
+          document.body.classList.toggle('dark');
+          const darkEnabled = document.body.classList.contains('dark');
+          localStorage.setItem('darkModeAbout', darkEnabled);
+          toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+        });
+        if (isDark) toggleBtn.textContent = '☀️ Light';
+        else toggleBtn.textContent = '🌓 Dark';
+      }
+    };
+
+    // Refresh button
+    const refreshBtn = document.getElementById('refreshPage');
+    if (refreshBtn) {
+      refreshBtn.addEventListener('click', () => {
+        window.location.reload();
+      });
+    }
+
+    // Set copyright year
+    document.getElementById('ThisYear').innerHTML = new Date().getFullYear();
+
+    initDarkMode();
+  </script>
+</body>
+</html>
