@@ -59,9 +59,9 @@
     .game-header .date { font-size: 0.7rem; opacity: 0.8; }
     .game-body { padding: 1.2rem; }
     .numbers-section { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; text-align: center; }
-    .section-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
-    .common-numbers { display: flex; flex-wrap: wrap; gap: 0.8rem; margin: 0.8rem 0; justify-content: center; }
-    .common-number-box { background: var(--surface); border-radius: 0.75rem; padding: 0.6rem 1rem; font-weight: 700; font-size: 1.1rem; min-width: 70px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .section-title { font-weight: 600; margin-bottom: 0.8rem; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem; }
+    .common-numbers-row { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.8rem 0; justify-content: center; }
+    .common-number-box { background: var(--surface); border-radius: 0.75rem; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 1.1rem; min-width: 75px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .house-box { border: 2px solid var(--house-color); color: var(--house-color); }
     .ending-box { border: 2px solid var(--ending-color); color: var(--ending-color); }
     .full-box { border: 2px solid var(--accent); color: var(--accent); }
@@ -87,7 +87,7 @@
     .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; }
     .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; }
     .refresh-btn img { width: 28px; height: 28px; }
-    @media (max-width: 768px) { .games-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } }
+    @media (max-width: 768px) { .games-grid { grid-template-columns: 1fr; } .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-numbers-row { gap: 0.6rem; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } }
   </style>
 </head>
 <body>
@@ -115,7 +115,6 @@
     <div id="gamesContainer" class="games-grid"></div>
     <div id="lastUpdated" class="last-updated"></div>
 
-    <!-- SEO Content Section -->
     <div class="seo-content">
       <h2>What are Teer Common Numbers?</h2>
       <p><strong>Shillong Teer Common Numbers</strong> are widely used by Teer enthusiasts to narrow down their number selection. Whether you are looking for <strong>Khanapara Teer Common Numbers</strong>, <strong>Juwai Teer Common Numbers</strong>, or <strong>Shillong Morning Teer Common Numbers</strong>, our daily updated list provides you with reliable data.</p>
@@ -123,19 +122,11 @@
       <h3>How to Use Teer Common Numbers</h3>
       <p>Common numbers are presented in three formats:</p>
       <ul>
-        <li><strong>House Numbers:</strong> Numbers where the first digit (tens place) is from the common digits. Example: 10, 30, 60, 80.</li>
-        <li><strong>Ending Numbers:</strong> Numbers where the second digit (units place) is from the common digits. Example: 01, 03, 06, 08.</li>
+        <li><strong>House Numbers:</strong> Numbers where the first digit (tens place) is from the common digits.</li>
+        <li><strong>Ending Numbers:</strong> Numbers where the second digit (units place) is from the common digits.</li>
         <li><strong>Common Numbers:</strong> Full two-digit numbers that are most likely to appear.</li>
       </ul>
       <p>Many players use these common numbers to plan their bets for the day. The success rate shown for each game is calculated based on the last 7 days of historical performance.</p>
-      
-      <h3>Games Covered</h3>
-      <p>We provide common numbers for all major Teer games:</p>
-      <ul>
-        <li><strong>Morning Sessions:</strong> Juwai Morning, Khanapara Morning, Shillong Morning</li>
-        <li><strong>Day Sessions:</strong> Juwai Day, Khanapara Day, Shillong Day</li>
-        <li><strong>Night Sessions:</strong> Shillong Night, Shillong Night Teer 2</li>
-      </ul>
       
       <div class="warning-box">
         <strong>⚠️ Important Disclaimer:</strong> Common numbers are mathematical derivations based on historical data. They are NOT guaranteed predictions or winning numbers. Teer is a game of chance based on archery outcomes. Past performance does not guarantee future results. This information is provided for educational and entertainment purposes only. We do not encourage gambling or betting. Always play responsibly and within legal limits.
@@ -182,7 +173,6 @@
       { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameKey: 'night teer 2' }
     ];
 
-    // Predefined 16 Teer Groups (House + Ending combinations)
     const TEER_GROUPS = [
       [10, 15, 50, 55], [1, 6, 10, 15, 51, 56, 60, 65], [2, 7, 20, 25, 52, 57, 70, 75],
       [3, 8, 30, 35, 53, 58, 80, 85], [4, 9, 40, 45, 54, 59, 90, 95], [1, 6, 10, 15, 51, 56, 60, 65],
@@ -211,11 +201,10 @@
       return digits.some(d => resultDigits.includes(d));
     }
 
-    // Generate 6 common numbers uniformly from Teer Groups
+    // Generate 6 common numbers uniformly (2 rows of 3 numbers each - clean 3+3 layout)
     function getUniformCommonNumbers(commonDigits) {
       if(commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
       
-      // Collect all numbers from all 16 groups that contain at least one common digit
       const candidateNumbers = new Set();
       for(const group of TEER_GROUPS){
         for(const num of group){
@@ -227,15 +216,13 @@
         }
       }
       
-      // Also add house and ending combinations
       for(const d of commonDigits){
-        candidateNumbers.add(d * 10); // house numbers
-        candidateNumbers.add(d); // single digit ending numbers
+        candidateNumbers.add(d * 10);
+        candidateNumbers.add(d);
       }
       
       let candidates = Array.from(candidateNumbers).filter(n => n >= 0 && n <= 99);
       
-      // Shuffle and pick 6
       for(let i = candidates.length - 1; i > 0; i--){
         const j = Math.floor(Math.random() * (i + 1));
         [candidates[i], candidates[j]] = [candidates[j], candidates[i]];
@@ -243,7 +230,6 @@
       
       const selected = candidates.slice(0, 6).sort((a,b)=>a-b);
       
-      // If less than 6, fill with some random numbers from common digits
       if(selected.length < 6){
         const fallbacks = [];
         for(let i=0; i<commonDigits.length && fallbacks.length < (6-selected.length); i++){
@@ -288,14 +274,14 @@
           const latest = results[0];
           const commonDigits = generateCommonDigits(latest.fr, latest.sr);
           
-          // Get house numbers (tens place)
           const houseNumbers = commonDigits.map(d => d * 10);
-          // Get ending numbers (units place)
           const endingNumbers = commonDigits;
-          // Get 6 uniform common numbers from Teer Groups
           const fullNumbers = getUniformCommonNumbers(commonDigits);
           
-          // Build 7-day history
+          // Split 6 numbers into 2 rows of 3 for clean display
+          const firstRow = fullNumbers.slice(0, 3);
+          const secondRow = fullNumbers.slice(3, 6);
+          
           const historyRows = [];
           let wins = 0, total = 0;
           for(let i = 1; i < Math.min(results.length, 8); i++){
@@ -308,13 +294,11 @@
             total++;
             const hitClass = hit ? 'win' : 'loss';
             const hitText = hit ? '✓ HIT' : '✗ MISS';
-            historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td>${currentResult.fr}</td><td>${currentResult.sr}</td><td class="${hitClass}">${hitText}${hitText}</td>`);
+            historyRows.push(`<tr><td style="padding:0.4rem;">${currentResult.date || 'N/A'}</td><td style="padding:0.4rem;">${currentResult.fr}</td><td style="padding:0.4rem;">${currentResult.sr}</td><td class="${hitClass}" style="padding:0.4rem;">${hitText}</td>`);
           }
           const successRate = total > 0 ? Math.round((wins/total)*100) : 50;
           
-          // Display house numbers as "HOUSE 1, 6" format
           const houseDisplay = houseNumbers.map(n => n/10).join(', ');
-          // Display ending numbers as "ENDING 1, 6" format  
           const endingDisplay = endingNumbers.join(', ');
           
           html += `
@@ -332,14 +316,17 @@
                 </div>
                 <div class="numbers-section">
                   <div class="section-title">📊 COMMON NUMBERS</div>
-                  <div class="common-numbers">
-                    ${fullNumbers.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
+                  <div class="common-numbers-row">
+                    ${firstRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
+                  </div>
+                  <div class="common-numbers-row">
+                    ${secondRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
                   </div>
                   <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
                 </div>
                 <table class="history-table">
                   <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
-                  <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td><tr>'}</tbody>
+                  <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td></tr>'}</tbody>
                 </table>
                 <div class="stats-row">
                   <span>📅 Based on last ${total} days</span>
