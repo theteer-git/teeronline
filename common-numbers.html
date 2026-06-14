@@ -29,6 +29,8 @@
       --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
       --success: #22c55e;
       --danger: #ef4444;
+      --house-color: #f59e0b;
+      --ending-color: #3b82f6;
     }
     body.dark {
       --primary: #f1f5f9;
@@ -56,13 +58,13 @@
     .game-header h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
     .game-header .date { font-size: 0.7rem; opacity: 0.8; }
     .game-body { padding: 1.2rem; }
-    .numbers-section { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; }
-    .section-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--accent); display: flex; align-items: center; gap: 0.5rem; }
-    .common-numbers { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.8rem 0; justify-content: center; }
-    .common-number-box { background: var(--surface); border: 2px solid var(--accent); border-radius: 0.75rem; padding: 0.6rem 1rem; font-weight: 700; font-size: 1.1rem; min-width: 70px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-    .house-number { border-color: #f59e0b; color: #f59e0b; }
-    .ending-number { border-color: #3b82f6; color: #3b82f6; }
-    .full-number { border-color: var(--accent); color: var(--accent); }
+    .numbers-section { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; text-align: center; }
+    .section-title { font-weight: 600; margin-bottom: 0.5rem; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+    .common-numbers { display: flex; flex-wrap: wrap; gap: 0.8rem; margin: 0.8rem 0; justify-content: center; }
+    .common-number-box { background: var(--surface); border-radius: 0.75rem; padding: 0.6rem 1rem; font-weight: 700; font-size: 1.1rem; min-width: 70px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .house-box { border: 2px solid var(--house-color); color: var(--house-color); }
+    .ending-box { border: 2px solid var(--ending-color); color: var(--ending-color); }
+    .full-box { border: 2px solid var(--accent); color: var(--accent); }
     .percentage { font-size: 0.75rem; margin-top: 0.5rem; text-align: center; }
     .history-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
     .history-table th, .history-table td { padding: 0.5rem 0.3rem; text-align: center; border-bottom: 1px solid var(--border); }
@@ -116,19 +118,16 @@
     <!-- SEO Content Section -->
     <div class="seo-content">
       <h2>What are Teer Common Numbers?</h2>
-      <p><strong>Shillong Teer Common Numbers</strong> are widely used by Teer enthusiasts to narrow down their number selection. These numbers are derived from previous day's results using a mathematical approach that has been followed by the Teer community for decades. Whether you are looking for <strong>Khanapara Teer Common Numbers</strong>, <strong>Juwai Teer Common Numbers</strong>, or <strong>Shillong Morning Teer Common Numbers</strong>, our daily updated list provides you with reliable data.</p>
+      <p><strong>Shillong Teer Common Numbers</strong> are widely used by Teer enthusiasts to narrow down their number selection. Whether you are looking for <strong>Khanapara Teer Common Numbers</strong>, <strong>Juwai Teer Common Numbers</strong>, or <strong>Shillong Morning Teer Common Numbers</strong>, our daily updated list provides you with reliable data.</p>
       
       <h3>How to Use Teer Common Numbers</h3>
-      <p>Common numbers are typically presented in three formats:</p>
+      <p>Common numbers are presented in three formats:</p>
       <ul>
-        <li><strong>House Numbers:</strong> Numbers where the first digit (tens place) is from the common digits. Example: If common digits are 1,3,6,8, then house numbers are 10, 30, 60, 80.</li>
-        <li><strong>Ending Numbers:</strong> Numbers where the second digit (units place) is from the common digits. Example: 01, 03, 06, 08, 11, 13, etc.</li>
-        <li><strong>Full Combinations:</strong> All possible two-digit numbers formed using the common digits.</li>
+        <li><strong>House Numbers:</strong> Numbers where the first digit (tens place) is from the common digits. Example: 10, 30, 60, 80.</li>
+        <li><strong>Ending Numbers:</strong> Numbers where the second digit (units place) is from the common digits. Example: 01, 03, 06, 08.</li>
+        <li><strong>Common Numbers:</strong> Full two-digit numbers that are most likely to appear.</li>
       </ul>
       <p>Many players use these common numbers to plan their bets for the day. The success rate shown for each game is calculated based on the last 7 days of historical performance.</p>
-      
-      <h3>Why Trust Our Common Numbers?</h3>
-      <p>Our common numbers are generated automatically from the official Teer results database. We maintain a complete archive of Shillong Teer, Khanapara Teer, and Juwai Teer results dating back several years. The common digits are derived using the traditional complement logic that has been used by the Teer community for generations.</p>
       
       <h3>Games Covered</h3>
       <p>We provide common numbers for all major Teer games:</p>
@@ -202,17 +201,30 @@
       return digits.some(d => resultDigits.includes(d));
     }
 
-    // Generate 6 random numbers from house/ending combinations
-    function getRandomSixNumbers(commonDigits) {
-      const houses = commonDigits.map(d => d * 10);
-      const endings = commonDigits;
-      const combined = [...houses, ...endings];
-      const shuffled = [...combined];
-      for(let i = shuffled.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    // Generate house numbers (tens digit from common digits)
+    function getHouseNumbers(digits) {
+      return digits.map(d => d * 10);
+    }
+
+    // Generate ending numbers (units digit from common digits)
+    function getEndingNumbers(digits) {
+      return digits.map(d => d);
+    }
+
+    // Generate 6 random full common numbers from combinations
+    function getRandomFullNumbers(commonDigits) {
+      const combos = [];
+      for(let i=0; i<commonDigits.length; i++){
+        for(let j=0; j<commonDigits.length; j++){
+          combos.push(commonDigits[i]*10 + commonDigits[j]);
+        }
       }
-      return shuffled.slice(0, 6).sort((a,b)=>a-b);
+      const unique = [...new Set(combos)];
+      for(let i = unique.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [unique[i], unique[j]] = [unique[j], unique[i]];
+      }
+      return unique.slice(0, 6).sort((a,b)=>a-b);
     }
 
     async function fetchData() {
@@ -245,7 +257,13 @@
           
           const latest = results[0];
           const commonDigits = generateCommonDigits(latest.fr, latest.sr);
-          const randomSix = getRandomSixNumbers(commonDigits);
+          
+          // Get house numbers (tens place)
+          const houseNumbers = getHouseNumbers(commonDigits);
+          // Get ending numbers (units place)
+          const endingNumbers = getEndingNumbers(commonDigits);
+          // Get 6 random full common numbers
+          const fullNumbers = getRandomFullNumbers(commonDigits);
           
           // Build 7-day history
           const historyRows = [];
@@ -260,13 +278,14 @@
             total++;
             const hitClass = hit ? 'win' : 'loss';
             const hitText = hit ? '✓ HIT' : '✗ MISS';
-            historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td>${currentResult.fr}</td><td>${currentResult.sr}</td><td class="${hitClass}">${hitText}</td></tr>`);
+            historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td>${currentResult.fr}</td><td>${currentResult.sr}</td><td class="${hitClass}">${hitText}</td>`);
           }
           const successRate = total > 0 ? Math.round((wins/total)*100) : 50;
           
-          // Generate house numbers and ending numbers display
-          const houseNumbers = commonDigits.map(d => (d*10).toString().padStart(2,'0'));
-          const endingNumbers = commonDigits.map(d => d.toString());
+          // Display house numbers as "HOUSE 1, 6" format
+          const houseDisplay = houseNumbers.map(n => n/10).join(', ');
+          // Display ending numbers as "ENDING 1, 6" format  
+          const endingDisplay = endingNumbers.join(', ');
           
           html += `
             <div class="game-card">
@@ -276,27 +295,15 @@
               </div>
               <div class="game-body">
                 <div class="numbers-section">
-                  <div class="section-title">🏠 House Numbers (6 Numbers)</div>
-                  <div class="common-numbers">
-                    ${randomSix.slice(0,3).map(n => `<span class="common-number-box house-number">${n.toString().padStart(2,'0')}</span>`).join('')}
-                  </div>
-                  <div class="common-numbers">
-                    ${randomSix.slice(3,6).map(n => `<span class="common-number-box house-number">${n.toString().padStart(2,'0')}</span>`).join('')}
-                  </div>
+                  <div class="section-title">🏠 HOUSE ${houseDisplay}</div>
                 </div>
                 <div class="numbers-section">
-                  <div class="section-title">🔢 Ending Numbers (6 Numbers)</div>
-                  <div class="common-numbers">
-                    ${randomSix.slice(0,3).map(n => `<span class="common-number-box ending-number">${(n%10).toString()}</span>`).join('')}
-                  </div>
-                  <div class="common-numbers">
-                    ${randomSix.slice(3,6).map(n => `<span class="common-number-box ending-number">${(n%10).toString()}</span>`).join('')}
-                  </div>
+                  <div class="section-title">🔢 ENDING ${endingDisplay}</div>
                 </div>
                 <div class="numbers-section">
-                  <div class="section-title">📊 Full Common Numbers (6 Numbers)</div>
+                  <div class="section-title">📊 COMMON NUMBERS</div>
                   <div class="common-numbers">
-                    ${randomSix.map(n => `<span class="common-number-box full-number">${n.toString().padStart(2,'0')}</span>`).join('')}
+                    ${fullNumbers.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
                   </div>
                   <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
                 </div>
