@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Teer Statistics | Shillong, Khanapara, Juwai | Predictions & Analysis</title>
-  <meta name="description" content="Advanced Teer statistics with date-wise, day-wise predictions and possibilities. Get number predictions based on historical patterns for Shillong, Khanapara, Juwai Teer.">
-  <meta name="keywords" content="Teer Statistics, Teer Prediction, Shillong Teer Prediction, Khanapara Teer Prediction, Juwai Teer Prediction, Day-wise Teer Numbers">
+  <title>Teer Statistics | Shillong, Khanapara, Juwai | Day-wise & Date-wise Analysis</title>
+  <meta name="description" content="Advanced Teer statistics with day-wise and date-wise analysis. Get statistical number possibilities for Shillong, Khanapara, Juwai Teer based on historical patterns.">
+  <meta name="keywords" content="Teer Statistics, Shillong Teer Statistics, Khanapara Teer Statistics, Juwai Teer Statistics, Day-wise Teer Numbers">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.teerresults.example.com/statistics.html">
-  <meta property="og:title" content="Teer Statistics | Predictions & Analysis | Shillong, Khanapara, Juwai">
-  <meta property="og:description" content="Advanced statistical analysis with date-wise and day-wise predictions. Get number possibilities based on historical patterns.">
+  <meta property="og:title" content="Teer Statistics | Day-wise & Date-wise Analysis | Shillong, Khanapara, Juwai">
+  <meta property="og:description" content="Statistical analysis with day-wise and date-wise number possibilities based on historical patterns.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,9 +27,7 @@
       --text-light: #475569;
       --border: #e2e8f0;
       --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
-      --success: #22c55e;
       --warning: #f59e0b;
-      --danger: #ef4444;
       --info: #3b82f6;
     }
     body.dark {
@@ -58,16 +56,13 @@
     .card-header h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
     .card-header .sub { font-size: 0.7rem; opacity: 0.8; }
     .card-body { padding: 1.2rem; }
-    .prediction-box { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid var(--accent); }
-    .prediction-title { font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
+    .stat-box { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; border-left: 4px solid var(--accent); }
+    .stat-title { font-weight: 700; margin-bottom: 0.5rem; color: var(--accent); }
     .numbers-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; margin: 0.5rem 0; justify-content: center; }
-    .prediction-number { background: var(--surface); border: 2px solid var(--accent); border-radius: 0.75rem; padding: 0.5rem 0.8rem; font-weight: 700; font-size: 0.9rem; min-width: 65px; text-align: center; }
-    .day-selector { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
-    .day-btn { background: var(--surface); border: 1px solid var(--border); padding: 0.4rem 0.8rem; border-radius: 2rem; cursor: pointer; font-size: 0.75rem; transition: 0.2s; }
-    .day-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
-    .stat-table { width: 100%; font-size: 0.7rem; border-collapse: collapse; }
-    .stat-table th, .stat-table td { padding: 0.4rem; text-align: center; border-bottom: 1px solid var(--border); }
-    .insight-box { background: var(--bg); border-radius: 1rem; padding: 0.8rem; margin-top: 0.8rem; }
+    .stat-number { background: var(--surface); border: 2px solid var(--accent); border-radius: 0.75rem; padding: 0.5rem 0.8rem; font-weight: 700; font-size: 0.9rem; min-width: 65px; text-align: center; }
+    .stat-number-warning { border-color: var(--warning); }
+    .stat-number-info { border-color: var(--info); }
+    .note-box { background: var(--bg); border-radius: 0.75rem; padding: 0.6rem; margin-top: 0.8rem; font-size: 0.7rem; color: var(--text-light); text-align: center; }
     .last-updated { text-align: center; font-size: 0.7rem; color: var(--text-light); margin: 1rem 0; }
     .seo-content { background: var(--surface); border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border); }
     .seo-content h2 { color: var(--accent); font-size: 1.6rem; margin-bottom: 1rem; }
@@ -90,7 +85,7 @@
 <body>
   <header class="sticky-header">
     <div class="container header-inner">
-      <div class="logo">📊 Teer Statistics & Predictions</div>
+      <div class="logo">📊 Teer Statistics</div>
       <div class="nav-links">
         <a href="#">Home</a>
         <a href="#">Common Numbers</a>
@@ -105,24 +100,25 @@
 
   <main class="container">
     <div class="hero">
-      <h1>Teer Statistics | Predictions & Possibilities</h1>
-      <p>Date-wise and day-wise number predictions based on historical patterns. Get today's most probable numbers for Shillong, Khanapara, and Juwai Teer.</p>
+      <h1>Teer Statistics | Day-wise & Date-wise Analysis</h1>
+      <p>Statistical number possibilities based on historical patterns for Shillong, Khanapara, and Juwai Teer.</p>
     </div>
 
     <div id="statsContainer" class="stats-grid"></div>
     <div id="lastUpdated" class="last-updated"></div>
 
     <div class="seo-content">
-      <h2>Teer Statistics & Prediction Methodology</h2>
-      <p>Our advanced statistical analysis uses historical Teer results to identify patterns and generate number possibilities. By analyzing date-wise and day-wise (Monday to Sunday) trends, we provide predictions for each game based on:</p>
+      <h2>Teer Statistical Analysis Methodology</h2>
+      <p>Our statistical analysis uses historical Teer results to identify patterns and generate number possibilities. The analysis considers:</p>
       <ul style="margin-left: 1.5rem; margin-bottom: 1rem;">
         <li><strong>Same Date Historical Data:</strong> Numbers that appeared on the same date in previous years</li>
-        <li><strong>Day-wise Patterns:</strong> Numbers that frequently appear on specific weekdays</li>
+        <li><strong>Day-wise Patterns:</strong> Numbers that frequently appear on specific weekdays (Monday to Sunday)</li>
         <li><strong>Recent Trends:</strong> Last 7-day performance and repeating patterns</li>
         <li><strong>Digit Frequency:</strong> Most common house and ending digits</li>
       </ul>
+      <p><strong>Note:</strong> On Sundays, only Morning and Night Teer statistics are displayed as Day games do not operate. Statistics for Day games will be shown from Monday onward once results are updated.</p>
       <div class="warning-box">
-        <strong>⚠️ Important Disclaimer:</strong> Predictions are based on historical data and statistical patterns. They are NOT guaranteed winning numbers. Teer is a game of chance based on archery outcomes. Past performance does not guarantee future results. Use this information for educational and entertainment purposes only.
+        <strong>⚠️ Important Disclaimer:</strong> Statistics are based on historical data and patterns. They are NOT guaranteed winning numbers. Teer is a game of chance based on archery outcomes. Past performance does not guarantee future results. Use this information for educational purposes only.
       </div>
     </div>
 
@@ -145,7 +141,7 @@
         <a href="#">Contact</a>
         <a href="#">About</a>
       </div>
-      <div class="disclaimer">⚠️ Informational Purpose Only: Predictions are statistical derivations from historical data. No guarantees of winning.</div>
+      <div class="disclaimer">⚠️ Informational Purpose Only: Statistics are derived from historical data. No guarantees of winning.</div>
       <div class="disclaimer" style="margin-top:0.5rem;">Copyright © <span id="ThisYear"></span> Teer Results Archive</div>
     </div>
   </footer>
@@ -156,20 +152,20 @@
 
   <script>
     const GAMES = [
-      { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameKey: 'juwai morning' },
-      { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameKey: 'khanapara morning' },
-      { id: 'shillong-morning', displayName: '🌅 Shillong Morning', gameKey: 'shillong morning' },
-      { id: 'juwai-day', displayName: '🏹 Juwai Day', gameKey: 'juwai day' },
-      { id: 'khanapara-day', displayName: '🎯 Khanapara Day', gameKey: 'khanapara day' },
-      { id: 'shillong-day', displayName: '🏹 Shillong Day', gameKey: 'shillong day' },
-      { id: 'shillong-night', displayName: '🌙 Shillong Night', gameKey: 'shillong night' },
-      { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameKey: 'night teer 2' }
+      { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameKey: 'juwai morning', type: 'morning' },
+      { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameKey: 'khanapara morning', type: 'morning' },
+      { id: 'shillong-morning', displayName: '🌅 Shillong Morning', gameKey: 'shillong morning', type: 'morning' },
+      { id: 'juwai-day', displayName: '🏹 Juwai Day', gameKey: 'juwai day', type: 'day' },
+      { id: 'khanapara-day', displayName: '🎯 Khanapara Day', gameKey: 'khanapara day', type: 'day' },
+      { id: 'shillong-day', displayName: '🏹 Shillong Day', gameKey: 'shillong day', type: 'day' },
+      { id: 'shillong-night', displayName: '🌙 Shillong Night', gameKey: 'shillong night', type: 'night' },
+      { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameKey: 'night teer 2', type: 'night' }
     ];
 
     const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     function parseDate(dateStr) {
-      if(!dateStr) return null;
+      if(!dateStr || dateStr === 'NaN' || dateStr === 'undefined') return null;
       let parts = dateStr.split(/[-/]/);
       if(parts.length === 3){
         if(parts[0].length === 4) return new Date(parts[0], parts[1]-1, parts[2]);
@@ -180,31 +176,34 @@
 
     function getDayOfWeek(dateStr) {
       const date = parseDate(dateStr);
-      if(!date) return '';
+      if(!date || isNaN(date.getTime())) return '';
       return DAYS[date.getDay()];
+    }
+
+    function isValidNumber(num) {
+      const n = parseInt(num);
+      return !isNaN(n) && n >= 0 && n <= 99 && num !== 'xx' && num !== 'OFF' && num !== '—' && num !== '-';
     }
 
     function getResultsForGame(data, gameKey) {
       return data.filter(item => (item.game||'').toLowerCase() === gameKey.toLowerCase())
         .map(item => ({ date: item.date, fr: item.fr, sr: item.sr, day: getDayOfWeek(item.date) }))
-        .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)))
+        .filter(item => item.date && item.fr && item.sr && isValidNumber(item.fr) && isValidNumber(item.sr))
         .sort((a,b) => new Date(b.date) - new Date(a.date));
     }
 
-    // Get historical numbers for same date (month-day)
     function getSameDateHistory(results, targetDate) {
       if(!targetDate) return [];
       const target = parseDate(targetDate);
-      if(!target) return [];
+      if(!target || isNaN(target.getTime())) return [];
       const monthDay = `${target.getMonth()+1}-${target.getDate()}`;
       return results.filter(r => {
         const rDate = parseDate(r.date);
-        if(!rDate) return false;
+        if(!rDate || isNaN(rDate.getTime())) return false;
         return `${rDate.getMonth()+1}-${rDate.getDate()}` === monthDay;
       });
     }
 
-    // Get day-wise statistics
     function getDayWiseNumbers(results, targetDay) {
       const dayResults = results.filter(r => r.day === targetDay);
       const freq = {};
@@ -215,10 +214,9 @@
         if(!isNaN(srNum)) freq[srNum] = (freq[srNum] || 0) + 1;
       }
       const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
-      return sorted.slice(0, 6).map(n => parseInt(n[0]));
+      return sorted.slice(0, 6).map(n => parseInt(n[0])).filter(n => !isNaN(n));
     }
 
-    // Get recent trend numbers (last 7 days)
     function getRecentTrendNumbers(results) {
       const recent = results.slice(0, 7);
       const freq = {};
@@ -229,42 +227,41 @@
         if(!isNaN(srNum)) freq[srNum] = (freq[srNum] || 0) + 1;
       }
       const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
-      return sorted.slice(0, 6).map(n => parseInt(n[0]));
+      return sorted.slice(0, 6).map(n => parseInt(n[0])).filter(n => !isNaN(n));
     }
 
-    // Generate combined prediction numbers
-    function generatePredictions(results, targetDate, targetDay) {
+    function generateStatisticsNumbers(results, targetDate, targetDay) {
       const sameDate = getSameDateHistory(results, targetDate);
       const dayWise = getDayWiseNumbers(results, targetDay);
       const recentTrend = getRecentTrendNumbers(results);
       
-      // Combine and count frequency
       const freq = {};
-      for(const n of sameDate) freq[n] = (freq[n] || 0) + 2;
-      for(const n of dayWise) freq[n] = (freq[n] || 0) + 1;
-      for(const n of recentTrend) freq[n] = (freq[n] || 0) + 1;
+      for(const n of sameDate) if(!isNaN(n)) freq[n] = (freq[n] || 0) + 2;
+      for(const n of dayWise) if(!isNaN(n)) freq[n] = (freq[n] || 0) + 1;
+      for(const n of recentTrend) if(!isNaN(n)) freq[n] = (freq[n] || 0) + 1;
       
       const sorted = Object.entries(freq).sort((a,b)=>b[1]-a[1]);
-      const topPredictions = sorted.slice(0, 6).map(n => parseInt(n[0]));
+      const topStats = sorted.slice(0, 6).map(n => parseInt(n[0])).filter(n => !isNaN(n));
       
-      // Generate additional numbers from digit patterns
       const allNumbers = results.slice(0, 20).flatMap(r => [parseInt(r.fr), parseInt(r.sr)]).filter(n => !isNaN(n));
       const digitFreq = new Array(10).fill(0);
       for(const n of allNumbers){
-        digitFreq[Math.floor(n/10)]++;
-        digitFreq[n%10]++;
+        if(!isNaN(n)){
+          digitFreq[Math.floor(n/10)]++;
+          digitFreq[n%10]++;
+        }
       }
       const topDigits = digitFreq.map((c,i)=> ({digit:i, count:c})).sort((a,b)=>b.count-a.count).slice(0, 4).map(d=>d.digit);
       const additionalNumbers = [];
       for(let i=0; i<topDigits.length && additionalNumbers.length<3; i++){
         for(let j=0; j<topDigits.length && additionalNumbers.length<3; j++){
           const num = topDigits[i]*10 + topDigits[j];
-          if(!topPredictions.includes(num) && num>=0 && num<=99) additionalNumbers.push(num);
+          if(!topStats.includes(num) && num>=0 && num<=99) additionalNumbers.push(num);
         }
       }
       
-      const finalPredictions = [...topPredictions, ...additionalNumbers].slice(0, 6);
-      return finalPredictions.sort((a,b)=>a-b);
+      const finalStats = [...topStats, ...additionalNumbers].slice(0, 6);
+      return finalStats.sort((a,b)=>a-b).filter(n => !isNaN(n));
     }
 
     async function fetchData() {
@@ -277,66 +274,83 @@
 
     async function render() {
       const container = document.getElementById('statsContainer');
-      container.innerHTML = '<div style="text-align:center;padding:2rem;">Loading statistics and predictions...</div>';
+      container.innerHTML = '<div style="text-align:center;padding:2rem;">Loading statistics...</div>';
       try {
         const data = await fetchData();
         const today = new Date();
         const todayStr = `${today.getFullYear()}-${(today.getMonth()+1).toString().padStart(2,'0')}-${today.getDate().toString().padStart(2,'0')}`;
         const todayDay = DAYS[today.getDay()];
+        const isSunday = todayDay === 'Sunday';
         
         let html = '';
         for(const game of GAMES){
+          // On Sunday, only show Morning and Night games, skip Day games
+          if(isSunday && game.type === 'day') continue;
+          
           const results = getResultsForGame(data, game.gameKey);
           if(results.length === 0) continue;
           
           const latest = results[0];
-          const predictions = generatePredictions(results, todayStr, todayDay);
+          const statsNumbers = generateStatisticsNumbers(results, todayStr, todayDay);
           const sameDateCount = getSameDateHistory(results, todayStr).length;
           const dayWiseNumbers = getDayWiseNumbers(results, todayDay);
           const recentTrends = getRecentTrendNumbers(results);
+          
+          // Format latest result safely
+          const latestFr = latest.fr && isValidNumber(latest.fr) ? latest.fr : '--';
+          const latestSr = latest.sr && isValidNumber(latest.sr) ? latest.sr : '--';
           
           html += `
             <div class="stat-card">
               <div class="card-header">
                 <h2>${game.displayName}</h2>
-                <div class="sub">Latest: ${latest.fr}-${latest.sr} (${latest.date}) | Today: ${todayDay}, ${todayStr}</div>
+                <div class="sub">Latest: ${latestFr}-${latestSr} (${latest.date || 'N/A'}) | Today: ${todayDay}, ${todayStr}</div>
               </div>
               <div class="card-body">
-                <div class="prediction-box">
-                  <div class="prediction-title">🎯 Today's Prediction (${todayDay})</div>
+                <div class="stat-box">
+                  <div class="stat-title">📊 Today's Statistical Numbers (${todayDay})</div>
                   <div class="numbers-grid">
-                    ${predictions.map(n => `<span class="prediction-number">${n.toString().padStart(2,'0')}</span>`).join('')}
+                    ${statsNumbers.length ? statsNumbers.map(n => `<span class="stat-number">${n.toString().padStart(2,'0')}</span>`).join('') : '<span>Insufficient data for statistics</span>'}
                   </div>
-                  <div style="font-size:0.7rem; margin-top:0.5rem;">Based on ${sameDateCount} same-date historical records, ${dayWiseNumbers.length} day-wise patterns, and recent 7-day trends</div>
+                  <div class="note-box">Based on ${sameDateCount} same-date records, ${dayWiseNumbers.length} day-wise patterns, and recent 7-day trends</div>
                 </div>
                 
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
                   <div>
-                    <div class="prediction-title">📅 Same Date History</div>
+                    <div class="stat-title">📅 Same Date History</div>
                     <div class="numbers-grid">
-                      ${getSameDateHistory(results, todayStr).slice(0, 6).map(r => `<span class="prediction-number" style="border-color:var(--warning);">${r.fr}-${r.sr}</span>`).join('') || '<span>No historical data</span>'}
+                      ${getSameDateHistory(results, todayStr).slice(0, 6).map(r => {
+                        const fr = r.fr && isValidNumber(r.fr) ? r.fr : '--';
+                        const sr = r.sr && isValidNumber(r.sr) ? r.sr : '--';
+                        return `<span class="stat-number stat-number-warning">${fr}-${sr}</span>`;
+                      }).join('') || '<span>No historical data</span>'}
                     </div>
                   </div>
                   <div>
-                    <div class="prediction-title">📆 ${todayDay} Pattern</div>
+                    <div class="stat-title">📆 ${todayDay} Pattern</div>
                     <div class="numbers-grid">
-                      ${dayWiseNumbers.slice(0, 6).map(n => `<span class="prediction-number" style="border-color:var(--info);">${n.toString().padStart(2,'0')}</span>`).join('') || '<span>Insufficient data</span>'}
+                      ${dayWiseNumbers.length ? dayWiseNumbers.slice(0, 6).map(n => `<span class="stat-number stat-number-info">${n.toString().padStart(2,'0')}</span>`).join('') : '<span>Insufficient data</span>'}
                     </div>
                   </div>
                 </div>
                 
-                <div class="insight-box">
-                  <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:0.5rem;">
-                    <span>🔥 <strong>Last 7 Days Trend:</strong> ${recentTrends.slice(0, 4).map(n => n.toString().padStart(2,'0')).join(', ')}</span>
-                    <span>📊 <strong>Total Records:</strong> ${results.length} days</span>
-                  </div>
+                <div class="note-box" style="margin-top:0.8rem;">
+                  <span>🔥 <strong>Last 7 Days Trend:</strong> ${recentTrends.length ? recentTrends.slice(0, 4).map(n => n.toString().padStart(2,'0')).join(', ') : 'Insufficient data'}</span>
+                  &nbsp;&nbsp;|&nbsp;&nbsp;
+                  <span>📊 <strong>Total Records:</strong> ${results.length} days</span>
                 </div>
               </div>
             </div>
           `;
         }
+        
+        if(isSunday && html === ''){
+          html = '<div style="text-align:center;padding:2rem;color:var(--accent);">📌 Sunday: Only Morning and Night Teer statistics are available. Day game statistics will appear on Monday.</div>';
+        }
+        
         container.innerHTML = html;
-        document.getElementById('lastUpdated').innerHTML = `📅 Predictions Last Updated: ${new Date().toLocaleString()} | Based on ${todayDay} patterns | Refresh when new results are available`;
+        const sundayNote = isSunday ? ' | Sunday: Only Morning & Night games shown' : '';
+        document.getElementById('lastUpdated').innerHTML = `📅 Statistics Last Updated: ${new Date().toLocaleString()} | Based on ${todayDay} patterns${sundayNote}`;
         
       } catch(e){
         console.error(e);
