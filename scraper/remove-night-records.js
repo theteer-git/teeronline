@@ -6,42 +6,19 @@ const FILE = path.join(
   "../data/all-results.json"
 );
 
-const BACKUP = path.join(
-  __dirname,
-  "../data/all-results.backup.json"
-);
-
 try {
 
-  console.log("Loading:", FILE);
-
-  const raw = fs.readFileSync(FILE, "utf8");
-  const data = JSON.parse(raw);
-
-  // Backup first
-  fs.writeFileSync(
-    BACKUP,
-    raw,
-    "utf8"
+  const data = JSON.parse(
+    fs.readFileSync(FILE, "utf8")
   );
-
-  console.log("Backup created:", BACKUP);
 
   const records = Array.isArray(data)
     ? data
     : data.results;
 
-  if (!Array.isArray(records)) {
-    throw new Error(
-      "Could not find results array"
-    );
-  }
-
   const originalCount = records.length;
 
-  const cleaned = [];
-
-  for (const record of records) {
+  const cleaned = records.filter((record) => {
 
     const game = String(
       record.game || ""
@@ -49,23 +26,32 @@ try {
       .toLowerCase()
       .trim();
 
-    if (
+    return (
       game !== "shillong night" &&
       game !== "night teer 2"
-    ) {
-      cleaned.push(record);
-    }
+    );
 
-  }
+  });
 
   const removed =
     originalCount - cleaned.length;
+
+  // Backup
+  fs.writeFileSync(
+    FILE + ".backup",
+    JSON.stringify(data, null, 2),
+    "utf8"
+  );
 
   if (Array.isArray(data)) {
 
     fs.writeFileSync(
       FILE,
-      JSON.stringify(cleaned, null, 2),
+      JSON.stringify(
+        cleaned,
+        null,
+        2
+      ),
       "utf8"
     );
 
@@ -75,30 +61,35 @@ try {
 
     fs.writeFileSync(
       FILE,
-      JSON.stringify(data, null, 2),
+      JSON.stringify(
+        data,
+        null,
+        2
+      ),
       "utf8"
     );
 
   }
 
-  console.log(
-    `Original Records : ${originalCount}`
-  );
-
-  console.log(
-    `Removed Records  : ${removed}`
-  );
-
-  console.log(
-    `Remaining Records: ${cleaned.length}`
-  );
-
+  console.log("");
   console.log("Completed Successfully");
+  console.log(
+    "Original Records:",
+    originalCount
+  );
+  console.log(
+    "Removed Records:",
+    removed
+  );
+  console.log(
+    "Remaining Records:",
+    cleaned.length
+  );
 
 } catch (err) {
 
   console.error(
-    "Error:"
+    "Failed:"
   );
 
   console.error(err);
