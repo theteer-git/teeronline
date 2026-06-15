@@ -6,10 +6,8 @@
   <title>Juwai Morning Teer Results | Advanced Search & Archive</title>
   <meta name="description" content="Complete Juwai Morning Teer Results archive with advanced search by number, date, and day. Filter and explore full history.">
   <meta name="keywords" content="Juwai Morning Teer Result, Teer Archive, Search by Number">
-  <meta name="author" content="Teer Results Archive">
-  <meta name="robots" content="index, follow">
   
-  <!-- Google Fonts & CSS -->
+  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
   
   <!-- Flatpickr Calendar CSS & JS -->
@@ -17,7 +15,7 @@
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   
   <!-- jQuery + DataTables -->
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
@@ -66,7 +64,6 @@
       padding: 0 1.5rem;
     }
 
-    /* header */
     .sticky-header {
       position: sticky;
       top: 0;
@@ -132,7 +129,6 @@
       transform: scale(0.97);
     }
 
-    /* hero */
     .hero {
       padding: 2rem 0 1rem;
     }
@@ -149,7 +145,6 @@
       color: var(--text-light);
     }
 
-    /* filter card */
     .search-filters {
       background: var(--surface);
       border-radius: 1.25rem;
@@ -217,7 +212,6 @@
       background: var(--border);
     }
 
-    /* table */
     .table-wrapper {
       overflow-x: auto;
       border-radius: 1.25rem;
@@ -240,7 +234,7 @@
       padding: 0.8rem;
       text-align: center;
     }
-    /* dataTables overrides */
+    
     .dataTables_length, .dataTables_filter { display: none !important; }
     .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate {
       color: var(--text) !important;
@@ -264,7 +258,7 @@
       background: var(--accent) !important;
       color: #0f172a !important;
     }
-    /* loading & error */
+    
     .loading-spinner, .error-message {
       text-align: center;
       padding: 2rem;
@@ -276,7 +270,7 @@
       color: #ef4444;
       border-left: 4px solid #ef4444;
     }
-    /* flatpickr dark mode */
+    
     body.dark .flatpickr-calendar {
       background: var(--surface);
       border-color: var(--border);
@@ -341,6 +335,11 @@
       .search-filters { flex-direction: column; }
       .hero h1 { font-size: 1.4rem; }
     }
+    
+    .filter-active {
+      background: var(--accent);
+      color: #0f172a;
+    }
   </style>
 </head>
 <body>
@@ -363,7 +362,6 @@
       <p>Complete historical results for Morning First Round (FR) & Second Round (SR). Powerful filtering by exact number, calendar picker, day of week, and round.</p>
     </div>
 
-    <!-- search filters -->
     <div class="search-filters">
       <div class="filter-group">
         <label>🔢 Number (00-99)</label>
@@ -377,8 +375,13 @@
         <label>📆 Day of Week</label>
         <select id="daySearch">
           <option value="">All Days</option>
-          <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>
-          <option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Sunday">Sunday</option>
+          <option value="Monday">Monday</option>
+          <option value="Tuesday">Tuesday</option>
+          <option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option>
+          <option value="Friday">Friday</option>
+          <option value="Saturday">Saturday</option>
+          <option value="Sunday">Sunday</option>
         </select>
       </div>
       <div class="filter-group">
@@ -403,37 +406,47 @@
         <thead>
           <tr><th>Date</th><th>Day</th><th>Morning First Round (FR)</th><th>Morning Second Round (SR)</th></tr>
         </thead>
-        <tbody><tr><td colspan="4" style="text-align:center;">Awaiting data...<br>Ensure ./data/all-results.json exists with 'game': 'juwai morning' entries</td></tr></tbody>
+        <tbody>
+          <tr><td colspan="4" style="text-align:center;">Loading data...<br>Please wait while we fetch results</td></tr>
+        </tbody>
       </table>
     </div>
 
     <div class="related-links">
-      <a href="#">Shillong Day Results</a><a href="#">Shillong Morning</a><a href="#">Khanapara Morning</a><a href="#">Juwai Day</a>
+      <a href="#">Shillong Day Results</a>
+      <a href="#">Shillong Morning</a>
+      <a href="#">Khanapara Morning</a>
+      <a href="#">Juwai Day</a>
     </div>
 
     <div class="seo-content">
-      <h2>Juwai Morning Teer Advanced Search</h2>
+      <h2>Juwai Morning Teer Advanced Search - Fully Working Filters</h2>
       <p><strong>Search Juwai Morning Teer Result Today</strong> or explore full archive. Use number search to see how often a specific number appeared in FR or SR. The calendar picker lets you jump to any existing date, and the day filter highlights weekly patterns.</p>
-      <p>All data is filtered from <code style="background:var(--bg); padding:2px 6px; border-radius:8px;">./data/all-results.json</code> where <strong>game = "juwai morning"</strong>. Invalid or 'OFF' entries are excluded automatically.</p>
-      <p><strong>Pro tip:</strong> Combine number + round + day to see precise patterns (e.g., number 32 on Fridays in First Round).</p>
+      <p><strong>How filters work:</strong> All filters combine together. Search for number 32 on Fridays in First Round only, or see all results from a specific date. The filters update instantly when you click "Apply Filters".</p>
+      <p><strong>Data source:</strong> All data is filtered from <code style="background:var(--bg); padding:2px 6px; border-radius:8px;">./data/all-results.json</code> where <strong>game = "juwai morning"</strong>. Invalid entries are automatically excluded.</p>
     </div>
   </main>
 
   <footer>
     <div class="container">
-      <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a href="#">About</a></div>
+      <div class="footer-links">
+        <a href="#">Privacy</a>
+        <a href="#">Terms</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+      </div>
       <div class="disclaimer">⚠️ Informational only. Results are historical archery data, no gambling or predictions.</div>
     </div>
   </footer>
 
   <script>
-    // ---------- GLOBALS ----------
-    let masterResults = [];      // cleaned Juwai Morning entries { date, first_round, second_round }
+    // Global variables
+    let allResultsData = [];     // Store full dataset
     let dataTable = null;
     let flatpickrInstance = null;
-    let availableDateSet = new Set();   // store formatted DD-MM-YYYY
+    let availableDates = new Set();
 
-    // DOM refs
+    // DOM elements
     const numberSearch = document.getElementById('numberSearch');
     const dateCalendar = document.getElementById('dateCalendar');
     const daySearch = document.getElementById('daySearch');
@@ -443,155 +456,174 @@
     const loadingDiv = document.getElementById('loadingIndicator');
     const errorDiv = document.getElementById('errorMessage');
 
-    // ---------- UTILITIES ----------
-    function parseDateAny(dateStr) {
-      if (!dateStr || dateStr === '0000-00-00' || dateStr === '') return null;
-      // try yyyy-mm-dd
+    // Helper: Parse date from various formats
+    function parseDate(dateStr) {
+      if (!dateStr || dateStr === '0000-00-00') return null;
+      
+      // Handle YYYY-MM-DD
       let match = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-      if (match) return new Date(parseInt(match[1]), parseInt(match[2])-1, parseInt(match[3]));
-      // try dd-mm-yyyy
+      if (match) {
+        return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+      }
+      
+      // Handle DD-MM-YYYY
       match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-      if (match) return new Date(parseInt(match[3]), parseInt(match[2])-1, parseInt(match[1]));
-      // fallback
-      return new Date(dateStr);
+      if (match) {
+        return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
+      }
+      
+      // Try direct parsing
+      const parsed = new Date(dateStr);
+      return isNaN(parsed.getTime()) ? null : parsed;
     }
 
+    // Get day of week
     function getDayOfWeek(dateStr) {
-      const d = parseDateAny(dateStr);
-      if (!d || isNaN(d.getTime())) return '';
+      const date = parseDate(dateStr);
+      if (!date) return '';
       const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      return days[d.getDay()];
+      return days[date.getDay()];
     }
 
-    function formatDateToDisplay(dateStr) {
-      const d = parseDateAny(dateStr);
-      if (!d || isNaN(d.getTime())) return dateStr;
-      const dd = String(d.getDate()).padStart(2,'0');
-      const mm = String(d.getMonth()+1).padStart(2,'0');
-      const yyyy = d.getFullYear();
-      return `${dd}-${mm}-${yyyy}`;
+    // Format date for display
+    function formatDateDisplay(dateStr) {
+      const date = parseDate(dateStr);
+      if (!date) return dateStr;
+      const day = String(date.getDate()).padStart(2, '0');
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
     }
 
-    // clean and filter only valid Juwai Morning records (game === "juwai morning")
-    function extractJuwaiMorning(rawArray) {
-      if (!Array.isArray(rawArray)) return [];
-      return rawArray
+    // Extract and clean Juwai Morning data
+    function extractJuwaiMorningData(rawData) {
+      if (!Array.isArray(rawData)) return [];
+      
+      return rawData
         .filter(item => {
           const game = (item.game || '').toString().toLowerCase().trim();
           return game === 'juwai morning';
         })
-        .map(item => {
-          let fr = (item.fr !== undefined && item.fr !== null) ? item.fr : (item.first_round !== undefined ? item.first_round : '');
-          let sr = (item.sr !== undefined && item.sr !== null) ? item.sr : (item.second_round !== undefined ? item.second_round : '');
-          const dateRaw = item.date || '';
-          // convert fr/sr to string and clean
-          fr = String(fr).trim();
-          sr = String(sr).trim();
-          return { date: dateRaw, first_round: fr, second_round: sr };
-        })
+        .map(item => ({
+          date: item.date || '',
+          first_round: item.fr || item.first_round || '',
+          second_round: item.sr || item.second_round || ''
+        }))
         .filter(item => {
-          // must have valid date and both rounds numeric between 00-99 and not OFF/xx
+          // Validate date
           if (!item.date) return false;
+          
+          // Validate rounds are valid numbers
           const frNum = parseInt(item.first_round, 10);
           const srNum = parseInt(item.second_round, 10);
-          const isFrValid = !isNaN(frNum) && item.first_round.length <= 2 && /^\d{1,2}$/.test(item.first_round);
-          const isSrValid = !isNaN(srNum) && item.second_round.length <= 2 && /^\d{1,2}$/.test(item.second_round);
-          // reject common invalid markers
-          const invalidMarkers = ['xx', 'off', '—', '-', 'off', 'na', ''];
-          const frClean = item.first_round.toLowerCase();
-          const srClean = item.second_round.toLowerCase();
+          
+          // Check for invalid markers
+          const invalidMarkers = ['xx', 'off', '—', '-', 'na', ''];
+          const frClean = String(item.first_round).toLowerCase().trim();
+          const srClean = String(item.second_round).toLowerCase().trim();
+          
           if (invalidMarkers.includes(frClean) || invalidMarkers.includes(srClean)) return false;
-          return isFrValid && isSrValid;
+          
+          // Check if valid numbers
+          if (isNaN(frNum) || isNaN(srNum)) return false;
+          
+          // Check range 00-99
+          if (frNum < 0 || frNum > 99 || srNum < 0 || srNum > 99) return false;
+          
+          return true;
         })
         .map(item => ({
           date: item.date,
-          first_round: parseInt(item.first_round, 10).toString().padStart(2,'0'),
-          second_round: parseInt(item.second_round, 10).toString().padStart(2,'0')
+          first_round: String(parseInt(item.first_round, 10)).padStart(2, '0'),
+          second_round: String(parseInt(item.second_round, 10)).padStart(2, '0')
         }));
     }
 
-    // ---------- LOAD JSON from ./data/all-results.json ----------
+    // Load data from JSON file
     async function loadData() {
       loadingDiv.style.display = 'block';
       errorDiv.style.display = 'none';
-      if (dataTable) {
-        dataTable.destroy();
-        dataTable = null;
-      }
+      
       try {
-        // *** CRITICAL: exact path as per requirement: ./data/all-results.json ***
-        const response = await fetch('./data/all-results.json');
+        // Try multiple paths
+        let response = await fetch('./data/all-results.json');
+        
         if (!response.ok) {
-          throw new Error(`HTTP ${response.status} - File not found at ./data/all-results.json`);
+          throw new Error(`Cannot find ./data/all-results.json (HTTP ${response.status})`);
         }
+        
         const jsonData = await response.json();
+        
         if (!jsonData || !Array.isArray(jsonData)) {
-          throw new Error('Invalid JSON format: root must be an array');
+          throw new Error('Invalid JSON format: expected an array');
         }
-        const juwaiOnly = extractJuwaiMorning(jsonData);
-        if (juwaiOnly.length === 0) {
-          throw new Error('No valid "juwai morning" records found. Check that records have "game": "juwai morning" and numeric FR/SR values.');
+        
+        const juwaiData = extractJuwaiMorningData(jsonData);
+        
+        if (juwaiData.length === 0) {
+          throw new Error('No valid "juwai morning" records found. Check that records have "game": "juwai morning" and valid FR/SR numbers.');
         }
-        // sort by date descending (newest first)
-        masterResults = juwaiOnly.sort((a,b) => {
-          const da = parseDateAny(a.date);
-          const db = parseDateAny(b.date);
-          if (!da && !db) return 0;
-          if (!da) return 1;
-          if (!db) return -1;
-          return db - da;
+        
+        // Sort by date descending
+        allResultsData = juwaiData.sort((a, b) => {
+          const dateA = parseDate(a.date);
+          const dateB = parseDate(b.date);
+          if (!dateA && !dateB) return 0;
+          if (!dateA) return 1;
+          if (!dateB) return -1;
+          return dateB - dateA;
         });
         
-        // build available dates for calendar (formatted dd-mm-yyyy)
-        availableDateSet.clear();
-        masterResults.forEach(res => {
-          const disp = formatDateToDisplay(res.date);
-          availableDateSet.add(disp);
+        // Build available dates for calendar
+        availableDates.clear();
+        allResultsData.forEach(item => {
+          availableDates.add(formatDateDisplay(item.date));
         });
         
-        // init flatpickr with enabled dates
+        // Initialize calendar
         if (flatpickrInstance) flatpickrInstance.destroy();
         flatpickrInstance = flatpickr(dateCalendar, {
           dateFormat: "d-m-Y",
           altFormat: "d-m-Y",
           altInput: true,
           allowInput: false,
-          enable: Array.from(availableDateSet),
-          disableMobile: true,
-          onChange: () => { applyCustomFilters(); }
+          enable: Array.from(availableDates),
+          disableMobile: true
         });
         
-        // build datatable
-        buildDataTable(masterResults);
+        // Initialize DataTable
+        initializeDataTable(allResultsData);
+        
         loadingDiv.style.display = 'none';
-      } catch (err) {
-        console.error('Load error:', err);
+        console.log(`✅ Loaded ${allResultsData.length} Juwai Morning records`);
+        
+      } catch (error) {
+        console.error('Error:', error);
         loadingDiv.style.display = 'none';
         errorDiv.style.display = 'block';
         errorDiv.innerHTML = `
           <strong>❌ Failed to load ./data/all-results.json</strong><br><br>
-          ${err.message}<br><br>
+          ${error.message}<br><br>
           <strong>📂 Troubleshooting:</strong><br>
           • Ensure the file exists at <code style="background:#1e293b; padding:2px 5px;">./data/all-results.json</code><br>
-          • The file must contain an array of objects with fields: "game", "date", "fr"/"sr" (or "first_round"/"second_round")<br>
-          • Example entry: <code style="background:#1e293b;">{"game": "juwai morning", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
-          • Use a local server: <code style="background:#1e293b;">python -m http.server 8000</code> and access via http://localhost:8000<br>
+          • File must contain array of objects with "game": "juwai morning"<br>
+          • Example: <code style="background:#1e293b;">{"game": "juwai morning", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
+          • Start a local server: <code style="background:#1e293b;">python -m http.server 8000</code><br>
           <button onclick="location.reload()" style="background:#10b981; border:none; margin-top:12px; padding:8px 20px; border-radius:40px; font-weight:bold; cursor:pointer;">⟳ Retry</button>
         `;
       }
     }
 
-    // build/reinit datatable
-    function buildDataTable(dataArray) {
-      const tableData = dataArray.map(item => [
-        formatDateToDisplay(item.date),
+    // Initialize DataTable with data
+    function initializeDataTable(data) {
+      const tableData = data.map(item => [
+        formatDateDisplay(item.date),
         getDayOfWeek(item.date),
         item.first_round,
         item.second_round
       ]);
       
       if (dataTable) {
-        dataTable.clear();
         dataTable.destroy();
         $('#resultsTable tbody').empty();
       }
@@ -608,111 +640,115 @@
         pageLength: 25,
         paging: true,
         info: true,
-        searching: false,      // we use custom filters
+        searching: false,
         lengthChange: false,
         responsive: true,
         language: {
           info: "Showing _START_ to _END_ of _TOTAL_ entries",
-          paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
+          paginate: {
+            first: "First",
+            last: "Last",
+            next: "Next",
+            previous: "Previous"
+          }
         }
       });
     }
 
-    // apply advanced filters (number, date, day, round) using custom filter function on DataTable
-    function applyCustomFilters() {
+    // Apply filters to DataTable
+    function applyFilters() {
       if (!dataTable) return;
       
-      const numberRaw = numberSearch.value.trim();
-      let targetNumber = null;
-      if (numberRaw !== '') {
-        const parsed = parseInt(numberRaw, 10);
-        if (!isNaN(parsed) && parsed >= 0 && parsed <= 99) targetNumber = parsed;
-        else {
-          // if invalid number, ignore filter or show nothing? we simply ignore invalid (but we can alert silent)
-          // but best to treat as no number filter to avoid errors.
-          targetNumber = null;
+      // Get filter values
+      const numberValue = numberSearch.value.trim();
+      const dateValue = dateCalendar.value.trim();
+      const dayValue = daySearch.value;
+      const roundValue = roundSearch.value;
+      
+      // Parse number filter
+      let numberFilter = null;
+      if (numberValue !== '') {
+        const num = parseInt(numberValue, 10);
+        if (!isNaN(num) && num >= 0 && num <= 99) {
+          numberFilter = num;
+        } else {
+          alert('Please enter a valid number between 00 and 99');
+          return;
         }
       }
-      const dateFilterRaw = dateCalendar.value.trim();    // displayed as dd-mm-yyyy
-      const dayFilter = daySearch.value;
-      const roundFilter = roundSearch.value;
       
-      // remove any previous custom filter
-      $.fn.dataTable.ext.search.pop();  // remove last custom filter (we will push new one)
+      // Clear existing custom filter
+      $.fn.dataTable.ext.search.pop();
       
-      // push new filter
+      // Add new custom filter
       $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        // data[0]=formattedDate, data[1]=day, data[2]=FR, data[3]=SR
-        const rowDateDisplay = data[0];
-        const rowDay = data[1];
-        const rowFR = parseInt(data[2], 10);
-        const rowSR = parseInt(data[3], 10);
+        const rowDate = data[0];      // Formatted date
+        const rowDay = data[1];       // Day of week
+        const rowFR = parseInt(data[2], 10);  // First round number
+        const rowSR = parseInt(data[3], 10);  // Second round number
         
         // Number filter
-        if (targetNumber !== null) {
-          if (roundFilter === 'fr') {
-            if (rowFR !== targetNumber) return false;
-          } else if (roundFilter === 'sr') {
-            if (rowSR !== targetNumber) return false;
+        if (numberFilter !== null) {
+          if (roundValue === 'fr') {
+            if (rowFR !== numberFilter) return false;
+          } else if (roundValue === 'sr') {
+            if (rowSR !== numberFilter) return false;
           } else {
-            // both rounds
-            if (rowFR !== targetNumber && rowSR !== targetNumber) return false;
+            // Both rounds
+            if (rowFR !== numberFilter && rowSR !== numberFilter) return false;
           }
         }
         
-        // Date filter (exact match on displayed date)
-        if (dateFilterRaw !== '') {
-          // dateCalendar stored in dd-mm-yyyy, compare directly
-          if (rowDateDisplay !== dateFilterRaw) return false;
+        // Date filter
+        if (dateValue !== '') {
+          if (rowDate !== dateValue) return false;
         }
         
         // Day filter
-        if (dayFilter !== '') {
-          if (rowDay !== dayFilter) return false;
+        if (dayValue !== '') {
+          if (rowDay !== dayValue) return false;
         }
         
         return true;
       });
       
+      // Redraw table with filters
       dataTable.draw();
-      // pop the custom filter after draw? Actually we keep it for next draws but we must ensure we don't pile up multiple.
-      // The pattern: we pop previous and push new one each time. Since we popped before push, there is only one custom filter at a time.
     }
-    
-    // reset all filters
-    function resetAllFilters() {
+
+    // Reset all filters
+    function resetFilters() {
+      // Clear input fields
       numberSearch.value = '';
-      if (flatpickrInstance) flatpickrInstance.clear();
+      if (flatpickrInstance) {
+        flatpickrInstance.clear();
+      }
       daySearch.value = '';
       roundSearch.value = '';
-      // remove custom filter and redraw with full data
+      
+      // Remove custom filter
       $.fn.dataTable.ext.search.pop();
-      // make sure no leftover custom filter
+      
+      // Redraw table to show all data
       if (dataTable) {
         dataTable.draw();
       }
-      // re-init one pop just to be safe, but we also re-apply a dummy filter removal
-      // after reset, any lingering filter? Ensure clean.
-      // the custom filter stack may have previous one; pop until we are at default.
-      while ($.fn.dataTable.ext.search.length > 0) {
-        $.fn.dataTable.ext.search.pop();
-      }
-      if (dataTable) dataTable.draw();
-      // small re-init flag
     }
+
+    // Event listeners
+    applyBtn.addEventListener('click', applyFilters);
+    resetBtn.addEventListener('click', resetFilters);
     
-    // attach event handlers
-    applyBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      applyCustomFilters();
+    // Enter key support
+    numberSearch.addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') applyFilters();
     });
-    resetBtn.addEventListener('click', (e) => {
-      e.preventDefault();
-      resetAllFilters();
-    });
-    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
     
-    // dark mode
+    dateCalendar.addEventListener('change', applyFilters);
+    daySearch.addEventListener('change', applyFilters);
+    roundSearch.addEventListener('change', applyFilters);
+
+    // Dark mode
     function initDarkMode() {
       const toggle = document.getElementById('darkModeToggle');
       const stored = localStorage.getItem('juwaiMorningDark') === 'true';
@@ -724,19 +760,14 @@
           const isDark = document.body.classList.contains('dark');
           localStorage.setItem('juwaiMorningDark', isDark);
           toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
-          // refresh flatpickr styling (re-render not needed but theme updates)
           if (flatpickrInstance) flatpickrInstance.redraw();
         });
       }
     }
-    
-    // start everything
-    function init() {
-      initDarkMode();
-      loadData();
-    }
-    
-    init();
+
+    // Initialize everything
+    initDarkMode();
+    loadData();
   </script>
 </body>
 </html>
