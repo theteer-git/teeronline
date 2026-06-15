@@ -15,7 +15,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
@@ -485,10 +485,10 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
+          <tr><td colspan="4" style="text-align:center;">Loading data...<\/td><\/tr>
         </tbody>
-      </table>
-    </div>
+      <\/table>
+    <\/div>
 
     <div class="related-links">
       <a href="#">Shillong Morning Results</a>
@@ -496,35 +496,35 @@
       <a href="#">Shillong Night Teer 2 Results</a>
       <a href="#">Khanapara Day Results</a>
       <a href="#">Juwai Day Results</a>
-    </div>
+    <\/div>
 
     <div class="seo-content">
-      <h2>Shillong Day Teer Result Search: Find Any Number, Date, or Day</h2>
-      <p><strong>Search Shillong Day Teer Result Today</strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.</p>
+      <h2>Shillong Day Teer Result Search: Find Any Number, Date, or Day<\/h2>
+      <p><strong>Search Shillong Day Teer Result Today<\/strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.<\/p>
       
-      <p>The <strong>Shillong Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
+      <p>The <strong>Shillong Teer Previous Result<\/strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.<\/p>
       
-      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
+      <p><strong>How to use:<\/strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!<\/p>
       
-      <p><strong>Equal width columns:</strong> All four columns (Date, Day, First Round, Second Round) have equal width for balanced presentation and easy scanning.</p>
+      <p><strong>Equal width columns:<\/strong> All four columns (Date, Day, First Round, Second Round) have equal width for balanced presentation and easy scanning.<\/p>
       
-      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "shillong day"</strong> records. This ensures accurate and reliable search results for Shillong Day Teer enthusiasts.</p>
-    </div>
-  </main>
+      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data\/all-results.json<\/code> and filtered to display only <strong>"game": "shillong day"<\/strong> records. This ensures accurate and reliable search results for Shillong Day Teer enthusiasts.<\/p>
+    <\/div>
+  <\/main>
 
   <footer>
     <div class="container">
       <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Contact</a>
-        <a href="#">About</a>
-      </div>
+        <a href="#">Privacy Policy<\/a>
+        <a href="#">Terms & Conditions<\/a>
+        <a href="#">Contact<\/a>
+        <a href="#">About<\/a>
+      <\/div>
       <div class="disclaimer">
         Warning: Informational Purpose Only: This website does not promote gambling, betting, or predictions. Shillong Day Teer results are based on archery events and are provided as historical reference only.
-      </div>
-    </div>
-  </footer>
+      <\/div>
+    <\/div>
+  <\/footer>
 
   <script>
     let originalData = [];
@@ -778,7 +778,8 @@
           altInput: true,
           allowInput: false,
           enable: Array.from(availableDates),
-          disableMobile: true
+          disableMobile: true,
+          maxDate: "today"
         });
         
         initDataTable(originalData);
