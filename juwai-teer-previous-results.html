@@ -623,45 +623,57 @@
     };
 
     // Apply custom filters to DataTable
-    const applyCustomFilters = () => {
-      if (!dataTable) return;
-      
-      let numberVal = numberSearch.value.trim();
-      let dateVal = dateCalendar.value.trim();
-      let dayVal = daySearch.value;
-      let roundVal = roundSearch.value;
-      
-      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        const rowDate = data[0];
-        const rowDay = data[1];
-        const rowFR = data[2];
-        const rowSR = data[3];
-        
-        if (numberVal) {
-          const num = parseInt(numberVal);
-          if (roundVal === 'fr') {
-            if (parseInt(rowFR) !== num) return false;
-          } else if (roundVal === 'sr') {
-            if (parseInt(rowSR) !== num) return false;
-          } else {
-            if (parseInt(rowFR) !== num && parseInt(rowSR) !== num) return false;
-          }
-        }
-        
-        if (dateVal) {
-          if (!rowDate.includes(dateVal)) return false;
-        }
-        
-        if (dayVal) {
-          if (rowDay !== dayVal) return false;
-        }
-        
-        return true;
-      });
-      
-      dataTable.draw();
-      $.fn.dataTable.ext.search.pop();
-    };
+    let activeFilter = null;
+
+const applyCustomFilters = () => {
+  if (!dataTable) return;
+
+  const numberVal = numberSearch.value.trim();
+  const dateVal = dateCalendar.value.trim();
+  const dayVal = daySearch.value;
+  const roundVal = roundSearch.value;
+
+  if (activeFilter) {
+    const index = $.fn.dataTable.ext.search.indexOf(activeFilter);
+    if (index !== -1) {
+      $.fn.dataTable.ext.search.splice(index, 1);
+    }
+  }
+
+  activeFilter = function(settings, data) {
+    if (settings.nTable.id !== 'resultsTable') return true;
+
+    const rowDate = data[0];
+    const rowDay = data[1];
+    const rowFR = data[2];
+    const rowSR = data[3];
+
+    if (numberVal) {
+      const num = numberVal.padStart(2, '0');
+
+      if (roundVal === 'fr') {
+        if (rowFR !== num) return false;
+      } else if (roundVal === 'sr') {
+        if (rowSR !== num) return false;
+      } else {
+        if (rowFR !== num && rowSR !== num) return false;
+      }
+    }
+
+    if (dateVal) {
+      if (rowDate !== dateVal) return false;
+    }
+
+    if (dayVal) {
+      if (rowDay !== dayVal) return false;
+    }
+
+    return true;
+  };
+
+  $.fn.dataTable.ext.search.push(activeFilter);
+  dataTable.draw();
+};
     
     // Reset all filters
     const resetFilters = () => {
