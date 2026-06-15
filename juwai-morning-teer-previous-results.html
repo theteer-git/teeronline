@@ -209,19 +209,43 @@
       background: var(--surface);
       margin: 1.5rem 0;
     }
+    
+    /* EQUAL WIDTH FOR ALL COLUMNS */
     .results-table {
       width: 100% !important;
+      table-layout: fixed !important;
       font-size: 0.85rem;
     }
+    
+    .results-table th,
+    .results-table td {
+      width: 25% !important;
+      text-align: center;
+      padding: 0.8rem;
+      vertical-align: middle;
+    }
+    
+    /* Ensure DataTables doesn't override the fixed layout */
+    .dataTables_wrapper .results-table {
+      table-layout: fixed !important;
+    }
+    
     .results-table th {
       background: var(--bg);
       font-weight: 700;
       color: var(--accent);
-      padding: 1rem 0.8rem;
     }
-    .results-table td {
-      padding: 0.8rem;
-      text-align: center;
+    
+    /* Responsive handling - on small screens allow some flexibility */
+    @media (max-width: 768px) {
+      .results-table th,
+      .results-table td {
+        width: auto !important;
+        min-width: 100px;
+      }
+      .results-table {
+        table-layout: auto !important;
+      }
     }
     
     .dataTables_length, .dataTables_filter { display: none !important; }
@@ -318,16 +342,24 @@
       font-size: 0.7rem;
       color: var(--text-light);
     }
-    @media (max-width: 720px) {
-      .search-filters { flex-direction: column; }
-      .hero h1 { font-size: 1.4rem; }
-    }
     
     .results-count {
-      padding: 0.5rem;
+      padding: 0.75rem 1rem;
       margin-bottom: 0.5rem;
       font-weight: 600;
       color: var(--accent);
+      background: var(--surface);
+      border-radius: 0.8rem;
+      display: inline-block;
+    }
+    
+    .filter-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
     }
   </style>
 </head>
@@ -348,7 +380,7 @@
   <main class="container">
     <div class="hero">
       <h1>Juwai Morning Teer Results | Search by Number, Date & Day</h1>
-      <p>Complete historical results for Morning First Round (FR) & Second Round (SR). All filters work together for precise searching.</p>
+      <p>Complete historical results for Morning First Round (FR) & Second Round (SR). All columns have equal width for easy reading.</p>
     </div>
 
     <div class="search-filters">
@@ -390,10 +422,19 @@
     <div id="loadingIndicator" class="loading-spinner" style="display: none;">📡 Loading Juwai Morning results from ./data/all-results.json ...</div>
     <div id="errorMessage" class="error-message" style="display: none;"></div>
 
+    <div class="filter-status">
+      <div class="results-count" id="resultsCount">📊 Loading...</div>
+    </div>
+
     <div class="table-wrapper">
       <table id="resultsTable" class="results-table display responsive" style="width:100%">
         <thead>
-          <tr><th>Date</th><th>Day</th><th>Morning First Round (FR)</th><th>Morning Second Round (SR)</th></tr>
+          <tr>
+            <th>Date</th>
+            <th>Day</th>
+            <th>Morning First Round (FR)</th>
+            <th>Morning Second Round (SR)</th>
+          </tr>
         </thead>
         <tbody></tbody>
       </table>
@@ -404,12 +445,14 @@
       <a href="#">Shillong Morning</a>
       <a href="#">Khanapara Morning</a>
       <a href="#">Juwai Day</a>
+      <a href="#">Juwai Night</a>
     </div>
 
     <div class="seo-content">
-      <h2>Juwai Morning Teer Advanced Search - Fully Working Filters</h2>
+      <h2>Juwai Morning Teer Advanced Search - Equal Width Columns</h2>
       <p><strong>How to use:</strong> Enter any number between 00-99, select a date from the calendar, choose a day of week, and/or filter by specific round. Click "Apply Filters" to see matching results. All filters work together!</p>
       <p><strong>Example searches:</strong> Find all dates where number 45 appeared in First Round, or see all Tuesday results where number 12 appeared in Second Round.</p>
+      <p><strong>Table design:</strong> All four columns (Date, Day, Morning First Round, Morning Second Round) have equal width for balanced presentation and easy scanning.</p>
       <p><strong>Data source:</strong> Data loaded from <code>./data/all-results.json</code> where <strong>game = "juwai morning"</strong>.</p>
     </div>
   </main>
@@ -417,12 +460,14 @@
   <footer>
     <div class="container">
       <div class="footer-links">
-        <a href="#">Privacy</a>
-        <a href="#">Terms</a>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
         <a href="#">Contact</a>
         <a href="#">About</a>
       </div>
-      <div class="disclaimer">⚠️ Informational only. Results are historical archery data, no gambling or predictions.</div>
+      <div class="disclaimer">
+        ⚠️ Informational only. Results are historical archery data, no gambling or predictions.
+      </div>
     </div>
   </footer>
 
@@ -443,6 +488,7 @@
     const resetBtn = document.getElementById('resetFilters');
     const loadingDiv = document.getElementById('loadingIndicator');
     const errorDiv = document.getElementById('errorMessage');
+    const resultsCountSpan = document.getElementById('resultsCount');
 
     // Parse date from various formats
     function parseDate(dateStr) {
@@ -503,20 +549,36 @@
         }));
     }
 
+    // Update results count display
+    function updateResultsCount(filteredCount, totalCount) {
+      if (filteredCount === totalCount) {
+        resultsCountSpan.innerHTML = `📊 Showing all ${totalCount} results`;
+        resultsCountSpan.style.color = 'var(--accent)';
+      } else {
+        resultsCountSpan.innerHTML = `📊 Found ${filteredCount} result${filteredCount !== 1 ? 's' : ''} (filtered from ${totalCount} total)`;
+        if (filteredCount === 0) {
+          resultsCountSpan.style.color = '#ef4444';
+        } else {
+          resultsCountSpan.style.color = 'var(--accent)';
+        }
+      }
+    }
+
     // Load data
     async function loadData() {
       loadingDiv.style.display = 'block';
       errorDiv.style.display = 'none';
+      resultsCountSpan.innerHTML = '📊 Loading...';
       
       try {
         const response = await fetch('./data/all-results.json');
-        if (!response.ok) throw new Error(`HTTP ${response.status} - File not found`);
+        if (!response.ok) throw new Error(`HTTP ${response.status} - File not found at ./data/all-results.json`);
         
         const jsonData = await response.json();
         const juwaiData = extractJuwaiMorningData(jsonData);
         
         if (juwaiData.length === 0) {
-          throw new Error('No valid "juwai morning" records found.');
+          throw new Error('No valid "juwai morning" records found. Please check your data file.');
         }
         
         // Sort by date descending
@@ -548,27 +610,30 @@
         
         // Initialize DataTable
         initDataTable(currentDisplayData);
+        updateResultsCount(currentDisplayData.length, originalData.length);
         
         loadingDiv.style.display = 'none';
-        console.log(`✅ Loaded ${originalData.length} records`);
+        console.log(`✅ Loaded ${originalData.length} Juwai Morning records`);
         
       } catch (error) {
-        console.error(error);
+        console.error('Error:', error);
         loadingDiv.style.display = 'none';
         errorDiv.style.display = 'block';
         errorDiv.innerHTML = `
           <strong>❌ Failed to load ./data/all-results.json</strong><br><br>
           ${error.message}<br><br>
           <strong>📂 Troubleshooting:</strong><br>
-          • File must exist at <code>./data/all-results.json</code><br>
-          • Records need <code>"game": "juwai morning"</code><br>
-          • Start a local server: <code>python -m http.server 8000</code><br><br>
-          <button onclick="location.reload()" style="background:#10b981; border:none; margin-top:12px; padding:8px 20px; border-radius:40px; cursor:pointer;">⟳ Retry</button>
+          • File must exist at <code style="background:#1e293b; padding:2px 5px;">./data/all-results.json</code><br>
+          • Records need <code style="background:#1e293b; padding:2px 5px;">"game": "juwai morning"</code><br>
+          • Example entry: <code style="background:#1e293b; padding:2px 5px;">{"game": "juwai morning", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
+          • Start a local server: <code style="background:#1e293b; padding:2px 5px;">python -m http.server 8000</code><br><br>
+          <button onclick="location.reload()" style="background:#10b981; border:none; margin-top:12px; padding:8px 20px; border-radius:40px; cursor:pointer; font-weight:600;">⟳ Retry Loading</button>
         `;
+        resultsCountSpan.innerHTML = '📊 Error loading data';
       }
     }
 
-    // Initialize or refresh DataTable
+    // Initialize or refresh DataTable with equal column widths
     function initDataTable(data) {
       const tableData = data.map(item => [
         item.displayDate,
@@ -598,6 +663,7 @@
         searching: false,
         lengthChange: false,
         responsive: true,
+        autoWidth: false,
         language: {
           info: "Showing _START_ to _END_ of _TOTAL_ entries",
           paginate: {
@@ -606,8 +672,15 @@
             next: "Next",
             previous: "Previous"
           }
+        },
+        drawCallback: function() {
+          // Ensure equal column widths after each draw
+          $('#resultsTable th, #resultsTable td').css('width', '25%');
         }
       });
+      
+      // Force equal column widths
+      $('#resultsTable th, #resultsTable td').css('width', '25%');
     }
 
     // Apply filters - the core filtering logic
@@ -662,22 +735,8 @@
       // Update table
       initDataTable(currentDisplayData);
       
-      // Show results count in console
-      console.log(`Filtered: ${filtered.length} of ${originalData.length} results`);
-      
-      // Optional: Show count on page
-      let countDiv = document.querySelector('.results-count');
-      if (!countDiv) {
-        countDiv = document.createElement('div');
-        countDiv.className = 'results-count';
-        document.querySelector('.table-wrapper').insertBefore(countDiv, document.querySelector('#resultsTable'));
-      }
-      countDiv.innerHTML = `📊 Found ${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
-      if (filtered.length === 0) {
-        countDiv.style.color = '#ef4444';
-      } else {
-        countDiv.style.color = 'var(--accent)';
-      }
+      // Update count display
+      updateResultsCount(currentDisplayData.length, originalData.length);
     }
 
     // Reset all filters
@@ -689,13 +748,7 @@
       
       currentDisplayData = [...originalData];
       initDataTable(currentDisplayData);
-      
-      // Update or remove count display
-      const countDiv = document.querySelector('.results-count');
-      if (countDiv) {
-        countDiv.innerHTML = `📊 Showing all ${originalData.length} results`;
-        countDiv.style.color = 'var(--accent)';
-      }
+      updateResultsCount(currentDisplayData.length, originalData.length);
     }
 
     // Event listeners
@@ -716,6 +769,12 @@
           localStorage.setItem('juwaiMorningDark', isDark);
           toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
           if (flatpickrInstance) flatpickrInstance.redraw();
+          // Reapply equal widths after theme change
+          setTimeout(() => {
+            if (dataTable) {
+              $('#resultsTable th, #resultsTable td').css('width', '25%');
+            }
+          }, 100);
         });
       }
     }
