@@ -395,6 +395,10 @@
         font-size: 1.5rem;
       }
     }
+	#resultsTable th:nth-child(5),
+	#resultsTable td:nth-child(5) {
+	  display: none;
+	}
   </style>
 </head>
 <body>
@@ -469,10 +473,11 @@
             <th>Day</th>
             <th>Morning First Round (FR)</th>
             <th>Morning Second Round (SR)</th>
+			<th>SortDate</th>
           </tr>
         </thead>
         <tbody id="tableBody">
-          <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
+          <tr><td colspan="5" style="text-align:center;">Loading data...</td></tr>
         </tbody>
       </table>
     </div>
