@@ -3,28 +3,19 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Khanapara Morning Teer Results | Advanced Search & Archive | Khanapara Morning Teer Result Today</title>
-  <meta name="description" content="Complete Khanapara Morning Teer Results archive with advanced search by number, date (calendar picker), and day. Filter, sort, and explore full history of Morning First Round & Morning Second Round results.">
-  <meta name="keywords" content="Khanapara Morning Teer Result, Khanapara Teer Result Today, Khanapara Morning Teer Previous Result, Khanapara Teer Archive, Teer Search by Number">
+  <title>Khanapara Morning Teer Results | Advanced Search & Archive</title>
+  <meta name="description" content="Complete Khanapara Morning Teer Results archive with advanced search by number, date, and day.">
+  <meta name="keywords" content="Khanapara Morning Teer Result, Khanapara Teer Result Today, Teer Search by Number">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://www.teerresults.example.com/khanapara-morning-advanced.html">
-  <meta property="og:title" content="Khanapara Morning Teer Results | Advanced Search & Archive">
-  <meta property="og:description" content="Search Khanapara Morning Teer results by number, date (calendar picker), or day of week. Full historical archive with powerful filtering.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Flatpickr Calendar CSS & JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <!-- DataTables CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <!-- DataTables JS -->
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
   <style>
@@ -75,9 +66,7 @@
       top: 0;
       z-index: 100;
       background: var(--surface);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       border-bottom: 1px solid var(--border);
-      transition: background 0.3s;
     }
 
     .header-inner {
@@ -92,7 +81,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 800;
-      color: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #2dd4bf 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .nav-links {
@@ -104,7 +96,7 @@
 
     .nav-links a {
       text-decoration: none;
-      color: var(--text);
+      color: var(--text-light);
       font-weight: 500;
       font-size: 0.85rem;
       transition: color 0.2s;
@@ -201,30 +193,24 @@
       font-size: 0.85rem;
     }
 
-    .date-input-wrapper {
-      position: relative;
-    }
-
-    .date-input-wrapper input {
-      cursor: pointer;
-      background-color: var(--bg);
-    }
-
     .filter-group input:focus, .filter-group select:focus {
       outline: none;
       border-color: var(--accent);
     }
 
-    .search-btn {
-      background: var(--accent);
-      color: #0f172a;
-      border: none;
+    .search-btn, .reset-btn {
       padding: 0.6rem 1.5rem;
       border-radius: 0.5rem;
-      cursor: pointer;
       font-weight: 600;
       font-family: Poppins;
+      cursor: pointer;
       transition: 0.2s;
+    }
+
+    .search-btn {
+      background: var(--accent);
+      border: none;
+      color: #0f172a;
     }
 
     .search-btn:hover {
@@ -236,12 +222,6 @@
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.6rem 1.5rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: Poppins;
-      transition: 0.2s;
     }
 
     .reset-btn:hover {
@@ -271,17 +251,12 @@
       vertical-align: middle;
     }
 
-    .dataTables_wrapper .results-table {
-      table-layout: fixed !important;
-    }
-
     .results-table th {
       background: var(--bg);
       font-weight: 700;
       color: var(--accent);
     }
 
-    /* Responsive handling */
     @media (max-width: 768px) {
       .results-table th,
       .results-table td {
@@ -293,7 +268,6 @@
       }
     }
 
-    /* Hide default DataTables length and search elements */
     .dataTables_length, .dataTables_filter {
       display: none !important;
     }
@@ -322,35 +296,33 @@
       border-color: var(--accent);
     }
 
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-      background: var(--accent) !important;
-      color: #0f172a !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-      opacity: 0.5;
-    }
-
-    /* Flatpickr calendar dark mode support */
     body.dark .flatpickr-calendar {
       background: var(--surface);
       border-color: var(--border);
-      box-shadow: 0 3px 13px rgba(0,0,0,0.3);
     }
+
     body.dark .flatpickr-day {
       color: var(--text);
     }
+
     body.dark .flatpickr-day.selected {
       background: var(--accent);
       border-color: var(--accent);
     }
-    body.dark .flatpickr-months .flatpickr-month,
-    body.dark .flatpickr-weekdays {
-      color: var(--text);
+
+    .filter-status {
+      margin-bottom: 1rem;
     }
-    body.dark .flatpickr-current-month .flatpickr-monthDropdown-months,
-    body.dark .flatpickr-current-month input.cur-year {
-      color: var(--text);
+
+    .results-count {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border-radius: 0.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
     }
 
     .seo-content {
@@ -422,25 +394,6 @@
       color: var(--text-light);
     }
 
-    .filter-status {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin-bottom: 1rem;
-    }
-
-    .results-count {
-      padding: 0.5rem 1rem;
-      font-weight: 600;
-      color: var(--accent);
-      background: var(--surface);
-      border-radius: 0.8rem;
-      display: inline-block;
-      font-size: 0.85rem;
-    }
-
     @media (max-width: 768px) {
       .search-filters {
         flex-direction: column;
@@ -452,24 +405,17 @@
         font-size: 1.5rem;
       }
     }
-    
-    table.dataTable thead th, 
-    table.dataTable thead td {
-      text-align: center;
-    }
   </style>
 </head>
 <body>
   <header class="sticky-header">
     <div class="container header-inner">
-      <div class="logo">🌅 Khanapara Morning Teer Advanced Search</div>
+      <div class="logo">🌅 Khanapara Morning Teer · Advanced Archive</div>
       <div class="nav-links">
         <a href="#">Home</a>
         <a href="#">Common Numbers</a>
         <a href="#">Dream Numbers</a>
-        <a href="#">Teer Formula</a>
         <a href="#">Statistics</a>
-        <a href="#">Contact</a>
         <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
       </div>
     </div>
@@ -477,21 +423,18 @@
 
   <main class="container">
     <div class="hero">
-      <h1>Khanapara Morning Teer Results | Advanced Search & Full History Archive</h1>
-      <p>Search Khanapara Morning Teer results by number, date (calendar picker), or day of week. Our powerful archive lets you filter, sort, and explore complete historical data with ease.</p>
+      <h1>Khanapara Morning Teer Results | Search by Number, Date & Day</h1>
+      <p>Complete historical results for Morning First Round (FR) & Second Round (SR). All columns have equal width for easy reading.</p>
     </div>
 
-    <!-- Advanced Search Filters -->
     <div class="search-filters">
       <div class="filter-group">
-        <label>🔢 Search by Number (FR or SR)</label>
-        <input type="text" id="numberSearch" placeholder="Enter number (00-99)" maxlength="2" inputmode="numeric">
+        <label>🔢 Number (00-99)</label>
+        <input type="text" id="numberSearch" placeholder="e.g., 45" maxlength="2" inputmode="numeric">
       </div>
       <div class="filter-group">
-        <label>📅 Select Date (Calendar)</label>
-        <div class="date-input-wrapper">
-          <input type="text" id="dateCalendar" placeholder="Click to select date" autocomplete="off">
-        </div>
+        <label>📅 Pick a Date</label>
+        <input type="text" id="dateCalendar" placeholder="Select date" autocomplete="off">
       </div>
       <div class="filter-group">
         <label>📆 Day of Week</label>
@@ -507,20 +450,20 @@
         </select>
       </div>
       <div class="filter-group">
-        <label>🎯 Filter by Round</label>
+        <label>🎯 Round Filter</label>
         <select id="roundSearch">
           <option value="">Both Rounds</option>
           <option value="fr">Morning First Round (FR)</option>
           <option value="sr">Morning Second Round (SR)</option>
         </select>
       </div>
-      <div>
+      <div style="display: flex; gap: 0.8rem;">
         <button class="search-btn" id="applyFilters">🔍 Apply Filters</button>
         <button class="reset-btn" id="resetFilters">⟳ Reset</button>
       </div>
     </div>
 
-    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📊 Loading Khanapara Morning Teer results...</div>
+    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📡 Loading Khanapara Morning results from ./data/all-results.json ...</div>
     <div id="errorMessage" class="error-message" style="display: none;"></div>
 
     <div class="filter-status">
@@ -538,412 +481,341 @@
           </tr>
         </thead>
         <tbody>
-          <tr><td colspan="4" style="text-align:center;">Loading data...<\/td><\/tr>
+          <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
         </tbody>
-      <\/table>
-    <\/div>
+      </table>
+    </div>
 
     <div class="related-links">
       <a href="#">Shillong Day Results</a>
       <a href="#">Shillong Morning Results</a>
-      <a href="#">Shillong Night Results</a>
       <a href="#">Khanapara Day Results</a>
       <a href="#">Juwai Morning Results</a>
-    <\/div>
+      <a href="#">Juwai Day Results</a>
+    </div>
 
     <div class="seo-content">
-      <h2>Khanapara Morning Teer Result Search: Find Any Number, Date, or Day<\/h2>
-      <p><strong>Search Khanapara Morning Teer Result Today<\/strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.</p>
-      
-      <p>The <strong>Khanapara Morning Teer Previous Result<\/strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in Morning First Round or Morning Second Round.</p>
-      
-      <p><strong>How to use:<\/strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
-      
-      <p><strong>Equal width columns:<\/strong> All four columns (Date, Day, Morning First Round, Morning Second Round) have equal width for balanced presentation and easy scanning.</p>
-      
-      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data\/all-results.json<\/code> and filtered to display only <strong>"game": "khanapara morning"<\/strong> records. This ensures accurate and reliable search results for Khanapara Morning Teer enthusiasts.</p>
-    <\/div>
-  <\/main>
+      <h2>Khanapara Morning Teer Advanced Search - Working Filters</h2>
+      <p><strong>How to use:</strong> Enter any number between 00-99, select a date from the calendar, choose a day of week, and/or filter by specific round. Click "Apply Filters" to see matching results. All filters work together!</p>
+      <p><strong>Example searches:</strong> Find all dates where number 45 appeared in First Round, or see all Tuesday results where number 12 appeared in Second Round.</p>
+      <p><strong>Data source:</strong> Data loaded from <code>./data/all-results.json</code> where <strong>game = "khanapara morning"</strong>.</p>
+    </div>
+  </main>
 
   <footer>
     <div class="container">
       <div class="footer-links">
-        <a href="#">Privacy Policy<\/a>
-        <a href="#">Terms & Conditions<\/a>
-        <a href="#">Contact<\/a>
-        <a href="#">About<\/a>
-      <\/div>
-      <div class="disclaimer">
-        ⚠️ Informational Purpose Only: This website does not promote gambling, betting, or predictions. Khanapara Morning Teer results are based on archery events and are provided as historical reference only.
-      <\/div>
-    <\/div>
-  <\/footer>
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+      </div>
+      <div class="disclaimer">⚠️ Informational only. Results are historical archery data, no gambling or predictions.</div>
+    </div>
+  </footer>
 
   <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      // Global variables
-      let originalData = [];
-      let currentDisplayData = [];
-      let dataTable = null;
-      let flatpickrInstance = null;
-      let availableDates = new Set();
+    // Global variables
+    let allData = [];        // Store original full data
+    let dataTable = null;
+    let flatpickrInstance = null;
+    let availableDates = new Set();
 
-      const GAME_NAME = "khanapara morning";
+    // DOM elements
+    const loadingDiv = document.getElementById('loadingIndicator');
+    const errorDiv = document.getElementById('errorMessage');
+    const numberSearch = document.getElementById('numberSearch');
+    const dateCalendar = document.getElementById('dateCalendar');
+    const daySearch = document.getElementById('daySearch');
+    const roundSearch = document.getElementById('roundSearch');
+    const applyBtn = document.getElementById('applyFilters');
+    const resetBtn = document.getElementById('resetFilters');
+    const resultsCountSpan = document.getElementById('resultsCount');
 
-      // DOM elements
-      const loadingIndicator = document.getElementById("loadingIndicator");
-      const errorMessageDiv = document.getElementById("errorMessage");
-      const numberSearch = document.getElementById("numberSearch");
-      const dateCalendar = document.getElementById("dateCalendar");
-      const daySearch = document.getElementById("daySearch");
-      const roundSearch = document.getElementById("roundSearch");
-      const applyFiltersBtn = document.getElementById("applyFilters");
-      const resetFiltersBtn = document.getElementById("resetFilters");
-      const resultsCountSpan = document.getElementById("resultsCount");
+    // Helper functions
+    function parseDate(dateStr) {
+      if (!dateStr || dateStr === '0000-00-00') return null;
+      let match = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (match) {
+        return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+      }
+      match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+      if (match) {
+        return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
+      }
+      const parsed = new Date(dateStr);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
 
-      // Helper: Parse date
-      function parseDate(dateStr) {
-        if (!dateStr || dateStr === '0000-00-00') return null;
-        
-        let parts = dateStr.split(/[-/]/);
-        if (parts.length === 3) {
-          if (parts[0].length === 4) {
-            return new Date(parts[0], parts[1] - 1, parts[2]);
+    function getDayOfWeek(dateStr) {
+      const date = parseDate(dateStr);
+      if (!date) return '';
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return days[date.getDay()];
+    }
+
+    function formatDateDisplay(dateStr) {
+      const date = parseDate(dateStr);
+      if (!date) return dateStr;
+      return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+    }
+
+    function cleanNumber(value) {
+      if (value === undefined || value === null || value === '') return '';
+      const str = String(value).trim().toLowerCase();
+      const invalid = ['xx', 'off', '—', '-', '--', 'na', 'null', ''];
+      if (invalid.includes(str)) return '';
+      const num = parseInt(str, 10);
+      if (isNaN(num) || num < 0 || num > 99) return '';
+      return String(num).padStart(2, '0');
+    }
+
+    // Filter only Khanapara Morning results
+    function filterKhanaparaMorning(rawData) {
+      if (!Array.isArray(rawData)) return [];
+      
+      return rawData
+        .filter(item => {
+          const game = (item.game || '').toString().toLowerCase().trim();
+          return game === 'khanapara morning';
+        })
+        .map(item => ({
+          date: item.date || '',
+          fr: item.fr || item.first_round || '',
+          sr: item.sr || item.second_round || ''
+        }))
+        .filter(item => {
+          if (!item.date) return false;
+          const frClean = cleanNumber(item.fr);
+          const srClean = cleanNumber(item.sr);
+          return frClean && srClean;
+        })
+        .map(item => ({
+          originalDate: item.date,
+          displayDate: formatDateDisplay(item.date),
+          day: getDayOfWeek(item.date),
+          fr: cleanNumber(item.fr),
+          sr: cleanNumber(item.sr)
+        }));
+    }
+
+    // Rebuild table with given data
+    function rebuildTable(data) {
+      const tableData = data.map(item => [
+        item.displayDate,
+        item.day,
+        item.fr,
+        item.sr
+      ]);
+      
+      if (dataTable) {
+        dataTable.clear();
+        dataTable.destroy();
+        $('#resultsTable tbody').empty();
+      }
+      
+      dataTable = $('#resultsTable').DataTable({
+        data: tableData,
+        columns: [
+          { title: "Date" },
+          { title: "Day" },
+          { title: "Morning First Round (FR)" },
+          { title: "Morning Second Round (SR)" }
+        ],
+        order: [[0, 'desc']],
+        pageLength: 25,
+        paging: true,
+        info: true,
+        searching: false,
+        lengthChange: false,
+        responsive: true,
+        autoWidth: false,
+        language: {
+          info: "Showing _START_ to _END_ of _TOTAL_ entries",
+          paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
+        },
+        drawCallback: function() {
+          $('#resultsTable th, #resultsTable td').css('width', '25%');
+        }
+      });
+      
+      $('#resultsTable th, #resultsTable td').css('width', '25%');
+    }
+
+    // Apply all filters
+    function applyFilters() {
+      const numberRaw = numberSearch.value.trim();
+      const dateVal = dateCalendar.value.trim();
+      const dayVal = daySearch.value;
+      const roundVal = roundSearch.value;
+      
+      // Validate number
+      let numberFilter = null;
+      if (numberRaw !== '') {
+        const num = parseInt(numberRaw, 10);
+        if (isNaN(num) || num < 0 || num > 99) {
+          alert('Please enter a valid number between 00 and 99');
+          return;
+        }
+        numberFilter = num;
+      }
+      
+      // Start with all data
+      let filtered = [...allData];
+      
+      // Filter by number
+      if (numberFilter !== null) {
+        filtered = filtered.filter(item => {
+          const frNum = parseInt(item.fr, 10);
+          const srNum = parseInt(item.sr, 10);
+          
+          if (roundVal === 'fr') {
+            return frNum === numberFilter;
+          } else if (roundVal === 'sr') {
+            return srNum === numberFilter;
           } else {
-            return new Date(parts[2], parts[1] - 1, parts[0]);
+            return frNum === numberFilter || srNum === numberFilter;
           }
+        });
+      }
+      
+      // Filter by date
+      if (dateVal !== '') {
+        filtered = filtered.filter(item => item.displayDate === dateVal);
+      }
+      
+      // Filter by day
+      if (dayVal !== '') {
+        filtered = filtered.filter(item => item.day === dayVal);
+      }
+      
+      // Update count display
+      if (filtered.length === allData.length) {
+        resultsCountSpan.innerHTML = `📊 Showing all ${filtered.length} results`;
+        resultsCountSpan.style.color = 'var(--accent)';
+      } else {
+        resultsCountSpan.innerHTML = `📊 Found ${filtered.length} result${filtered.length !== 1 ? 's' : ''} (filtered from ${allData.length} total)`;
+        resultsCountSpan.style.color = filtered.length === 0 ? '#ef4444' : 'var(--accent)';
+      }
+      
+      // Rebuild table with filtered data
+      rebuildTable(filtered);
+    }
+
+    // Reset all filters
+    function resetFilters() {
+      numberSearch.value = '';
+      if (flatpickrInstance) flatpickrInstance.clear();
+      daySearch.value = '';
+      roundSearch.value = '';
+      
+      resultsCountSpan.innerHTML = `📊 Showing all ${allData.length} results`;
+      resultsCountSpan.style.color = 'var(--accent)';
+      rebuildTable(allData);
+    }
+
+    // Load data from JSON
+    async function loadData() {
+      loadingDiv.style.display = 'block';
+      errorDiv.style.display = 'none';
+      resultsCountSpan.innerHTML = '📊 Loading...';
+      
+      try {
+        const response = await fetch('./data/all-results.json');
+        
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} - File not found at ./data/all-results.json`);
         }
         
-        const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-        for (let i = 0; i < monthNames.length; i++) {
-          if (dateStr.toLowerCase().includes(monthNames[i])) {
-            const match = dateStr.match(/(\d+)\s+(\w+)\s+(\d+)/);
-            if (match) {
-              return new Date(match[3], i, parseInt(match[1]));
-            }
-          }
+        const jsonData = await response.json();
+        
+        if (!Array.isArray(jsonData)) {
+          throw new Error('Invalid JSON format: expected an array');
         }
         
-        return new Date(dateStr);
-      }
-
-      // Get day of week
-      function getDayOfWeek(dateStr) {
-        const date = parseDate(dateStr);
-        if (!date) return '';
-        const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-        return days[date.getDay()];
-      }
-
-      // Format date for display
-      function formatDate(dateStr) {
-        const date = parseDate(dateStr);
-        if (!date) return dateStr;
-        const day = date.getDate().toString().padStart(2, '0');
-        const month = (date.getMonth() + 1).toString().padStart(2, '0');
-        const year = date.getFullYear();
-        return `${day}-${month}-${year}`;
-      }
-
-      // Clean number (remove invalid values)
-      function cleanNumber(value) {
-        if (value === undefined || value === null || value === "") return "";
-        const strValue = String(value).trim().toLowerCase();
-        const invalidMarkers = ['xx', 'off', '—', '–', '-', '--', 'na', 'null'];
-        if (invalidMarkers.includes(strValue)) return "";
-        const num = parseInt(strValue, 10);
-        if (isNaN(num) || num < 0 || num > 99) return "";
-        return String(num).padStart(2, '0');
-      }
-
-      // Sort by date descending
-      function sortByDateDesc(results) {
-        return results.sort((a, b) => {
-          const dateA = parseDate(a.date);
-          const dateB = parseDate(b.date);
+        const filteredData = filterKhanaparaMorning(jsonData);
+        
+        if (filteredData.length === 0) {
+          throw new Error('No "khanapara morning" records found. Make sure your data has game: "khanapara morning"');
+        }
+        
+        // Sort by date descending (newest first)
+        allData = filteredData.sort((a, b) => {
+          const dateA = parseDate(a.originalDate);
+          const dateB = parseDate(b.originalDate);
           if (!dateA && !dateB) return 0;
           if (!dateA) return 1;
           if (!dateB) return -1;
           return dateB - dateA;
         });
-      }
-
-      // Filter only Khanapara Morning results
-      function filterKhanaparaMorning(data) {
-        if (!Array.isArray(data)) return [];
         
-        return data
-          .filter(item => {
-            const gameName = (item.game || '').toString().toLowerCase().trim();
-            return gameName === GAME_NAME;
-          })
-          .map(item => ({
-            date: item.date || '',
-            first_round: item.fr || item.first_round || '',
-            second_round: item.sr || item.second_round || ''
-          }))
-          .filter(item => {
-            if (!item.date) return false;
-            const frCleaned = cleanNumber(item.first_round);
-            const srCleaned = cleanNumber(item.second_round);
-            return frCleaned && srCleaned;
-          })
-          .map(item => ({
-            date: item.date,
-            first_round: cleanNumber(item.first_round),
-            second_round: cleanNumber(item.second_round),
-            day: getDayOfWeek(item.date),
-            displayDate: formatDate(item.date)
-          }));
-      }
-
-      // Update results count display
-      function updateResultsCount(filteredCount, totalCount) {
-        if (filteredCount === totalCount) {
-          resultsCountSpan.innerHTML = `📊 Showing all ${totalCount} results`;
-          resultsCountSpan.style.color = 'var(--accent)';
-        } else {
-          resultsCountSpan.innerHTML = `📊 Found ${filteredCount} result${filteredCount !== 1 ? 's' : ''} (filtered from ${totalCount} total)`;
-          if (filteredCount === 0) {
-            resultsCountSpan.style.color = '#ef4444';
-          } else {
-            resultsCountSpan.style.color = 'var(--accent)';
-          }
-        }
-      }
-
-      // Initialize calendar
-      function initCalendar() {
-        if (flatpickrInstance) {
-          flatpickrInstance.destroy();
-        }
+        // Build available dates for calendar
+        availableDates.clear();
+        allData.forEach(item => availableDates.add(item.displayDate));
         
-        const dateStrings = Array.from(availableDates);
-        
+        // Initialize flatpickr
         flatpickrInstance = flatpickr(dateCalendar, {
           dateFormat: "d-m-Y",
           altFormat: "d-m-Y",
           altInput: true,
           allowInput: false,
-          enable: dateStrings.length > 0 ? dateStrings : undefined,
+          enable: Array.from(availableDates),
           disableMobile: true
         });
+        
+        // Build table
+        rebuildTable(allData);
+        resultsCountSpan.innerHTML = `📊 Showing all ${allData.length} results`;
+        
+        loadingDiv.style.display = 'none';
+        console.log(`✅ Loaded ${allData.length} Khanapara Morning records`);
+        
+      } catch (error) {
+        console.error('Error:', error);
+        loadingDiv.style.display = 'none';
+        errorDiv.style.display = 'block';
+        errorDiv.innerHTML = `
+          <strong>❌ Failed to load ./data/all-results.json</strong><br><br>
+          ${error.message}<br><br>
+          <strong>📂 Troubleshooting:</strong><br>
+          • File must exist at <code>./data/all-results.json</code><br>
+          • Records need <code>"game": "khanapara morning"</code><br>
+          • Example: <code>{"game": "khanapara morning", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
+          • Start a local server: <code>python -m http.server 8000</code><br><br>
+          <button onclick="location.reload()" style="background:#22c55e; border:none; padding:8px 20px; border-radius:40px; cursor:pointer; font-weight:600;">⟳ Retry</button>
+        `;
+        resultsCountSpan.innerHTML = '📊 Error loading data';
       }
+    }
 
-      // Initialize DataTable with equal widths
-      function initDataTable(data) {
-        if (dataTable) {
-          dataTable.destroy();
-          $('#resultsTable tbody').empty();
-        }
-        
-        const tableData = data.map(item => [
-          item.displayDate,
-          item.day,
-          item.first_round,
-          item.second_round
-        ]);
-        
-        dataTable = $('#resultsTable').DataTable({
-          data: tableData,
-          columns: [
-            { title: "Date" },
-            { title: "Day" },
-            { title: "Morning First Round (FR)" },
-            { title: "Morning Second Round (SR)" }
-          ],
-          order: [[0, 'desc']],
-          pageLength: 25,
-          paging: true,
-          info: true,
-          searching: false,
-          lengthChange: false,
-          responsive: true,
-          autoWidth: false,
-          language: {
-            info: "Showing _START_ to _END_ of _TOTAL_ entries",
-            paginate: {
-              first: "First",
-              last: "Last",
-              next: "Next",
-              previous: "Previous"
-            }
-          },
-          drawCallback: function() {
-            // Ensure equal column widths after each draw
-            $('#resultsTable th, #resultsTable td').css('width', '25%');
-          }
+    // Dark mode
+    function initDarkMode() {
+      const toggle = document.getElementById('darkModeToggle');
+      const isDark = localStorage.getItem('darkModeKhanaparaMorning') === 'true';
+      if (isDark) document.body.classList.add('dark');
+      if (toggle) {
+        toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
+        toggle.addEventListener('click', () => {
+          document.body.classList.toggle('dark');
+          const darkEnabled = document.body.classList.contains('dark');
+          localStorage.setItem('darkModeKhanaparaMorning', darkEnabled);
+          toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+          if (flatpickrInstance) flatpickrInstance.redraw();
+          setTimeout(() => {
+            if (dataTable) $('#resultsTable th, #resultsTable td').css('width', '25%');
+          }, 100);
         });
-        
-        // Force equal column widths
-        $('#resultsTable th, #resultsTable td').css('width', '25%');
       }
+    }
 
-      // Apply filters
-      function applyFilters() {
-        const numberValue = numberSearch.value.trim();
-        const dateValue = dateCalendar.value.trim();
-        const dayValue = daySearch.value;
-        const roundValue = roundSearch.value;
-        
-        // Validate number
-        let numberFilter = null;
-        if (numberValue !== '') {
-          const num = parseInt(numberValue, 10);
-          if (isNaN(num) || num < 0 || num > 99) {
-            alert('Please enter a valid number between 00 and 99');
-            return;
-          }
-          numberFilter = num;
-        }
-        
-        // Filter the data
-        let filtered = [...originalData];
-        
-        // Apply number filter
-        if (numberFilter !== null) {
-          filtered = filtered.filter(item => {
-            const frNum = parseInt(item.first_round, 10);
-            const srNum = parseInt(item.second_round, 10);
-            
-            if (roundValue === 'fr') {
-              return frNum === numberFilter;
-            } else if (roundValue === 'sr') {
-              return srNum === numberFilter;
-            } else {
-              return frNum === numberFilter || srNum === numberFilter;
-            }
-          });
-        }
-        
-        // Apply date filter
-        if (dateValue !== '') {
-          filtered = filtered.filter(item => item.displayDate === dateValue);
-        }
-        
-        // Apply day filter
-        if (dayValue !== '') {
-          filtered = filtered.filter(item => item.day === dayValue);
-        }
-        
-        currentDisplayData = filtered;
-        
-        // Update table
-        initDataTable(currentDisplayData);
-        
-        // Update count display
-        updateResultsCount(currentDisplayData.length, originalData.length);
-      }
+    // Event listeners
+    applyBtn.addEventListener('click', applyFilters);
+    resetBtn.addEventListener('click', resetFilters);
+    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
 
-      // Reset all filters
-      function resetFilters() {
-        numberSearch.value = '';
-        if (flatpickrInstance) {
-          flatpickrInstance.clear();
-        }
-        daySearch.value = '';
-        roundSearch.value = '';
-        
-        currentDisplayData = [...originalData];
-        initDataTable(currentDisplayData);
-        updateResultsCount(currentDisplayData.length, originalData.length);
-      }
-
-      // Load data from JSON
-      async function loadData() {
-        loadingIndicator.style.display = "block";
-        errorMessageDiv.style.display = "none";
-        resultsCountSpan.innerHTML = '📊 Loading...';
-        
-        try {
-          const response = await fetch("./data/all-results.json");
-          
-          if (!response.ok) {
-            throw new Error(`HTTP ${response.status} - File not found at ./data/all-results.json`);
-          }
-          
-          const data = await response.json();
-          
-          if (!Array.isArray(data)) {
-            throw new Error('Invalid data format: expected an array');
-          }
-          
-          let khanaparaResults = filterKhanaparaMorning(data);
-          
-          if (khanaparaResults.length === 0) {
-            throw new Error('No Khanapara Morning results found. Check that records have "game": "khanapara morning"');
-          }
-          
-          originalData = sortByDateDesc(khanaparaResults);
-          currentDisplayData = [...originalData];
-          
-          // Build available dates for calendar
-          availableDates.clear();
-          originalData.forEach(result => {
-            availableDates.add(result.displayDate);
-          });
-          
-          initCalendar();
-          initDataTable(currentDisplayData);
-          updateResultsCount(currentDisplayData.length, originalData.length);
-          
-          loadingIndicator.style.display = "none";
-          console.log(`✅ Loaded ${originalData.length} Khanapara Morning records`);
-          
-        } catch (error) {
-          console.error('Error loading JSON:', error);
-          loadingIndicator.style.display = "none";
-          errorMessageDiv.style.display = "block";
-          errorMessageDiv.innerHTML = `
-            <strong>⚠️ Unable to load data from ./data/all-results.json</strong><br><br>
-            ${error.message}<br><br>
-            <strong>📂 Troubleshooting tips:</strong><br>
-            • Make sure the file exists at: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">./data/all-results.json</code><br>
-            • The file should contain records with <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">"game": "khanapara morning"</code><br>
-            • Example entry: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">{"game": "khanapara morning", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
-            • If running locally, start a local web server:<br>
-            <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br><br>
-            <button onclick="location.reload()" style="background: var(--accent); color: #0f172a; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-family: Poppins; font-weight: 600; margin-top: 10px;">🔄 Retry Loading</button>
-          `;
-          resultsCountSpan.innerHTML = '📊 Error loading data';
-        }
-      }
-
-      // Dark mode
-      function initDarkMode() {
-        const toggleBtn = document.getElementById("darkModeToggle");
-        const isDark = localStorage.getItem("darkModeKhanaparaMorningAdvanced") === "true";
-        
-        if (isDark) document.body.classList.add("dark");
-        
-        if (toggleBtn) {
-          toggleBtn.textContent = isDark ? "☀️ Light" : "🌓 Dark";
-          
-          toggleBtn.addEventListener("click", function () {
-            document.body.classList.toggle("dark");
-            const darkEnabled = document.body.classList.contains("dark");
-            localStorage.setItem("darkModeKhanaparaMorningAdvanced", darkEnabled);
-            toggleBtn.textContent = darkEnabled ? "☀️ Light" : "🌓 Dark";
-            if (flatpickrInstance) flatpickrInstance.redraw();
-            // Reapply equal widths after theme change
-            setTimeout(() => {
-              if (dataTable) {
-                $('#resultsTable th, #resultsTable td').css('width', '25%');
-              }
-            }, 100);
-          });
-        }
-      }
-
-      // Event listeners
-      applyFiltersBtn.addEventListener("click", applyFilters);
-      resetFiltersBtn.addEventListener("click", resetFilters);
-      numberSearch.addEventListener("keypress", (e) => { if (e.key === "Enter") applyFilters(); });
-
-      // Initialize
-      initDarkMode();
-      loadData();
-    });
+    // Initialize
+    initDarkMode();
+    loadData();
   </script>
 </body>
 </html>
