@@ -37,6 +37,7 @@
     :root {
       --primary: #0f172a;
       --accent: #22c55e;
+      --accent-hover: #16a34a;
       --bg: #f8fafc;
       --surface: #ffffff;
       --text: #0f172a;
@@ -122,6 +123,11 @@
       font-family: Poppins;
       font-weight: 500;
       color: #0f172a;
+      transition: 0.2s;
+    }
+
+    .dark-toggle:hover {
+      background: var(--accent-hover);
     }
 
     .hero {
@@ -218,6 +224,12 @@
       cursor: pointer;
       font-weight: 600;
       font-family: Poppins;
+      transition: 0.2s;
+    }
+
+    .search-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
     }
 
     .reset-btn {
@@ -229,6 +241,11 @@
       cursor: pointer;
       font-weight: 600;
       font-family: Poppins;
+      transition: 0.2s;
+    }
+
+    .reset-btn:hover {
+      background: var(--border);
     }
 
     .table-wrapper {
@@ -239,14 +256,23 @@
       margin: 1.5rem 0;
     }
 
+    /* EQUAL WIDTH FOR ALL COLUMNS */
     .results-table {
       width: 100% !important;
+      table-layout: fixed !important;
       font-size: 0.85rem;
     }
 
-    .results-table th, .results-table td {
-      padding: 0.8rem;
+    .results-table th,
+    .results-table td {
+      width: 25% !important;
       text-align: center;
+      padding: 0.8rem;
+      vertical-align: middle;
+    }
+
+    .dataTables_wrapper .results-table {
+      table-layout: fixed !important;
     }
 
     .results-table th {
@@ -255,7 +281,19 @@
       color: var(--accent);
     }
 
-    /* Hide default DataTables length and search elements */
+    /* Responsive handling */
+    @media (max-width: 768px) {
+      .results-table th,
+      .results-table td {
+        width: auto !important;
+        min-width: 100px;
+      }
+      .results-table {
+        table-layout: auto !important;
+      }
+    }
+
+    /* Hide default DataTables elements */
     .dataTables_length, .dataTables_filter {
       display: none !important;
     }
@@ -384,6 +422,25 @@
       color: var(--text-light);
     }
 
+    .filter-status {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .results-count {
+      padding: 0.5rem 1rem;
+      font-weight: 600;
+      color: var(--accent);
+      background: var(--surface);
+      border-radius: 0.8rem;
+      display: inline-block;
+      font-size: 0.85rem;
+    }
+
     @media (max-width: 768px) {
       .search-filters {
         flex-direction: column;
@@ -395,7 +452,11 @@
         font-size: 1.5rem;
       }
     }
-	table.dataTable thead th, table.dataTable thead td{text-align: center;}
+    
+    table.dataTable thead th, 
+    table.dataTable thead td {
+      text-align: center;
+    }
   </style>
 </head>
 <body>
@@ -424,12 +485,12 @@
     <div class="search-filters">
       <div class="filter-group">
         <label>🔢 Search by Number (FR or SR)</label>
-        <input type="text" id="numberSearch" placeholder="Enter number (00-99)" maxlength="2">
+        <input type="text" id="numberSearch" placeholder="Enter number (00-99)" maxlength="2" inputmode="numeric">
       </div>
       <div class="filter-group">
         <label>📅 Select Date (Calendar)</label>
         <div class="date-input-wrapper">
-          <input type="text" id="dateCalendar" placeholder="Click to select date">
+          <input type="text" id="dateCalendar" placeholder="Click to select date" autocomplete="off">
         </div>
       </div>
       <div class="filter-group">
@@ -462,6 +523,10 @@
     <div id="loadingIndicator" class="loading-spinner" style="display: none;">📊 Loading Juwai Day Teer results...</div>
     <div id="errorMessage" class="error-message" style="display: none;"></div>
 
+    <div class="filter-status">
+      <div class="results-count" id="resultsCount">📊 Loading...</div>
+    </div>
+
     <div class="table-wrapper">
       <table id="resultsTable" class="results-table display responsive" style="width:100%">
         <thead>
@@ -472,12 +537,10 @@
             <th>Second Round (SR)</th>
           </tr>
         </thead>
-        <tbody id="tableBody">
-		  <tr>
-			<td colspan="4" style="text-align:center;">Loading data...</td>
-		  </tr>
-		</tbody>
-      </table>
+        <tbody>
+          <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
+        </tbody>
+       </table>
     </div>
 
     <div class="related-links">
@@ -495,6 +558,8 @@
       <p>The <strong>Juwai Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
       
       <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
+      
+      <p><strong>Equal width columns:</strong> All four columns (Date, Day, First Round, Second Round) have equal width for balanced presentation and easy scanning.</p>
       
       <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "juwai day"</strong> records. This ensures accurate and reliable search results for Juwai Day Teer enthusiasts.</p>
     </div>
@@ -516,7 +581,8 @@
 
   <script>
     // Global variables
-    let allResults = [];
+    let originalData = [];
+    let currentDisplayData = [];
     let dataTable = null;
     let availableDates = new Set();
     let flatpickrInstance = null;
@@ -530,14 +596,7 @@
     const roundSearch = document.getElementById('roundSearch');
     const applyFiltersBtn = document.getElementById('applyFilters');
     const resetFiltersBtn = document.getElementById('resetFilters');
-
-    // Helper: Parse date to get day of week
-    const getDayOfWeek = (dateStr) => {
-      const date = parseDate(dateStr);
-      if (!date) return '';
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      return days[date.getDay()];
-    };
+    const resultsCountSpan = document.getElementById('resultsCount');
 
     // Helper: Parse various date formats
     const parseDate = (dateStr) => {
@@ -565,6 +624,14 @@
       return new Date(dateStr);
     };
 
+    // Get day of week
+    const getDayOfWeek = (dateStr) => {
+      const date = parseDate(dateStr);
+      if (!date) return '';
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return days[date.getDay()];
+    };
+
     // Format date for display (DD-MM-YYYY)
     const formatDate = (dateStr) => {
       const date = parseDate(dateStr);
@@ -577,17 +644,37 @@
 
     // Filter only Juwai Day results (game === "juwai day")
     const filterJuwaiDay = (data) => {
+      if (!Array.isArray(data)) return [];
+      
       return data.filter(item => {
-        const gameName = (item.game || '').toLowerCase();
+        const gameName = (item.game || '').toLowerCase().trim();
         return gameName === 'juwai day';
       }).map(item => ({
         date: item.date || '',
         first_round: item.fr || item.first_round || '',
         second_round: item.sr || item.second_round || ''
-      })).filter(item => item.date && item.first_round && item.second_round && 
-              item.first_round !== 'xx' && item.first_round !== 'OFF' && item.first_round !== '—' && item.first_round !== '-' &&
-              item.second_round !== 'xx' && item.second_round !== 'OFF' && item.second_round !== '—' && item.second_round !== '-' &&
-              !isNaN(parseInt(item.first_round)) && !isNaN(parseInt(item.second_round)));
+      })).filter(item => {
+        if (!item.date) return false;
+        
+        const frNum = parseInt(item.first_round, 10);
+        const srNum = parseInt(item.second_round, 10);
+        
+        const invalidMarkers = ['xx', 'off', '—', '-', 'na', ''];
+        const frClean = String(item.first_round).toLowerCase().trim();
+        const srClean = String(item.second_round).toLowerCase().trim();
+        
+        if (invalidMarkers.includes(frClean) || invalidMarkers.includes(srClean)) return false;
+        if (isNaN(frNum) || isNaN(srNum)) return false;
+        if (frNum < 0 || frNum > 99 || srNum < 0 || srNum > 99) return false;
+        
+        return true;
+      }).map(item => ({
+        date: item.date,
+        first_round: String(parseInt(item.first_round, 10)).padStart(2, '0'),
+        second_round: String(parseInt(item.second_round, 10)).padStart(2, '0'),
+        day: getDayOfWeek(item.date),
+        displayDate: formatDate(item.date)
+      }));
     };
 
     // Sort by date descending (latest first)
@@ -602,6 +689,21 @@
       });
     };
 
+    // Update results count display
+    const updateResultsCount = (filteredCount, totalCount) => {
+      if (filteredCount === totalCount) {
+        resultsCountSpan.innerHTML = `📊 Showing all ${totalCount} results`;
+        resultsCountSpan.style.color = 'var(--accent)';
+      } else {
+        resultsCountSpan.innerHTML = `📊 Found ${filteredCount} result${filteredCount !== 1 ? 's' : ''} (filtered from ${totalCount} total)`;
+        if (filteredCount === 0) {
+          resultsCountSpan.style.color = '#ef4444';
+        } else {
+          resultsCountSpan.style.color = 'var(--accent)';
+        }
+      }
+    };
+
     // Initialize flatpickr calendar with available dates
     const initCalendar = () => {
       if (flatpickrInstance) {
@@ -614,76 +716,24 @@
         dateFormat: "d-m-Y",
         altFormat: "d-m-Y",
         altInput: true,
-        allowInput: true,
+        allowInput: false,
         enable: dateStrings.length > 0 ? dateStrings : undefined,
-        disableMobile: true,
-        onChange: function(selectedDates, dateStr, instance) {
-          applyCustomFilters();
-        }
+        disableMobile: true
       });
     };
 
-    // Apply custom filters to DataTable
-    const applyCustomFilters = () => {
-	  let filtered = [...allResults];
-
-	  const numberVal = numberSearch.value.trim().padStart(2, '0');
-	  const dateVal = dateCalendar.value.trim();
-	  const dayVal = daySearch.value;
-	  const roundVal = roundSearch.value;
-
-	  if (numberSearch.value.trim()) {
-		filtered = filtered.filter(item => {
-		  const fr = String(item.first_round).padStart(2, '0');
-		  const sr = String(item.second_round).padStart(2, '0');
-
-		  if (roundVal === 'fr') return fr === numberVal;
-		  if (roundVal === 'sr') return sr === numberVal;
-
-		  return fr === numberVal || sr === numberVal;
-		});
-	  }
-
-	  if (dateVal) {
-		filtered = filtered.filter(item => {
-		  return formatDate(item.date) === dateVal;
-		});
-	  }
-
-	  if (dayVal) {
-		filtered = filtered.filter(item => {
-		  return getDayOfWeek(item.date) === dayVal;
-		});
-	  }
-
-	  initDataTable(filtered);
-	};
-    
-    // Reset all filters
-		const resetFilters = () => {
-		  numberSearch.value = '';
-
-		  if (flatpickrInstance) {
-			flatpickrInstance.clear();
-		  }
-
-		  daySearch.value = '';
-		  roundSearch.value = '';
-
-		  initDataTable(allResults);
-		};
-    
-    // Initialize DataTable without length change and search box
+    // Initialize DataTable with equal column widths
     const initDataTable = (data) => {
       if (dataTable) {
         dataTable.destroy();
+        $('#resultsTable tbody').empty();
       }
       
       const tableData = data.map(item => [
-        formatDate(item.date),
-        getDayOfWeek(item.date),
-        item.first_round.padStart(2, '0'),
-        item.second_round.padStart(2, '0')
+        item.displayDate,
+        item.day,
+        item.first_round,
+        item.second_round
       ]);
       
       dataTable = $('#resultsTable').DataTable({
@@ -694,13 +744,14 @@
           { title: "First Round (FR)" },
           { title: "Second Round (SR)" }
         ],
-        order: [],
+        order: [[0, 'desc']],
         pageLength: 25,
         paging: true,
         info: true,
         searching: false,
         lengthChange: false,
         responsive: true,
+        autoWidth: false,
         language: {
           info: "Showing _START_ to _END_ of _TOTAL_ entries",
           paginate: {
@@ -709,82 +760,147 @@
             next: "Next",
             previous: "Previous"
           }
+        },
+        drawCallback: function() {
+          // Ensure equal column widths after each draw
+          $('#resultsTable th, #resultsTable td').css('width', '25%');
         }
       });
+      
+      // Force equal column widths
+      $('#resultsTable th, #resultsTable td').css('width', '25%');
     };
-    
+
+    // Apply filters - core filtering logic
+    const applyFilters = () => {
+      const numberValue = numberSearch.value.trim();
+      const dateValue = dateCalendar.value.trim();
+      const dayValue = daySearch.value;
+      const roundValue = roundSearch.value;
+      
+      // Validate number
+      let numberFilter = null;
+      if (numberValue !== '') {
+        const num = parseInt(numberValue, 10);
+        if (isNaN(num) || num < 0 || num > 99) {
+          alert('Please enter a valid number between 00 and 99');
+          return;
+        }
+        numberFilter = num;
+      }
+      
+      // Filter the data
+      let filtered = [...originalData];
+      
+      // Apply number filter
+      if (numberFilter !== null) {
+        filtered = filtered.filter(item => {
+          const frNum = parseInt(item.first_round, 10);
+          const srNum = parseInt(item.second_round, 10);
+          
+          if (roundValue === 'fr') {
+            return frNum === numberFilter;
+          } else if (roundValue === 'sr') {
+            return srNum === numberFilter;
+          } else {
+            return frNum === numberFilter || srNum === numberFilter;
+          }
+        });
+      }
+      
+      // Apply date filter
+      if (dateValue !== '') {
+        filtered = filtered.filter(item => item.displayDate === dateValue);
+      }
+      
+      // Apply day filter
+      if (dayValue !== '') {
+        filtered = filtered.filter(item => item.day === dayValue);
+      }
+      
+      currentDisplayData = filtered;
+      
+      // Update table
+      initDataTable(currentDisplayData);
+      
+      // Update count display
+      updateResultsCount(currentDisplayData.length, originalData.length);
+    };
+
+    // Reset all filters
+    const resetFilters = () => {
+      numberSearch.value = '';
+      if (flatpickrInstance) {
+        flatpickrInstance.clear();
+      }
+      daySearch.value = '';
+      roundSearch.value = '';
+      
+      currentDisplayData = [...originalData];
+      initDataTable(currentDisplayData);
+      updateResultsCount(currentDisplayData.length, originalData.length);
+    };
+
     // Load data from JSON file
     const loadDataFromJSON = async () => {
       loadingIndicator.style.display = 'block';
       errorMessageDiv.style.display = 'none';
+      resultsCountSpan.innerHTML = '📊 Loading...';
       
       try {
-        const paths = [
-          'data/all-results.json',
-          './data/all-results.json',
-          '../data/all-results.json',
-          'all-results.json'
-        ];
+        // Direct path to ./data/all-results.json
+        const response = await fetch('./data/all-results.json');
         
-        let data = null;
-        
-        for (const path of paths) {
-          try {
-            const response = await fetch(path);
-            if (response.ok) {
-              data = await response.json();
-              break;
-            }
-          } catch (err) {
-            continue;
-          }
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} - File not found at ./data/all-results.json`);
         }
         
-        if (!data) {
-          throw new Error('Unable to load all-results.json');
-        }
+        const data = await response.json();
         
         if (!Array.isArray(data)) {
-          throw new Error('Invalid data format');
+          throw new Error('Invalid data format: expected an array');
         }
         
         let dayResults = filterJuwaiDay(data);
         
         if (dayResults.length === 0) {
-          throw new Error('No Juwai Day results found');
+          throw new Error('No Juwai Day results found. Check that records have "game": "juwai day"');
         }
         
-        dayResults = sortByDateDesc(dayResults);
-        allResults = dayResults;
+        originalData = sortByDateDesc(dayResults);
+        currentDisplayData = [...originalData];
         
         // Build available dates set for calendar
         availableDates.clear();
-        allResults.forEach(result => {
-          const formatted = formatDate(result.date);
-          availableDates.add(formatted);
+        originalData.forEach(result => {
+          availableDates.add(result.displayDate);
         });
         
         initCalendar();
-        initDataTable(allResults);
+        initDataTable(currentDisplayData);
+        updateResultsCount(currentDisplayData.length, originalData.length);
         
         loadingIndicator.style.display = 'none';
         
-        console.log(`✅ Loaded ${allResults.length} Juwai Day records`);
+        console.log(`✅ Loaded ${originalData.length} Juwai Day records`);
         
       } catch (error) {
         console.error('Error loading JSON:', error);
         loadingIndicator.style.display = 'none';
         errorMessageDiv.style.display = 'block';
         errorMessageDiv.innerHTML = `
-          <strong>⚠️ Unable to load data from data/all-results.json</strong><br><br>
+          <strong>⚠️ Unable to load data from ./data/all-results.json</strong><br><br>
           ${error.message}<br><br>
-          <strong>Troubleshooting tips:</strong><br>
-          • Make sure the file exists at: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">data/all-results.json</code><br>
+          <strong>📂 Troubleshooting tips:</strong><br>
+          • Make sure the file exists at: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">./data/all-results.json</code><br>
           • The file should contain records with <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">"game": "juwai day"</code><br>
+          • Example entry: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">{"game": "juwai day", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
           • If running locally, start a local web server:<br>
-          <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">npx serve .</code> or <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br><br>
+          <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br>
+          or <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">npx serve .</code><br><br>
           <button onclick="location.reload()" style="background: var(--accent); color: #0f172a; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-family: Poppins; font-weight: 600; margin-top: 10px;">🔄 Retry Loading</button>
         `;
+        resultsCountSpan.innerHTML = '📊 Error loading data';
       }
     };
     
@@ -799,6 +915,13 @@
           const darkEnabled = document.body.classList.contains('dark');
           localStorage.setItem('darkModeJuwaiDayAdvanced', darkEnabled);
           toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+          if (flatpickrInstance) flatpickrInstance.redraw();
+          // Reapply equal widths after theme change
+          setTimeout(() => {
+            if (dataTable) {
+              $('#resultsTable th, #resultsTable td').css('width', '25%');
+            }
+          }, 100);
         });
         if (isDark) toggleBtn.textContent = '☀️ Light';
         else toggleBtn.textContent = '🌓 Dark';
@@ -806,10 +929,9 @@
     };
     
     // Event listeners
-    applyFiltersBtn.addEventListener('click', applyCustomFilters);
+    applyFiltersBtn.addEventListener('click', applyFilters);
     resetFiltersBtn.addEventListener('click', resetFilters);
-    
-    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
+    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
     
     // Initialize
     const init = () => {
