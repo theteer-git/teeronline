@@ -622,95 +622,94 @@
 
     // Apply custom filters to DataTable
     const applyCustomFilters = () => {
-      if (!dataTable) return;
-      
-      let numberVal = numberSearch.value.trim();
-      let dateVal = dateCalendar.value.trim();
-      let dayVal = daySearch.value;
-      let roundVal = roundSearch.value;
-      
-      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        const rowDate = data[0];
-        const rowDay = data[1];
-        const rowFR = data[2];
-        const rowSR = data[3];
-        
-        if (numberVal) {
-          const num = parseInt(numberVal);
-          if (roundVal === 'fr') {
-            if (parseInt(rowFR) !== num) return false;
-          } else if (roundVal === 'sr') {
-            if (parseInt(rowSR) !== num) return false;
-          } else {
-            if (parseInt(rowFR) !== num && parseInt(rowSR) !== num) return false;
-          }
-        }
-        
-        if (dateVal) {
-          if (!rowDate.includes(dateVal)) return false;
-        }
-        
-        if (dayVal) {
-          if (rowDay !== dayVal) return false;
-        }
-        
-        return true;
-      });
-      
-      dataTable.draw();
-      $.fn.dataTable.ext.search.pop();
-    };
+	  let filtered = [...allResults];
+
+	  const numberRaw = numberSearch.value.trim();
+	  const numberVal = numberRaw.padStart(2, '0');
+	  const dateVal = dateCalendar.value.trim();
+	  const dayVal = daySearch.value;
+	  const roundVal = roundSearch.value;
+
+	  if (numberRaw) {
+		filtered = filtered.filter(item => {
+		  const fr = String(item.first_round).padStart(2, '0');
+		  const sr = String(item.second_round).padStart(2, '0');
+
+		  if (roundVal === 'fr') return fr === numberVal;
+		  if (roundVal === 'sr') return sr === numberVal;
+
+		  return fr === numberVal || sr === numberVal;
+		});
+	  }
+
+	  if (dateVal) {
+		filtered = filtered.filter(item => {
+		  return formatDate(item.date) === dateVal;
+		});
+	  }
+
+	  if (dayVal) {
+		filtered = filtered.filter(item => {
+		  return getDayOfWeek(item.date) === dayVal;
+		});
+	  }
+
+	  filtered = sortByDateDesc(filtered);
+	  initDataTable(filtered);
+	};
     
     // Reset all filters
     const resetFilters = () => {
-      numberSearch.value = '';
-      if (flatpickrInstance) {
-        flatpickrInstance.clear();
-      }
-      daySearch.value = '';
-      roundSearch.value = '';
-      applyCustomFilters();
-    };
+	  numberSearch.value = '';
+
+	  if (flatpickrInstance) {
+		flatpickrInstance.clear();
+	  }
+
+	  daySearch.value = '';
+	  roundSearch.value = '';
+
+	  initDataTable(sortByDateDesc(allResults));
+	};
     
     // Initialize DataTable without length change and search box
     const initDataTable = (data) => {
-      if (dataTable) {
-        dataTable.destroy();
-      }
-      
-      const tableData = data.map(item => [
-        formatDate(item.date),
-        getDayOfWeek(item.date),
-        item.first_round.padStart(2, '0'),
-        item.second_round.padStart(2, '0')
-      ]);
-      
-      dataTable = $('#resultsTable').DataTable({
-        data: tableData,
-        columns: [
-          { title: "Date" },
-          { title: "Day" },
-          { title: "Morning First Round (FR)" },
-          { title: "Morning Second Round (SR)" }
-        ],
-        order: [[0, 'desc']],
-        pageLength: 25,
-        paging: true,
-        info: true,
-        searching: false,
-        lengthChange: false,
-        responsive: true,
-        language: {
-          info: "Showing _START_ to _END_ of _TOTAL_ entries",
-          paginate: {
-            first: "First",
-            last: "Last",
-            next: "Next",
-            previous: "Previous"
-          }
-        }
-      });
-    };
+	  if (dataTable) {
+		dataTable.destroy();
+		$('#resultsTable tbody').empty();
+	  }
+
+	  const tableData = data.map(item => {
+		const parsed = parseDate(item.date);
+		const sortDate = parsed ? parsed.toISOString().slice(0, 10) : item.date;
+
+		return [
+		  formatDate(item.date),
+		  getDayOfWeek(item.date),
+		  item.first_round.padStart(2, '0'),
+		  item.second_round.padStart(2, '0'),
+		  sortDate
+		];
+	  });
+
+	  dataTable = $('#resultsTable').DataTable({
+		data: tableData,
+		columns: [
+		  { title: "Date" },
+		  { title: "Day" },
+		  { title: "Morning First Round (FR)" },
+		  { title: "Morning Second Round (SR)" },
+		  { title: "SortDate", visible: false }
+		],
+		order: [[4, 'desc']],
+		pageLength: 25,
+		paging: true,
+		info: true,
+		searching: false,
+		lengthChange: false,
+		responsive: true
+	  });
+	};
     
     // Load data from JSON file
     const loadDataFromJSON = async () => {
