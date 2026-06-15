@@ -3,28 +3,24 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Shillong Day Teer Results | Advanced Search & Archive | Shillong Teer Result Today</title>
-  <meta name="description" content="Complete Shillong Day Teer Results archive with advanced search by number, date (calendar picker), and day. Filter, sort, and explore full history of First Round & Second Round results.">
-  <meta name="keywords" content="Shillong Day Teer Result, Shillong Teer Result Today, Shillong Teer Previous Result, Shillong Teer Archive, Teer Search by Number">
+  <title>Shillong Night Teer Results | Advanced Search & Archive | Shillong Night Teer Result Today</title>
+  <meta name="description" content="Complete Shillong Night Teer Results archive with advanced search by number, date (calendar picker), and day. Filter, sort, and explore full history of First Round & Second Round results.">
+  <meta name="keywords" content="Shillong Night Teer Result, Shillong Teer Result Today, Shillong Teer Previous Result, Shillong Teer Archive, Teer Search by Number">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://www.teerresults.example.com/shillong-day-advanced.html">
-  <meta property="og:title" content="Shillong Day Teer Results | Advanced Search & Archive">
-  <meta property="og:description" content="Search Shillong Day Teer results by number, date (calendar picker), or day of week. Full historical archive with powerful filtering.">
+  <link rel="canonical" href="https://www.teerresults.example.com/shillong-night-advanced.html">
+  <meta property="og:title" content="Shillong Night Teer Results | Advanced Search & Archive">
+  <meta property="og:description" content="Search Shillong Night Teer results by number, date (calendar picker), or day of week. Full historical archive with powerful filtering.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-  <!-- Flatpickr Calendar CSS & JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <!-- DataTables CSS -->
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-  <!-- jQuery -->
   <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <!-- DataTables JS -->
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
   <style>
@@ -37,6 +33,7 @@
     :root {
       --primary: #0f172a;
       --accent: #22c55e;
+      --accent-hover: #16a34a;
       --bg: #f8fafc;
       --surface: #ffffff;
       --text: #0f172a;
@@ -74,9 +71,7 @@
       top: 0;
       z-index: 100;
       background: var(--surface);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       border-bottom: 1px solid var(--border);
-      transition: background 0.3s;
     }
 
     .header-inner {
@@ -91,7 +86,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 800;
-      color: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #2dd4bf 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
     }
 
     .nav-links {
@@ -103,7 +101,7 @@
 
     .nav-links a {
       text-decoration: none;
-      color: var(--text);
+      color: var(--text-light);
       font-weight: 500;
       font-size: 0.85rem;
       transition: color 0.2s;
@@ -122,6 +120,11 @@
       font-family: Poppins;
       font-weight: 500;
       color: #0f172a;
+      transition: 0.2s;
+    }
+
+    .dark-toggle:hover {
+      background: var(--accent-hover);
     }
 
     .hero {
@@ -195,40 +198,39 @@
       font-size: 0.85rem;
     }
 
-    .date-input-wrapper {
-      position: relative;
-    }
-
-    .date-input-wrapper input {
-      cursor: pointer;
-      background-color: var(--bg);
-    }
-
     .filter-group input:focus, .filter-group select:focus {
       outline: none;
       border-color: var(--accent);
     }
 
-    .search-btn {
-      background: var(--accent);
-      color: #0f172a;
-      border: none;
+    .search-btn, .reset-btn {
       padding: 0.6rem 1.5rem;
       border-radius: 0.5rem;
-      cursor: pointer;
       font-weight: 600;
       font-family: Poppins;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .search-btn {
+      background: var(--accent);
+      border: none;
+      color: #0f172a;
+    }
+
+    .search-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
     }
 
     .reset-btn {
       background: var(--surface);
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.6rem 1.5rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: Poppins;
+    }
+
+    .reset-btn:hover {
+      background: var(--border);
     }
 
     .table-wrapper {
@@ -241,12 +243,16 @@
 
     .results-table {
       width: 100% !important;
+      table-layout: fixed !important;
       font-size: 0.85rem;
     }
 
-    .results-table th, .results-table td {
-      padding: 0.8rem;
+    .results-table th,
+    .results-table td {
+      width: 25% !important;
       text-align: center;
+      padding: 0.8rem;
+      vertical-align: middle;
     }
 
     .results-table th {
@@ -255,7 +261,17 @@
       color: var(--accent);
     }
 
-    /* Hide default DataTables length and search elements */
+    @media (max-width: 768px) {
+      .results-table th,
+      .results-table td {
+        width: auto !important;
+        min-width: 100px;
+      }
+      .results-table {
+        table-layout: auto !important;
+      }
+    }
+
     .dataTables_length, .dataTables_filter {
       display: none !important;
     }
@@ -284,35 +300,33 @@
       border-color: var(--accent);
     }
 
-    .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
-      background: var(--accent) !important;
-      color: #0f172a !important;
-    }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-      opacity: 0.5;
-    }
-
-    /* Flatpickr calendar dark mode support */
     body.dark .flatpickr-calendar {
       background: var(--surface);
       border-color: var(--border);
-      box-shadow: 0 3px 13px rgba(0,0,0,0.3);
     }
+
     body.dark .flatpickr-day {
       color: var(--text);
     }
+
     body.dark .flatpickr-day.selected {
       background: var(--accent);
       border-color: var(--accent);
     }
-    body.dark .flatpickr-months .flatpickr-month,
-    body.dark .flatpickr-weekdays {
-      color: var(--text);
+
+    .filter-status {
+      margin-bottom: 1rem;
     }
-    body.dark .flatpickr-current-month .flatpickr-monthDropdown-months,
-    body.dark .flatpickr-current-month input.cur-year {
-      color: var(--text);
+
+    .results-count {
+      display: inline-block;
+      padding: 0.5rem 1rem;
+      background: var(--surface);
+      border-radius: 0.5rem;
+      font-weight: 600;
+      color: var(--accent);
+      font-size: 0.85rem;
+      border: 1px solid var(--border);
     }
 
     .seo-content {
@@ -400,14 +414,12 @@
 <body>
   <header class="sticky-header">
     <div class="container header-inner">
-      <div class="logo">🏹 Shillong Teer Advanced Search</div>
+      <div class="logo">🌙 Shillong Night Teer · Advanced Archive</div>
       <div class="nav-links">
         <a href="#">Home</a>
         <a href="#">Common Numbers</a>
         <a href="#">Dream Numbers</a>
-        <a href="#">Teer Formula</a>
         <a href="#">Statistics</a>
-        <a href="#">Contact</a>
         <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
       </div>
     </div>
@@ -415,21 +427,18 @@
 
   <main class="container">
     <div class="hero">
-      <h1>Shillong Day Teer Results | Advanced Search & Full History Archive</h1>
-      <p>Search Shillong Day Teer results by number, date (calendar picker), or day of week. Our powerful archive lets you filter, sort, and explore complete historical data with ease.</p>
+      <h1>Shillong Night Teer Results | Search by Number, Date & Day</h1>
+      <p>Complete historical results for First Round (FR) & Second Round (SR). All columns have equal width for easy reading.</p>
     </div>
 
-    <!-- Advanced Search Filters -->
     <div class="search-filters">
       <div class="filter-group">
-        <label>🔢 Search by Number (FR or SR)</label>
-        <input type="text" id="numberSearch" placeholder="Enter number (00-99)" maxlength="2">
+        <label>🔢 Number (00-99)</label>
+        <input type="text" id="numberSearch" placeholder="e.g., 45" maxlength="2" inputmode="numeric">
       </div>
       <div class="filter-group">
-        <label>📅 Select Date (Calendar)</label>
-        <div class="date-input-wrapper">
-          <input type="text" id="dateCalendar" placeholder="Click to select date">
-        </div>
+        <label>📅 Pick a Date</label>
+        <input type="text" id="dateCalendar" placeholder="Select date" autocomplete="off">
       </div>
       <div class="filter-group">
         <label>📆 Day of Week</label>
@@ -445,21 +454,25 @@
         </select>
       </div>
       <div class="filter-group">
-        <label>🎯 Filter by Round</label>
+        <label>🎯 Round Filter</label>
         <select id="roundSearch">
           <option value="">Both Rounds</option>
           <option value="fr">First Round (FR)</option>
           <option value="sr">Second Round (SR)</option>
         </select>
       </div>
-      <div>
-        <button class="search-btn" id="applyFilters">🔍 Apply Filters</button>
-        <button class="reset-btn" id="resetFilters">⟳ Reset</button>
+      <div style="display: flex; gap: 0.8rem;">
+        <button class="search-btn" id="applyFilters">Apply Filters</button>
+        <button class="reset-btn" id="resetFilters">Reset</button>
       </div>
     </div>
 
-    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📊 Loading Shillong Day results...</div>
+    <div id="loadingIndicator" class="loading-spinner" style="display: none;">Loading Shillong Night results from ./data/all-results.json ...</div>
     <div id="errorMessage" class="error-message" style="display: none;"></div>
+
+    <div class="filter-status">
+      <div class="results-count" id="resultsCount">Loading...</div>
+    </div>
 
     <div class="table-wrapper">
       <table id="resultsTable" class="results-table display responsive" style="width:100%">
@@ -471,54 +484,54 @@
             <th>Second Round (SR)</th>
           </tr>
         </thead>
-        <tbody id="tableBody">
-          <tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
+        <tbody>
+          <tr><td colspan="4" style="text-align:center;">Loading data...<\/td><\/tr>
         </tbody>
-      </table>
-    </div>
+      <\/table>
+    <\/div>
 
     <div class="related-links">
+      <a href="#">Shillong Day Results</a>
       <a href="#">Shillong Morning Results</a>
-      <a href="#">Shillong Night Results</a>
+      <a href="#">Shillong Night Teer 2 Results</a>
       <a href="#">Khanapara Results</a>
       <a href="#">Juwai Results</a>
-      <a href="#">Statistics Page</a>
-    </div>
+    <\/div>
 
     <div class="seo-content">
-      <h2>Shillong Teer Result Search: Find Any Number, Date, or Day</h2>
-      <p><strong>Search Shillong Teer Result Today</strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.</p>
+      <h2>Shillong Night Teer Result Search: Find Any Number, Date, or Day<\/h2>
+      <p><strong>Search Shillong Night Teer Result Today<\/strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.<\/p>
       
-      <p>The <strong>Shillong Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
+      <p>The <strong>Shillong Night Teer Previous Result<\/strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.<\/p>
       
-      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
+      <p><strong>How to use:<\/strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!<\/p>
       
-      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "shillong day"</strong> records. This ensures accurate and reliable search results for Shillong Day Teer enthusiasts.</p>
-    </div>
-  </main>
+      <p><strong>Equal width columns:<\/strong> All four columns (Date, Day, First Round, Second Round) have equal width for balanced presentation and easy scanning.<\/p>
+      
+      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data\/all-results.json<\/code> and filtered to display only <strong>"game": "Shillong Night"<\/strong> records. This ensures accurate and reliable search results for Shillong Night Teer enthusiasts.<\/p>
+    <\/div>
+  <\/main>
 
   <footer>
     <div class="container">
       <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Contact</a>
-        <a href="#">About</a>
-      </div>
+        <a href="#">Privacy Policy<\/a>
+        <a href="#">Terms & Conditions<\/a>
+        <a href="#">Contact<\/a>
+        <a href="#">About<\/a>
+      <\/div>
       <div class="disclaimer">
-        ⚠️ Informational Purpose Only: This website does not promote gambling, betting, or predictions. Shillong Day Teer results are based on archery events and are provided as historical reference only.
-      </div>
-    </div>
-  </footer>
+        Warning: Informational Purpose Only: This website does not promote gambling, betting, or predictions. Shillong Night Teer results are based on archery events and are provided as historical reference only.
+      <\/div>
+    <\/div>
+  <\/footer>
 
   <script>
-    // Global variables
-    let allResults = [];
+    let originalData = [];
     let dataTable = null;
-    let availableDates = new Set();
     let flatpickrInstance = null;
+    let availableDates = new Set();
 
-    // DOM elements
     const loadingIndicator = document.getElementById('loadingIndicator');
     const errorMessageDiv = document.getElementById('errorMessage');
     const numberSearch = document.getElementById('numberSearch');
@@ -527,174 +540,95 @@
     const roundSearch = document.getElementById('roundSearch');
     const applyFiltersBtn = document.getElementById('applyFilters');
     const resetFiltersBtn = document.getElementById('resetFilters');
+    const resultsCountSpan = document.getElementById('resultsCount');
 
-    // Helper: Parse date to get day of week
-    const getDayOfWeek = (dateStr) => {
+    function parseDate(dateStr) {
+      if (!dateStr || dateStr === '0000-00-00') return null;
+      let match = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (match) {
+        return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+      }
+      match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+      if (match) {
+        return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
+      }
+      return new Date(dateStr);
+    }
+
+    function getDayOfWeek(dateStr) {
       const date = parseDate(dateStr);
       if (!date) return '';
       const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       return days[date.getDay()];
-    };
+    }
 
-    // Helper: Parse various date formats
-    const parseDate = (dateStr) => {
-      if (!dateStr || dateStr === '0000-00-00') return null;
-      
-      let parts = dateStr.split(/[-/]/);
-      if (parts.length === 3) {
-        if (parts[0].length === 4) {
-          return new Date(parts[0], parts[1] - 1, parts[2]);
-        } else {
-          return new Date(parts[2], parts[1] - 1, parts[0]);
-        }
-      }
-      
-      const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-      for (let i = 0; i < monthNames.length; i++) {
-        if (dateStr.toLowerCase().includes(monthNames[i])) {
-          const match = dateStr.match(/(\d+)\s+(\w+)\s+(\d+)/);
-          if (match) {
-            return new Date(match[3], i, parseInt(match[1]));
-          }
-        }
-      }
-      
-      return new Date(dateStr);
-    };
-
-    // Format date for display (DD-MM-YYYY)
-    const formatDate = (dateStr) => {
+    function formatDate(dateStr) {
       const date = parseDate(dateStr);
       if (!date) return dateStr;
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    };
+      return String(date.getDate()).padStart(2, '0') + '-' + String(date.getMonth() + 1).padStart(2, '0') + '-' + date.getFullYear();
+    }
 
-    // Format date for flatpickr value (YYYY-MM-DD)
-    const formatDateForPicker = (dateStr) => {
-      const date = parseDate(dateStr);
-      if (!date) return '';
-      const year = date.getFullYear();
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const day = date.getDate().toString().padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    };
+    function cleanNumber(value) {
+      if (value === undefined || value === null || value === '') return '';
+      const str = String(value).trim().toLowerCase();
+      const invalid = ['xx', 'off', '—', '-', '--', 'na', 'null', ''];
+      if (invalid.includes(str)) return '';
+      const num = parseInt(str, 10);
+      if (isNaN(num) || num < 0 || num > 99) return '';
+      return String(num).padStart(2, '0');
+    }
 
-    // Filter only Shillong Day results
-    const filterShillongDay = (data) => {
-      return data.filter(item => {
-        const gameName = (item.game || '').toLowerCase();
-        return gameName === 'shillong day';
-      }).map(item => ({
-        date: item.date || '',
-        first_round: item.fr || item.first_round || '',
-        second_round: item.sr || item.second_round || ''
-      })).filter(item => item.date && item.first_round && item.second_round && 
-              item.first_round !== 'xx' && item.first_round !== 'OFF' && item.first_round !== '—' && item.first_round !== '-' &&
-              item.second_round !== 'xx' && item.second_round !== 'OFF' && item.second_round !== '—' && item.second_round !== '-' &&
-              !isNaN(parseInt(item.first_round)) && !isNaN(parseInt(item.second_round)));
-    };
+    function filterShillongNight(data) {
+      if (!Array.isArray(data)) return [];
+      
+      return data
+        .filter(function(item) {
+          var gameName = (item.game || '').toString().trim();
+          return gameName === 'Shillong Night';
+        })
+        .map(function(item) {
+          return {
+            date: item.date || '',
+            first_round: item.fr || item.first_round || '',
+            second_round: item.sr || item.second_round || ''
+          };
+        })
+        .filter(function(item) {
+          if (!item.date) return false;
+          var frClean = cleanNumber(item.first_round);
+          var srClean = cleanNumber(item.second_round);
+          return frClean && srClean;
+        })
+        .map(function(item) {
+          return {
+            originalDate: item.date,
+            displayDate: formatDate(item.date),
+            day: getDayOfWeek(item.date),
+            first_round: cleanNumber(item.first_round),
+            second_round: cleanNumber(item.second_round)
+          };
+        });
+    }
 
-    // Sort by date descending
-    const sortByDateDesc = (results) => {
-      return results.sort((a, b) => {
-        const dateA = parseDate(a.date);
-        const dateB = parseDate(b.date);
+    function sortByDateDesc(results) {
+      return results.sort(function(a, b) {
+        var dateA = parseDate(a.originalDate);
+        var dateB = parseDate(b.originalDate);
         if (!dateA && !dateB) return 0;
         if (!dateA) return 1;
         if (!dateB) return -1;
         return dateB - dateA;
       });
-    };
+    }
 
-    // Initialize flatpickr calendar with available dates
-    const initCalendar = () => {
-      if (flatpickrInstance) {
-        flatpickrInstance.destroy();
-      }
-      
-      const dateStrings = Array.from(availableDates);
-      
-      flatpickrInstance = flatpickr(dateCalendar, {
-        dateFormat: "d-m-Y",
-        altFormat: "d-m-Y",
-        altInput: true,
-        allowInput: true,
-        enable: dateStrings.length > 0 ? dateStrings : undefined,
-        disableMobile: true,
-        onChange: function(selectedDates, dateStr, instance) {
-          // When date is selected, automatically apply filters
-          applyCustomFilters();
-        }
-      });
-    };
-
-    // Apply custom filters to DataTable
-    const applyCustomFilters = () => {
-      if (!dataTable) return;
-      
-      let numberVal = numberSearch.value.trim();
-      let dateVal = dateCalendar.value.trim();
-      let dayVal = daySearch.value;
-      let roundVal = roundSearch.value;
-      
-      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        const rowDate = data[0];
-        const rowDay = data[1];
-        const rowFR = data[2];
-        const rowSR = data[3];
-        
-        if (numberVal) {
-          const num = parseInt(numberVal);
-          if (roundVal === 'fr') {
-            if (parseInt(rowFR) !== num) return false;
-          } else if (roundVal === 'sr') {
-            if (parseInt(rowSR) !== num) return false;
-          } else {
-            if (parseInt(rowFR) !== num && parseInt(rowSR) !== num) return false;
-          }
-        }
-        
-        if (dateVal) {
-          if (!rowDate.includes(dateVal)) return false;
-        }
-        
-        if (dayVal) {
-          if (rowDay !== dayVal) return false;
-        }
-        
-        return true;
-      });
-      
-      dataTable.draw();
-      $.fn.dataTable.ext.search.pop();
-    };
-    
-    // Reset all filters
-    const resetFilters = () => {
-      numberSearch.value = '';
-      if (flatpickrInstance) {
-        flatpickrInstance.clear();
-      }
-      daySearch.value = '';
-      roundSearch.value = '';
-      applyCustomFilters();
-    };
-    
-    // Initialize DataTable without length change and search box
-    const initDataTable = (data) => {
+    function initDataTable(data) {
       if (dataTable) {
         dataTable.destroy();
       }
       
-      const tableData = data.map(item => [
-        formatDate(item.date),
-        getDayOfWeek(item.date),
-        item.first_round.padStart(2, '0'),
-        item.second_round.padStart(2, '0')
-      ]);
+      var tableData = data.map(function(item) {
+        return [item.displayDate, item.day, item.first_round, item.second_round];
+      });
       
       dataTable = $('#resultsTable').DataTable({
         data: tableData,
@@ -711,6 +645,7 @@
         searching: false,
         lengthChange: false,
         responsive: true,
+        autoWidth: false,
         language: {
           info: "Showing _START_ to _END_ of _TOTAL_ entries",
           paginate: {
@@ -719,115 +654,173 @@
             next: "Next",
             previous: "Previous"
           }
+        },
+        drawCallback: function() {
+          $('#resultsTable th, #resultsTable td').css('width', '25%');
         }
       });
-    };
+      
+      $('#resultsTable th, #resultsTable td').css('width', '25%');
+    }
+
+    function applyFilters() {
+      var numberVal = numberSearch.value.trim();
+      var dateVal = dateCalendar.value.trim();
+      var dayVal = daySearch.value;
+      var roundVal = roundSearch.value;
+      
+      var numberFilter = null;
+      if (numberVal !== '') {
+        var num = parseInt(numberVal, 10);
+        if (isNaN(num) || num < 0 || num > 99) {
+          alert('Please enter a valid number between 00 and 99');
+          return;
+        }
+        numberFilter = num;
+      }
+      
+      var filtered = originalData.slice();
+      
+      if (numberFilter !== null) {
+        filtered = filtered.filter(function(item) {
+          var frNum = parseInt(item.first_round, 10);
+          var srNum = parseInt(item.second_round, 10);
+          
+          if (roundVal === 'fr') {
+            return frNum === numberFilter;
+          } else if (roundVal === 'sr') {
+            return srNum === numberFilter;
+          } else {
+            return frNum === numberFilter || srNum === numberFilter;
+          }
+        });
+      }
+      
+      if (dateVal !== '') {
+        filtered = filtered.filter(function(item) {
+          return item.displayDate === dateVal;
+        });
+      }
+      
+      if (dayVal !== '') {
+        filtered = filtered.filter(function(item) {
+          return item.day === dayVal;
+        });
+      }
+      
+      if (filtered.length === originalData.length) {
+        resultsCountSpan.innerHTML = 'Showing all ' + filtered.length + ' results';
+        resultsCountSpan.style.color = 'var(--accent)';
+      } else {
+        resultsCountSpan.innerHTML = 'Found ' + filtered.length + ' result' + (filtered.length !== 1 ? 's' : '') + ' (filtered from ' + originalData.length + ' total)';
+        resultsCountSpan.style.color = filtered.length === 0 ? '#ef4444' : 'var(--accent)';
+      }
+      
+      initDataTable(filtered);
+    }
     
-    // Load data from JSON file
-    const loadDataFromJSON = async () => {
+    function resetFilters() {
+      numberSearch.value = '';
+      if (flatpickrInstance) {
+        flatpickrInstance.clear();
+      }
+      daySearch.value = '';
+      roundSearch.value = '';
+      
+      resultsCountSpan.innerHTML = 'Showing all ' + originalData.length + ' results';
+      resultsCountSpan.style.color = 'var(--accent)';
+      initDataTable(originalData);
+    }
+    
+    async function loadData() {
       loadingIndicator.style.display = 'block';
       errorMessageDiv.style.display = 'none';
+      resultsCountSpan.innerHTML = 'Loading...';
       
       try {
-        const paths = [
-          'data/all-results.json',
-          './data/all-results.json',
-          '../data/all-results.json',
-          'all-results.json'
-        ];
+        var response = await fetch('./data/all-results.json');
         
-        let data = null;
-        
-        for (const path of paths) {
-          try {
-            const response = await fetch(path);
-            if (response.ok) {
-              data = await response.json();
-              break;
-            }
-          } catch (err) {
-            continue;
-          }
+        if (!response.ok) {
+          throw new Error('HTTP ' + response.status + ' - File not found at ./data/all-results.json');
         }
         
-        if (!data) {
-          throw new Error('Unable to load all-results.json');
-        }
+        var data = await response.json();
         
         if (!Array.isArray(data)) {
           throw new Error('Invalid data format');
         }
         
-        let shillongResults = filterShillongDay(data);
+        var nightResults = filterShillongNight(data);
         
-        if (shillongResults.length === 0) {
-          throw new Error('No Shillong Day results found');
+        if (nightResults.length === 0) {
+          var availableGames = [];
+          for (var i = 0; i < data.length; i++) {
+            if (data[i].game) {
+              availableGames.push(data[i].game);
+            }
+          }
+          var gameList = availableGames.join(', ');
+          
+          throw new Error('No "Shillong Night" records found. Available games: ' + (gameList || 'none'));
         }
         
-        shillongResults = sortByDateDesc(shillongResults);
-        allResults = shillongResults;
+        originalData = sortByDateDesc(nightResults);
         
-        // Build available dates set for calendar
         availableDates.clear();
-        allResults.forEach(result => {
-          const formatted = formatDate(result.date);
-          availableDates.add(formatted);
+        for (var j = 0; j < originalData.length; j++) {
+          availableDates.add(originalData[j].displayDate);
+        }
+        
+        if (flatpickrInstance) flatpickrInstance.destroy();
+        flatpickrInstance = flatpickr(dateCalendar, {
+          dateFormat: "d-m-Y",
+          altFormat: "d-m-Y",
+          altInput: true,
+          allowInput: false,
+          enable: Array.from(availableDates),
+          disableMobile: true
         });
         
-        initCalendar();
-        initDataTable(allResults);
+        initDataTable(originalData);
+        resultsCountSpan.innerHTML = 'Showing all ' + originalData.length + ' results';
         
         loadingIndicator.style.display = 'none';
-        
-        console.log(`✅ Loaded ${allResults.length} Shillong Day records`);
+        console.log('Loaded ' + originalData.length + ' Shillong Night records');
         
       } catch (error) {
-        console.error('Error loading JSON:', error);
+        console.error('Error:', error);
         loadingIndicator.style.display = 'none';
         errorMessageDiv.style.display = 'block';
-        errorMessageDiv.innerHTML = `
-          <strong>⚠️ Unable to load data from data/all-results.json</strong><br><br>
-          ${error.message}<br><br>
-          <strong>Troubleshooting tips:</strong><br>
-          • Make sure the file exists at: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">data/all-results.json</code><br>
-          • The file should contain records with <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">"game": "shillong day"</code><br>
-          • If running locally, start a local web server:<br>
-          <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">npx serve .</code> or <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br><br>
-          <button onclick="location.reload()" style="background: var(--accent); color: #0f172a; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-family: Poppins; font-weight: 600; margin-top: 10px;">🔄 Retry Loading</button>
-        `;
+        errorMessageDiv.innerHTML = '<strong>Unable to load data from ./data/all-results.json</strong><br><br>' + error.message + '<br><br><strong>Troubleshooting tips:</strong><br>• Make sure the file exists at: <code>./data/all-results.json</code><br>• The file should contain records with <code>"game": "Shillong Night"</code><br>• Example: <code>{"game": "Shillong Night", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>• Start a local server: <code>python -m http.server 8000</code><br><br><button onclick="location.reload()" style="background: #22c55e; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-weight: 600;">Retry Loading</button>';
+        resultsCountSpan.innerHTML = 'Error loading data';
       }
-    };
+    }
     
-    // Dark Mode Toggle
-    const initDarkMode = () => {
-      const toggleBtn = document.getElementById('darkModeToggle');
-      const isDark = localStorage.getItem('darkModeAdvanced') === 'true';
+    function initDarkMode() {
+      var toggleBtn = document.getElementById('darkModeToggle');
+      var isDark = localStorage.getItem('darkModeShillongNightAdvanced') === 'true';
       if (isDark) document.body.classList.add('dark');
       if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
+        toggleBtn.addEventListener('click', function() {
           document.body.classList.toggle('dark');
-          const darkEnabled = document.body.classList.contains('dark');
-          localStorage.setItem('darkModeAdvanced', darkEnabled);
-          toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+          var darkEnabled = document.body.classList.contains('dark');
+          localStorage.setItem('darkModeShillongNightAdvanced', darkEnabled);
+          toggleBtn.textContent = darkEnabled ? 'Light' : 'Dark';
+          if (flatpickrInstance) flatpickrInstance.redraw();
+          setTimeout(function() {
+            if (dataTable) $('#resultsTable th, #resultsTable td').css('width', '25%');
+          }, 100);
         });
-        if (isDark) toggleBtn.textContent = '☀️ Light';
-        else toggleBtn.textContent = '🌓 Dark';
+        toggleBtn.textContent = isDark ? 'Light' : 'Dark';
       }
-    };
+    }
     
-    // Event listeners
-    applyFiltersBtn.addEventListener('click', applyCustomFilters);
+    applyFiltersBtn.addEventListener('click', applyFilters);
     resetFiltersBtn.addEventListener('click', resetFilters);
+    numberSearch.addEventListener('keypress', function(e) { if (e.key === 'Enter') applyFilters(); });
     
-    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
-    
-    // Initialize
-    const init = () => {
-      initDarkMode();
-      loadDataFromJSON();
-    };
-    
-    init();
+    initDarkMode();
+    loadData();
   </script>
 </body>
 </html>
