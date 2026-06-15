@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Connect with Us | Contact & Social — Studio Elara</title>
+  <meta name="description" content="Reach out to our team, find our location, and follow us on social media. We’d love to hear from you.">
+  <!-- Google Fonts + modern fallback -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+  <!-- Font Awesome 6 (free CDN for social icons & UI) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, sans-serif;
+      background: #faf9f8;
+      color: #1e1e2a;
+      line-height: 1.5;
+      scroll-behavior: smooth;
+    }
+
+    /* background subtle texture */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(#e2e0dc 0.8px, transparent 0.8px);
+      background-size: 28px 28px;
+      opacity: 0.3;
+      pointer-events: none;
+      z-index: -2;
+    }
+
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    /* modern header / nav (consistent with imagined main site) */
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin-bottom: 3rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+
+    .logo a {
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      text-decoration: none;
+      background: linear-gradient(135deg, #2B2D42, #4A4E69);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      transition: all 0.2s;
+    }
+
+    .logo a:hover {
+      opacity: 0.85;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      font-weight: 500;
+      color: #2c2c38;
+      transition: color 0.2s;
+      font-size: 1rem;
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: #8b5e3c;
+      border-bottom: 2px solid #8b5e3c;
+      padding-bottom: 0.25rem;
+    }
+
+    /* page intro */
+    .page-header {
+      text-align: center;
+      margin-bottom: 3rem;
+    }
+
+    .page-header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      background: linear-gradient(to right, #1e1e2a, #4a4a6a);
+      background-clip: text;
+      -webkit-background-clip: text;
+      color: transparent;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-header p {
+      font-size: 1.2rem;
+      color: #4b4b5a;
+      max-width: 620px;
+      margin: 0 auto;
+    }
+
+    /* two column layout (contact form + info) */
+    .contact-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 4rem;
+    }
+
+    /* cards style */
+    .form-card, .info-card {
+      background: #ffffff;
+      border-radius: 2rem;
+      box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.05), 0 1px 2px rgba(0,0,0,0.02);
+      padding: 2rem;
+      transition: transform 0.2s ease, box-shadow 0.2s;
+      border: 1px solid #f0eeeb;
+    }
+
+    .form-card:hover, .info-card:hover {
+      box-shadow: 0 25px 40px -14px rgba(0, 0, 0, 0.08);
+    }
+
+    h2 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      margin-bottom: 1.5rem;
+      letter-spacing: -0.01em;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    h2 i {
+      color: #8b5e3c;
+      font-size: 1.6rem;
+    }
+
+    /* form styling */
+    .input-group {
+      margin-bottom: 1.4rem;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+      color: #2d2d3a;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1.5px solid #e7e5e2;
+      border-radius: 1.2rem;
+      font-family: inherit;
+      font-size: 1rem;
+      background: #fefefe;
+      transition: all 0.2s;
+      outline: none;
+      color: #1e1e2a;
+    }
+
+    input:focus, textarea:focus, select:focus {
+      border-color: #b28b5e;
+      box-shadow: 0 0 0 3px rgba(139, 94, 60, 0.15);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 110px;
+    }
+
+    .btn-submit {
+      background: #1e1e2a;
+      color: white;
+      border: none;
+      padding: 0.9rem 1.8rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.25s;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      margin-top: 0.5rem;
+    }
+
+    .btn-submit:hover {
+      background: #8b5e3c;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.1);
+    }
+
+    /* contact details list */
+    .contact-details {
+      list-style: none;
+      margin: 1.5rem 0 2rem;
+    }
+
+    .contact-details li {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 1rem;
+    }
+
+    .contact-details li i {
+      width: 2rem;
+      font-size: 1.3rem;
+      color: #8b5e3c;
+    }
+
+    .contact-details a {
+      color: #2c2c38;
+      text-decoration: none;
+      border-bottom: 1px dotted transparent;
+      transition: border-color 0.2s;
+    }
+
+    .contact-details a:hover {
+      border-bottom: 1px dotted #8b5e3c;
+      color: #8b5e3c;
+    }
+
+    /* social media section - prominent modern links */
+    .social-section {
+      background: #ffffffd9;
+      backdrop-filter: blur(2px);
+      border-radius: 2rem;
+      padding: 2rem 2rem 2rem;
+      margin-top: 1rem;
+      border: 1px solid #f0ede8;
+      text-align: center;
+    }
+
+    .social-section h3 {
+      font-size: 1.6rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+    }
+
+    .social-links {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin: 2rem 0 0.6rem;
+    }
+
+    .social-icon {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.6rem;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      background: #f8f7f4;
+      padding: 0.8rem 1.6rem;
+      border-radius: 3rem;
+      min-width: 110px;
+      border: 1px solid #ece9e4;
+    }
+
+    .social-icon i {
+      font-size: 2.2rem;
+      transition: transform 0.2s;
+    }
+
+    .social-icon span {
+      font-weight: 500;
+      font-size: 0.9rem;
+      color: #2c2c38;
+    }
+
+    .social-icon:hover {
+      transform: translateY(-6px);
+      background: white;
+      border-color: #d9cec0;
+      box-shadow: 0 12px 20px -12px rgba(0,0,0,0.15);
+    }
+
+    .social-icon:hover i {
+      transform: scale(1.05);
+    }
+
+    /* brand-specific colors on hover */
+    .social-icon[data-platform="instagram"]:hover i { color: #d62976; }
+    .social-icon[data-platform="twitter"]:hover i { color: #1DA1F2; }
+    .social-icon[data-platform="linkedin"]:hover i { color: #0077B5; }
+    .social-icon[data-platform="facebook"]:hover i { color: #1877F2; }
+    .social-icon[data-platform="youtube"]:hover i { color: #FF0000; }
+
+    /* map placeholder / location mini */
+    .map-placeholder {
+      background: #ece8e2;
+      border-radius: 1.2rem;
+      margin-top: 1.5rem;
+      padding: 0.8rem;
+      text-align: center;
+      font-size: 0.9rem;
+      color: #5a5a6e;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+
+    .map-placeholder i {
+      color: #8b5e3c;
+    }
+
+    /* success message toast style */
+    .toast-msg {
+      position: fixed;
+      bottom: 2rem;
+      left: 50%;
+      transform: translateX(-50%) scale(0.95);
+      background: #1e1e2a;
+      color: white;
+      padding: 0.8rem 1.8rem;
+      border-radius: 3rem;
+      font-weight: 500;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+      z-index: 1000;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+      backdrop-filter: blur(4px);
+    }
+
+    .toast-msg.show {
+      opacity: 1;
+      transform: translateX(-50%) scale(1);
+    }
+
+    footer {
+      text-align: center;
+      margin-top: 4rem;
+      padding-top: 2rem;
+      border-top: 1px solid rgba(0,0,0,0.05);
+      font-size: 0.85rem;
+      color: #6b6b7a;
+    }
+
+    /* responsive */
+    @media (max-width: 880px) {
+      .contact-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .navbar {
+        flex-direction: column;
+        text-align: center;
+      }
+      .page-header h1 {
+        font-size: 2.3rem;
+      }
+      .social-links {
+        gap: 1rem;
+      }
+      .social-icon {
+        padding: 0.6rem 1.2rem;
+        min-width: auto;
+      }
+    }
+
+    @media (max-width: 550px) {
+      .nav-links {
+        gap: 1.2rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+      .container {
+        padding: 1rem 1rem 3rem;
+      }
+    }
+  </style>
+</head>
+<body>
+<div class="container">
+  <!-- navigation (consistent with main website) -->
+  <div class="navbar">
+    <div class="logo"><a href="#">✦ Elara Studio</a></div>
+    <ul class="nav-links">
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Work</a></li>
+      <li><a href="#">Services</a></li>
+      <li><a href="#" class="active">Contact</a></li>
+    </ul>
+  </div>
+
+  <!-- Page intro -->
+  <div class="page-header">
+    <h1>Let's connect</h1>
+    <p>We’d love to hear from you — whether it’s a project, a collaboration, or just a friendly hello.</p>
+  </div>
+
+  <!-- two-columns: contact form + direct info -->
+  <div class="contact-grid">
+    <!-- contact form card -->
+    <div class="form-card">
+      <h2><i class="fas fa-pen-fancy"></i> Send a message</h2>
+      <form id="contactForm">
+        <div class="input-group">
+          <label for="name">Full name *</label>
+          <input type="text" id="name" name="name" placeholder="Alex Morgan" required>
+        </div>
+        <div class="input-group">
+          <label for="email">Email address *</label>
+          <input type="email" id="email" name="email" placeholder="hello@example.com" required>
+        </div>
+        <div class="input-group">
+          <label for="subject">Subject</label>
+          <select id="subject" name="subject">
+            <option value="General inquiry">General inquiry</option>
+            <option value="Project collaboration">Project collaboration</option>
+            <option value="Press & media">Press & media</option>
+            <option value="Careers">Careers</option>
+          </select>
+        </div>
+        <div class="input-group">
+          <label for="message">Message *</label>
+          <textarea id="message" name="message" placeholder="Tell us about your ideas or questions..." required></textarea>
+        </div>
+        <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> Send message</button>
+      </form>
+    </div>
+
+    <!-- contact information + social preview  -->
+    <div class="info-card">
+      <h2><i class="fas fa-map-pin"></i> Studio & connect</h2>
+      <ul class="contact-details">
+        <li><i class="fas fa-map-marker-alt"></i> <span> 447 Broadway, 2nd Floor, New York, NY 10013</span></li>
+        <li><i class="fas fa-envelope"></i> <a href="mailto:hello@elarastudio.com">hello@elarastudio.com</a></li>
+        <li><i class="fas fa-phone-alt"></i> <a href="tel:+12125557890">+1 (212) 555 7890</a></li>
+        <li><i class="far fa-clock"></i> Mon–Fri: 9:00 AM – 6:00 PM (EST)</li>
+      </ul>
+      <div class="map-placeholder">
+        <i class="fas fa-location-dot"></i> Nestled in the creative heart of SoHo — visit us by appointment.
+      </div>
+
+      <!-- Social media section inside the info card or we can add extra dedicated block below -->
+    </div>
+  </div>
+
+  <!-- Dedicated social media links section (prominent and fully styled) -->
+  <div class="social-section">
+    <h3><i class="fas fa-share-alt"></i> Join the conversation</h3>
+    <p style="margin-bottom: 0.75rem; color: #5c5c6e;">Follow us for design inspiration, behind the scenes & studio updates</p>
+    <div class="social-links">
+      <a href="#" class="social-icon" data-platform="instagram" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-instagram"></i>
+        <span>Instagram</span>
+      </a>
+      <a href="#" class="social-icon" data-platform="twitter" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-x-twitter"></i>
+        <span>X (Twitter)</span>
+      </a>
+      <a href="#" class="social-icon" data-platform="linkedin" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-linkedin-in"></i>
+        <span>LinkedIn</span>
+      </a>
+      <a href="#" class="social-icon" data-platform="facebook" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-facebook-f"></i>
+        <span>Facebook</span>
+      </a>
+      <a href="#" class="social-icon" data-platform="youtube" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-youtube"></i>
+        <span>YouTube</span>
+      </a>
+    </div>
+    <p style="margin-top: 1.8rem; font-size: 0.8rem; opacity: 0.7;">Tag us @elarastudio to get featured ✦</p>
+  </div>
+
+  <footer>
+    <p>© 2025 Elara Studio — Designed with intention & warmth. All rights reserved.</p>
+  </footer>
+</div>
+
+<!-- toast notification element -->
+<div id="formToast" class="toast-msg">✨ Message sent! We'll get back soon.</div>
+
+<script>
+  (function() {
+    const form = document.getElementById('contactForm');
+    const toast = document.getElementById('formToast');
+
+    function showToast(message) {
+      toast.textContent = message || '✨ Message sent! We\'ll get back soon.';
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 3500);
+    }
+
+    // handle form submission with mock success / validation
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      // simple front-end validation
+      const nameInput = document.getElementById('name');
+      const emailInput = document.getElementById('email');
+      const messageInput = document.getElementById('message');
+      
+      let isValid = true;
+      if (!nameInput.value.trim()) {
+        nameInput.style.borderColor = '#d9534f';
+        isValid = false;
+      } else {
+        nameInput.style.borderColor = '#e7e5e2';
+      }
+      
+      const emailRegex = /^[^\s@]+@([^\s@.,]+\.)+[^\s@.,]{2,}$/;
+      if (!emailInput.value.trim() || !emailRegex.test(emailInput.value)) {
+        emailInput.style.borderColor = '#d9534f';
+        isValid = false;
+      } else {
+        emailInput.style.borderColor = '#e7e5e2';
+      }
+      
+      if (!messageInput.value.trim()) {
+        messageInput.style.borderColor = '#d9534f';
+        isValid = false;
+      } else {
+        messageInput.style.borderColor = '#e7e5e2';
+      }
+      
+      if (!isValid) {
+        showToast('⚠️ Please fill in all required fields correctly.');
+        return;
+      }
+      
+      // simulate sending (mock success)
+      const submitBtn = form.querySelector('.btn-submit');
+      const originalBtnText = submitBtn.innerHTML;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Sending...';
+      submitBtn.disabled = true;
+      
+      setTimeout(() => {
+        // reset form after "success"
+        form.reset();
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
+        showToast('✓ Message delivered! We’ll reply within 24h.');
+        // reset borders
+        nameInput.style.borderColor = '#e7e5e2';
+        emailInput.style.borderColor = '#e7e5e2';
+        messageInput.style.borderColor = '#e7e5e2';
+        // optional: clear optional fields style
+      }, 800);
+    });
+
+    // real-time remove error style on typing
+    const nameField = document.getElementById('name');
+    const emailField = document.getElementById('email');
+    const messageField = document.getElementById('message');
+    
+    function clearErrorStyle(e) {
+      e.target.style.borderColor = '#e7e5e2';
+    }
+    nameField.addEventListener('input', clearErrorStyle);
+    emailField.addEventListener('input', clearErrorStyle);
+    messageField.addEventListener('input', clearErrorStyle);
+    
+    // simple smooth external social links: For demo they point to "#", but you can replace with actual URLs.
+    // In real scenario: update href with official profiles.
+    // additional behavior to notify that it's a demo environment (optional but polite)
+    const socialIcons = document.querySelectorAll('.social-icon');
+    socialIcons.forEach(icon => {
+      const platform = icon.getAttribute('data-platform') || 'social';
+      icon.addEventListener('click', (ev) => {
+        if (icon.getAttribute('href') === '#') {
+          ev.preventDefault();
+          showToast(`🔗 You're being directed to our ${platform} page (demo) — add your link!`);
+          // optionally you can simulate an external link alert but leaving no redirect.
+          // For demonstration, you could assign actual URLs later. 
+          // For realistic user experience we notify but keep fake links.
+          setTimeout(() => {
+            // just illustrative: we can open dummy window? but better to not force.
+          }, 100);
+        }
+      });
+    });
+    
+    // for map placeholder / phone/mail we keep functional
+    // ensure active default nav + no page reload issues
+    const navLinks = document.querySelectorAll('.nav-links a');
+    navLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        if(link.getAttribute('href') === '#') {
+          e.preventDefault();
+          showToast('🚧 Explore the rest of our site (demo navigation)');
+        }
+      });
+    });
+    const logoLink = document.querySelector('.logo a');
+    if(logoLink && logoLink.getAttribute('href') === '#') {
+      logoLink.addEventListener('click', (e) => {
+        e.preventDefault();
+        showToast('✨ Elara Studio — homepage (demo)');
+      });
+    }
+  })();
+</script>
+</body>
+</html>
