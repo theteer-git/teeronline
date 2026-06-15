@@ -1,3541 +1,577 @@
-<!DOCTYPE html><html lang="en"><head>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Shillong Teer Results Live Dashboard | FR & SR Timings | Khanapara & Juwai Teer</title>
+  <meta name="description" content="Live Shillong Teer Results with FR & SR (First Round & Second Round). Get Khanapara Teer, Juwai Teer, Morning & Night session results with specific timings. Official informational dashboard.">
+  <meta name="keywords" content="Shillong Teer Result Today, Shillong Teer FR SR, Khanapara Teer Result Today, Juwai Teer Result Today, Teer Result Live, Shillong Morning Teer Result, Shillong Night Teer Result, Teer Timings">
+  <meta name="author" content="Teer Results Dashboard">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://www.teerresults.example.com/">
+  <meta property="og:title" content="Shillong Teer Results Live | FR & SR Timings Dashboard">
+  <meta property="og:description" content="First Round & Second Round results for Shillong, Khanapara, Juwai Teer. Morning/Night updates with specific game timings.">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    :root {
+      --primary: #0f172a;
+      --accent: #22c55e;
+      --bg: #f8fafc;
+      --surface: #ffffff;
+      --text: #0f172a;
+      --text-light: #475569;
+      --border: #e2e8f0;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+    }
 
-    <!-- Dynamic Title (PHP) -->
-    <title>Teer | Tir | Shillong Night Teer Previous Result 12 June 2026</title>
+    body.dark {
+      --primary: #f1f5f9;
+      --bg: #0f172a;
+      --surface: #1e293b;
+      --text: #f1f5f9;
+      --text-light: #cbd5e1;
+      --border: #334155;
+      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+    }
 
-   
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      transition: background-color 0.3s, color 0.2s;
+    }
 
-    <!-- JSON-LD Structured Data -->
-  
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    .sticky-header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: var(--surface);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+      border-bottom: 1px solid var(--border);
+      transition: background 0.3s;
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      padding: 0.9rem 0;
+      gap: 0.8rem;
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent);
+    }
+
+    .nav-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: var(--text);
+      font-weight: 500;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent);
+    }
+
+    .dark-toggle {
+      background: var(--accent);
+      border: none;
+      padding: 0.4rem 0.9rem;
+      border-radius: 2rem;
+      cursor: pointer;
+      font-family: Poppins;
+      font-weight: 500;
+      color: #0f172a;
+    }
+
+    .hero {
+      padding: 2rem 0 1rem;
+    }
+
+    .hero h1 {
+      font-size: 1.9rem;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+    }
+
+    .hero p {
+      margin-top: 0.8rem;
+      color: var(--text-light);
+      max-width: 780px;
+    }
+
+    .results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .result-card {
+      background: var(--surface);
+      border-radius: 1.25rem;
+      padding: 1.25rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+    }
+
+    .result-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 0.25rem;
+    }
+
+    .game-timings {
+      font-size: 0.7rem;
+      color: var(--accent);
+      font-weight: 500;
+      margin-bottom: 0.75rem;
+      display: flex;
+      gap: 0.8rem;
+      flex-wrap: wrap;
+    }
+
+    .fr-sr-container {
+      display: flex;
+      gap: 1rem;
+      margin: 1rem 0;
+    }
+
+    .fr-box, .sr-box {
+      flex: 1;
+      background: var(--bg);
+      border-radius: 1rem;
+      padding: 0.7rem;
+      text-align: center;
+    }
+
+    .fr-label, .sr-label {
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-light);
+    }
+
+    .fr-value, .sr-value {
+      font-size: 1.6rem;
+      font-weight: 800;
+      font-family: monospace;
+      margin: 0.3rem 0;
+    }
+
+    .time-badge {
+      font-size: 0.65rem;
+      background: var(--accent);
+      color: #0f172a;
+      padding: 0.2rem 0.5rem;
+      border-radius: 1rem;
+      display: inline-block;
+      font-weight: 600;
+    }
+
+    .refresh-btn {
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      color: var(--accent);
+      padding: 0.5rem 1rem;
+      border-radius: 2rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      font-family: Poppins;
+      transition: 0.2s;
+      margin-top: 0.5rem;
+    }
+
+    .refresh-btn:hover {
+      background: var(--accent);
+      color: white;
+    }
+
+    .loading {
+      opacity: 0.6;
+      pointer-events: none;
+    }
+
+    .table-wrapper {
+      overflow-x: auto;
+      border-radius: 1rem;
+      border: 1px solid var(--border);
+      background: var(--surface);
+      margin: 1rem 0 2rem;
+    }
+
+    .results-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.75rem;
+      min-width: 900px;
+    }
+
+    .results-table th, .results-table td {
+      padding: 0.7rem 0.4rem;
+      text-align: center;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .results-table th {
+      background: var(--bg);
+      font-weight: 600;
+    }
+
+    .seo-content {
+      background: var(--surface);
+      border-radius: 1.5rem;
+      padding: 1.8rem;
+      margin: 2rem 0;
+      border: 1px solid var(--border);
+    }
+
+    .seo-content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .seo-content p {
+      margin-bottom: 1rem;
+      color: var(--text-light);
+    }
+
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 2rem;
+    }
+
+    .footer-links {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .footer-links a {
+      text-decoration: none;
+      color: var(--text-light);
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent);
+    }
+
+    .disclaimer {
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--text-light);
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    @media (max-width: 680px) {
+      .header-inner {
+        flex-direction: column;
+        align-items: stretch;
+      }
+      .nav-links {
+        justify-content: center;
+      }
+      .hero h1 {
+        font-size: 1.5rem;
+      }
+    }
+  </style>
 </head>
-
 <body>
-
-    <style>
-.top-header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-box-sizing:border-box;
-height:60px;
-min-height:60px;
-padding:6px 15px;
-background-color:#9cf;
-overflow:hidden;
-}
-
-.top-header a{
-display:flex;
-align-items:center;
-height:48px;
-flex:0 1 auto;
-}
-
-.top-header img{
-box-sizing:border-box;
-height:48px !important;
-max-height:48px !important;
-width:auto !important;
-max-width:260px;
-display:block;
-object-fit:contain;
-}
-
-    /* hamburger */
-
-.hamburger-btn{
-display:flex;
-align-items:center;
-justify-content:center;
-box-sizing:border-box;
-width:48px;
-height:48px;
-padding:0;
-font-size:26px;
-line-height:48px;
-background:none;
-border:none;
-cursor:pointer;
-color:#111;
-font-family:Arial,Helvetica,sans-serif;
-flex:0 0 48px;
-}
-
-@media (max-width:480px){
-.top-header img{
-max-width:67vw;
-}
-}
-
-/* menu */
-
-.mobile-menu{
-display:none;
-width:100%;
-box-sizing:border-box;
-background:#fff;
-border-top:1px solid #eee;
-box-shadow:0 4px 10px rgba(0,0,0,0.08);
-}
-
-.mobile-menu ul{
-list-style:none;
-margin:0;
-padding:0;
-}
-
-.mobile-menu li{
-border-bottom:1px solid #eee;
-}
-
-.mobile-menu a{
-display:block;
-padding:14px;
-text-decoration:none;
-color:#111;
-font-weight:500;
-font-size:16px;
-line-height:1.25;
-word-break:normal;
-text-align:left;
-}
-
-.mobile-menu a:hover{
-background:#f5f5f5;
-}
-
-.mobile-menu.show{
-display:block;
-}
-
-/* desktop */
-
-@media(min-width:768px){
-
-.hamburger-btn{
-display:none;
-}
-
-.mobile-menu{
-display:block !important;
-}
-
-.mobile-menu ul{
-display:flex;
-justify-content:center;
-gap:25px;
-}
-
-.mobile-menu li{
-border:none;
-}
-
-.mobile-menu a{
-padding:10px 0;
-text-align:center;
-}
-
-}
-</style>
-   
-    <div class="top-header">
-        <a href="index">
-            <img src="public/logo.webp" title="Night Teer" alt="Shillong Night Teer">
-        </a>
-            <button class="hamburger-btn" type="button" aria-label="Open menu" onclick="toggleMenu()">☰</button>
-
-</div>
-
-
-<nav class="mobile-menu" id="mobileMenu">
-
-<ul>
-<li><a href="index">Home</a></li>
-<li><a href="shillong-night-teer-common-number">Common Number</a></li>
-<li><a href="shillong-night-teer-previous-result">Previous Result</a></li>
-<li><a href="blog">Night Teer Blog</a></li>
-<li><a href="night-teer-house-target">Night Teer House Target</a></li>
-<li><a href="contact-us">Contact Us</a></li>
-<li><a href="app">App</a></li>
-</ul>
-
-</nav>
-    <!-- Google tag (gtag.js) -->
- 
-    
-
-
-
-    <div id="work" class="work" style="background-color:white;">
-
-        <div class="container" style="background-color:white;">
-
-            <div class="head-one text-center team-head">
-
-                <br><br>
-
-                <table class="table" id="results-table">
-
-                    <tbody>
-
-                        <tr>
-                            <th colspan="4">
-                                Shillong Night Teer Results
-                            </th>
-                        </tr>
-
-                        <tr style="background-color:#3FD5BA;">
-
-                            <td>CITY</td>
-
-                            <td>DATE</td>
-
-                            <td style="width:4rem;">
-                                F/R
-                            </td>
-
-                            <td style="width:4rem;">
-                                S/R
-                            </td>
-
-                        </tr>
-
-                        
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        12/06/2026                                    </td>
-
-                                    <td>
-                                        43                                    </td>
-
-                                    <td>
-                                        26                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        11/06/2026                                    </td>
-
-                                    <td>
-                                        88                                    </td>
-
-                                    <td>
-                                        69                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        10/06/2026                                    </td>
-
-                                    <td>
-                                        48                                    </td>
-
-                                    <td>
-                                        68                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        09/06/2026                                    </td>
-
-                                    <td>
-                                        25                                    </td>
-
-                                    <td>
-                                        13                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        08/06/2026                                    </td>
-
-                                    <td>
-                                        96                                    </td>
-
-                                    <td>
-                                        80                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        07/06/2026                                    </td>
-
-                                    <td>
-                                        17                                    </td>
-
-                                    <td>
-                                        41                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        06/06/2026                                    </td>
-
-                                    <td>
-                                        28                                    </td>
-
-                                    <td>
-                                        33                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        05/06/2026                                    </td>
-
-                                    <td>
-                                        76                                    </td>
-
-                                    <td>
-                                        02                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        04/06/2026                                    </td>
-
-                                    <td>
-                                        62                                    </td>
-
-                                    <td>
-                                        45                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        03/06/2026                                    </td>
-
-                                    <td>
-                                        81                                    </td>
-
-                                    <td>
-                                        77                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        02/06/2026                                    </td>
-
-                                    <td>
-                                        37                                    </td>
-
-                                    <td>
-                                        12                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        01/06/2026                                    </td>
-
-                                    <td>
-                                        43                                    </td>
-
-                                    <td>
-                                        89                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        31/05/2026                                    </td>
-
-                                    <td>
-                                        24                                    </td>
-
-                                    <td>
-                                        67                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        30/05/2026                                    </td>
-
-                                    <td>
-                                        49                                    </td>
-
-                                    <td>
-                                        05                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        29/05/2026                                    </td>
-
-                                    <td>
-                                        62                                    </td>
-
-                                    <td>
-                                        83                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        28/05/2026                                    </td>
-
-                                    <td>
-                                        78                                    </td>
-
-                                    <td>
-                                        90                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        27/05/2026                                    </td>
-
-                                    <td>
-                                        34                                    </td>
-
-                                    <td>
-                                        51                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        26/05/2026                                    </td>
-
-                                    <td>
-                                        91                                    </td>
-
-                                    <td>
-                                        29                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        25/05/2026                                    </td>
-
-                                    <td>
-                                        10                                    </td>
-
-                                    <td>
-                                        63                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        24/05/2026                                    </td>
-
-                                    <td>
-                                        52                                    </td>
-
-                                    <td>
-                                        76                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        23/05/2026                                    </td>
-
-                                    <td>
-                                        83                                    </td>
-
-                                    <td>
-                                        35                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        22/05/2026                                    </td>
-
-                                    <td>
-                                        69                                    </td>
-
-                                    <td>
-                                        02                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        21/05/2026                                    </td>
-
-                                    <td>
-                                        08                                    </td>
-
-                                    <td>
-                                        32                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        20/05/2026                                    </td>
-
-                                    <td>
-                                        81                                    </td>
-
-                                    <td>
-                                        24                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        19/05/2026                                    </td>
-
-                                    <td>
-                                        29                                    </td>
-
-                                    <td>
-                                        63                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        18/05/2026                                    </td>
-
-                                    <td>
-                                        18                                    </td>
-
-                                    <td>
-                                        79                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        17/05/2026                                    </td>
-
-                                    <td>
-                                        22                                    </td>
-
-                                    <td>
-                                        56                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        16/05/2026                                    </td>
-
-                                    <td>
-                                        75                                    </td>
-
-                                    <td>
-                                        28                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        15/05/2026                                    </td>
-
-                                    <td>
-                                        90                                    </td>
-
-                                    <td>
-                                        44                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        14/05/2026                                    </td>
-
-                                    <td>
-                                        34                                    </td>
-
-                                    <td>
-                                        71                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        13/05/2026                                    </td>
-
-                                    <td>
-                                        58                                    </td>
-
-                                    <td>
-                                        29                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        12/05/2026                                    </td>
-
-                                    <td>
-                                        63                                    </td>
-
-                                    <td>
-                                        45                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        11/05/2026                                    </td>
-
-                                    <td>
-                                        14                                    </td>
-
-                                    <td>
-                                        77                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        10/05/2026                                    </td>
-
-                                    <td>
-                                        35                                    </td>
-
-                                    <td>
-                                        47                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        09/05/2026                                    </td>
-
-                                    <td>
-                                        62                                    </td>
-
-                                    <td>
-                                        81                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        08/05/2026                                    </td>
-
-                                    <td>
-                                        80                                    </td>
-
-                                    <td>
-                                        43                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        07/05/2026                                    </td>
-
-                                    <td>
-                                        92                                    </td>
-
-                                    <td>
-                                        65                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        06/05/2026                                    </td>
-
-                                    <td>
-                                        47                                    </td>
-
-                                    <td>
-                                        30                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        05/05/2026                                    </td>
-
-                                    <td>
-                                        18                                    </td>
-
-                                    <td>
-                                        06                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        04/05/2026                                    </td>
-
-                                    <td>
-                                        51                                    </td>
-
-                                    <td>
-                                        84                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        03/05/2026                                    </td>
-
-                                    <td>
-                                        29                                    </td>
-
-                                    <td>
-                                        68                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        02/05/2026                                    </td>
-
-                                    <td>
-                                        60                                    </td>
-
-                                    <td>
-                                        47                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        01/05/2026                                    </td>
-
-                                    <td>
-                                        35                                    </td>
-
-                                    <td>
-                                        15                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        30/04/2026                                    </td>
-
-                                    <td>
-                                        89                                    </td>
-
-                                    <td>
-                                        06                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        29/04/2026                                    </td>
-
-                                    <td>
-                                        87                                    </td>
-
-                                    <td>
-                                        14                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        28/04/2026                                    </td>
-
-                                    <td>
-                                        76                                    </td>
-
-                                    <td>
-                                        54                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        27/04/2026                                    </td>
-
-                                    <td>
-                                        04                                    </td>
-
-                                    <td>
-                                        98                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        26/04/2026                                    </td>
-
-                                    <td>
-                                        66                                    </td>
-
-                                    <td>
-                                        42                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        25/04/2026                                    </td>
-
-                                    <td>
-                                        51                                    </td>
-
-                                    <td>
-                                        36                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        24/04/2026                                    </td>
-
-                                    <td>
-                                        23                                    </td>
-
-                                    <td>
-                                        78                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        23/04/2026                                    </td>
-
-                                    <td>
-                                        88                                    </td>
-
-                                    <td>
-                                        54                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        22/04/2026                                    </td>
-
-                                    <td>
-                                        94                                    </td>
-
-                                    <td>
-                                        32                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        21/04/2026                                    </td>
-
-                                    <td>
-                                        20                                    </td>
-
-                                    <td>
-                                        55                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        20/04/2026                                    </td>
-
-                                    <td>
-                                        31                                    </td>
-
-                                    <td>
-                                        63                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        19/04/2026                                    </td>
-
-                                    <td>
-                                        97                                    </td>
-
-                                    <td>
-                                        68                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        18/04/2026                                    </td>
-
-                                    <td>
-                                        05                                    </td>
-
-                                    <td>
-                                        44                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        17/04/2026                                    </td>
-
-                                    <td>
-                                        11                                    </td>
-
-                                    <td>
-                                        75                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        16/04/2026                                    </td>
-
-                                    <td>
-                                        41                                    </td>
-
-                                    <td>
-                                        41                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        15/04/2026                                    </td>
-
-                                    <td>
-                                        76                                    </td>
-
-                                    <td>
-                                        83                                    </td>
-
-                                </tr>
-
-                            
-                                <tr>
-
-                                    <td>Shillong</td>
-
-                                    <td>
-                                        14/04/2026                                    </td>
-
-                                    <td>
-                                        58                                    </td>
-
-                                    <td>
-                                        63                                    </td>
-
-                                </tr>
-
-                            
-                        
-                    <tr>
-                    <td>Shillong</td>
-                    <td>13/04/2026</td>
-                    <td>95</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/04/2026</td>
-                    <td>91</td>
-                    <td>78</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/04/2026</td>
-                    <td>60</td>
-                    <td>48</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/04/2026</td>
-                    <td>98</td>
-                    <td>75</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/04/2026</td>
-                    <td>24</td>
-                    <td>08</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/04/2026</td>
-                    <td>85</td>
-                    <td>66</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/04/2026</td>
-                    <td>30</td>
-                    <td>74</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/04/2026</td>
-                    <td>28</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/04/2026</td>
-                    <td>81</td>
-                    <td>69</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/04/2026</td>
-                    <td>15</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/04/2026</td>
-                    <td>72</td>
-                    <td>97</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/04/2026</td>
-                    <td>59</td>
-                    <td>19</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/04/2026</td>
-                    <td>48</td>
-                    <td>48</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/03/2026</td>
-                    <td>39</td>
-                    <td>79</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/03/2026</td>
-                    <td>22</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/03/2026</td>
-                    <td>94</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/03/2026</td>
-                    <td>63</td>
-                    <td>15</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/03/2026</td>
-                    <td>74</td>
-                    <td>33</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/03/2026</td>
-                    <td>85</td>
-                    <td>92</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/03/2026</td>
-                    <td>07</td>
-                    <td>28</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/03/2026</td>
-                    <td>48</td>
-                    <td>95</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/03/2026</td>
-                    <td>79</td>
-                    <td>13</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/03/2026</td>
-                    <td>36</td>
-                    <td>58</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/03/2026</td>
-                    <td>14</td>
-                    <td>35</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/03/2026</td>
-                    <td>78</td>
-                    <td>60</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/03/2026</td>
-                    <td>83</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/03/2026</td>
-                    <td>69</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/03/2026</td>
-                    <td>95</td>
-                    <td>35</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/03/2026</td>
-                    <td>84</td>
-                    <td>59</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/03/2026</td>
-                    <td>62</td>
-                    <td>86</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/03/2026</td>
-                    <td>21</td>
-                    <td>75</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/03/2026</td>
-                    <td>85</td>
-                    <td>44</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/03/2026</td>
-                    <td>74</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/03/2026</td>
-                    <td>40</td>
-                    <td>28</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/03/2026</td>
-                    <td>01</td>
-                    <td>93</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/03/2026</td>
-                    <td>45</td>
-                    <td>18</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/03/2026</td>
-                    <td>74</td>
-                    <td>49</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/03/2026</td>
-                    <td>31</td>
-                    <td>86</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/03/2026</td>
-                    <td>24</td>
-                    <td>90</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/03/2026</td>
-                    <td>17</td>
-                    <td>55</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/03/2026</td>
-                    <td>85</td>
-                    <td>08</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/03/2026</td>
-                    <td>46</td>
-                    <td>31</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/03/2026</td>
-                    <td>67</td>
-                    <td>82</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/03/2026</td>
-                    <td>04</td>
-                    <td>68</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/02/2026</td>
-                    <td>33</td>
-                    <td>49</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/02/2026</td>
-                    <td>71</td>
-                    <td>15</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/02/2026</td>
-                    <td>71</td>
-                    <td>31</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/02/2026</td>
-                    <td>06</td>
-                    <td>53</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/02/2026</td>
-                    <td>12</td>
-                    <td>95</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/02/2026</td>
-                    <td>28</td>
-                    <td>76</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/02/2026</td>
-                    <td>53</td>
-                    <td>25</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/02/2026</td>
-                    <td>60</td>
-                    <td>98</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/02/2026</td>
-                    <td>74</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/02/2026</td>
-                    <td>63</td>
-                    <td>42</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/02/2026</td>
-                    <td>87</td>
-                    <td>19</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/02/2026</td>
-                    <td>56</td>
-                    <td>73</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/02/2026</td>
-                    <td>29</td>
-                    <td>52</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/02/2026</td>
-                    <td>23</td>
-                    <td>45</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/02/2026</td>
-                    <td>63</td>
-                    <td>05</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/02/2026</td>
-                    <td>47</td>
-                    <td>71</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/02/2026</td>
-                    <td>13</td>
-                    <td>52</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/02/2026</td>
-                    <td>70</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/02/2026</td>
-                    <td>37</td>
-                    <td>69</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/02/2026</td>
-                    <td>35</td>
-                    <td>64</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/02/2026</td>
-                    <td>82</td>
-                    <td>14</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/02/2026</td>
-                    <td>46</td>
-                    <td>75</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/02/2026</td>
-                    <td>12</td>
-                    <td>55</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/02/2026</td>
-                    <td>73</td>
-                    <td>16</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/02/2026</td>
-                    <td>49</td>
-                    <td>94</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/02/2026</td>
-                    <td>86</td>
-                    <td>71</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/02/2026</td>
-                    <td>64</td>
-                    <td>08</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/02/2026</td>
-                    <td>46</td>
-                    <td>43</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/01/2026</td>
-                    <td>18</td>
-                    <td>52</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/01/2026</td>
-                    <td>06</td>
-                    <td>78</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/01/2026</td>
-                    <td>69</td>
-                    <td>87</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/01/2026</td>
-                    <td>24</td>
-                    <td>34</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/01/2026</td>
-                    <td>60</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/01/2026</td>
-                    <td>🇮🇳Republic</td>
-                    <td>Day</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/01/2026</td>
-                    <td>90</td>
-                    <td>82</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/01/2026</td>
-                    <td>14</td>
-                    <td>53</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/01/2026</td>
-                    <td>65</td>
-                    <td>79</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/01/2026</td>
-                    <td>45</td>
-                    <td>18</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/01/2026</td>
-                    <td>64</td>
-                    <td>92</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/01/2026</td>
-                    <td>87</td>
-                    <td>88</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/01/2026</td>
-                    <td>62</td>
-                    <td>20</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/01/2026</td>
-                    <td>41</td>
-                    <td>07</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/01/2026</td>
-                    <td>65</td>
-                    <td>92</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/01/2026</td>
-                    <td>39</td>
-                    <td>78</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/01/2026</td>
-                    <td>16</td>
-                    <td>18</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/01/2026</td>
-                    <td>09</td>
-                    <td>78</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/01/2026</td>
-                    <td>53</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/01/2026</td>
-                    <td>25</td>
-                    <td>74</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/01/2026</td>
-                    <td>64</td>
-                    <td>69</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/01/2026</td>
-                    <td>32</td>
-                    <td>66</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/01/2026</td>
-                    <td>87</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/01/2026</td>
-                    <td>67</td>
-                    <td>52</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/01/2026</td>
-                    <td>94</td>
-                    <td>05</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/01/2026</td>
-                    <td>20</td>
-                    <td>58</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/01/2026</td>
-                    <td>47</td>
-                    <td>77</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/01/2026</td>
-                    <td>01</td>
-                    <td>58</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/01/2026</td>
-                    <td>54</td>
-                    <td>69</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/01/2026</td>
-                    <td>81</td>
-                    <td>02</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/01/2026</td>
-                    <td>40</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/12/2025</td>
-                    <td>17</td>
-                    <td>49</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/12/2025</td>
-                    <td>46</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/12/2025</td>
-                    <td>96</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/12/2025</td>
-                    <td>61</td>
-                    <td>82</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/12/2025</td>
-                    <td>13</td>
-                    <td>55</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/12/2025</td>
-                    <td>73</td>
-                    <td>94</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/12/2025</td>
-                    <td>OFF</td>
-                    <td>OFF</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/12/2025</td>
-                    <td>29</td>
-                    <td>46</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/12/2025</td>
-                    <td>81</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/12/2025</td>
-                    <td>79</td>
-                    <td>54</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/12/2025</td>
-                    <td>03</td>
-                    <td>94</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/12/2025</td>
-                    <td>69</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/12/2025</td>
-                    <td>44</td>
-                    <td>87</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/12/2025</td>
-                    <td>25</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/12/2025</td>
-                    <td>42</td>
-                    <td>96</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/12/2025</td>
-                    <td>08</td>
-                    <td>74</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/12/2025</td>
-                    <td>45</td>
-                    <td>05</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/12/2025</td>
-                    <td>61</td>
-                    <td>87</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/12/2025</td>
-                    <td>22</td>
-                    <td>30</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/12/2025</td>
-                    <td>51</td>
-                    <td>71</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/12/2025</td>
-                    <td>69</td>
-                    <td>49</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/12/2025</td>
-                    <td>36</td>
-                    <td>09</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/12/2025</td>
-                    <td>85</td>
-                    <td>42</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/12/2025</td>
-                    <td>07</td>
-                    <td>63</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/12/2025</td>
-                    <td>65</td>
-                    <td>81</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/12/2025</td>
-                    <td>32</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/12/2025</td>
-                    <td>79</td>
-                    <td>94</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/12/2025</td>
-                    <td>20</td>
-                    <td>88</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/12/2025</td>
-                    <td>14</td>
-                    <td>57</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/12/2025</td>
-                    <td>26</td>
-                    <td>60</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/12/2025</td>
-                    <td>86</td>
-                    <td>94</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/11/2025</td>
-                    <td>40</td>
-                    <td>25</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/11/2025</td>
-                    <td>37</td>
-                    <td>86</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/11/2025</td>
-                    <td>05</td>
-                    <td>61</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/11/2025</td>
-                    <td>75</td>
-                    <td>09</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/11/2025</td>
-                    <td>44</td>
-                    <td>81</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/11/2025</td>
-                    <td>38</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/11/2025</td>
-                    <td>71</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/11/2025</td>
-                    <td>85</td>
-                    <td>67</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/11/2025</td>
-                    <td>17</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/11/2025</td>
-                    <td>38</td>
-                    <td>93</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/11/2025</td>
-                    <td>95</td>
-                    <td>01</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/11/2025</td>
-                    <td>13</td>
-                    <td>38</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/11/2025</td>
-                    <td>46</td>
-                    <td>93</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/11/2025</td>
-                    <td>58</td>
-                    <td>68</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/11/2025</td>
-                    <td>37</td>
-                    <td>01</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/11/2025</td>
-                    <td>66</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/11/2025</td>
-                    <td>15</td>
-                    <td>98</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/11/2025</td>
-                    <td>72</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/11/2025</td>
-                    <td>24</td>
-                    <td>09</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/11/2025</td>
-                    <td>70</td>
-                    <td>47</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/11/2025</td>
-                    <td>61</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/11/2025</td>
-                    <td>59</td>
-                    <td>31</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/11/2025</td>
-                    <td>98</td>
-                    <td>63</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/11/2025</td>
-                    <td>20</td>
-                    <td>79</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/11/2025</td>
-                    <td>84</td>
-                    <td>70</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/11/2025</td>
-                    <td>61</td>
-                    <td>14</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/11/2025</td>
-                    <td>49</td>
-                    <td>92</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/11/2025</td>
-                    <td>27</td>
-                    <td>58</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/11/2025</td>
-                    <td>06</td>
-                    <td>88</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/11/2025</td>
-                    <td>52</td>
-                    <td>81</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/10/2025</td>
-                    <td>76</td>
-                    <td>14</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/10/2025</td>
-                    <td>31</td>
-                    <td>95</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/10/2025</td>
-                    <td>17</td>
-                    <td>19</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/10/2025</td>
-                    <td>40</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/10/2025</td>
-                    <td>78</td>
-                    <td>66</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/10/2025</td>
-                    <td>13</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/10/2025</td>
-                    <td>07</td>
-                    <td>53</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/10/2025</td>
-                    <td>89</td>
-                    <td>84</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/10/2025</td>
-                    <td>62</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/10/2025</td>
-                    <td>21</td>
-                    <td>54</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/10/2025</td>
-                    <td>65</td>
-                    <td>08</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/10/2025</td>
-                    <td>77</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/10/2025</td>
-                    <td>14</td>
-                    <td>78</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/10/2025</td>
-                    <td>30</td>
-                    <td>44</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/10/2025</td>
-                    <td>84</td>
-                    <td>61</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/10/2025</td>
-                    <td>56</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/10/2025</td>
-                    <td>76</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/10/2025</td>
-                    <td>86</td>
-                    <td>47</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/10/2025</td>
-                    <td>59</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/10/2025</td>
-                    <td>10</td>
-                    <td>94</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/10/2025</td>
-                    <td>78</td>
-                    <td>18</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/10/2025</td>
-                    <td>77</td>
-                    <td>42</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/10/2025</td>
-                    <td>95</td>
-                    <td>52</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/10/2025</td>
-                    <td>35</td>
-                    <td>62</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/10/2025</td>
-                    <td>60</td>
-                    <td>17</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/10/2025</td>
-                    <td>97</td>
-                    <td>22</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/10/2025</td>
-                    <td>36</td>
-                    <td>19</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/10/2025</td>
-                    <td>71</td>
-                    <td>68</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/10/2025</td>
-                    <td>94</td>
-                    <td>46</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/10/2025</td>
-                    <td>20</td>
-                    <td>50</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/09/2025</td>
-                    <td>07</td>
-                    <td>34</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/09/2025</td>
-                    <td>83</td>
-                    <td>25</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/09/2025</td>
-                    <td>56</td>
-                    <td>00</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/09/2025</td>
-                    <td>50</td>
-                    <td>21</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/09/2025</td>
-                    <td>61</td>
-                    <td>35</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/09/2025</td>
-                    <td>24</td>
-                    <td>98</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/09/2025</td>
-                    <td>62</td>
-                    <td>42</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/09/2025</td>
-                    <td>74</td>
-                    <td>10</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/09/2025</td>
-                    <td>29</td>
-                    <td>56</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/09/2025</td>
-                    <td>09</td>
-                    <td>62</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/09/2025</td>
-                    <td>41</td>
-                    <td>70</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/09/2025</td>
-                    <td>76</td>
-                    <td>11</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/09/2025</td>
-                    <td>32</td>
-                    <td>14</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/09/2025</td>
-                    <td>04</td>
-                    <td>29</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/09/2025</td>
-                    <td>58</td>
-                    <td>88</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/09/2025</td>
-                    <td>68</td>
-                    <td>46</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/09/2025</td>
-                    <td>66</td>
-                    <td>02</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/09/2025</td>
-                    <td>19</td>
-                    <td>65</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/09/2025</td>
-                    <td>52</td>
-                    <td>43</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/09/2025</td>
-                    <td>13</td>
-                    <td>34</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/09/2025</td>
-                    <td>98</td>
-                    <td>45</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/09/2025</td>
-                    <td>18</td>
-                    <td>35</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/09/2025</td>
-                    <td>63</td>
-                    <td>96</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/09/2025</td>
-                    <td>02</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/09/2025</td>
-                    <td>21</td>
-                    <td>22</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/09/2025</td>
-                    <td>64</td>
-                    <td>58</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/09/2025</td>
-                    <td>37</td>
-                    <td>98</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/09/2025</td>
-                    <td>10</td>
-                    <td>56</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/09/2025</td>
-                    <td>62</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/09/2025</td>
-                    <td>80</td>
-                    <td>91</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/08/2025</td>
-                    <td>19</td>
-                    <td>44</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/08/2025</td>
-                    <td>83</td>
-                    <td>25</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/08/2025</td>
-                    <td>17</td>
-                    <td>69</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/08/2025</td>
-                    <td>77</td>
-                    <td>07</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/08/2025</td>
-                    <td>42</td>
-                    <td>95</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/08/2025</td>
-                    <td>29</td>
-                    <td>17</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/08/2025</td>
-                    <td>73</td>
-                    <td>47</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/08/2025</td>
-                    <td>32</td>
-                    <td>46</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/08/2025</td>
-                    <td>68</td>
-                    <td>72</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/08/2025</td>
-                    <td>20</td>
-                    <td>83</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/08/2025</td>
-                    <td>14</td>
-                    <td>81</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/08/2025</td>
-                    <td>54</td>
-                    <td>92</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/08/2025</td>
-                    <td>86</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/08/2025</td>
-                    <td>41</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/08/2025</td>
-                    <td>20</td>
-                    <td>89</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/08/2025</td>
-                    <td>92</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/08/2025</td>
-                    <td>OFF</td>
-                    <td>OFF</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/08/2025</td>
-                    <td>57</td>
-                    <td>55</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/08/2025</td>
-                    <td>05</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/08/2025</td>
-                    <td>13</td>
-                    <td>46</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/08/2025</td>
-                    <td>75</td>
-                    <td>00</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/08/2025</td>
-                    <td>02</td>
-                    <td>36</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/08/2025</td>
-                    <td>60</td>
-                    <td>67</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/08/2025</td>
-                    <td>92</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/08/2025</td>
-                    <td>24</td>
-                    <td>82</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/08/2025</td>
-                    <td>13</td>
-                    <td>64</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/08/2025</td>
-                    <td>34</td>
-                    <td>60</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/08/2025</td>
-                    <td>63</td>
-                    <td>81</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/08/2025</td>
-                    <td>76</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/08/2025</td>
-                    <td>12</td>
-                    <td>67</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/08/2025</td>
-                    <td>81</td>
-                    <td>85</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/07/2025</td>
-                    <td>44</td>
-                    <td>53</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/07/2025</td>
-                    <td>13</td>
-                    <td>57</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/07/2025</td>
-                    <td>40</td>
-                    <td>23</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/07/2025</td>
-                    <td>72</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/07/2025</td>
-                    <td>66</td>
-                    <td>76</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/07/2025</td>
-                    <td>89</td>
-                    <td>21</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/07/2025</td>
-                    <td>46</td>
-                    <td>68</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/07/2025</td>
-                    <td>82</td>
-                    <td>79</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/07/2025</td>
-                    <td>17</td>
-                    <td>07</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/07/2025</td>
-                    <td>79</td>
-                    <td>54</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/07/2025</td>
-                    <td>51</td>
-                    <td>13</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/07/2025</td>
-                    <td>71</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/07/2025</td>
-                    <td>20</td>
-                    <td>97</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/07/2025</td>
-                    <td>00</td>
-                    <td>73</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/07/2025</td>
-                    <td>46</td>
-                    <td>56</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/07/2025</td>
-                    <td>85</td>
-                    <td>54</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/07/2025</td>
-                    <td>52</td>
-                    <td>34</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/07/2025</td>
-                    <td>51</td>
-                    <td>96</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/07/2025</td>
-                    <td>18</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/07/2025</td>
-                    <td>74</td>
-                    <td>67</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/07/2025</td>
-                    <td>53</td>
-                    <td>79</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/07/2025</td>
-                    <td>66</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/07/2025</td>
-                    <td>90</td>
-                    <td>56</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/07/2025</td>
-                    <td>44</td>
-                    <td>72</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/07/2025</td>
-                    <td>96</td>
-                    <td>19</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/07/2025</td>
-                    <td>38</td>
-                    <td>46</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/07/2025</td>
-                    <td>74</td>
-                    <td>62</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/07/2025</td>
-                    <td>17</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/07/2025</td>
-                    <td>56</td>
-                    <td>85</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/07/2025</td>
-                    <td>64</td>
-                    <td>44</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/07/2025</td>
-                    <td>56</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/06/2025</td>
-                    <td>04</td>
-                    <td>42</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/06/2025</td>
-                    <td>78</td>
-                    <td>28</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/06/2025</td>
-                    <td>11</td>
-                    <td>27</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/06/2025</td>
-                    <td>69</td>
-                    <td>00</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/06/2025</td>
-                    <td>27</td>
-                    <td>84</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/06/2025</td>
-                    <td>50</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/06/2025</td>
-                    <td>16</td>
-                    <td>42</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/06/2025</td>
-                    <td>09</td>
-                    <td>01</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/06/2025</td>
-                    <td>73</td>
-                    <td>99</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/06/2025</td>
-                    <td>24</td>
-                    <td>82</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/06/2025</td>
-                    <td>16</td>
-                    <td>95</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/06/2025</td>
-                    <td>27</td>
-                    <td>41</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/06/2025</td>
-                    <td>62</td>
-                    <td>43</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/06/2025</td>
-                    <td>73</td>
-                    <td>57</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/06/2025</td>
-                    <td>89</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/06/2025</td>
-                    <td>75</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/06/2025</td>
-                    <td>65</td>
-                    <td>30</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/06/2025</td>
-                    <td>91</td>
-                    <td>76</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/06/2025</td>
-                    <td>00</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/06/2025</td>
-                    <td>17</td>
-                    <td>49</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/06/2025</td>
-                    <td>93</td>
-                    <td>62</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/06/2025</td>
-                    <td>79</td>
-                    <td>23</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/06/2025</td>
-                    <td>78</td>
-                    <td>86</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/06/2025</td>
-                    <td>00</td>
-                    <td>88</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/06/2025</td>
-                    <td>52</td>
-                    <td>90</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/06/2025</td>
-                    <td>93</td>
-                    <td>89</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/06/2025</td>
-                    <td>65</td>
-                    <td>09</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/06/2025</td>
-                    <td>96</td>
-                    <td>53</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/06/2025</td>
-                    <td>70</td>
-                    <td>33</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/06/2025</td>
-                    <td>98</td>
-                    <td>09</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/05/2025</td>
-                    <td>35</td>
-                    <td>18</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/05/2025</td>
-                    <td>01</td>
-                    <td>99</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/05/2025</td>
-                    <td>48</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/05/2025</td>
-                    <td>90</td>
-                    <td>37</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/05/2025</td>
-                    <td>41</td>
-                    <td>02</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/05/2025</td>
-                    <td>49</td>
-                    <td>98</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/05/2025</td>
-                    <td>62</td>
-                    <td>82</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/05/2025</td>
-                    <td>59</td>
-                    <td>93</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/05/2025</td>
-                    <td>22</td>
-                    <td>90</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/05/2025</td>
-                    <td>82</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/05/2025</td>
-                    <td>41</td>
-                    <td>45</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/05/2025</td>
-                    <td>81</td>
-                    <td>60</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/05/2025</td>
-                    <td>13</td>
-                    <td>36</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/05/2025</td>
-                    <td>86</td>
-                    <td>93</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/05/2025</td>
-                    <td>85</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/05/2025</td>
-                    <td>20</td>
-                    <td>70</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/05/2025</td>
-                    <td>43</td>
-                    <td>81</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/05/2025</td>
-                    <td>92</td>
-                    <td>06</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/05/2025</td>
-                    <td>15</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/05/2025</td>
-                    <td>66</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/05/2025</td>
-                    <td>45</td>
-                    <td>80</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/05/2025</td>
-                    <td>68</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/05/2025</td>
-                    <td>53</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/05/2025</td>
-                    <td>63</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/05/2025</td>
-                    <td>23</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/05/2025</td>
-                    <td>02</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/05/2025</td>
-                    <td>29</td>
-                    <td>72</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/05/2025</td>
-                    <td>05</td>
-                    <td>43</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/05/2025</td>
-                    <td>74</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/05/2025</td>
-                    <td>63</td>
-                    <td>10</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/05/2025</td>
-                    <td>99</td>
-                    <td>69</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/04/2025</td>
-                    <td>25</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/04/2025</td>
-                    <td>21</td>
-                    <td>31</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/04/2025</td>
-                    <td>40</td>
-                    <td>37</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/04/2025</td>
-                    <td>75</td>
-                    <td>33</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/04/2025</td>
-                    <td>14</td>
-                    <td>21</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/04/2025</td>
-                    <td>76</td>
-                    <td>18</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/04/2025</td>
-                    <td>95</td>
-                    <td>43</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/04/2025</td>
-                    <td>60</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/04/2025</td>
-                    <td>26</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/04/2025</td>
-                    <td>05</td>
-                    <td>62</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/04/2025</td>
-                    <td>61</td>
-                    <td>49</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/04/2025</td>
-                    <td>91</td>
-                    <td>07</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/04/2025</td>
-                    <td>09</td>
-                    <td>44</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/04/2025</td>
-                    <td>42</td>
-                    <td>80</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/04/2025</td>
-                    <td>05</td>
-                    <td>97</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/04/2025</td>
-                    <td>36</td>
-                    <td>58</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/04/2025</td>
-                    <td>59</td>
-                    <td>20</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/04/2025</td>
-                    <td>28</td>
-                    <td>78</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/04/2025</td>
-                    <td>81</td>
-                    <td>55</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/04/2025</td>
-                    <td>79</td>
-                    <td>64</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/04/2025</td>
-                    <td>37</td>
-                    <td>88</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/04/2025</td>
-                    <td>90</td>
-                    <td>20</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/04/2025</td>
-                    <td>61</td>
-                    <td>33</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/04/2025</td>
-                    <td>25</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/04/2025</td>
-                    <td>73</td>
-                    <td>45</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/04/2025</td>
-                    <td>46</td>
-                    <td>06</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/04/2025</td>
-                    <td>72</td>
-                    <td>17</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/04/2025</td>
-                    <td>15</td>
-                    <td>62</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/04/2025</td>
-                    <td>45</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/04/2025</td>
-                    <td>94</td>
-                    <td>77</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/03/2025</td>
-                    <td>78</td>
-                    <td>06</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/03/2025</td>
-                    <td>20</td>
-                    <td>07</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/03/2025</td>
-                    <td>92</td>
-                    <td>71</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/03/2025</td>
-                    <td>89</td>
-                    <td>13</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/03/2025</td>
-                    <td>43</td>
-                    <td>36</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/03/2025</td>
-                    <td>74</td>
-                    <td>89</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/03/2025</td>
-                    <td>41</td>
-                    <td>57</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/03/2025</td>
-                    <td>49</td>
-                    <td>59</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/03/2025</td>
-                    <td>69</td>
-                    <td>05</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/03/2025</td>
-                    <td>14</td>
-                    <td>49</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/03/2025</td>
-                    <td>93</td>
-                    <td>65</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/03/2025</td>
-                    <td>30</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/03/2025</td>
-                    <td>77</td>
-                    <td>01</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/03/2025</td>
-                    <td>75</td>
-                    <td>17</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/03/2025</td>
-                    <td>37</td>
-                    <td>82</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/03/2025</td>
-                    <td>90</td>
-                    <td>90</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/03/2025</td>
-                    <td>18</td>
-                    <td>38</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/03/2025</td>
-                    <td>62</td>
-                    <td>01</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/03/2025</td>
-                    <td>97</td>
-                    <td>51</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/03/2025</td>
-                    <td>71</td>
-                    <td>09</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/03/2025</td>
-                    <td>83</td>
-                    <td>25</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/03/2025</td>
-                    <td>42</td>
-                    <td>94</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/03/2025</td>
-                    <td>88</td>
-                    <td>21</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/03/2025</td>
-                    <td>63</td>
-                    <td>33</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/03/2025</td>
-                    <td>29</td>
-                    <td>50</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/03/2025</td>
-                    <td>81</td>
-                    <td>52</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/03/2025</td>
-                    <td>43</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/03/2025</td>
-                    <td>08</td>
-                    <td>57</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/03/2025</td>
-                    <td>80</td>
-                    <td>73</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/03/2025</td>
-                    <td>91</td>
-                    <td>32</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/03/2025</td>
-                    <td>15</td>
-                    <td>83</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/02/2025</td>
-                    <td>79</td>
-                    <td>06</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/02/2025</td>
-                    <td>79</td>
-                    <td>17</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/02/2025</td>
-                    <td>51</td>
-                    <td>36</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/02/2025</td>
-                    <td>80</td>
-                    <td>99</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/02/2025</td>
-                    <td>31</td>
-                    <td>79</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/02/2025</td>
-                    <td>05</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/02/2025</td>
-                    <td>39</td>
-                    <td>21</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/02/2025</td>
-                    <td>75</td>
-                    <td>98</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/02/2025</td>
-                    <td>81</td>
-                    <td>40</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/02/2025</td>
-                    <td>06</td>
-                    <td>53</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/02/2025</td>
-                    <td>99</td>
-                    <td>24</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/02/2025</td>
-                    <td>41</td>
-                    <td>21</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/02/2025</td>
-                    <td>83</td>
-                    <td>09</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/02/2025</td>
-                    <td>72</td>
-                    <td>55</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/02/2025</td>
-                    <td>45</td>
-                    <td>86</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/02/2025</td>
-                    <td>16</td>
-                    <td>63</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/02/2025</td>
-                    <td>77</td>
-                    <td>86</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/02/2025</td>
-                    <td>35</td>
-                    <td>91</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/02/2025</td>
-                    <td>63</td>
-                    <td>27</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/02/2025</td>
-                    <td>22</td>
-                    <td>96</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/02/2025</td>
-                    <td>20</td>
-                    <td>81</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/02/2025</td>
-                    <td>36</td>
-                    <td>95</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/02/2025</td>
-                    <td>48</td>
-                    <td>60</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/02/2025</td>
-                    <td>36</td>
-                    <td>04</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/02/2025</td>
-                    <td>80</td>
-                    <td>59</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/02/2025</td>
-                    <td>26</td>
-                    <td>16</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/02/2025</td>
-                    <td>00</td>
-                    <td>41</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/02/2025</td>
-                    <td>10</td>
-                    <td>25</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>31/01/2025</td>
-                    <td>84</td>
-                    <td>02</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>30/01/2025</td>
-                    <td>04</td>
-                    <td>29</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>29/01/2025</td>
-                    <td>64</td>
-                    <td>29</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>28/01/2025</td>
-                    <td>93</td>
-                    <td>80</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>27/01/2025</td>
-                    <td>77</td>
-                    <td>63</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/01/2025</td>
-                    <td>43</td>
-                    <td>79</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>25/01/2025</td>
-                    <td>23</td>
-                    <td>37</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>24/01/2025</td>
-                    <td>78</td>
-                    <td>60</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>23/01/2025</td>
-                    <td>13</td>
-                    <td>44</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>22/01/2025</td>
-                    <td>92</td>
-                    <td>75</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>21/01/2025</td>
-                    <td>26</td>
-                    <td>54</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>20/01/2025</td>
-                    <td>67</td>
-                    <td>19</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>19/01/2025</td>
-                    <td>99</td>
-                    <td>43</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>18/01/2025</td>
-                    <td>80</td>
-                    <td>37</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>17/01/2025</td>
-                    <td>57</td>
-                    <td>41</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>16/01/2025</td>
-                    <td>02</td>
-                    <td>12</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>15/01/2025</td>
-                    <td>46</td>
-                    <td>70</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>14/01/2025</td>
-                    <td>52</td>
-                    <td>23</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>13/01/2025</td>
-                    <td>03</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>12/01/2025</td>
-                    <td>56</td>
-                    <td>14</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>11/01/2025</td>
-                    <td>49</td>
-                    <td>26</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>10/01/2025</td>
-                    <td>74</td>
-                    <td>03</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>09/01/2025</td>
-                    <td>23</td>
-                    <td>90</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>08/01/2025</td>
-                    <td>67</td>
-                    <td>38</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>07/01/2025</td>
-                    <td>30</td>
-                    <td>05</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>06/01/2025</td>
-                    <td>87</td>
-                    <td>39</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>05/01/2025</td>
-                    <td>79</td>
-                    <td>15</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>04/01/2025</td>
-                    <td>18</td>
-                    <td>99</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>03/01/2025</td>
-                    <td>42</td>
-                    <td>97</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>02/01/2025</td>
-                    <td>56</td>
-                    <td>13</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>01/01/2025</td>
-                    <td>63</td>
-                    <td>87</td>
-                </tr><tr>
-                    <td>Shillong</td>
-                    <td>26/01/2024</td>
-                    <td>41</td>
-                    <td>96</td>
-                </tr></tbody>
-
-                
-
+  <header class="sticky-header">
+    <div class="container header-inner">
+      <div class="logo">🏹 Teer Results</div>
+      <div class="nav-links">
+        <a href="#">Home</a>
+        <a href="#">Common Numbers</a>
+        <a href="#">Dream Numbers</a>
+        <a href="#">Teer Formula</a>
+        <a href="#">Statistics</a>
+        <a href="#">Contact</a>
+        <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="hero">
+      <h1>Shillong Teer Results Live Dashboard | FR & SR Timings</h1>
+      <p>Get accurate First Round (FR) and Second Round (SR) results for Shillong Teer, Khanapara Teer, Juwai Teer including Morning & Night sessions. Each game has specific timings. This dashboard provides live-updated results with mock refresh functionality. All data is informational and updated after official declarations.</p>
+    </div>
+
+    <div class="results-grid" id="resultsGrid"></div>
+
+    <div class="history-section">
+      <h2 style="margin-bottom: 1rem;">📅 Last 7 Days Teer Results (FR/SR Combined)</h2>
+      <div class="table-wrapper">
+        <table class="results-table" id="historyTable">
+          <thead>
+            <tr><th>Date</th><th>Shillong FR/SR</th><th>Khanapara FR/SR</th><th>Juwai FR/SR</th><th>Shillong Morning FR/SR</th><th>Shillong Night FR/SR</th><th>Shillong Night Teer 2 FR/SR</th><th>Khanapara Morning FR/SR</th><th>Juwai Morning FR/SR</th></tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="seo-content">
+      <h2>Complete Teer Results: First Round & Second Round with Specific Timings</h2>
+      <p><strong>Shillong Teer Result Today</strong> follows a fixed schedule: First Round (FR) at 11:30 AM and Second Round (SR) at 4:00 PM. <strong>Khanapara Teer Result Today</strong> also maintains FR at 11:45 AM and SR at 4:15 PM. For <strong>Juwai Teer Result Today</strong>, FR is declared at 12:00 PM and SR at 4:30 PM. Morning sessions: Shillong Morning Teer (FR: 9:00 AM, SR: 10:00 AM), Khanapara Morning (FR: 9:30 AM, SR: 10:30 AM), Juwai Morning (FR: 9:45 AM, SR: 10:45 AM). Night sessions: Shillong Night Teer (FR: 6:00 PM, SR: 7:00 PM) and Shillong Night Teer 2 (FR: 7:30 PM, SR: 8:30 PM).</p>
+      <p>Our dashboard provides <strong>Teer Result Live</strong> updates for every game's FR and SR. You can refresh each card manually to simulate latest result updates. The <strong>Shillong Morning Teer Result</strong> and <strong>Shillong Night Teer Result</strong> are crucial for daily tracking. We also maintain a 7-day historical record showing FR and SR outcomes combined as "FR/SR" (e.g., 45-72). All information is strictly educational and does not promote gambling or prediction.</p>
+      <p>Check daily updated results for Shillong, Khanapara, Juwai, and their morning/night variants. The FR and SR structure is based on traditional archery arrow counts. This platform helps enthusiasts maintain historical data without any guarantee of future outcomes.</p>
+    </div>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-links">
+        <a href="#">Privacy Policy</a>
+        <a href="#">Terms & Conditions</a>
+        <a href="#">Contact</a>
+        <a href="#">About</a>
+      </div>
+      <div class="disclaimer">
+        ⚠️ Disclaimer: This website is for informational purposes only. Teer results are based on archery events. We do not promote gambling, betting, or prediction. All data is mock/representational for demonstration. Users must verify with official sources.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    (function() {
+      // Game definitions with specific timings and keys
+      const games = [
+        { title: "Shillong Teer Results", key: "shillong", timingFR: "11:30 AM", timingSR: "4:00 PM" },
+        { title: "Shillong Morning Teer Results", key: "shillong_morning", timingFR: "9:00 AM", timingSR: "10:00 AM" },
+        { title: "Shillong Night Teer Results", key: "shillong_night", timingFR: "6:00 PM", timingSR: "7:00 PM" },
+        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", timingFR: "7:30 PM", timingSR: "8:30 PM" },
+        { title: "Khanapara Teer Results", key: "khanapara", timingFR: "11:45 AM", timingSR: "4:15 PM" },
+        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", timingFR: "9:30 AM", timingSR: "10:30 AM" },
+        { title: "Juwai Teer Results", key: "juwai", timingFR: "12:00 PM", timingSR: "4:30 PM" },
+        { title: "Juwai Morning Teer Results", key: "juwai_morning", timingFR: "9:45 AM", timingSR: "10:45 AM" }
+      ];
+
+      // State for FR and SR numbers per game
+      let gameData = {};
+      const randomNum = () => Math.floor(Math.random() * 100).toString().padStart(2, '0');
+      
+      games.forEach(game => {
+        gameData[game.key] = {
+          fr: randomNum(),
+          sr: randomNum()
+        };
+      });
+
+      const getTodayDate = () => {
+        const d = new Date();
+        return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
+      };
+
+      // Render all cards with FR/SR displays
+      const renderCards = () => {
+        const grid = document.getElementById('resultsGrid');
+        if (!grid) return;
+        grid.innerHTML = '';
+        games.forEach(game => {
+          const data = gameData[game.key];
+          const card = document.createElement('div');
+          card.className = 'result-card';
+          card.setAttribute('data-key', game.key);
+          card.innerHTML = `
+            <div class="card-title">${game.title}</div>
+            <div class="game-timings">
+              <span>🏹 FR: ${game.timingFR}</span>
+              <span>🎯 SR: ${game.timingSR}</span>
             </div>
+            <div class="fr-sr-container">
+              <div class="fr-box">
+                <div class="fr-label">FIRST ROUND (FR)</div>
+                <div class="fr-value" id="fr-${game.key}">${data.fr}</div>
+                <span class="time-badge">${game.timingFR}</span>
+              </div>
+              <div class="sr-box">
+                <div class="sr-label">SECOND ROUND (SR)</div>
+                <div class="sr-value" id="sr-${game.key}">${data.sr}</div>
+                <span class="time-badge">${game.timingSR}</span>
+              </div>
+            </div>
+            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result (FR & SR)</button>
+          `;
+          grid.appendChild(card);
+        });
 
-        </div>
+        // Attach refresh events
+        document.querySelectorAll('.refresh-btn').forEach(btn => {
+          btn.addEventListener('click', async (e) => {
+            const key = btn.getAttribute('data-key');
+            const frDiv = document.getElementById(`fr-${key}`);
+            const srDiv = document.getElementById(`sr-${key}`);
+            if (!frDiv || !srDiv) return;
+            
+            const originalFr = frDiv.innerText;
+            const originalSr = srDiv.innerText;
+            frDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
+            srDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
+            btn.disabled = true;
+            btn.classList.add('loading');
+            
+            await new Promise(resolve => setTimeout(resolve, 1400));
+            
+            const newFr = randomNum();
+            const newSr = randomNum();
+            gameData[key].fr = newFr;
+            gameData[key].sr = newSr;
+            frDiv.innerHTML = newFr;
+            srDiv.innerHTML = newSr;
+            btn.disabled = false;
+            btn.classList.remove('loading');
+            
+            // Update table's first row to reflect new FR/SR values (format "FR-SR")
+            updateHistoryWithCurrentData();
+          });
+        });
+      };
 
-    </div>
-<footer class="sky-blue-footer">
-    <div class="sky-footer-container">
-        
-        <nav class="sky-footer-nav">
-            <a href="index">Home</a>
-            <a href="terms-and-condition">Terms and Conditions</a>
-            <a href="about">About Us</a>
-            <a href="blog">Blog</a>
-            <a href="privacy-policy">Privacy Policy</a>
-            <a href="contact-us">Contact Us</a>
-        </nav>
-
-        <hr class="sky-footer-line">
-
-       
-        <p class="sky-footer-copy">Copyright © All site reserved 2016-2026</p>
-        <p></p>
-
-    </div>
-</footer>
-
- 
-
-</body></html>
+      // Helper: format FR/SR as "45-72"
+      const formatFrSr = (fr, sr) => `${fr}-${sr}`;
+      
+      // Generate last 7 days historical data (mock with FR/SR pairs)
+      const generateHistoryData = () => {
+        const dates = [];
+        for (let i = 6; i >= 0; i--) {
+          const d = new Date();
+          d.setDate(d.getDate() - i);
+          const dateStr = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
+          dates.push(dateStr);
+        }
+        return dates.map(date => ({
+          date: date,
+          shillong: formatFrSr(randomNum(), randomNum()),
+          khanapara: formatFrSr(randomNum(), randomNum()),
+          juwai: formatFrSr(randomNum(), randomNum()),
+          shillong_morning: formatFrSr(randomNum(), randomNum()),
+          shillong_night: formatFrSr(randomNum(), randomNum()),
+          shillong_night2: formatFrSr(randomNum(), randomNum()),
+          khanapara_morning: formatFrSr(randomNum(), randomNum()),
+          juwai_morning: formatFrSr(randomNum(), randomNum())
+        }));
+      };
+      
+      let historicalRows = generateHistoryData();
+      
+      const renderHistoryTable = () => {
+        const tbody = document.getElementById('historyBody');
+        if (!tbody) return;
+        tbody.innerHTML = '';
+        historicalRows.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${row.date}</td>
+            <td>${row.shillong}</td>
+            <td>${row.khanapara}</td>
+            <td>${row.juwai}</td>
+            <td>${row.shillong_morning}</td>
+            <td>${row.shillong_night}</td>
+            <td>${row.shillong_night2}</td>
+            <td>${row.khanapara_morning}</td>
+            <td>${row.juwai_morning}</td>
+          `;
+          tbody.appendChild(tr);
+        });
+      };
+      
+      const updateHistoryWithCurrentData = () => {
+        if (historicalRows.length === 0) return;
+        const todayRow = historicalRows[0];
+        todayRow.shillong = formatFrSr(gameData['shillong'].fr, gameData['shillong'].sr);
+        todayRow.shillong_morning = formatFrSr(gameData['shillong_morning'].fr, gameData['shillong_morning'].sr);
+        todayRow.shillong_night = formatFrSr(gameData['shillong_night'].fr, gameData['shillong_night'].sr);
+        todayRow.shillong_night2 = formatFrSr(gameData['shillong_night2'].fr, gameData['shillong_night2'].sr);
+        todayRow.khanapara = formatFrSr(gameData['khanapara'].fr, gameData['khanapara'].sr);
+        todayRow.khanapara_morning = formatFrSr(gameData['khanapara_morning'].fr, gameData['khanapara_morning'].sr);
+        todayRow.juwai = formatFrSr(gameData['juwai'].fr, gameData['juwai'].sr);
+        todayRow.juwai_morning = formatFrSr(gameData['juwai_morning'].fr, gameData['juwai_morning'].sr);
+        renderHistoryTable();
+      };
+      
+      const initialSyncTable = () => {
+        if (historicalRows.length) {
+          historicalRows[0].shillong = formatFrSr(gameData['shillong'].fr, gameData['shillong'].sr);
+          historicalRows[0].shillong_morning = formatFrSr(gameData['shillong_morning'].fr, gameData['shillong_morning'].sr);
+          historicalRows[0].shillong_night = formatFrSr(gameData['shillong_night'].fr, gameData['shillong_night'].sr);
+          historicalRows[0].shillong_night2 = formatFrSr(gameData['shillong_night2'].fr, gameData['shillong_night2'].sr);
+          historicalRows[0].khanapara = formatFrSr(gameData['khanapara'].fr, gameData['khanapara'].sr);
+          historicalRows[0].khanapara_morning = formatFrSr(gameData['khanapara_morning'].fr, gameData['khanapara_morning'].sr);
+          historicalRows[0].juwai = formatFrSr(gameData['juwai'].fr, gameData['juwai'].sr);
+          historicalRows[0].juwai_morning = formatFrSr(gameData['juwai_morning'].fr, gameData['juwai_morning'].sr);
+          renderHistoryTable();
+        } else {
+          renderHistoryTable();
+        }
+      };
+      
+      // Dark mode
+      const initDarkMode = () => {
+        const toggle = document.getElementById('darkModeToggle');
+        const isDark = localStorage.getItem('darkMode') === 'true';
+        if (isDark) document.body.classList.add('dark');
+        toggle.addEventListener('click', () => {
+          document.body.classList.toggle('dark');
+          const darkEnabled = document.body.classList.contains('dark');
+          localStorage.setItem('darkMode', darkEnabled);
+          toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+        });
+        if (isDark) toggle.textContent = '☀️ Light';
+        else toggle.textContent = '🌓 Dark';
+      };
+      
+      renderCards();
+      initialSyncTable();
+      initDarkMode();
+    })();
+  </script>
+</body>
+</html>
