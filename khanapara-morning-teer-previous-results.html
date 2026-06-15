@@ -512,302 +512,340 @@
   </footer>
 
   <script>
-	let allResults = [];
-	let dataTable = null;
-	let availableDates = new Set();
-	let flatpickrInstance = null;
+let allResults = [];
+let dataTable = null;
+let flatpickrInstance = null;
 
-	const loadingIndicator = document.getElementById('loadingIndicator');
-	const errorMessageDiv = document.getElementById('errorMessage');
-	const numberSearch = document.getElementById('numberSearch');
-	const dateCalendar = document.getElementById('dateCalendar');
-	const daySearch = document.getElementById('daySearch');
-	const roundSearch = document.getElementById('roundSearch');
-	const applyFiltersBtn = document.getElementById('applyFilters');
-	const resetFiltersBtn = document.getElementById('resetFilters');
+const GAME_NAME = 'khanapara morning';
+const GAME_ID = 'KHM';
 
-	const parseDate = (dateStr) => {
-	  if (!dateStr || dateStr === '0000-00-00') return null;
+const loadingIndicator = document.getElementById('loadingIndicator');
+const errorMessageDiv = document.getElementById('errorMessage');
+const numberSearch = document.getElementById('numberSearch');
+const dateCalendar = document.getElementById('dateCalendar');
+const daySearch = document.getElementById('daySearch');
+const roundSearch = document.getElementById('roundSearch');
+const applyFiltersBtn = document.getElementById('applyFilters');
+const resetFiltersBtn = document.getElementById('resetFilters');
 
-	  dateStr = String(dateStr).trim();
+function parseDate(dateStr) {
+  if (!dateStr) return null;
 
-	  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
-		const [y, m, d] = dateStr.split('-');
-		return new Date(Number(y), Number(m) - 1, Number(d));
-	  }
+  dateStr = String(dateStr).trim();
 
-	  if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
-		const [d, m, y] = dateStr.split('-');
-		return new Date(Number(y), Number(m) - 1, Number(d));
-	  }
+  if (/^\d{4}-\d{2}-\d{2}$/.test(dateStr)) {
+    const [y, m, d] = dateStr.split('-');
+    return new Date(Number(y), Number(m) - 1, Number(d));
+  }
 
-	  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
-		const [d, m, y] = dateStr.split('/');
-		return new Date(Number(y), Number(m) - 1, Number(d));
-	  }
+  if (/^\d{2}-\d{2}-\d{4}$/.test(dateStr)) {
+    const [d, m, y] = dateStr.split('-');
+    return new Date(Number(y), Number(m) - 1, Number(d));
+  }
 
-	  const parsed = new Date(dateStr);
-	  return isNaN(parsed.getTime()) ? null : parsed;
-	};
+  if (/^\d{2}\/\d{2}\/\d{4}$/.test(dateStr)) {
+    const [d, m, y] = dateStr.split('/');
+    return new Date(Number(y), Number(m) - 1, Number(d));
+  }
 
-	const getDayOfWeek = (dateStr) => {
-	  const date = parseDate(dateStr);
-	  if (!date) return '';
-	  return ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'][date.getDay()];
-	};
+  const parsed = new Date(dateStr);
+  return isNaN(parsed.getTime()) ? null : parsed;
+}
 
-	const formatDate = (dateStr) => {
-	  const date = parseDate(dateStr);
-	  if (!date) return dateStr;
+function formatDate(dateStr) {
+  const date = parseDate(dateStr);
+  if (!date) return '';
 
-	  const d = String(date.getDate()).padStart(2, '0');
-	  const m = String(date.getMonth() + 1).padStart(2, '0');
-	  const y = date.getFullYear();
+  const d = String(date.getDate()).padStart(2, '0');
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const y = date.getFullYear();
 
-	  return `${d}-${m}-${y}`;
-	};
+  return d + '-' + m + '-' + y;
+}
 
-	const normalizeNumber = (value) => {
-	  if (!value) return '';
-	  return String(value).trim().padStart(2, '0');
-	};
+function sortKey(dateStr) {
+  const date = parseDate(dateStr);
+  if (!date) return '0000-00-00';
 
-	const filterKhanaparaMorning = (data) => {
-	  return data
-		.filter(item => {
-		  const gameName = String(item.game || '').toLowerCase().trim();
-		  const gameId = String(item.gameId || '').toUpperCase().trim();
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
 
-		  return gameName === 'khanapara morning' || gameId === 'KHM';
-		})
-		.map(item => ({
-		  date: item.date || '',
-		  first_round: normalizeNumber(item.fr || item.first_round),
-		  second_round: normalizeNumber(item.sr || item.second_round)
-		}))
-		.filter(item => {
-		  return (
-			item.date &&
-			item.first_round &&
-			item.second_round &&
-			!['xx', 'XX', 'OFF', 'off', '—', '–', '-', '--'].includes(item.first_round) &&
-			!['xx', 'XX', 'OFF', 'off', '—', '–', '-', '--'].includes(item.second_round) &&
-			!isNaN(parseInt(item.first_round)) &&
-			!isNaN(parseInt(item.second_round))
-		  );
-		});
-	};
+  return y + '-' + m + '-' + d;
+}
 
-	const sortByDateDesc = (results) => {
-	  return results.slice().sort((a, b) => {
-		const dateA = parseDate(a.date);
-		const dateB = parseDate(b.date);
+function getDayOfWeek(dateStr) {
+  const date = parseDate(dateStr);
+  if (!date) return '';
 
-		if (!dateA && !dateB) return 0;
-		if (!dateA) return 1;
-		if (!dateB) return -1;
+  const days = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday'
+  ];
 
-		return dateB - dateA;
-	  });
-	};
+  return days[date.getDay()];
+}
 
-	const initCalendar = () => {
-	  if (flatpickrInstance) {
-		flatpickrInstance.destroy();
-	  }
+function normalizeNumber(value) {
+  if (
+    value === null ||
+    value === undefined ||
+    value === '' ||
+    value === 'xx' ||
+    value === 'XX' ||
+    value === 'OFF' ||
+    value === 'off' ||
+    value === '—' ||
+    value === '–' ||
+    value === '-' ||
+    value === '--'
+  ) {
+    return '';
+  }
 
-	  const dateStrings = Array.from(availableDates);
+  return String(value).trim().padStart(2, '0');
+}
 
-	  flatpickrInstance = flatpickr(dateCalendar, {
-		dateFormat: 'd-m-Y',
-		allowInput: true,
-		enable: dateStrings.length ? dateStrings : undefined,
-		disableMobile: true,
-		onChange: function () {
-		  applyCustomFilters();
-		}
-	  });
-	};
+function getRecordsArray(data) {
+  if (Array.isArray(data)) return data;
+  if (data && Array.isArray(data.results)) return data.results;
+  return [];
+}
 
-	const initDataTable = (data) => {
-	  if ($.fn.DataTable.isDataTable('#resultsTable')) {
-		$('#resultsTable').DataTable().clear().destroy();
-	  }
+function filterGameRecords(data) {
+  const records = getRecordsArray(data);
 
-	  $('#resultsTable tbody').empty();
+  return records
+    .filter(item => {
+      const gameName = String(item.game || '').toLowerCase().trim();
+      const gameId = String(item.gameId || '').toUpperCase().trim();
 
-	  const tableData = data.map(item => {
-		const parsed = parseDate(item.date);
-		const sortDate = parsed ? parsed.toISOString().slice(0, 10) : '0000-00-00';
+      return gameName === GAME_NAME || gameId === GAME_ID;
+    })
+    .map(item => {
+      return {
+        date: item.date || '',
+        fr: normalizeNumber(item.fr || item.first_round),
+        sr: normalizeNumber(item.sr || item.second_round)
+      };
+    })
+    .filter(item => {
+      return item.date && item.fr && item.sr;
+    })
+    .sort((a, b) => {
+      return sortKey(b.date).localeCompare(sortKey(a.date));
+    });
+}
 
-		return [
-		  formatDate(item.date),
-		  getDayOfWeek(item.date),
-		  normalizeNumber(item.first_round),
-		  normalizeNumber(item.second_round),
-		  sortDate
-		];
-	  });
+function buildTable(data) {
+  if ($.fn.DataTable.isDataTable('#resultsTable')) {
+    $('#resultsTable').DataTable().clear().destroy();
+  }
 
-	  dataTable = $('#resultsTable').DataTable({
-		data: tableData,
-		destroy: true,
-		columns: [
-		  { title: 'Date' },
-		  { title: 'Day' },
-		  { title: 'Morning First Round (FR)' },
-		  { title: 'Morning Second Round (SR)' },
-		  { title: 'SortDate', visible: false }
-		],
-		order: [[4, 'desc']],
-		pageLength: 25,
-		paging: true,
-		info: true,
-		searching: false,
-		lengthChange: false,
-		responsive: true
-	  });
-	};
+  const tbody = document.querySelector('#resultsTable tbody');
+  tbody.innerHTML = '';
 
-	const applyCustomFilters = () => {
-	  let filtered = allResults.slice();
+  const tableData = data.map(item => {
+    return [
+      formatDate(item.date),
+      getDayOfWeek(item.date),
+      item.fr,
+      item.sr,
+      sortKey(item.date)
+    ];
+  });
 
-	  const numberRaw = numberSearch.value.trim();
-	  const numberVal = numberRaw ? numberRaw.padStart(2, '0') : '';
-	  const selectedDate = dateCalendar.value.trim();
-	  const selectedDay = daySearch.value;
-	  const selectedRound = roundSearch.value;
+  dataTable = $('#resultsTable').DataTable({
+    data: tableData,
+    destroy: true,
+    columns: [
+      { title: 'Date' },
+      { title: 'Day' },
+      { title: 'Morning First Round (FR)' },
+      { title: 'Morning Second Round (SR)' },
+      { title: 'SortDate', visible: false }
+    ],
+    order: [[4, 'desc']],
+    pageLength: 25,
+    paging: true,
+    info: true,
+    searching: false,
+    lengthChange: false,
+    responsive: true
+  });
+}
 
-	  if (numberVal) {
-		filtered = filtered.filter(item => {
-		  const fr = normalizeNumber(item.first_round);
-		  const sr = normalizeNumber(item.second_round);
+function applyCustomFilters() {
+  let filtered = allResults.slice();
 
-		  if (selectedRound === 'fr') return fr === numberVal;
-		  if (selectedRound === 'sr') return sr === numberVal;
+  const numberRaw = numberSearch.value.trim();
+  const numberVal = numberRaw ? numberRaw.padStart(2, '0') : '';
+  const selectedDay = daySearch.value;
+  const selectedRound = roundSearch.value;
 
-		  return fr === numberVal || sr === numberVal;
-		});
-	  }
+  let selectedDate = '';
+  if (flatpickrInstance && flatpickrInstance.selectedDates.length > 0) {
+    selectedDate = formatDate(flatpickrInstance.selectedDates[0]);
+  } else {
+    selectedDate = dateCalendar.value.trim();
+  }
 
-	  if (selectedDate) {
-		filtered = filtered.filter(item => formatDate(item.date) === selectedDate);
-	  }
+  if (numberVal) {
+    filtered = filtered.filter(item => {
+      if (selectedRound === 'fr') {
+        return item.fr === numberVal;
+      }
 
-	  if (selectedDay) {
-		filtered = filtered.filter(item => getDayOfWeek(item.date) === selectedDay);
-	  }
+      if (selectedRound === 'sr') {
+        return item.sr === numberVal;
+      }
 
-	  initDataTable(sortByDateDesc(filtered));
-	};
+      return item.fr === numberVal || item.sr === numberVal;
+    });
+  }
 
-	const resetFilters = () => {
-	  numberSearch.value = '';
-	  daySearch.value = '';
-	  roundSearch.value = '';
+  if (selectedDate) {
+    filtered = filtered.filter(item => {
+      return formatDate(item.date) === selectedDate;
+    });
+  }
 
-	  if (flatpickrInstance) {
-		flatpickrInstance.clear();
-	  }
+  if (selectedDay) {
+    filtered = filtered.filter(item => {
+      return getDayOfWeek(item.date) === selectedDay;
+    });
+  }
 
-	  initDataTable(sortByDateDesc(allResults));
-	};
+  filtered.sort((a, b) => {
+    return sortKey(b.date).localeCompare(sortKey(a.date));
+  });
 
-	const loadDataFromJSON = async () => {
-	  loadingIndicator.style.display = 'block';
-	  errorMessageDiv.style.display = 'none';
+  buildTable(filtered);
+}
 
-	  try {
-		const paths = [
-		  'data/all-results.json',
-		  './data/all-results.json',
-		  '../data/all-results.json',
-		  'all-results.json'
-		];
+function resetFilters() {
+  numberSearch.value = '';
+  daySearch.value = '';
+  roundSearch.value = '';
 
-		let data = null;
+  if (flatpickrInstance) {
+    flatpickrInstance.clear();
+  }
 
-		for (const jsonPath of paths) {
-		  try {
-			const response = await fetch(jsonPath);
-			if (response.ok) {
-			  data = await response.json();
-			  break;
-			}
-		  } catch (err) {}
-		}
+  dateCalendar.value = '';
 
-		if (!data) {
-		  throw new Error('Unable to load all-results.json');
-		}
+  buildTable(allResults);
+}
 
-		if (!Array.isArray(data)) {
-		  throw new Error('Invalid data format. Expected JSON array.');
-		}
+function initCalendar() {
+  if (flatpickrInstance) {
+    flatpickrInstance.destroy();
+  }
 
-		let morningResults = filterKhanaparaMorning(data);
+  const availableDates = allResults.map(item => formatDate(item.date));
 
-		if (!morningResults.length) {
-		  throw new Error('No Khanapara Morning results found');
-		}
+  flatpickrInstance = flatpickr(dateCalendar, {
+    dateFormat: 'd-m-Y',
+    allowInput: true,
+    enable: availableDates,
+    disableMobile: true,
+    onChange: function () {
+      applyCustomFilters();
+    }
+  });
+}
 
-		allResults = sortByDateDesc(morningResults);
+async function loadDataFromJSON() {
+  loadingIndicator.style.display = 'block';
+  errorMessageDiv.style.display = 'none';
 
-		availableDates.clear();
-		allResults.forEach(result => {
-		  availableDates.add(formatDate(result.date));
-		});
+  try {
+    const paths = [
+      'data/all-results.json',
+      './data/all-results.json',
+      '../data/all-results.json',
+      'all-results.json'
+    ];
 
-		initCalendar();
-		initDataTable(allResults);
+    let data = null;
 
-		loadingIndicator.style.display = 'none';
+    for (const filePath of paths) {
+      try {
+        const response = await fetch(filePath);
+        if (response.ok) {
+          data = await response.json();
+          break;
+        }
+      } catch (e) {}
+    }
 
-		console.log('Loaded Khanapara Morning records:', allResults.length);
+    if (!data) {
+      throw new Error('Unable to load all-results.json');
+    }
 
-	  } catch (error) {
-		console.error(error);
+    allResults = filterGameRecords(data);
 
-		loadingIndicator.style.display = 'none';
-		errorMessageDiv.style.display = 'block';
+    if (!allResults.length) {
+      throw new Error('No Khanapara Morning records found');
+    }
 
-		errorMessageDiv.innerHTML = `
-		  <strong>Unable to load data</strong><br><br>
-		  ${error.message}
-		`;
-	  }
-	};
+    initCalendar();
+    buildTable(allResults);
 
-	const initDarkMode = () => {
-	  const toggleBtn = document.getElementById('darkModeToggle');
-	  const isDark = localStorage.getItem('darkModeKhanaparaMorningAdvanced') === 'true';
+    loadingIndicator.style.display = 'none';
 
-	  if (isDark) document.body.classList.add('dark');
+    console.log('Loaded records:', allResults.length);
 
-	  if (toggleBtn) {
-		toggleBtn.textContent = isDark ? '☀️ Light' : '🌓 Dark';
+  } catch (error) {
+    console.error(error);
 
-		toggleBtn.addEventListener('click', () => {
-		  document.body.classList.toggle('dark');
-		  const darkEnabled = document.body.classList.contains('dark');
-		  localStorage.setItem('darkModeKhanaparaMorningAdvanced', darkEnabled);
-		  toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
-		});
-	  }
-	};
+    loadingIndicator.style.display = 'none';
+    errorMessageDiv.style.display = 'block';
+    errorMessageDiv.innerHTML =
+      '<strong>Unable to load data</strong><br><br>' +
+      error.message;
+  }
+}
 
-	applyFiltersBtn.addEventListener('click', applyCustomFilters);
-	resetFiltersBtn.addEventListener('click', resetFilters);
-	numberSearch.addEventListener('input', applyCustomFilters);
-	daySearch.addEventListener('change', applyCustomFilters);
-	roundSearch.addEventListener('change', applyCustomFilters);
+function initDarkMode() {
+  const toggleBtn = document.getElementById('darkModeToggle');
+  const isDark = localStorage.getItem('darkModeKhanaparaMorningAdvanced') === 'true';
 
-	const init = () => {
-	  initDarkMode();
-	  loadDataFromJSON();
-	};
+  if (isDark) {
+    document.body.classList.add('dark');
+  }
 
-	init();
+  if (toggleBtn) {
+    toggleBtn.textContent = isDark ? '☀️ Light' : '🌓 Dark';
+
+    toggleBtn.addEventListener('click', function () {
+      document.body.classList.toggle('dark');
+
+      const darkEnabled = document.body.classList.contains('dark');
+
+      localStorage.setItem(
+        'darkModeKhanaparaMorningAdvanced',
+        darkEnabled
+      );
+
+      toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+    });
+  }
+}
+
+applyFiltersBtn.addEventListener('click', applyCustomFilters);
+resetFiltersBtn.addEventListener('click', resetFilters);
+numberSearch.addEventListener('input', applyCustomFilters);
+daySearch.addEventListener('change', applyCustomFilters);
+roundSearch.addEventListener('change', applyCustomFilters);
+
+initDarkMode();
+loadDataFromJSON();
 </script>
 </body>
 </html>
