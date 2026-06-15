@@ -496,24 +496,24 @@
     <\/div>
 
     <div class="related-links">
-      <a href="#">Shillong Day Results</a>
-      <a href="#">Shillong Morning Results</a>
-      <a href="#">Shillong Night Results</a>
-      <a href="#">Khanapara Morning Results</a>
-      <a href="#">Juwai Day Results</a>
+      <a href="#">Shillong Day Results<\/a>
+      <a href="#">Shillong Morning Results<\/a>
+      <a href="#">Shillong Night Results<\/a>
+      <a href="#">Khanapara Morning Results<\/a>
+      <a href="#">Juwai Day Results<\/a>
     <\/div>
 
     <div class="seo-content">
       <h2>Khanapara Day Teer Result Search: Find Any Number, Date, or Day<\/h2>
-      <p><strong>Search Khanapara Day Teer Result Today<\/strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.</p>
+      <p><strong>Search Khanapara Day Teer Result Today<\/strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.<\/p>
       
-      <p>The <strong>Khanapara Teer Previous Result<\/strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.</p>
+      <p>The <strong>Khanapara Teer Previous Result<\/strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in First Round or Second Round.<\/p>
       
-      <p><strong>How to use:<\/strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
+      <p><strong>How to use:<\/strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!<\/p>
       
-      <p><strong>Equal width columns:<\/strong> All four columns (Date, Day, First Round, Second Round) have equal width for balanced presentation and easy scanning.</p>
+      <p><strong>Equal width columns:<\/strong> All four columns (Date, Day, First Round, Second Round) have equal width for balanced presentation and easy scanning.<\/p>
       
-      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data\/all-results.json<\/code> and filtered to display only <strong>"game": "khanapara day"<\/strong> records. This ensures accurate and reliable search results for Khanapara Day Teer enthusiasts.</p>
+      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data\/all-results.json<\/code> and filtered to display only <strong>"game": "khanapara day"<\/strong> records. This ensures accurate and reliable search results for Khanapara Day Teer enthusiasts.<\/p>
     <\/div>
   <\/main>
 
@@ -533,51 +533,59 @@
 
   <script>
     // Global variables
-    let allData = [];
+    let originalData = [];
+    let currentDisplayData = [];
     let dataTable = null;
     let flatpickrInstance = null;
     let availableDates = new Set();
 
     // DOM elements
-    const loadingDiv = document.getElementById('loadingIndicator');
-    const errorDiv = document.getElementById('errorMessage');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+    const errorMessageDiv = document.getElementById('errorMessage');
     const numberSearch = document.getElementById('numberSearch');
     const dateCalendar = document.getElementById('dateCalendar');
     const daySearch = document.getElementById('daySearch');
     const roundSearch = document.getElementById('roundSearch');
-    const applyBtn = document.getElementById('applyFilters');
-    const resetBtn = document.getElementById('resetFilters');
+    const applyFiltersBtn = document.getElementById('applyFilters');
+    const resetFiltersBtn = document.getElementById('resetFilters');
     const resultsCountSpan = document.getElementById('resultsCount');
 
-    // Helper functions
-    function parseDate(dateStr) {
+    // Helper: Parse date
+    const parseDate = (dateStr) => {
       if (!dateStr || dateStr === '0000-00-00') return null;
-      let match = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-      if (match) {
-        return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
+      
+      let parts = dateStr.split(/[-/]/);
+      if (parts.length === 3) {
+        if (parts[0].length === 4) {
+          return new Date(parts[0], parts[1] - 1, parts[2]);
+        } else {
+          return new Date(parts[2], parts[1] - 1, parts[0]);
+        }
       }
-      match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-      if (match) {
-        return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
-      }
-      const parsed = new Date(dateStr);
-      return isNaN(parsed.getTime()) ? null : parsed;
-    }
+      
+      return new Date(dateStr);
+    };
 
-    function getDayOfWeek(dateStr) {
+    // Get day of week
+    const getDayOfWeek = (dateStr) => {
       const date = parseDate(dateStr);
       if (!date) return '';
       const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
       return days[date.getDay()];
-    }
+    };
 
-    function formatDateDisplay(dateStr) {
+    // Format date for display
+    const formatDate = (dateStr) => {
       const date = parseDate(dateStr);
       if (!date) return dateStr;
-      return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
-    }
+      const day = date.getDate().toString().padStart(2, '0');
+      const month = (date.getMonth() + 1).toString().padStart(2, '0');
+      const year = date.getFullYear();
+      return `${day}-${month}-${year}`;
+    };
 
-    function cleanNumber(value) {
+    // Clean number function
+    const cleanNumber = (value) => {
       if (value === undefined || value === null || value === '') return '';
       const str = String(value).trim().toLowerCase();
       const invalid = ['xx', 'off', '—', '-', '--', 'na', 'null', ''];
@@ -585,51 +593,62 @@
       const num = parseInt(str, 10);
       if (isNaN(num) || num < 0 || num > 99) return '';
       return String(num).padStart(2, '0');
-    }
+    };
 
     // Filter only Khanapara Day results
-    function filterKhanaparaDay(rawData) {
-      if (!Array.isArray(rawData)) return [];
+    const filterKhanaparaDay = (data) => {
+      if (!Array.isArray(data)) return [];
       
-      return rawData
+      return data
         .filter(item => {
-          const game = (item.game || '').toString().toLowerCase().trim();
-          return game === 'khanapara day';
+          const gameName = (item.game || '').toString().toLowerCase().trim();
+          return gameName === 'khanapara day';
         })
         .map(item => ({
           date: item.date || '',
-          fr: item.fr || item.first_round || '',
-          sr: item.sr || item.second_round || ''
+          first_round: item.fr || item.first_round || '',
+          second_round: item.sr || item.second_round || ''
         }))
         .filter(item => {
           if (!item.date) return false;
-          const frClean = cleanNumber(item.fr);
-          const srClean = cleanNumber(item.sr);
+          const frClean = cleanNumber(item.first_round);
+          const srClean = cleanNumber(item.second_round);
           return frClean && srClean;
         })
         .map(item => ({
           originalDate: item.date,
-          displayDate: formatDateDisplay(item.date),
+          displayDate: formatDate(item.date),
           day: getDayOfWeek(item.date),
-          fr: cleanNumber(item.fr),
-          sr: cleanNumber(item.sr)
+          first_round: cleanNumber(item.first_round),
+          second_round: cleanNumber(item.second_round)
         }));
-    }
+    };
 
-    // Rebuild table with given data
-    function rebuildTable(data) {
-      const tableData = data.map(item => [
-        item.displayDate,
-        item.day,
-        item.fr,
-        item.sr
-      ]);
-      
+    // Sort by date descending
+    const sortByDateDesc = (results) => {
+      return results.sort((a, b) => {
+        const dateA = parseDate(a.originalDate);
+        const dateB = parseDate(b.originalDate);
+        if (!dateA && !dateB) return 0;
+        if (!dateA) return 1;
+        if (!dateB) return -1;
+        return dateB - dateA;
+      });
+    };
+
+    // Initialize DataTable with equal widths
+    const initDataTable = (data) => {
       if (dataTable) {
-        dataTable.clear();
         dataTable.destroy();
         $('#resultsTable tbody').empty();
       }
+      
+      const tableData = data.map(item => [
+        item.displayDate,
+        item.day,
+        item.first_round,
+        item.second_round
+      ]);
       
       dataTable = $('#resultsTable').DataTable({
         data: tableData,
@@ -649,7 +668,12 @@
         autoWidth: false,
         language: {
           info: "Showing _START_ to _END_ of _TOTAL_ entries",
-          paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
+          paginate: {
+            first: "First",
+            last: "Last",
+            next: "Next",
+            previous: "Previous"
+          }
         },
         drawCallback: function() {
           $('#resultsTable th, #resultsTable td').css('width', '25%');
@@ -657,19 +681,19 @@
       });
       
       $('#resultsTable th, #resultsTable td').css('width', '25%');
-    }
+    };
 
-    // Apply all filters
-    function applyFilters() {
-      const numberRaw = numberSearch.value.trim();
+    // Apply custom filters
+    const applyCustomFilters = () => {
+      const numberVal = numberSearch.value.trim();
       const dateVal = dateCalendar.value.trim();
       const dayVal = daySearch.value;
       const roundVal = roundSearch.value;
       
       // Validate number
       let numberFilter = null;
-      if (numberRaw !== '') {
-        const num = parseInt(numberRaw, 10);
+      if (numberVal !== '') {
+        const num = parseInt(numberVal, 10);
         if (isNaN(num) || num < 0 || num > 99) {
           alert('Please enter a valid number between 00 and 99');
           return;
@@ -677,14 +701,13 @@
         numberFilter = num;
       }
       
-      // Start with all data
-      let filtered = [...allData];
+      let filtered = [...originalData];
       
       // Filter by number
       if (numberFilter !== null) {
         filtered = filtered.filter(item => {
-          const frNum = parseInt(item.fr, 10);
-          const srNum = parseInt(item.sr, 10);
+          const frNum = parseInt(item.first_round, 10);
+          const srNum = parseInt(item.second_round, 10);
           
           if (roundVal === 'fr') {
             return frNum === numberFilter;
@@ -706,35 +729,39 @@
         filtered = filtered.filter(item => item.day === dayVal);
       }
       
+      currentDisplayData = filtered;
+      
       // Update count display
-      if (filtered.length === allData.length) {
+      if (filtered.length === originalData.length) {
         resultsCountSpan.innerHTML = `📊 Showing all ${filtered.length} results`;
         resultsCountSpan.style.color = 'var(--accent)';
       } else {
-        resultsCountSpan.innerHTML = `📊 Found ${filtered.length} result${filtered.length !== 1 ? 's' : ''} (filtered from ${allData.length} total)`;
+        resultsCountSpan.innerHTML = `📊 Found ${filtered.length} result${filtered.length !== 1 ? 's' : ''} (filtered from ${originalData.length} total)`;
         resultsCountSpan.style.color = filtered.length === 0 ? '#ef4444' : 'var(--accent)';
       }
       
-      // Rebuild table with filtered data
-      rebuildTable(filtered);
-    }
-
+      initDataTable(filtered);
+    };
+    
     // Reset all filters
-    function resetFilters() {
+    const resetFilters = () => {
       numberSearch.value = '';
-      if (flatpickrInstance) flatpickrInstance.clear();
+      if (flatpickrInstance) {
+        flatpickrInstance.clear();
+      }
       daySearch.value = '';
       roundSearch.value = '';
       
-      resultsCountSpan.innerHTML = `📊 Showing all ${allData.length} results`;
+      currentDisplayData = [...originalData];
+      resultsCountSpan.innerHTML = `📊 Showing all ${originalData.length} results`;
       resultsCountSpan.style.color = 'var(--accent)';
-      rebuildTable(allData);
-    }
-
-    // Load data from JSON
-    async function loadData() {
-      loadingDiv.style.display = 'block';
-      errorDiv.style.display = 'none';
+      initDataTable(originalData);
+    };
+    
+    // Load data from JSON file
+    const loadDataFromJSON = async () => {
+      loadingIndicator.style.display = 'block';
+      errorMessageDiv.style.display = 'none';
       resultsCountSpan.innerHTML = '📊 Loading...';
       
       try {
@@ -744,33 +771,29 @@
           throw new Error(`HTTP ${response.status} - File not found at ./data/all-results.json`);
         }
         
-        const jsonData = await response.json();
+        const data = await response.json();
         
-        if (!Array.isArray(jsonData)) {
-          throw new Error('Invalid JSON format: expected an array');
+        if (!Array.isArray(data)) {
+          throw new Error('Invalid data format');
         }
         
-        const filteredData = filterKhanaparaDay(jsonData);
+        let dayResults = filterKhanaparaDay(data);
         
-        if (filteredData.length === 0) {
-          throw new Error('No "khanapara day" records found. Make sure your data has game: "khanapara day"');
+        if (dayResults.length === 0) {
+          throw new Error('No Khanapara Day results found. Check for "game": "khanapara day"');
         }
         
-        // Sort by date descending (newest first)
-        allData = filteredData.sort((a, b) => {
-          const dateA = parseDate(a.originalDate);
-          const dateB = parseDate(b.originalDate);
-          if (!dateA && !dateB) return 0;
-          if (!dateA) return 1;
-          if (!dateB) return -1;
-          return dateB - dateA;
+        originalData = sortByDateDesc(dayResults);
+        currentDisplayData = [...originalData];
+        
+        // Build available dates set for calendar
+        availableDates.clear();
+        originalData.forEach(result => {
+          availableDates.add(result.displayDate);
         });
         
-        // Build available dates for calendar
-        availableDates.clear();
-        allData.forEach(item => availableDates.add(item.displayDate));
-        
-        // Initialize flatpickr
+        // Initialize calendar
+        if (flatpickrInstance) flatpickrInstance.destroy();
         flatpickrInstance = flatpickr(dateCalendar, {
           dateFormat: "d-m-Y",
           altFormat: "d-m-Y",
@@ -780,59 +803,64 @@
           disableMobile: true
         });
         
-        // Build table
-        rebuildTable(allData);
-        resultsCountSpan.innerHTML = `📊 Showing all ${allData.length} results`;
+        initDataTable(originalData);
+        resultsCountSpan.innerHTML = `📊 Showing all ${originalData.length} results`;
         
-        loadingDiv.style.display = 'none';
-        console.log(`✅ Loaded ${allData.length} Khanapara Day records`);
+        loadingIndicator.style.display = 'none';
+        console.log(`✅ Loaded ${originalData.length} Khanapara Day records`);
         
       } catch (error) {
-        console.error('Error:', error);
-        loadingDiv.style.display = 'none';
-        errorDiv.style.display = 'block';
-        errorDiv.innerHTML = `
-          <strong>❌ Failed to load ./data/all-results.json</strong><br><br>
+        console.error('Error loading JSON:', error);
+        loadingIndicator.style.display = 'none';
+        errorMessageDiv.style.display = 'block';
+        errorMessageDiv.innerHTML = `
+          <strong>⚠️ Unable to load data from ./data/all-results.json</strong><br><br>
           ${error.message}<br><br>
-          <strong>📂 Troubleshooting:</strong><br>
-          • File must exist at <code>./data/all-results.json</code><br>
-          • Records need <code>"game": "khanapara day"</code><br>
-          • Example: <code>{"game": "khanapara day", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
-          • Start a local server: <code>python -m http.server 8000</code><br><br>
-          <button onclick="location.reload()" style="background:#22c55e; border:none; padding:8px 20px; border-radius:40px; cursor:pointer; font-weight:600;">⟳ Retry</button>
+          <strong>Troubleshooting tips:</strong><br>
+          • Make sure the file exists at: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">./data/all-results.json</code><br>
+          • The file should contain records with <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">"game": "khanapara day"</code><br>
+          • Example: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">{"game": "khanapara day", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
+          • If running locally, start a local web server:<br>
+          <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br><br>
+          <button onclick="location.reload()" style="background: var(--accent); color: #0f172a; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-family: Poppins; font-weight: 600; margin-top: 10px;">🔄 Retry Loading</button>
         `;
         resultsCountSpan.innerHTML = '📊 Error loading data';
       }
-    }
-
-    // Dark mode
-    function initDarkMode() {
-      const toggle = document.getElementById('darkModeToggle');
-      const isDark = localStorage.getItem('darkModeKhanaparaDay') === 'true';
+    };
+    
+    // Dark Mode Toggle
+    const initDarkMode = () => {
+      const toggleBtn = document.getElementById('darkModeToggle');
+      const isDark = localStorage.getItem('darkModeKhanaparaDayAdvanced') === 'true';
       if (isDark) document.body.classList.add('dark');
-      if (toggle) {
-        toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
-        toggle.addEventListener('click', () => {
+      if (toggleBtn) {
+        toggleBtn.addEventListener('click', () => {
           document.body.classList.toggle('dark');
           const darkEnabled = document.body.classList.contains('dark');
-          localStorage.setItem('darkModeKhanaparaDay', darkEnabled);
-          toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
+          localStorage.setItem('darkModeKhanaparaDayAdvanced', darkEnabled);
+          toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
           if (flatpickrInstance) flatpickrInstance.redraw();
           setTimeout(() => {
             if (dataTable) $('#resultsTable th, #resultsTable td').css('width', '25%');
           }, 100);
         });
+        if (isDark) toggleBtn.textContent = '☀️ Light';
+        else toggleBtn.textContent = '🌓 Dark';
       }
-    }
-
+    };
+    
     // Event listeners
-    applyBtn.addEventListener('click', applyFilters);
-    resetBtn.addEventListener('click', resetFilters);
-    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
-
+    applyFiltersBtn.addEventListener('click', applyCustomFilters);
+    resetFiltersBtn.addEventListener('click', resetFilters);
+    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
+    
     // Initialize
-    initDarkMode();
-    loadData();
+    const init = () => {
+      initDarkMode();
+      loadDataFromJSON();
+    };
+    
+    init();
   </script>
 </body>
 </html>
