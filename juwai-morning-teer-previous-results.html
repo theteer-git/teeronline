@@ -4,17 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
   <title>Juwai Morning Teer Results | Advanced Search & Archive</title>
-  <meta name="description" content="Complete Juwai Morning Teer Results archive with advanced search by number, date, and day. Filter and explore full history.">
-  <meta name="keywords" content="Juwai Morning Teer Result, Teer Archive, Search by Number">
+  <meta name="description" content="Complete Juwai Morning Teer Results archive with advanced search by number, date, and day.">
   
-  <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
-  
-  <!-- Flatpickr Calendar CSS & JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  
-  <!-- jQuery + DataTables -->
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
@@ -70,8 +64,6 @@
       z-index: 100;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(0px);
-      transition: background 0.2s;
     }
 
     .header-inner {
@@ -90,7 +82,6 @@
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
-      letter-spacing: -0.3px;
     }
 
     .nav-links {
@@ -126,7 +117,6 @@
 
     .dark-toggle:hover {
       background: var(--accent-hover);
-      transform: scale(0.97);
     }
 
     .hero {
@@ -218,7 +208,6 @@
       border: 1px solid var(--border);
       background: var(--surface);
       margin: 1.5rem 0;
-      padding: 0;
     }
     .results-table {
       width: 100% !important;
@@ -274,11 +263,9 @@
     body.dark .flatpickr-calendar {
       background: var(--surface);
       border-color: var(--border);
-      box-shadow: 0 3px 15px rgba(0,0,0,0.5);
     }
     body.dark .flatpickr-day { color: var(--text); }
     body.dark .flatpickr-day.selected { background: var(--accent); border-color: var(--accent); color: #0f172a; }
-    body.dark .flatpickr-months .flatpickr-month, body.dark .flatpickr-weekdays { color: var(--text); }
 
     .seo-content {
       background: var(--surface);
@@ -336,9 +323,11 @@
       .hero h1 { font-size: 1.4rem; }
     }
     
-    .filter-active {
-      background: var(--accent);
-      color: #0f172a;
+    .results-count {
+      padding: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-weight: 600;
+      color: var(--accent);
     }
   </style>
 </head>
@@ -359,7 +348,7 @@
   <main class="container">
     <div class="hero">
       <h1>Juwai Morning Teer Results | Search by Number, Date & Day</h1>
-      <p>Complete historical results for Morning First Round (FR) & Second Round (SR). Powerful filtering by exact number, calendar picker, day of week, and round.</p>
+      <p>Complete historical results for Morning First Round (FR) & Second Round (SR). All filters work together for precise searching.</p>
     </div>
 
     <div class="search-filters">
@@ -406,9 +395,7 @@
         <thead>
           <tr><th>Date</th><th>Day</th><th>Morning First Round (FR)</th><th>Morning Second Round (SR)</th></tr>
         </thead>
-        <tbody>
-          <tr><td colspan="4" style="text-align:center;">Loading data...<br>Please wait while we fetch results</td></tr>
-        </tbody>
+        <tbody></tbody>
       </table>
     </div>
 
@@ -421,9 +408,9 @@
 
     <div class="seo-content">
       <h2>Juwai Morning Teer Advanced Search - Fully Working Filters</h2>
-      <p><strong>Search Juwai Morning Teer Result Today</strong> or explore full archive. Use number search to see how often a specific number appeared in FR or SR. The calendar picker lets you jump to any existing date, and the day filter highlights weekly patterns.</p>
-      <p><strong>How filters work:</strong> All filters combine together. Search for number 32 on Fridays in First Round only, or see all results from a specific date. The filters update instantly when you click "Apply Filters".</p>
-      <p><strong>Data source:</strong> All data is filtered from <code style="background:var(--bg); padding:2px 6px; border-radius:8px;">./data/all-results.json</code> where <strong>game = "juwai morning"</strong>. Invalid entries are automatically excluded.</p>
+      <p><strong>How to use:</strong> Enter any number between 00-99, select a date from the calendar, choose a day of week, and/or filter by specific round. Click "Apply Filters" to see matching results. All filters work together!</p>
+      <p><strong>Example searches:</strong> Find all dates where number 45 appeared in First Round, or see all Tuesday results where number 12 appeared in Second Round.</p>
+      <p><strong>Data source:</strong> Data loaded from <code>./data/all-results.json</code> where <strong>game = "juwai morning"</strong>.</p>
     </div>
   </main>
 
@@ -440,8 +427,9 @@
   </footer>
 
   <script>
-    // Global variables
-    let allResultsData = [];     // Store full dataset
+    // Store all original data
+    let originalData = [];
+    let currentDisplayData = [];
     let dataTable = null;
     let flatpickrInstance = null;
     let availableDates = new Set();
@@ -456,28 +444,17 @@
     const loadingDiv = document.getElementById('loadingIndicator');
     const errorDiv = document.getElementById('errorMessage');
 
-    // Helper: Parse date from various formats
+    // Parse date from various formats
     function parseDate(dateStr) {
       if (!dateStr || dateStr === '0000-00-00') return null;
-      
-      // Handle YYYY-MM-DD
       let match = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-      if (match) {
-        return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
-      }
-      
-      // Handle DD-MM-YYYY
+      if (match) return new Date(parseInt(match[1]), parseInt(match[2]) - 1, parseInt(match[3]));
       match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-      if (match) {
-        return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
-      }
-      
-      // Try direct parsing
+      if (match) return new Date(parseInt(match[3]), parseInt(match[2]) - 1, parseInt(match[1]));
       const parsed = new Date(dateStr);
       return isNaN(parsed.getTime()) ? null : parsed;
     }
 
-    // Get day of week
     function getDayOfWeek(dateStr) {
       const date = parseDate(dateStr);
       if (!date) return '';
@@ -485,14 +462,10 @@
       return days[date.getDay()];
     }
 
-    // Format date for display
     function formatDateDisplay(dateStr) {
       const date = parseDate(dateStr);
       if (!date) return dateStr;
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
+      return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
     }
 
     // Extract and clean Juwai Morning data
@@ -510,62 +483,44 @@
           second_round: item.sr || item.second_round || ''
         }))
         .filter(item => {
-          // Validate date
           if (!item.date) return false;
-          
-          // Validate rounds are valid numbers
           const frNum = parseInt(item.first_round, 10);
           const srNum = parseInt(item.second_round, 10);
-          
-          // Check for invalid markers
           const invalidMarkers = ['xx', 'off', '—', '-', 'na', ''];
           const frClean = String(item.first_round).toLowerCase().trim();
           const srClean = String(item.second_round).toLowerCase().trim();
-          
           if (invalidMarkers.includes(frClean) || invalidMarkers.includes(srClean)) return false;
-          
-          // Check if valid numbers
           if (isNaN(frNum) || isNaN(srNum)) return false;
-          
-          // Check range 00-99
           if (frNum < 0 || frNum > 99 || srNum < 0 || srNum > 99) return false;
-          
           return true;
         })
         .map(item => ({
           date: item.date,
           first_round: String(parseInt(item.first_round, 10)).padStart(2, '0'),
-          second_round: String(parseInt(item.second_round, 10)).padStart(2, '0')
+          second_round: String(parseInt(item.second_round, 10)).padStart(2, '0'),
+          day: getDayOfWeek(item.date),
+          displayDate: formatDateDisplay(item.date)
         }));
     }
 
-    // Load data from JSON file
+    // Load data
     async function loadData() {
       loadingDiv.style.display = 'block';
       errorDiv.style.display = 'none';
       
       try {
-        // Try multiple paths
-        let response = await fetch('./data/all-results.json');
-        
-        if (!response.ok) {
-          throw new Error(`Cannot find ./data/all-results.json (HTTP ${response.status})`);
-        }
+        const response = await fetch('./data/all-results.json');
+        if (!response.ok) throw new Error(`HTTP ${response.status} - File not found`);
         
         const jsonData = await response.json();
-        
-        if (!jsonData || !Array.isArray(jsonData)) {
-          throw new Error('Invalid JSON format: expected an array');
-        }
-        
         const juwaiData = extractJuwaiMorningData(jsonData);
         
         if (juwaiData.length === 0) {
-          throw new Error('No valid "juwai morning" records found. Check that records have "game": "juwai morning" and valid FR/SR numbers.');
+          throw new Error('No valid "juwai morning" records found.');
         }
         
         // Sort by date descending
-        allResultsData = juwaiData.sort((a, b) => {
+        originalData = juwaiData.sort((a, b) => {
           const dateA = parseDate(a.date);
           const dateB = parseDate(b.date);
           if (!dateA && !dateB) return 0;
@@ -574,11 +529,11 @@
           return dateB - dateA;
         });
         
+        currentDisplayData = [...originalData];
+        
         // Build available dates for calendar
         availableDates.clear();
-        allResultsData.forEach(item => {
-          availableDates.add(formatDateDisplay(item.date));
-        });
+        originalData.forEach(item => availableDates.add(item.displayDate));
         
         // Initialize calendar
         if (flatpickrInstance) flatpickrInstance.destroy();
@@ -592,38 +547,38 @@
         });
         
         // Initialize DataTable
-        initializeDataTable(allResultsData);
+        initDataTable(currentDisplayData);
         
         loadingDiv.style.display = 'none';
-        console.log(`✅ Loaded ${allResultsData.length} Juwai Morning records`);
+        console.log(`✅ Loaded ${originalData.length} records`);
         
       } catch (error) {
-        console.error('Error:', error);
+        console.error(error);
         loadingDiv.style.display = 'none';
         errorDiv.style.display = 'block';
         errorDiv.innerHTML = `
           <strong>❌ Failed to load ./data/all-results.json</strong><br><br>
           ${error.message}<br><br>
           <strong>📂 Troubleshooting:</strong><br>
-          • Ensure the file exists at <code style="background:#1e293b; padding:2px 5px;">./data/all-results.json</code><br>
-          • File must contain array of objects with "game": "juwai morning"<br>
-          • Example: <code style="background:#1e293b;">{"game": "juwai morning", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
-          • Start a local server: <code style="background:#1e293b;">python -m http.server 8000</code><br>
-          <button onclick="location.reload()" style="background:#10b981; border:none; margin-top:12px; padding:8px 20px; border-radius:40px; font-weight:bold; cursor:pointer;">⟳ Retry</button>
+          • File must exist at <code>./data/all-results.json</code><br>
+          • Records need <code>"game": "juwai morning"</code><br>
+          • Start a local server: <code>python -m http.server 8000</code><br><br>
+          <button onclick="location.reload()" style="background:#10b981; border:none; margin-top:12px; padding:8px 20px; border-radius:40px; cursor:pointer;">⟳ Retry</button>
         `;
       }
     }
 
-    // Initialize DataTable with data
-    function initializeDataTable(data) {
+    // Initialize or refresh DataTable
+    function initDataTable(data) {
       const tableData = data.map(item => [
-        formatDateDisplay(item.date),
-        getDayOfWeek(item.date),
+        item.displayDate,
+        item.day,
         item.first_round,
         item.second_round
       ]);
       
       if (dataTable) {
+        dataTable.clear();
         dataTable.destroy();
         $('#resultsTable tbody').empty();
       }
@@ -655,98 +610,98 @@
       });
     }
 
-    // Apply filters to DataTable
+    // Apply filters - the core filtering logic
     function applyFilters() {
-      if (!dataTable) return;
-      
-      // Get filter values
       const numberValue = numberSearch.value.trim();
       const dateValue = dateCalendar.value.trim();
       const dayValue = daySearch.value;
       const roundValue = roundSearch.value;
       
-      // Parse number filter
+      // Validate number
       let numberFilter = null;
       if (numberValue !== '') {
         const num = parseInt(numberValue, 10);
-        if (!isNaN(num) && num >= 0 && num <= 99) {
-          numberFilter = num;
-        } else {
+        if (isNaN(num) || num < 0 || num > 99) {
           alert('Please enter a valid number between 00 and 99');
           return;
         }
+        numberFilter = num;
       }
       
-      // Clear existing custom filter
-      $.fn.dataTable.ext.search.pop();
+      // Filter the data
+      let filtered = [...originalData];
       
-      // Add new custom filter
-      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        const rowDate = data[0];      // Formatted date
-        const rowDay = data[1];       // Day of week
-        const rowFR = parseInt(data[2], 10);  // First round number
-        const rowSR = parseInt(data[3], 10);  // Second round number
-        
-        // Number filter
-        if (numberFilter !== null) {
+      // Apply number filter
+      if (numberFilter !== null) {
+        filtered = filtered.filter(item => {
+          const frNum = parseInt(item.first_round, 10);
+          const srNum = parseInt(item.second_round, 10);
+          
           if (roundValue === 'fr') {
-            if (rowFR !== numberFilter) return false;
+            return frNum === numberFilter;
           } else if (roundValue === 'sr') {
-            if (rowSR !== numberFilter) return false;
+            return srNum === numberFilter;
           } else {
-            // Both rounds
-            if (rowFR !== numberFilter && rowSR !== numberFilter) return false;
+            return frNum === numberFilter || srNum === numberFilter;
           }
-        }
-        
-        // Date filter
-        if (dateValue !== '') {
-          if (rowDate !== dateValue) return false;
-        }
-        
-        // Day filter
-        if (dayValue !== '') {
-          if (rowDay !== dayValue) return false;
-        }
-        
-        return true;
-      });
+        });
+      }
       
-      // Redraw table with filters
-      dataTable.draw();
+      // Apply date filter
+      if (dateValue !== '') {
+        filtered = filtered.filter(item => item.displayDate === dateValue);
+      }
+      
+      // Apply day filter
+      if (dayValue !== '') {
+        filtered = filtered.filter(item => item.day === dayValue);
+      }
+      
+      currentDisplayData = filtered;
+      
+      // Update table
+      initDataTable(currentDisplayData);
+      
+      // Show results count in console
+      console.log(`Filtered: ${filtered.length} of ${originalData.length} results`);
+      
+      // Optional: Show count on page
+      let countDiv = document.querySelector('.results-count');
+      if (!countDiv) {
+        countDiv = document.createElement('div');
+        countDiv.className = 'results-count';
+        document.querySelector('.table-wrapper').insertBefore(countDiv, document.querySelector('#resultsTable'));
+      }
+      countDiv.innerHTML = `📊 Found ${filtered.length} result${filtered.length !== 1 ? 's' : ''}`;
+      if (filtered.length === 0) {
+        countDiv.style.color = '#ef4444';
+      } else {
+        countDiv.style.color = 'var(--accent)';
+      }
     }
 
     // Reset all filters
     function resetFilters() {
-      // Clear input fields
       numberSearch.value = '';
-      if (flatpickrInstance) {
-        flatpickrInstance.clear();
-      }
+      if (flatpickrInstance) flatpickrInstance.clear();
       daySearch.value = '';
       roundSearch.value = '';
       
-      // Remove custom filter
-      $.fn.dataTable.ext.search.pop();
+      currentDisplayData = [...originalData];
+      initDataTable(currentDisplayData);
       
-      // Redraw table to show all data
-      if (dataTable) {
-        dataTable.draw();
+      // Update or remove count display
+      const countDiv = document.querySelector('.results-count');
+      if (countDiv) {
+        countDiv.innerHTML = `📊 Showing all ${originalData.length} results`;
+        countDiv.style.color = 'var(--accent)';
       }
     }
 
     // Event listeners
     applyBtn.addEventListener('click', applyFilters);
     resetBtn.addEventListener('click', resetFilters);
-    
-    // Enter key support
-    numberSearch.addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') applyFilters();
-    });
-    
-    dateCalendar.addEventListener('change', applyFilters);
-    daySearch.addEventListener('change', applyFilters);
-    roundSearch.addEventListener('change', applyFilters);
+    numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyFilters(); });
 
     // Dark mode
     function initDarkMode() {
@@ -765,7 +720,7 @@
       }
     }
 
-    // Initialize everything
+    // Initialize
     initDarkMode();
     loadData();
   </script>
