@@ -3,30 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Juwai Morning Teer Results | Advanced Search & Archive | Juwai Morning Teer Result Today</title>
-  <meta name="description" content="Complete Juwai Morning Teer Results archive with advanced search by number, date (calendar picker), and day. Filter, sort, and explore full history of Morning First Round & Morning Second Round results.">
-  <meta name="keywords" content="Juwai Morning Teer Result, Juwai Teer Result Today, Juwai Morning Teer Previous Result, Juwai Teer Archive, Teer Search by Number">
+  <title>Juwai Morning Teer Results | Advanced Search & Archive</title>
+  <meta name="description" content="Complete Juwai Morning Teer Results archive with advanced search by number, date, and day. Filter and explore full history.">
+  <meta name="keywords" content="Juwai Morning Teer Result, Teer Archive, Search by Number">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
-  <link rel="canonical" href="https://www.teerresults.example.com/juwai-morning-advanced.html">
-  <meta property="og:title" content="Juwai Morning Teer Results | Advanced Search & Archive">
-  <meta property="og:description" content="Search Juwai Morning Teer results by number, date (calendar picker), or day of week. Full historical archive with powerful filtering.">
-  <meta property="og:type" content="website">
-  <meta name="twitter:card" content="summary_large_image">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Google Fonts & CSS -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+  
   <!-- Flatpickr Calendar CSS & JS -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
   <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
-  <!-- DataTables CSS -->
+  
+  <!-- jQuery + DataTables -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.5.0/css/responsive.dataTables.min.css">
-  <!-- jQuery -->
-  <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
-  <!-- DataTables JS -->
   <script type="text/javascript" src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" src="https://cdn.datatables.net/responsive/2.5.0/js/dataTables.responsive.min.js"></script>
+
   <style>
     * {
       margin: 0;
@@ -36,47 +32,49 @@
 
     :root {
       --primary: #0f172a;
-      --accent: #22c55e;
+      --accent: #10b981;
+      --accent-hover: #059669;
       --bg: #f8fafc;
       --surface: #ffffff;
       --text: #0f172a;
       --text-light: #475569;
       --border: #e2e8f0;
-      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.03), 0 2px 6px rgba(0, 0, 0, 0.05);
     }
 
     body.dark {
       --primary: #f1f5f9;
-      --bg: #0f172a;
+      --bg: #0b1120;
       --surface: #1e293b;
       --text: #f1f5f9;
       --text-light: #cbd5e1;
       --border: #334155;
-      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+      --card-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
+      font-family: 'Inter', sans-serif;
       background-color: var(--bg);
       color: var(--text);
       line-height: 1.5;
-      transition: background-color 0.3s, color 0.2s;
+      transition: background 0.2s ease, color 0.2s ease;
     }
 
     .container {
       max-width: 1400px;
       margin: 0 auto;
-      padding: 0 1.25rem;
+      padding: 0 1.5rem;
     }
 
+    /* header */
     .sticky-header {
       position: sticky;
       top: 0;
       z-index: 100;
       background: var(--surface);
-      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
       border-bottom: 1px solid var(--border);
-      transition: background 0.3s;
+      backdrop-filter: blur(0px);
+      transition: background 0.2s;
     }
 
     .header-inner {
@@ -84,26 +82,30 @@
       align-items: center;
       justify-content: space-between;
       flex-wrap: wrap;
-      padding: 0.9rem 0;
-      gap: 0.8rem;
+      padding: 1rem 0;
+      gap: 1rem;
     }
 
     .logo {
-      font-size: 1.5rem;
+      font-size: 1.4rem;
       font-weight: 800;
-      color: var(--accent);
+      background: linear-gradient(135deg, var(--accent) 0%, #2dd4bf 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      color: transparent;
+      letter-spacing: -0.3px;
     }
 
     .nav-links {
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.2rem;
       align-items: center;
     }
 
     .nav-links a {
       text-decoration: none;
-      color: var(--text);
+      color: var(--text-light);
       font-weight: 500;
       font-size: 0.85rem;
       transition: color 0.2s;
@@ -116,204 +118,173 @@
     .dark-toggle {
       background: var(--accent);
       border: none;
-      padding: 0.4rem 0.9rem;
+      padding: 0.4rem 1rem;
       border-radius: 2rem;
       cursor: pointer;
-      font-family: Poppins;
-      font-weight: 500;
+      font-weight: 600;
+      font-size: 0.8rem;
       color: #0f172a;
+      transition: 0.2s;
     }
 
+    .dark-toggle:hover {
+      background: var(--accent-hover);
+      transform: scale(0.97);
+    }
+
+    /* hero */
     .hero {
       padding: 2rem 0 1rem;
     }
-
     .hero h1 {
       font-size: 1.9rem;
       font-weight: 800;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+      background: linear-gradient(135deg, var(--text) 0%, var(--accent) 100%);
       -webkit-background-clip: text;
       background-clip: text;
       color: transparent;
     }
-
     .hero p {
       margin-top: 0.5rem;
       color: var(--text-light);
     }
 
-    .loading-spinner {
-      text-align: center;
-      padding: 2rem;
-      color: var(--accent);
-    }
-
-    .error-message {
-      text-align: center;
-      padding: 2rem;
-      color: #ef4444;
-      background: var(--surface);
-      border-radius: 1rem;
-      margin: 1rem 0;
-    }
-
+    /* filter card */
     .search-filters {
       background: var(--surface);
-      border-radius: 1rem;
+      border-radius: 1.25rem;
       padding: 1.5rem;
-      margin: 1rem 0;
+      margin: 1.5rem 0;
       border: 1px solid var(--border);
+      box-shadow: var(--card-shadow);
       display: flex;
       flex-wrap: wrap;
-      gap: 1rem;
+      gap: 1.2rem;
       align-items: flex-end;
     }
-
     .filter-group {
       flex: 1;
       min-width: 160px;
     }
-
     .filter-group label {
       display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
+      font-size: 0.7rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
       color: var(--text-light);
       text-transform: uppercase;
       letter-spacing: 0.5px;
     }
-
     .filter-group input, .filter-group select {
       width: 100%;
-      padding: 0.6rem 0.8rem;
-      border-radius: 0.5rem;
+      padding: 0.7rem 0.9rem;
+      border-radius: 0.8rem;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text);
-      font-family: Poppins;
+      font-family: 'Inter', sans-serif;
       font-size: 0.85rem;
+      transition: 0.2s;
     }
-
-    .date-input-wrapper {
-      position: relative;
-    }
-
-    .date-input-wrapper input {
-      cursor: pointer;
-      background-color: var(--bg);
-    }
-
     .filter-group input:focus, .filter-group select:focus {
       outline: none;
       border-color: var(--accent);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
     }
-
+    .search-btn, .reset-btn {
+      padding: 0.7rem 1.6rem;
+      border-radius: 0.8rem;
+      font-weight: 600;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: 0.2s;
+    }
     .search-btn {
       background: var(--accent);
-      color: #0f172a;
       border: none;
-      padding: 0.6rem 1.5rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: Poppins;
+      color: #0f172a;
     }
-
     .reset-btn {
-      background: var(--surface);
+      background: transparent;
       border: 1px solid var(--border);
       color: var(--text);
-      padding: 0.6rem 1.5rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-weight: 600;
-      font-family: Poppins;
+    }
+    .search-btn:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+    .reset-btn:hover {
+      background: var(--border);
     }
 
+    /* table */
     .table-wrapper {
       overflow-x: auto;
-      border-radius: 1rem;
+      border-radius: 1.25rem;
       border: 1px solid var(--border);
       background: var(--surface);
       margin: 1.5rem 0;
+      padding: 0;
     }
-
     .results-table {
       width: 100% !important;
       font-size: 0.85rem;
     }
-
-    .results-table th, .results-table td {
-      padding: 0.8rem;
-      text-align: center;
-    }
-
     .results-table th {
       background: var(--bg);
       font-weight: 700;
       color: var(--accent);
+      padding: 1rem 0.8rem;
     }
-
-    /* Hide default DataTables length and search elements */
-    .dataTables_length, .dataTables_filter {
-      display: none !important;
+    .results-table td {
+      padding: 0.8rem;
+      text-align: center;
     }
-
-    .dataTables_wrapper .dataTables_info {
+    /* dataTables overrides */
+    .dataTables_length, .dataTables_filter { display: none !important; }
+    .dataTables_wrapper .dataTables_info, .dataTables_wrapper .dataTables_paginate {
       color: var(--text) !important;
       margin-top: 1rem;
+      margin-bottom: 1rem;
     }
-
-    .dataTables_wrapper .dataTables_paginate {
-      color: var(--text) !important;
-      margin-top: 1rem;
-    }
-
     .dataTables_wrapper .dataTables_paginate .paginate_button {
       color: var(--text) !important;
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 0.5rem;
+      border-radius: 0.6rem;
       margin: 0 0.2rem;
+      padding: 0.3rem 0.8rem;
     }
-
     .dataTables_wrapper .dataTables_paginate .paginate_button.current {
       background: var(--accent) !important;
       color: #0f172a !important;
       border-color: var(--accent);
     }
-
     .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
       background: var(--accent) !important;
       color: #0f172a !important;
     }
-
-    .dataTables_wrapper .dataTables_paginate .paginate_button.disabled {
-      opacity: 0.5;
+    /* loading & error */
+    .loading-spinner, .error-message {
+      text-align: center;
+      padding: 2rem;
+      background: var(--surface);
+      border-radius: 1.25rem;
+      margin: 1rem 0;
     }
-
-    /* Flatpickr calendar dark mode support */
+    .error-message {
+      color: #ef4444;
+      border-left: 4px solid #ef4444;
+    }
+    /* flatpickr dark mode */
     body.dark .flatpickr-calendar {
       background: var(--surface);
       border-color: var(--border);
-      box-shadow: 0 3px 13px rgba(0,0,0,0.3);
+      box-shadow: 0 3px 15px rgba(0,0,0,0.5);
     }
-    body.dark .flatpickr-day {
-      color: var(--text);
-    }
-    body.dark .flatpickr-day.selected {
-      background: var(--accent);
-      border-color: var(--accent);
-    }
-    body.dark .flatpickr-months .flatpickr-month,
-    body.dark .flatpickr-weekdays {
-      color: var(--text);
-    }
-    body.dark .flatpickr-current-month .flatpickr-monthDropdown-months,
-    body.dark .flatpickr-current-month input.cur-year {
-      color: var(--text);
-    }
+    body.dark .flatpickr-day { color: var(--text); }
+    body.dark .flatpickr-day.selected { background: var(--accent); border-color: var(--accent); color: #0f172a; }
+    body.dark .flatpickr-months .flatpickr-month, body.dark .flatpickr-weekdays { color: var(--text); }
 
     .seo-content {
       background: var(--surface);
@@ -322,25 +293,13 @@
       margin: 2rem 0;
       border: 1px solid var(--border);
     }
-
-    .seo-content h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
-
-    .seo-content p {
-      margin-bottom: 1rem;
-      color: var(--text-light);
-    }
-
     .related-links {
       display: flex;
       flex-wrap: wrap;
       gap: 1rem;
-      margin: 1rem 0 2rem;
       justify-content: center;
+      margin: 1rem 0;
     }
-
     .related-links a {
       background: var(--surface);
       padding: 0.5rem 1.2rem;
@@ -348,66 +307,51 @@
       text-decoration: none;
       color: var(--accent);
       border: 1px solid var(--accent);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       transition: 0.2s;
     }
-
     .related-links a:hover {
       background: var(--accent);
       color: white;
     }
-
     footer {
       background: var(--surface);
       border-top: 1px solid var(--border);
       padding: 2rem 0;
       margin-top: 2rem;
     }
-
     .footer-links {
       display: flex;
       flex-wrap: wrap;
       justify-content: center;
       gap: 1.8rem;
-      margin-bottom: 1.2rem;
+      margin-bottom: 1rem;
     }
-
     .footer-links a {
       text-decoration: none;
       color: var(--text-light);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
     }
-
     .disclaimer {
       text-align: center;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       color: var(--text-light);
     }
-
-    @media (max-width: 768px) {
-      .search-filters {
-        flex-direction: column;
-      }
-      .filter-group {
-        width: 100%;
-      }
-      .hero h1 {
-        font-size: 1.5rem;
-      }
+    @media (max-width: 720px) {
+      .search-filters { flex-direction: column; }
+      .hero h1 { font-size: 1.4rem; }
     }
   </style>
 </head>
 <body>
   <header class="sticky-header">
     <div class="container header-inner">
-      <div class="logo">🌄 Juwai Morning Teer Advanced Search</div>
+      <div class="logo">🏹 Juwai Morning Teer · Advanced Archive</div>
       <div class="nav-links">
         <a href="#">Home</a>
         <a href="#">Common Numbers</a>
         <a href="#">Dream Numbers</a>
-        <a href="#">Teer Formula</a>
         <a href="#">Statistics</a>
-        <a href="#">Contact</a>
         <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
       </div>
     </div>
@@ -415,275 +359,242 @@
 
   <main class="container">
     <div class="hero">
-      <h1>Juwai Morning Teer Results | Advanced Search & Full History Archive</h1>
-      <p>Search Juwai Morning Teer results by number, date (calendar picker), or day of week. Our powerful archive lets you filter, sort, and explore complete historical data with ease.</p>
+      <h1>Juwai Morning Teer Results | Search by Number, Date & Day</h1>
+      <p>Complete historical results for Morning First Round (FR) & Second Round (SR). Powerful filtering by exact number, calendar picker, day of week, and round.</p>
     </div>
 
-    <!-- Advanced Search Filters -->
+    <!-- search filters -->
     <div class="search-filters">
       <div class="filter-group">
-        <label>🔢 Search by Number (FR or SR)</label>
-        <input type="text" id="numberSearch" placeholder="Enter number (00-99)" maxlength="2">
+        <label>🔢 Number (00-99)</label>
+        <input type="text" id="numberSearch" placeholder="e.g., 45" maxlength="2" inputmode="numeric">
       </div>
       <div class="filter-group">
-        <label>📅 Select Date (Calendar)</label>
-        <div class="date-input-wrapper">
-          <input type="text" id="dateCalendar" placeholder="Click to select date">
-        </div>
+        <label>📅 Pick a Date</label>
+        <input type="text" id="dateCalendar" placeholder="Select date" autocomplete="off">
       </div>
       <div class="filter-group">
         <label>📆 Day of Week</label>
         <select id="daySearch">
           <option value="">All Days</option>
-          <option value="Monday">Monday</option>
-          <option value="Tuesday">Tuesday</option>
-          <option value="Wednesday">Wednesday</option>
-          <option value="Thursday">Thursday</option>
-          <option value="Friday">Friday</option>
-          <option value="Saturday">Saturday</option>
-          <option value="Sunday">Sunday</option>
+          <option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option>
+          <option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Sunday">Sunday</option>
         </select>
       </div>
       <div class="filter-group">
-        <label>🎯 Filter by Round</label>
+        <label>🎯 Round Filter</label>
         <select id="roundSearch">
           <option value="">Both Rounds</option>
           <option value="fr">Morning First Round (FR)</option>
           <option value="sr">Morning Second Round (SR)</option>
         </select>
       </div>
-      <div>
+      <div style="display: flex; gap: 0.8rem;">
         <button class="search-btn" id="applyFilters">🔍 Apply Filters</button>
         <button class="reset-btn" id="resetFilters">⟳ Reset</button>
       </div>
     </div>
 
-    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📊 Loading Juwai Morning Teer results...</div>
+    <div id="loadingIndicator" class="loading-spinner" style="display: none;">📡 Loading Juwai Morning results from ./data/all-results.json ...</div>
     <div id="errorMessage" class="error-message" style="display: none;"></div>
 
     <div class="table-wrapper">
       <table id="resultsTable" class="results-table display responsive" style="width:100%">
         <thead>
-          <tr>
-            <th>Date</th>
-            <th>Day</th>
-            <th>Morning First Round (FR)</th>
-            <th>Morning Second Round (SR)</th>
-          </tr>
+          <tr><th>Date</th><th>Day</th><th>Morning First Round (FR)</th><th>Morning Second Round (SR)</th></tr>
         </thead>
-        <tbody id="tableBody">
-          <tr><td colspan="4" style="text-align:center;">Loading data...<\/td><\/tr>
-        </tbody>
+        <tbody><tr><td colspan="4" style="text-align:center;">Awaiting data...<br>Ensure ./data/all-results.json exists with 'game': 'juwai morning' entries</td></tr></tbody>
       </table>
-    <\/div>
+    </div>
 
     <div class="related-links">
-      <a href="#">Shillong Day Results</a>
-      <a href="#">Shillong Morning Results</a>
-      <a href="#">Shillong Night Results</a>
-      <a href="#">Khanapara Morning Results</a>
-      <a href="#">Juwai Day Results</a>
-    <\/div>
+      <a href="#">Shillong Day Results</a><a href="#">Shillong Morning</a><a href="#">Khanapara Morning</a><a href="#">Juwai Day</a>
+    </div>
 
     <div class="seo-content">
-      <h2>Juwai Morning Teer Result Search: Find Any Number, Date, or Day</h2>
-      <p><strong>Search Juwai Morning Teer Result Today</strong> or any historical result using our advanced search functionality. You can search by specific numbers (00-99), select any date using the interactive calendar picker, or filter by day of the week (Monday to Sunday). The calendar makes it extremely easy to pick any date from the available records.<\/p>
-      
-      <p>The <strong>Juwai Morning Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in Morning First Round or Morning Second Round.<\/p>
-      
-      <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!<\/p>
-      
-      <p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json<\/code> and filtered to display only <strong>"game": "juwai morning"</strong> records. This ensures accurate and reliable search results for Juwai Morning Teer enthusiasts.<\/p>
-    <\/div>
-  <\/main>
+      <h2>Juwai Morning Teer Advanced Search</h2>
+      <p><strong>Search Juwai Morning Teer Result Today</strong> or explore full archive. Use number search to see how often a specific number appeared in FR or SR. The calendar picker lets you jump to any existing date, and the day filter highlights weekly patterns.</p>
+      <p>All data is filtered from <code style="background:var(--bg); padding:2px 6px; border-radius:8px;">./data/all-results.json</code> where <strong>game = "juwai morning"</strong>. Invalid or 'OFF' entries are excluded automatically.</p>
+      <p><strong>Pro tip:</strong> Combine number + round + day to see precise patterns (e.g., number 32 on Fridays in First Round).</p>
+    </div>
+  </main>
 
   <footer>
     <div class="container">
-      <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Contact</a>
-        <a href="#">About</a>
-      <\/div>
-      <div class="disclaimer">
-        ⚠️ Informational Purpose Only: This website does not promote gambling, betting, or predictions. Juwai Morning Teer results are based on archery events and are provided as historical reference only.
-      <\/div>
-    <\/div>
-  <\/footer>
+      <div class="footer-links"><a href="#">Privacy</a><a href="#">Terms</a><a href="#">Contact</a><a href="#">About</a></div>
+      <div class="disclaimer">⚠️ Informational only. Results are historical archery data, no gambling or predictions.</div>
+    </div>
+  </footer>
 
   <script>
-    // Global variables
-    let allResults = [];
+    // ---------- GLOBALS ----------
+    let masterResults = [];      // cleaned Juwai Morning entries { date, first_round, second_round }
     let dataTable = null;
-    let availableDates = new Set();
     let flatpickrInstance = null;
+    let availableDateSet = new Set();   // store formatted DD-MM-YYYY
 
-    // DOM elements
-    const loadingIndicator = document.getElementById('loadingIndicator');
-    const errorMessageDiv = document.getElementById('errorMessage');
+    // DOM refs
     const numberSearch = document.getElementById('numberSearch');
     const dateCalendar = document.getElementById('dateCalendar');
     const daySearch = document.getElementById('daySearch');
     const roundSearch = document.getElementById('roundSearch');
-    const applyFiltersBtn = document.getElementById('applyFilters');
-    const resetFiltersBtn = document.getElementById('resetFilters');
+    const applyBtn = document.getElementById('applyFilters');
+    const resetBtn = document.getElementById('resetFilters');
+    const loadingDiv = document.getElementById('loadingIndicator');
+    const errorDiv = document.getElementById('errorMessage');
 
-    // Helper: Parse date to get day of week
-    const getDayOfWeek = (dateStr) => {
-      const date = parseDate(dateStr);
-      if (!date) return '';
-      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-      return days[date.getDay()];
-    };
-
-    // Helper: Parse various date formats
-    const parseDate = (dateStr) => {
-      if (!dateStr || dateStr === '0000-00-00') return null;
-      
-      let parts = dateStr.split(/[-/]/);
-      if (parts.length === 3) {
-        if (parts[0].length === 4) {
-          return new Date(parts[0], parts[1] - 1, parts[2]);
-        } else {
-          return new Date(parts[2], parts[1] - 1, parts[0]);
-        }
-      }
-      
-      const monthNames = ['january', 'february', 'march', 'april', 'may', 'june', 'july', 'august', 'september', 'october', 'november', 'december'];
-      for (let i = 0; i < monthNames.length; i++) {
-        if (dateStr.toLowerCase().includes(monthNames[i])) {
-          const match = dateStr.match(/(\d+)\s+(\w+)\s+(\d+)/);
-          if (match) {
-            return new Date(match[3], i, parseInt(match[1]));
-          }
-        }
-      }
-      
+    // ---------- UTILITIES ----------
+    function parseDateAny(dateStr) {
+      if (!dateStr || dateStr === '0000-00-00' || dateStr === '') return null;
+      // try yyyy-mm-dd
+      let match = dateStr.match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (match) return new Date(parseInt(match[1]), parseInt(match[2])-1, parseInt(match[3]));
+      // try dd-mm-yyyy
+      match = dateStr.match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+      if (match) return new Date(parseInt(match[3]), parseInt(match[2])-1, parseInt(match[1]));
+      // fallback
       return new Date(dateStr);
-    };
+    }
 
-    // Format date for display (DD-MM-YYYY)
-    const formatDate = (dateStr) => {
-      const date = parseDate(dateStr);
-      if (!date) return dateStr;
-      const day = date.getDate().toString().padStart(2, '0');
-      const month = (date.getMonth() + 1).toString().padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}-${month}-${year}`;
-    };
+    function getDayOfWeek(dateStr) {
+      const d = parseDateAny(dateStr);
+      if (!d || isNaN(d.getTime())) return '';
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return days[d.getDay()];
+    }
 
-    // Filter only Juwai Morning results (game === "juwai morning")
-    const filterJuwaiMorning = (data) => {
-      return data.filter(item => {
-        const gameName = (item.game || '').toLowerCase();
-        return gameName === 'juwai morning';
-      }).map(item => ({
-        date: item.date || '',
-        first_round: item.fr || item.first_round || '',
-        second_round: item.sr || item.second_round || ''
-      })).filter(item => item.date && item.first_round && item.second_round && 
-              item.first_round !== 'xx' && item.first_round !== 'OFF' && item.first_round !== '—' && item.first_round !== '-' &&
-              item.second_round !== 'xx' && item.second_round !== 'OFF' && item.second_round !== '—' && item.second_round !== '-' &&
-              !isNaN(parseInt(item.first_round)) && !isNaN(parseInt(item.second_round)));
-    };
+    function formatDateToDisplay(dateStr) {
+      const d = parseDateAny(dateStr);
+      if (!d || isNaN(d.getTime())) return dateStr;
+      const dd = String(d.getDate()).padStart(2,'0');
+      const mm = String(d.getMonth()+1).padStart(2,'0');
+      const yyyy = d.getFullYear();
+      return `${dd}-${mm}-${yyyy}`;
+    }
 
-    // Sort by date descending (latest first)
-    const sortByDateDesc = (results) => {
-      return results.sort((a, b) => {
-        const dateA = parseDate(a.date);
-        const dateB = parseDate(b.date);
-        if (!dateA && !dateB) return 0;
-        if (!dateA) return 1;
-        if (!dateB) return -1;
-        return dateB - dateA;
-      });
-    };
+    // clean and filter only valid Juwai Morning records (game === "juwai morning")
+    function extractJuwaiMorning(rawArray) {
+      if (!Array.isArray(rawArray)) return [];
+      return rawArray
+        .filter(item => {
+          const game = (item.game || '').toString().toLowerCase().trim();
+          return game === 'juwai morning';
+        })
+        .map(item => {
+          let fr = (item.fr !== undefined && item.fr !== null) ? item.fr : (item.first_round !== undefined ? item.first_round : '');
+          let sr = (item.sr !== undefined && item.sr !== null) ? item.sr : (item.second_round !== undefined ? item.second_round : '');
+          const dateRaw = item.date || '';
+          // convert fr/sr to string and clean
+          fr = String(fr).trim();
+          sr = String(sr).trim();
+          return { date: dateRaw, first_round: fr, second_round: sr };
+        })
+        .filter(item => {
+          // must have valid date and both rounds numeric between 00-99 and not OFF/xx
+          if (!item.date) return false;
+          const frNum = parseInt(item.first_round, 10);
+          const srNum = parseInt(item.second_round, 10);
+          const isFrValid = !isNaN(frNum) && item.first_round.length <= 2 && /^\d{1,2}$/.test(item.first_round);
+          const isSrValid = !isNaN(srNum) && item.second_round.length <= 2 && /^\d{1,2}$/.test(item.second_round);
+          // reject common invalid markers
+          const invalidMarkers = ['xx', 'off', '—', '-', 'off', 'na', ''];
+          const frClean = item.first_round.toLowerCase();
+          const srClean = item.second_round.toLowerCase();
+          if (invalidMarkers.includes(frClean) || invalidMarkers.includes(srClean)) return false;
+          return isFrValid && isSrValid;
+        })
+        .map(item => ({
+          date: item.date,
+          first_round: parseInt(item.first_round, 10).toString().padStart(2,'0'),
+          second_round: parseInt(item.second_round, 10).toString().padStart(2,'0')
+        }));
+    }
 
-    // Initialize flatpickr calendar with available dates
-    const initCalendar = () => {
-      if (flatpickrInstance) {
-        flatpickrInstance.destroy();
-      }
-      
-      const dateStrings = Array.from(availableDates);
-      
-      flatpickrInstance = flatpickr(dateCalendar, {
-        dateFormat: "d-m-Y",
-        altFormat: "d-m-Y",
-        altInput: true,
-        allowInput: true,
-        enable: dateStrings.length > 0 ? dateStrings : undefined,
-        disableMobile: true,
-        onChange: function(selectedDates, dateStr, instance) {
-          applyCustomFilters();
-        }
-      });
-    };
-
-    // Apply custom filters to DataTable
-    const applyCustomFilters = () => {
-      if (!dataTable) return;
-      
-      let numberVal = numberSearch.value.trim();
-      let dateVal = dateCalendar.value.trim();
-      let dayVal = daySearch.value;
-      let roundVal = roundSearch.value;
-      
-      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
-        const rowDate = data[0];
-        const rowDay = data[1];
-        const rowFR = data[2];
-        const rowSR = data[3];
-        
-        if (numberVal) {
-          const num = parseInt(numberVal);
-          if (roundVal === 'fr') {
-            if (parseInt(rowFR) !== num) return false;
-          } else if (roundVal === 'sr') {
-            if (parseInt(rowSR) !== num) return false;
-          } else {
-            if (parseInt(rowFR) !== num && parseInt(rowSR) !== num) return false;
-          }
-        }
-        
-        if (dateVal) {
-          if (!rowDate.includes(dateVal)) return false;
-        }
-        
-        if (dayVal) {
-          if (rowDay !== dayVal) return false;
-        }
-        
-        return true;
-      });
-      
-      dataTable.draw();
-      $.fn.dataTable.ext.search.pop();
-    };
-    
-    // Reset all filters
-    const resetFilters = () => {
-      numberSearch.value = '';
-      if (flatpickrInstance) {
-        flatpickrInstance.clear();
-      }
-      daySearch.value = '';
-      roundSearch.value = '';
-      applyCustomFilters();
-    };
-    
-    // Initialize DataTable without length change and search box
-    const initDataTable = (data) => {
+    // ---------- LOAD JSON from ./data/all-results.json ----------
+    async function loadData() {
+      loadingDiv.style.display = 'block';
+      errorDiv.style.display = 'none';
       if (dataTable) {
         dataTable.destroy();
+        dataTable = null;
       }
-      
-      const tableData = data.map(item => [
-        formatDate(item.date),
+      try {
+        // *** CRITICAL: exact path as per requirement: ./data/all-results.json ***
+        const response = await fetch('./data/all-results.json');
+        if (!response.ok) {
+          throw new Error(`HTTP ${response.status} - File not found at ./data/all-results.json`);
+        }
+        const jsonData = await response.json();
+        if (!jsonData || !Array.isArray(jsonData)) {
+          throw new Error('Invalid JSON format: root must be an array');
+        }
+        const juwaiOnly = extractJuwaiMorning(jsonData);
+        if (juwaiOnly.length === 0) {
+          throw new Error('No valid "juwai morning" records found. Check that records have "game": "juwai morning" and numeric FR/SR values.');
+        }
+        // sort by date descending (newest first)
+        masterResults = juwaiOnly.sort((a,b) => {
+          const da = parseDateAny(a.date);
+          const db = parseDateAny(b.date);
+          if (!da && !db) return 0;
+          if (!da) return 1;
+          if (!db) return -1;
+          return db - da;
+        });
+        
+        // build available dates for calendar (formatted dd-mm-yyyy)
+        availableDateSet.clear();
+        masterResults.forEach(res => {
+          const disp = formatDateToDisplay(res.date);
+          availableDateSet.add(disp);
+        });
+        
+        // init flatpickr with enabled dates
+        if (flatpickrInstance) flatpickrInstance.destroy();
+        flatpickrInstance = flatpickr(dateCalendar, {
+          dateFormat: "d-m-Y",
+          altFormat: "d-m-Y",
+          altInput: true,
+          allowInput: false,
+          enable: Array.from(availableDateSet),
+          disableMobile: true,
+          onChange: () => { applyCustomFilters(); }
+        });
+        
+        // build datatable
+        buildDataTable(masterResults);
+        loadingDiv.style.display = 'none';
+      } catch (err) {
+        console.error('Load error:', err);
+        loadingDiv.style.display = 'none';
+        errorDiv.style.display = 'block';
+        errorDiv.innerHTML = `
+          <strong>❌ Failed to load ./data/all-results.json</strong><br><br>
+          ${err.message}<br><br>
+          <strong>📂 Troubleshooting:</strong><br>
+          • Ensure the file exists at <code style="background:#1e293b; padding:2px 5px;">./data/all-results.json</code><br>
+          • The file must contain an array of objects with fields: "game", "date", "fr"/"sr" (or "first_round"/"second_round")<br>
+          • Example entry: <code style="background:#1e293b;">{"game": "juwai morning", "date": "2025-01-15", "fr": "42", "sr": "87"}</code><br>
+          • Use a local server: <code style="background:#1e293b;">python -m http.server 8000</code> and access via http://localhost:8000<br>
+          <button onclick="location.reload()" style="background:#10b981; border:none; margin-top:12px; padding:8px 20px; border-radius:40px; font-weight:bold; cursor:pointer;">⟳ Retry</button>
+        `;
+      }
+    }
+
+    // build/reinit datatable
+    function buildDataTable(dataArray) {
+      const tableData = dataArray.map(item => [
+        formatDateToDisplay(item.date),
         getDayOfWeek(item.date),
-        item.first_round.padStart(2, '0'),
-        item.second_round.padStart(2, '0')
+        item.first_round,
+        item.second_round
       ]);
+      
+      if (dataTable) {
+        dataTable.clear();
+        dataTable.destroy();
+        $('#resultsTable tbody').empty();
+      }
       
       dataTable = $('#resultsTable').DataTable({
         data: tableData,
@@ -697,124 +608,133 @@
         pageLength: 25,
         paging: true,
         info: true,
-        searching: false,
+        searching: false,      // we use custom filters
         lengthChange: false,
         responsive: true,
         language: {
           info: "Showing _START_ to _END_ of _TOTAL_ entries",
-          paginate: {
-            first: "First",
-            last: "Last",
-            next: "Next",
-            previous: "Previous"
-          }
+          paginate: { first: "First", last: "Last", next: "Next", previous: "Previous" }
         }
       });
-    };
-    
-    // Load data from JSON file
-    const loadDataFromJSON = async () => {
-      loadingIndicator.style.display = 'block';
-      errorMessageDiv.style.display = 'none';
+    }
+
+    // apply advanced filters (number, date, day, round) using custom filter function on DataTable
+    function applyCustomFilters() {
+      if (!dataTable) return;
       
-      try {
-        const paths = [
-          'data/all-results.json',
-          './data/all-results.json',
-          '../data/all-results.json',
-          'all-results.json'
-        ];
+      const numberRaw = numberSearch.value.trim();
+      let targetNumber = null;
+      if (numberRaw !== '') {
+        const parsed = parseInt(numberRaw, 10);
+        if (!isNaN(parsed) && parsed >= 0 && parsed <= 99) targetNumber = parsed;
+        else {
+          // if invalid number, ignore filter or show nothing? we simply ignore invalid (but we can alert silent)
+          // but best to treat as no number filter to avoid errors.
+          targetNumber = null;
+        }
+      }
+      const dateFilterRaw = dateCalendar.value.trim();    // displayed as dd-mm-yyyy
+      const dayFilter = daySearch.value;
+      const roundFilter = roundSearch.value;
+      
+      // remove any previous custom filter
+      $.fn.dataTable.ext.search.pop();  // remove last custom filter (we will push new one)
+      
+      // push new filter
+      $.fn.dataTable.ext.search.push(function(settings, data, dataIndex) {
+        // data[0]=formattedDate, data[1]=day, data[2]=FR, data[3]=SR
+        const rowDateDisplay = data[0];
+        const rowDay = data[1];
+        const rowFR = parseInt(data[2], 10);
+        const rowSR = parseInt(data[3], 10);
         
-        let data = null;
-        
-        for (const path of paths) {
-          try {
-            const response = await fetch(path);
-            if (response.ok) {
-              data = await response.json();
-              break;
-            }
-          } catch (err) {
-            continue;
+        // Number filter
+        if (targetNumber !== null) {
+          if (roundFilter === 'fr') {
+            if (rowFR !== targetNumber) return false;
+          } else if (roundFilter === 'sr') {
+            if (rowSR !== targetNumber) return false;
+          } else {
+            // both rounds
+            if (rowFR !== targetNumber && rowSR !== targetNumber) return false;
           }
         }
         
-        if (!data) {
-          throw new Error('Unable to load all-results.json');
+        // Date filter (exact match on displayed date)
+        if (dateFilterRaw !== '') {
+          // dateCalendar stored in dd-mm-yyyy, compare directly
+          if (rowDateDisplay !== dateFilterRaw) return false;
         }
         
-        if (!Array.isArray(data)) {
-          throw new Error('Invalid data format');
+        // Day filter
+        if (dayFilter !== '') {
+          if (rowDay !== dayFilter) return false;
         }
         
-        let morningResults = filterJuwaiMorning(data);
-        
-        if (morningResults.length === 0) {
-          throw new Error('No Juwai Morning results found');
-        }
-        
-        morningResults = sortByDateDesc(morningResults);
-        allResults = morningResults;
-        
-        // Build available dates set for calendar
-        availableDates.clear();
-        allResults.forEach(result => {
-          const formatted = formatDate(result.date);
-          availableDates.add(formatted);
-        });
-        
-        initCalendar();
-        initDataTable(allResults);
-        
-        loadingIndicator.style.display = 'none';
-        
-        console.log(`✅ Loaded ${allResults.length} Juwai Morning records`);
-        
-      } catch (error) {
-        console.error('Error loading JSON:', error);
-        loadingIndicator.style.display = 'none';
-        errorMessageDiv.style.display = 'block';
-        errorMessageDiv.innerHTML = `
-          <strong>⚠️ Unable to load data from data/all-results.json</strong><br><br>
-          ${error.message}<br><br>
-          <strong>Troubleshooting tips:</strong><br>
-          • Make sure the file exists at: <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">data/all-results.json</code><br>
-          • The file should contain records with <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">"game": "juwai morning"</code><br>
-          • If running locally, start a local web server:<br>
-          <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">npx serve .</code> or <code style="background:#1e293b; padding:2px 6px; border-radius:4px;">python -m http.server 8000</code><br><br>
-          <button onclick="location.reload()" style="background: var(--accent); color: #0f172a; border: none; padding: 8px 20px; border-radius: 2rem; cursor: pointer; font-family: Poppins; font-weight: 600; margin-top: 10px;">🔄 Retry Loading</button>
-        `;
+        return true;
+      });
+      
+      dataTable.draw();
+      // pop the custom filter after draw? Actually we keep it for next draws but we must ensure we don't pile up multiple.
+      // The pattern: we pop previous and push new one each time. Since we popped before push, there is only one custom filter at a time.
+    }
+    
+    // reset all filters
+    function resetAllFilters() {
+      numberSearch.value = '';
+      if (flatpickrInstance) flatpickrInstance.clear();
+      daySearch.value = '';
+      roundSearch.value = '';
+      // remove custom filter and redraw with full data
+      $.fn.dataTable.ext.search.pop();
+      // make sure no leftover custom filter
+      if (dataTable) {
+        dataTable.draw();
       }
-    };
-    
-    // Dark Mode Toggle
-    const initDarkMode = () => {
-      const toggleBtn = document.getElementById('darkModeToggle');
-      const isDark = localStorage.getItem('darkModeJuwaiMorningAdvanced') === 'true';
-      if (isDark) document.body.classList.add('dark');
-      if (toggleBtn) {
-        toggleBtn.addEventListener('click', () => {
-          document.body.classList.toggle('dark');
-          const darkEnabled = document.body.classList.contains('dark');
-          localStorage.setItem('darkModeJuwaiMorningAdvanced', darkEnabled);
-          toggleBtn.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
-        });
-        if (isDark) toggleBtn.textContent = '☀️ Light';
-        else toggleBtn.textContent = '🌓 Dark';
+      // re-init one pop just to be safe, but we also re-apply a dummy filter removal
+      // after reset, any lingering filter? Ensure clean.
+      // the custom filter stack may have previous one; pop until we are at default.
+      while ($.fn.dataTable.ext.search.length > 0) {
+        $.fn.dataTable.ext.search.pop();
       }
-    };
+      if (dataTable) dataTable.draw();
+      // small re-init flag
+    }
     
-    // Event listeners
-    applyFiltersBtn.addEventListener('click', applyCustomFilters);
-    resetFiltersBtn.addEventListener('click', resetFilters);
-    
+    // attach event handlers
+    applyBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      applyCustomFilters();
+    });
+    resetBtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      resetAllFilters();
+    });
     numberSearch.addEventListener('keypress', (e) => { if (e.key === 'Enter') applyCustomFilters(); });
     
-    // Initialize
-    const init = () => {
+    // dark mode
+    function initDarkMode() {
+      const toggle = document.getElementById('darkModeToggle');
+      const stored = localStorage.getItem('juwaiMorningDark') === 'true';
+      if (stored) document.body.classList.add('dark');
+      if (toggle) {
+        toggle.textContent = stored ? '☀️ Light' : '🌓 Dark';
+        toggle.addEventListener('click', () => {
+          document.body.classList.toggle('dark');
+          const isDark = document.body.classList.contains('dark');
+          localStorage.setItem('juwaiMorningDark', isDark);
+          toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
+          // refresh flatpickr styling (re-render not needed but theme updates)
+          if (flatpickrInstance) flatpickrInstance.redraw();
+        });
+      }
+    }
+    
+    // start everything
+    function init() {
       initDarkMode();
-      loadDataFromJSON();
-    };
+      loadData();
+    }
     
     init();
   </script>
