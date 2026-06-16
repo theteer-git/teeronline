@@ -21,8 +21,8 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install dependencies
-        run: npm install axios cheerio
+      - name: Install dependencies without modifying repo
+        run: npm install axios cheerio --no-save
 
       - name: Run result updater
         run: node assets/scripts/update-results.js
@@ -32,10 +32,12 @@ jobs:
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          if git diff --quiet; then
-            echo "No changes found."
-          else
-            git add data/all-results.json
-            git commit -m "Auto update teer results"
-            git push
+          git add data/all-results.json
+
+          if git diff --cached --quiet; then
+            echo "No JSON changes found."
+            exit 0
           fi
+
+          git commit -m "Auto update teer results"
+          git push
