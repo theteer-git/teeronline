@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <title>Teer Common Numbers | Shillong, Khanapara, Juwai | Winning Digits & Predictions</title>
-  <meta name="description" content="Daily updated common numbers for Shillong, Khanapara, Juwai Teer. Get house numbers, ending digits, and 6 common numbers with 7-day performance tracking.">
-  <meta name="keywords" content="Teer Common Numbers, Shillong Common Numbers, Khanapara Common Numbers, Juwai Common Numbers, Teer Winning Digits">
+  <title>Teer Common Numbers & Statistics | Shillong, Khanapara, Juwai Analysis</title>
+  <meta name="description" content="Daily Teer common numbers and statistical analysis for Shillong, Khanapara, Juwai, Morning and Night Teer games. Common numbers shown first, followed by statistics.">
+  <meta name="keywords" content="Teer Common Numbers, Teer Statistics, Shillong Common Numbers, Shillong Night 2, Khanapara Teer, Juwai Teer">
   <meta name="author" content="Teer Results Archive">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://www.teerresults.example.com/common-numbers.html">
-  <meta property="og:title" content="Teer Common Numbers | Shillong, Khanapara, Juwai">
-  <meta property="og:description" content="Daily common numbers for all Teer games. House numbers, ending digits, and full combinations with 7-day success rate tracking.">
+  <meta property="og:title" content="Teer Common Numbers & Statistics">
+  <meta property="og:description" content="Common numbers and statistics for all Teer games based on all-results.json.">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -29,8 +29,8 @@
       --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
       --success: #22c55e;
       --danger: #ef4444;
-      --house-color: #f59e0b;
-      --ending-color: #3b82f6;
+      --warning: #f59e0b;
+      --info: #3b82f6;
       --table-header-bg: #0f172a;
     }
     body.dark {
@@ -54,36 +54,42 @@
     .hero { background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%); border-radius: 1.5rem; padding: 2rem 1.5rem; margin: 1.5rem 0; color: white; text-align: center; }
     .hero h1 { font-size: 1.9rem; font-weight: 800; margin-bottom: 0.5rem; }
     .hero p { opacity: 0.9; }
-    .games-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-    .game-card { background: var(--surface); border-radius: 1.25rem; border: 1px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; }
-    .game-header { background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%); color: white; padding: 1rem 1.2rem; }
-    .game-header h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
-    .game-header .date { font-size: 0.7rem; opacity: 0.8; }
-    .game-body { padding: 1.2rem; }
-    .numbers-section { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; text-align: center; }
-    .section-title { font-weight: 600; margin-bottom: 0.8rem; color: var(--accent); display: flex; align-items: center; justify-content: center; gap: 0.5rem; font-size: 1rem; }
+    .page-section-title { margin: 2rem 0 1rem; font-size: 1.6rem; font-weight: 800; color: var(--accent); text-align: center; }
+    .page-section-subtitle { text-align: center; color: var(--text-light); margin: -0.5rem 0 1.5rem; }
+    .games-grid, .stats-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+    .game-card, .stat-card { background: var(--surface); border-radius: 1.25rem; border: 1px solid var(--border); box-shadow: var(--card-shadow); overflow: hidden; }
+    .game-header, .card-header { background: linear-gradient(135deg, var(--primary) 0%, #1e293b 100%); color: white; padding: 1rem 1.2rem; }
+    .game-header h2, .card-header h2 { font-size: 1.3rem; margin-bottom: 0.2rem; }
+    .game-header .date, .card-header .sub { font-size: 0.7rem; opacity: 0.8; }
+    .game-body, .card-body { padding: 1.2rem; }
+    .numbers-section, .stat-box { background: var(--bg); border-radius: 1rem; padding: 1rem; margin-bottom: 1rem; text-align: center; }
+    .stat-box { text-align: left; border-left: 4px solid var(--accent); }
+    .section-title, .stat-title { font-weight: 700; margin-bottom: 0.8rem; color: var(--accent); font-size: 1rem; }
+    .section-title { display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
     .common-numbers-grid { display: flex; flex-direction: column; gap: 0.8rem; align-items: center; }
-    .common-numbers-row { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
-    .common-number-box { background: var(--surface); border-radius: 0.75rem; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 1.1rem; min-width: 75px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); transition: transform 0.2s; }
-    .common-number-box:hover { transform: scale(1.05); }
-    .full-box { border: 2px solid var(--accent); color: var(--accent); background: linear-gradient(145deg, var(--surface), var(--bg)); }
+    .common-numbers-row, .numbers-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin: 0.5rem 0; }
+    .common-number-box, .stat-number { background: var(--surface); border-radius: 0.75rem; padding: 0.7rem 1.2rem; font-weight: 700; font-size: 1.05rem; min-width: 75px; text-align: center; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .full-box, .stat-number { border: 2px solid var(--accent); color: var(--accent); background: linear-gradient(145deg, var(--surface), var(--bg)); }
+    .stat-number { padding: 0.5rem 0.8rem; font-size: 0.9rem; min-width: 65px; color: var(--text); }
+    .stat-number-warning { border-color: var(--warning); }
+    .stat-number-info { border-color: var(--info); }
     .percentage { font-size: 0.75rem; margin-top: 0.5rem; text-align: center; }
     .history-wrapper { overflow-x: auto; border-radius: 1rem; margin-top: 0.5rem; }
     .history-table { width: 100%; font-size: 0.7rem; border-collapse: separate; border-spacing: 0; background: var(--surface); border-radius: 1rem; overflow: hidden; }
     .history-table th { background: var(--table-header-bg); color: white; padding: 0.7rem 0.4rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; font-size: 0.7rem; }
     .history-table td { padding: 0.6rem 0.3rem; text-align: center; border-bottom: 1px solid var(--border); background: var(--surface); }
-    .history-table tr:last-child td { border-bottom: none; }
-    .history-table tr:hover td { background: var(--bg); }
     .win-badge { background: var(--success); color: white; padding: 0.2rem 0.6rem; border-radius: 2rem; font-weight: 600; display: inline-block; font-size: 0.65rem; }
     .loss-badge { background: var(--danger); color: white; padding: 0.2rem 0.6rem; border-radius: 2rem; font-weight: 600; display: inline-block; font-size: 0.65rem; }
     .fr-sr-number { font-weight: 700; font-family: monospace; font-size: 0.85rem; background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.5rem; display: inline-block; }
     .stats-row { display: flex; justify-content: space-between; margin-top: 1rem; padding-top: 0.8rem; border-top: 1px solid var(--border); font-size: 0.75rem; }
+    .note-box { background: var(--bg); border-radius: 0.75rem; padding: 0.6rem; margin-top: 0.8rem; font-size: 0.7rem; color: var(--text-light); text-align: center; }
     .last-updated { text-align: center; font-size: 0.7rem; color: var(--text-light); margin: 1rem 0; }
     .seo-content { background: var(--surface); border-radius: 1.5rem; padding: 2rem; margin: 2rem 0; border: 1px solid var(--border); }
     .seo-content h2 { color: var(--accent); font-size: 1.6rem; margin-bottom: 1rem; }
     .seo-content h3 { color: var(--text); font-size: 1.2rem; margin: 1rem 0 0.5rem; }
     .seo-content p { margin-bottom: 1rem; color: var(--text-light); }
     .seo-content ul { margin-left: 1.5rem; margin-bottom: 1rem; color: var(--text-light); }
+    .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; }
     .related-links { display: flex; flex-wrap: wrap; gap: 1rem; margin: 2rem 0; justify-content: center; }
     .related-links a { background: var(--surface); padding: 0.5rem 1.2rem; border-radius: 2rem; text-decoration: none; color: var(--accent); border: 1px solid var(--accent); font-size: 0.85rem; transition: 0.2s; }
     .related-links a:hover { background: var(--accent); color: white; }
@@ -91,25 +97,24 @@
     .footer-links { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.8rem; margin-bottom: 1.2rem; }
     .footer-links a { text-decoration: none; color: var(--text-light); font-size: 0.85rem; }
     .disclaimer { text-align: center; font-size: 0.75rem; color: var(--text-light); }
-    .warning-box { background: rgba(239, 68, 68, 0.1); border-left: 4px solid #ef4444; padding: 1rem; border-radius: 0.75rem; margin: 1rem 0; }
     .refresh-btn { position: fixed; bottom: 20px; right: 20px; background: var(--accent); width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; box-shadow: 0 4px 12px rgba(0,0,0,0.15); z-index: 999; transition: transform 0.2s; }
     .refresh-btn:hover { transform: scale(1.05); }
     .refresh-btn img { width: 28px; height: 28px; }
-    @media (max-width: 900px) { .games-grid { grid-template-columns: 1fr; } }
-    @media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } .common-numbers-row { gap: 0.6rem; } .history-table th, .history-table td { padding: 0.4rem 0.2rem; font-size: 0.65rem; } }
+    @media (max-width: 900px) { .games-grid, .stats-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 768px) { .hero h1 { font-size: 1.5rem; } .header-inner { flex-direction: column; } .nav-links { justify-content: center; } .common-number-box { padding: 0.5rem 0.8rem; min-width: 60px; font-size: 0.9rem; } .history-table th, .history-table td { padding: 0.4rem 0.2rem; font-size: 0.65rem; } }
   </style>
 </head>
 <body>
   <header class="sticky-header">
     <div class="container header-inner">
-      <div class="logo">🔢 Teer Common Numbers</div>
+      <div class="logo">🔢📊 Teer Common & Statistics</div>
       <div class="nav-links">
-        <a href="#">Home</a>
-        <a href="#">Common Numbers</a>
-        <a href="#">Dream Numbers</a>
-        <a href="#">Teer Formula</a>
-        <a href="#">Statistics</a>
-        <a href="#">Contact</a>
+        <a href="index.html">Home</a>
+        <a href="common-numbers.html">Common Numbers</a>
+        <a href="dream-numbers.html">Dream Numbers</a>
+        <a href="teer-formula.html">Teer Formula</a>
+        <a href="statistics.html">Statistics</a>
+        <a href="contact.html">Contact</a>
         <button class="dark-toggle" id="darkModeToggle">🌓 Dark</button>
       </div>
     </div>
@@ -117,51 +122,54 @@
 
   <main class="container">
     <div class="hero">
-      <h1>Teer Common Numbers | Shillong, Khanapara, Juwai</h1>
-      <p>Daily updated common numbers for all Teer games. Trusted by thousands of players. Check house numbers, ending digits, and full combinations.</p>
+      <h1>Teer Common Numbers & Statistics</h1>
+      <p>Common numbers are displayed first for all games, followed by statistics based on historical results from all-results.json.</p>
     </div>
 
+    <h2 class="page-section-title">🔢 Today Common Numbers</h2>
+    <p class="page-section-subtitle">Generated from the latest available result for each game.</p>
     <div id="gamesContainer" class="games-grid"></div>
-    <div id="lastUpdated" class="last-updated"></div>
+    <div id="commonLastUpdated" class="last-updated"></div>
+
+    <h2 class="page-section-title">📊 Statistics</h2>
+    <p class="page-section-subtitle">Date-wise, day-wise and recent trend analysis for each game.</p>
+    <div id="statsContainer" class="stats-grid"></div>
+    <div id="statsLastUpdated" class="last-updated"></div>
 
     <div class="seo-content">
-      <h2>What are Teer Common Numbers?</h2>
-      <p><strong>Shillong Teer Common Numbers</strong> are widely used by Teer enthusiasts to narrow down their number selection. Whether you are looking for <strong>Khanapara Teer Common Numbers</strong>, <strong>Juwai Teer Common Numbers</strong>, or <strong>Shillong Morning Teer Common Numbers</strong>, our daily updated list provides you with reliable data.</p>
-      
-      <h3>How to Use Teer Common Numbers</h3>
-      <p>Common numbers are presented in three formats:</p>
+      <h2>Teer Common Numbers and Statistics</h2>
+      <p><strong>Teer Common Numbers</strong> and <strong>Teer Statistics</strong> are calculated from historical result data. This page combines both views so users can first see common numbers and then check statistical patterns for Shillong, Khanapara, Juwai, Morning and Night games.</p>
+      <h3>Games Covered</h3>
       <ul>
-        <li><strong>House Numbers:</strong> Numbers where the first digit (tens place) is from the common digits.</li>
-        <li><strong>Ending Numbers:</strong> Numbers where the second digit (units place) is from the common digits.</li>
-        <li><strong>Common Numbers:</strong> Full two-digit numbers that are most likely to appear.</li>
+        <li>Shillong Day, Shillong Morning, Shillong Night, Shillong Night 2</li>
+        <li>Khanapara Day and Khanapara Morning</li>
+        <li>Juwai Day and Juwai Morning</li>
       </ul>
-      <p>Many players use these common numbers to plan their bets for the day. The success rate shown for each game is calculated based on the last 7 days of historical performance.</p>
-      
       <div class="warning-box">
-        <strong>⚠️ Important Disclaimer:</strong> Common numbers are mathematical derivations based on historical data. They are NOT guaranteed predictions or winning numbers. Teer is a game of chance based on archery outcomes. Past performance does not guarantee future results. This information is provided for educational and entertainment purposes only. We do not encourage gambling or betting. Always play responsibly and within legal limits.
+        <strong>⚠️ Disclaimer:</strong> Common numbers and statistics are based on historical data. They are not guaranteed predictions or winning numbers. This information is for educational and informational use only.
       </div>
     </div>
 
     <div class="related-links">
-      <a href="#">Shillong Day Results</a>
-      <a href="#">Shillong Morning Results</a>
-      <a href="#">Khanapara Results</a>
-      <a href="#">Juwai Results</a>
-      <a href="#">Teer Formula</a>
-      <a href="#">Dream Numbers</a>
+      <a href="shillong-day.html">Shillong Day Results</a>
+      <a href="shillong-morning.html">Shillong Morning Results</a>
+      <a href="khanapara-day.html">Khanapara Results</a>
+      <a href="juwai-day.html">Juwai Results</a>
+      <a href="teer-formula.html">Teer Formula</a>
+      <a href="dream-numbers.html">Dream Numbers</a>
     </div>
   </main>
 
   <footer>
     <div class="container">
       <div class="footer-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms & Conditions</a>
-        <a href="#">Disclaimer</a>
-        <a href="#">Contact</a>
-        <a href="#">About</a>
+        <a href="privacy.html">Privacy Policy</a>
+        <a href="terms.html">Terms & Conditions</a>
+        <a href="disclaimer.html">Disclaimer</a>
+        <a href="contact.html">Contact</a>
+        <a href="about.html">About</a>
       </div>
-      <div class="disclaimer">⚠️ Informational Purpose Only: Common numbers are mathematical derivations based on historical data. No predictions are guaranteed.</div>
+      <div class="disclaimer">⚠️ Informational Purpose Only: Common numbers and statistics are derived from historical data. No guarantees of winning.</div>
       <div class="disclaimer" style="margin-top:0.5rem;">Copyright © <span id="ThisYear"></span> Teer Results Archive</div>
     </div>
   </footer>
@@ -171,22 +179,18 @@
   </div>
 
   <script>
-    // ============================================================
-    // COMMON NUMBERS ARE CONSTANT FOR THE DAY
-    // They are derived from the LATEST available result for each game
-    // The JSON file will have timestamps for future updates
-    // ============================================================
-    
     const GAMES = [
-      { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameKey: 'juwai morning' },
-      { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameKey: 'khanapara morning' },
-      { id: 'shillong-morning', displayName: '🌅 Shillong Morning', gameKey: 'shillong morning' },
-      { id: 'juwai-day', displayName: '🏹 Juwai Day', gameKey: 'juwai day' },
-      { id: 'khanapara-day', displayName: '🎯 Khanapara Day', gameKey: 'khanapara day' },
-      { id: 'shillong-day', displayName: '🏹 Shillong Day', gameKey: 'shillong day' },
-      { id: 'shillong-night', displayName: '🌙 Shillong Night', gameKey: 'shillong night' },
-      { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameKey: 'night teer 2' }
+      { id: 'juwai-morning', displayName: '🌄 Juwai Morning', gameId: 'JWM', gameNames: ['juwai morning'], type: 'morning' },
+      { id: 'khanapara-morning', displayName: '🎯 Khanapara Morning', gameId: 'KHM', gameNames: ['khanapara morning'], type: 'morning' },
+      { id: 'shillong-morning', displayName: '🌅 Shillong Morning', gameId: 'SHM', gameNames: ['shillong morning'], type: 'morning' },
+      { id: 'juwai-day', displayName: '🏹 Juwai Day', gameId: 'JWD', gameNames: ['juwai day', 'jowai day'], type: 'day' },
+      { id: 'khanapara-day', displayName: '🎯 Khanapara Day', gameId: 'KH', gameNames: ['khanapara day'], type: 'day' },
+      { id: 'shillong-day', displayName: '🏹 Shillong Day', gameId: 'SHD', gameNames: ['shillong day'], type: 'day' },
+      { id: 'shillong-night', displayName: '🌙 Shillong Night', gameId: 'SHN1', gameNames: ['shillong night'], type: 'night' },
+      { id: 'shillong-night2', displayName: '🌙 Shillong Night Teer 2', gameId: 'SHN2', gameNames: ['shillong night 2', 'night teer 2'], type: 'night' }
     ];
+
+    const DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
     const TEER_GROUPS = [
       [10, 15, 50, 55], [1, 6, 10, 15, 51, 56, 60, 65], [2, 7, 20, 25, 52, 57, 70, 75],
@@ -197,161 +201,359 @@
       [44, 49, 94, 99]
     ];
 
+    function parseDate(dateStr) {
+      if (!dateStr || dateStr === 'NaN' || dateStr === 'undefined') return null;
+      const parts = String(dateStr).split(/[-/]/);
+      if (parts.length === 3) {
+        if (parts[0].length === 4) return new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]));
+        return new Date(Number(parts[2]), Number(parts[1]) - 1, Number(parts[0]));
+      }
+      const parsed = new Date(dateStr);
+      return isNaN(parsed.getTime()) ? null : parsed;
+    }
+
+    function sortByDateDesc(a, b) {
+      const da = parseDate(a.date);
+      const db = parseDate(b.date);
+      if (!da && !db) return 0;
+      if (!da) return 1;
+      if (!db) return -1;
+      return db - da;
+    }
+
+    function getDayOfWeek(dateStr) {
+      const date = parseDate(dateStr);
+      if (!date || isNaN(date.getTime())) return '';
+      return DAYS[date.getDay()];
+    }
+
+    function isValidNumber(num) {
+      const clean = String(num || '').trim().toLowerCase();
+      const n = parseInt(clean, 10);
+      return !isNaN(n) && n >= 0 && n <= 99 && !['xx', 'off', '—', '-', 'na', ''].includes(clean);
+    }
+
+    function pad2(num) {
+      return String(parseInt(num, 10)).padStart(2, '0');
+    }
+
+    async function fetchData() {
+      const paths = ['data/all-results.json', './data/all-results.json', '../data/all-results.json', 'all-results.json'];
+      for (const path of paths) {
+        try {
+          const res = await fetch(path);
+          if (res.ok) return await res.json();
+        } catch (e) {}
+      }
+      throw new Error('Unable to load all-results.json');
+    }
+
+    function getResultsForGame(data, game) {
+      const names = game.gameNames.map(n => n.toLowerCase());
+      return data
+        .filter(item => {
+          const itemGameId = String(item.gameId || '').trim().toUpperCase();
+          const itemGame = String(item.game || '').trim().toLowerCase();
+          return itemGameId === game.gameId.toUpperCase() || names.includes(itemGame);
+        })
+        .map(item => ({
+          date: item.date,
+          fr: item.fr,
+          sr: item.sr,
+          day: getDayOfWeek(item.date),
+          gameId: item.gameId,
+          game: item.game
+        }))
+        .filter(item => item.date && isValidNumber(item.fr) && isValidNumber(item.sr))
+        .sort(sortByDateDesc);
+    }
+
     function getComplement(d) { return d <= 4 ? d + 5 : d - 5; }
 
     function generateCommonDigits(fr, sr) {
-      const frNum = parseInt(fr), srNum = parseInt(sr);
+      const frNum = parseInt(fr, 10), srNum = parseInt(sr, 10);
       if (isNaN(frNum) || isNaN(srNum)) return [];
-      const digits = [Math.floor(frNum/10), frNum%10, Math.floor(srNum/10), srNum%10];
+      const digits = [Math.floor(frNum / 10), frNum % 10, Math.floor(srNum / 10), srNum % 10];
       const all = [...digits];
-      for(let d of digits) all.push(getComplement(d));
+      for (const d of digits) all.push(getComplement(d));
       const unique = [...new Set(all)];
       return [0,1,2,3,4,5,6,7,8,9].filter(d => !unique.includes(d));
     }
 
     function checkSuccess(digits, fr, sr) {
-      const frNum = parseInt(fr), srNum = parseInt(sr);
-      if(isNaN(frNum)||isNaN(srNum)) return false;
-      const resultDigits = [Math.floor(frNum/10), frNum%10, Math.floor(srNum/10), srNum%10];
+      const frNum = parseInt(fr, 10), srNum = parseInt(sr, 10);
+      if (isNaN(frNum) || isNaN(srNum)) return false;
+      const resultDigits = [Math.floor(frNum / 10), frNum % 10, Math.floor(srNum / 10), srNum % 10];
       return digits.some(d => resultDigits.includes(d));
     }
 
-    // Generate 6 common numbers from Teer Groups (CONSTANT for the day)
     function getUniformCommonNumbers(commonDigits) {
-      if(commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
+      if (commonDigits.length === 0) return [10, 20, 30, 40, 50, 60];
       const candidateNumbers = new Set();
-      for(const group of TEER_GROUPS){
-        for(const num of group){
+      for (const group of TEER_GROUPS) {
+        for (const num of group) {
           const tens = Math.floor(num / 10);
           const units = num % 10;
-          if(commonDigits.includes(tens) || commonDigits.includes(units)) candidateNumbers.add(num);
+          if (commonDigits.includes(tens) || commonDigits.includes(units)) candidateNumbers.add(num);
         }
       }
-      for(const d of commonDigits){ candidateNumbers.add(d * 10); candidateNumbers.add(d); }
-      let candidates = Array.from(candidateNumbers).filter(n => n >= 0 && n <= 99);
-      // Deterministic sort to ensure same numbers throughout the day (no random)
-      candidates.sort((a,b)=>a-b);
-      // Take first 6 for consistency (constant throughout the day)
+      for (const d of commonDigits) {
+        candidateNumbers.add(d * 10);
+        candidateNumbers.add(d);
+      }
+      let candidates = Array.from(candidateNumbers).filter(n => n >= 0 && n <= 99).sort((a, b) => a - b);
       const selected = candidates.slice(0, 6);
-      if(selected.length < 6){
-        for(let i=0; i<commonDigits.length && selected.length < 6; i++){
-          for(let j=0; j<commonDigits.length && selected.length < 6; j++){
-            const num = commonDigits[i]*10 + commonDigits[j];
-            if(!selected.includes(num)) selected.push(num);
+      if (selected.length < 6) {
+        for (let i = 0; i < commonDigits.length && selected.length < 6; i++) {
+          for (let j = 0; j < commonDigits.length && selected.length < 6; j++) {
+            const num = commonDigits[i] * 10 + commonDigits[j];
+            if (!selected.includes(num)) selected.push(num);
           }
         }
       }
       return selected.slice(0, 6);
     }
 
-    async function fetchData() {
-      const paths = ['data/all-results.json','./data/all-results.json','../data/all-results.json','all-results.json'];
-      for(const path of paths){
-        try{ const res = await fetch(path); if(res.ok) return await res.json(); }catch(e){}
-      }
-      throw new Error('Unable to load all-results.json');
+    function getSameDateHistory(results, targetDate) {
+      if (!targetDate) return [];
+      const target = parseDate(targetDate);
+      if (!target || isNaN(target.getTime())) return [];
+      const monthDay = `${target.getMonth() + 1}-${target.getDate()}`;
+      return results.filter(r => {
+        const rDate = parseDate(r.date);
+        if (!rDate || isNaN(rDate.getTime())) return false;
+        return `${rDate.getMonth() + 1}-${rDate.getDate()}` === monthDay;
+      });
     }
 
-    function getGameResults(data, gameKey) {
-      return data.filter(item => (item.game||'').toLowerCase() === gameKey.toLowerCase())
-        .map(item => ({ date: item.date, fr: item.fr, sr: item.sr, timestamp: item.timestamp || null }))
-        .filter(item => item.fr && item.sr && !isNaN(parseInt(item.fr)) && !isNaN(parseInt(item.sr)))
-        .sort((a,b) => new Date(b.date) - new Date(a.date));
+    function getDayWiseNumbers(results, targetDay) {
+      const dayResults = results.filter(r => r.day === targetDay);
+      const freq = {};
+      for (const r of dayResults) {
+        const frNum = parseInt(r.fr, 10);
+        const srNum = parseInt(r.sr, 10);
+        if (!isNaN(frNum)) freq[frNum] = (freq[frNum] || 0) + 1;
+        if (!isNaN(srNum)) freq[srNum] = (freq[srNum] || 0) + 1;
+      }
+      return Object.entries(freq).sort((a,b) => b[1] - a[1]).slice(0, 6).map(n => parseInt(n[0], 10)).filter(n => !isNaN(n));
+    }
+
+    function getRecentTrendNumbers(results) {
+      const recent = results.slice(0, 7);
+      const freq = {};
+      for (const r of recent) {
+        const frNum = parseInt(r.fr, 10);
+        const srNum = parseInt(r.sr, 10);
+        if (!isNaN(frNum)) freq[frNum] = (freq[frNum] || 0) + 1;
+        if (!isNaN(srNum)) freq[srNum] = (freq[srNum] || 0) + 1;
+      }
+      return Object.entries(freq).sort((a,b) => b[1] - a[1]).slice(0, 6).map(n => parseInt(n[0], 10)).filter(n => !isNaN(n));
+    }
+
+    function generateStatisticsNumbers(results, targetDate, targetDay) {
+      const sameDateResults = getSameDateHistory(results, targetDate);
+      const sameDateNums = sameDateResults.flatMap(r => [parseInt(r.fr, 10), parseInt(r.sr, 10)]).filter(n => !isNaN(n));
+      const dayWise = getDayWiseNumbers(results, targetDay);
+      const recentTrend = getRecentTrendNumbers(results);
+      const freq = {};
+
+      for (const n of sameDateNums) freq[n] = (freq[n] || 0) + 2;
+      for (const n of dayWise) freq[n] = (freq[n] || 0) + 1;
+      for (const n of recentTrend) freq[n] = (freq[n] || 0) + 1;
+
+      const topStats = Object.entries(freq).sort((a,b) => b[1] - a[1]).slice(0, 6).map(n => parseInt(n[0], 10)).filter(n => !isNaN(n));
+      const allNumbers = results.slice(0, 20).flatMap(r => [parseInt(r.fr, 10), parseInt(r.sr, 10)]).filter(n => !isNaN(n));
+      const digitFreq = new Array(10).fill(0);
+      for (const n of allNumbers) {
+        digitFreq[Math.floor(n / 10)]++;
+        digitFreq[n % 10]++;
+      }
+
+      const topDigits = digitFreq.map((c,i) => ({ digit: i, count: c })).sort((a,b) => b.count - a.count).slice(0, 4).map(d => d.digit);
+      const additionalNumbers = [];
+      for (let i = 0; i < topDigits.length && additionalNumbers.length < 3; i++) {
+        for (let j = 0; j < topDigits.length && additionalNumbers.length < 3; j++) {
+          const num = topDigits[i] * 10 + topDigits[j];
+          if (!topStats.includes(num) && num >= 0 && num <= 99) additionalNumbers.push(num);
+        }
+      }
+
+      return [...topStats, ...additionalNumbers].slice(0, 6).sort((a,b) => a - b).filter(n => !isNaN(n));
+    }
+
+    function renderCommonSection(data) {
+      const container = document.getElementById('gamesContainer');
+      let html = '';
+
+      for (const game of GAMES) {
+        const results = getResultsForGame(data, game);
+        if (results.length === 0) {
+          html += `<div class="game-card"><div class="game-header"><h2>${game.displayName}</h2><div class="date">No valid records found</div></div><div class="game-body">No data available for ${game.gameId}</div></div>`;
+          continue;
+        }
+
+        const latest = results[0];
+        const commonDigits = generateCommonDigits(latest.fr, latest.sr);
+        const houseDisplay = commonDigits.join(', ');
+        const endingDisplay = commonDigits.join(', ');
+        const fullNumbers = getUniformCommonNumbers(commonDigits);
+        const firstRow = fullNumbers.slice(0, 3);
+        const secondRow = fullNumbers.slice(3, 6);
+
+        const historyRows = [];
+        let wins = 0, total = 0;
+        for (let i = 1; i < Math.min(results.length, 8); i++) {
+          const prevResult = results[i];
+          const currentResult = results[i - 1];
+          if (!prevResult || !currentResult) continue;
+          const predDigits = generateCommonDigits(prevResult.fr, prevResult.sr);
+          const hit = checkSuccess(predDigits, currentResult.fr, currentResult.sr);
+          if (hit) wins++;
+          total++;
+          historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td><span class="fr-sr-number">${pad2(currentResult.fr)}</span></td><td><span class="fr-sr-number">${pad2(currentResult.sr)}</span></td><td>${hit ? '<span class="win-badge">✓ HIT</span>' : '<span class="loss-badge">✗ MISS</span>'}</td></tr>`);
+        }
+
+        const successRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+
+        html += `
+          <div class="game-card">
+            <div class="game-header">
+              <h2>${game.displayName}</h2>
+              <div class="date">Previous Result: ${pad2(latest.fr)}-${pad2(latest.sr)} (${latest.date || 'N/A'}) | ID: ${game.gameId}</div>
+            </div>
+            <div class="game-body">
+              <div class="numbers-section">
+                <div class="section-title">🏠 HOUSE ${houseDisplay} &nbsp;&nbsp;|&nbsp;&nbsp; 🔢 ENDING ${endingDisplay}</div>
+              </div>
+              <div class="numbers-section">
+                <div class="section-title">📊 COMMON NUMBERS</div>
+                <div class="common-numbers-grid">
+                  <div class="common-numbers-row">${firstRow.map(n => `<span class="common-number-box full-box">${pad2(n)}</span>`).join('')}</div>
+                  <div class="common-numbers-row">${secondRow.map(n => `<span class="common-number-box full-box">${pad2(n)}</span>`).join('')}</div>
+                </div>
+                <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate >= 60 ? '#22c55e' : '#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
+              </div>
+              <div class="history-wrapper">
+                <table class="history-table">
+                  <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
+                  <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td></tr>'}</tbody>
+                </table>
+              </div>
+              <div class="stats-row">
+                <span>📅 Based on last ${total} days</span>
+                <span>🎯 Hit rate: ${successRate}%</span>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      container.innerHTML = html;
+      document.getElementById('commonLastUpdated').innerHTML = `📅 Common Numbers Last Updated: ${new Date().toLocaleString()} | All game IDs are matched from all-results.json.`;
+    }
+
+    function renderStatsSection(data) {
+      const container = document.getElementById('statsContainer');
+      const today = new Date();
+      const todayDay = DAYS[today.getDay()];
+      let html = '';
+
+      for (const game of GAMES) {
+        const results = getResultsForGame(data, game);
+        if (results.length === 0) {
+          html += `<div class="stat-card"><div class="card-header"><h2>${game.displayName}</h2><div class="sub">No valid records found</div></div><div class="card-body">No data available for ${game.gameId}</div></div>`;
+          continue;
+        }
+
+        const latestResult = results[0];
+        const latestResultDate = parseDate(latestResult.date);
+        let effectiveDate = today;
+
+        if (game.type === 'day' && latestResultDate && todayDay === 'Sunday') {
+          const daysDiff = Math.floor((today - latestResultDate) / (1000 * 60 * 60 * 24));
+          if (daysDiff <= 1) effectiveDate = latestResultDate;
+        }
+
+        const effectiveDateStr = `${effectiveDate.getFullYear()}-${String(effectiveDate.getMonth()+1).padStart(2,'0')}-${String(effectiveDate.getDate()).padStart(2,'0')}`;
+        const effectiveDay = DAYS[effectiveDate.getDay()];
+        const statsNumbers = generateStatisticsNumbers(results, effectiveDateStr, effectiveDay);
+        const sameDateHistory = getSameDateHistory(results, effectiveDateStr);
+        const dayWiseNumbers = getDayWiseNumbers(results, effectiveDay);
+        const recentTrends = getRecentTrendNumbers(results);
+        const isSundayNote = (game.type === 'day' && todayDay === 'Sunday') ? '<span style="color:var(--warning);"> (Sunday: Showing Saturday statistics until Monday results)</span>' : '';
+
+        html += `
+          <div class="stat-card">
+            <div class="card-header">
+              <h2>${game.displayName}</h2>
+              <div class="sub">Latest: ${pad2(latestResult.fr)}-${pad2(latestResult.sr)} (${latestResult.date || 'N/A'}) | Statistics for: ${effectiveDay}, ${effectiveDateStr}${isSundayNote} | ID: ${game.gameId}</div>
+            </div>
+            <div class="card-body">
+              <div class="stat-box">
+                <div class="stat-title">📊 Today's Statistical Numbers (${effectiveDay})</div>
+                <div class="numbers-grid">
+                  ${statsNumbers.length ? statsNumbers.map(n => `<span class="stat-number">${pad2(n)}</span>`).join('') : '<span>Insufficient data for statistics</span>'}
+                </div>
+                <div class="note-box">Based on ${sameDateHistory.length} same-date records, ${dayWiseNumbers.length} day-wise patterns, and recent 7-day trends</div>
+              </div>
+
+              <div style="display:grid; grid-template-columns:1fr 1fr; gap:0.8rem;">
+                <div>
+                  <div class="stat-title">📅 Same Date History</div>
+                  <div class="numbers-grid">
+                    ${sameDateHistory.slice(0, 6).map(r => `<span class="stat-number stat-number-warning">${pad2(r.fr)}-${pad2(r.sr)}</span>`).join('') || '<span>No historical data</span>'}
+                  </div>
+                </div>
+                <div>
+                  <div class="stat-title">📆 ${effectiveDay} Pattern</div>
+                  <div class="numbers-grid">
+                    ${dayWiseNumbers.length ? dayWiseNumbers.slice(0, 6).map(n => `<span class="stat-number stat-number-info">${pad2(n)}</span>`).join('') : '<span>Insufficient data</span>'}
+                  </div>
+                </div>
+              </div>
+
+              <div class="note-box" style="margin-top:0.8rem;">
+                <span>🔥 <strong>Last 7 Days Trend:</strong> ${recentTrends.length ? recentTrends.slice(0, 4).map(n => pad2(n)).join(', ') : 'Insufficient data'}</span>
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <span>📊 <strong>Total Records:</strong> ${results.length} days</span>
+              </div>
+            </div>
+          </div>`;
+      }
+
+      container.innerHTML = html;
+      const sundayNote = todayDay === 'Sunday' ? ' | Sunday: Day game statistics show Saturday data where applicable' : '';
+      document.getElementById('statsLastUpdated').innerHTML = `📅 Statistics Last Updated: ${new Date().toLocaleString()} | Based on latest available results${sundayNote}`;
     }
 
     async function render() {
-      const container = document.getElementById('gamesContainer');
-      container.innerHTML = '<div style="text-align:center;padding:2rem;">Loading common numbers...</div>';
+      document.getElementById('gamesContainer').innerHTML = '<div style="text-align:center;padding:2rem;">Loading common numbers...</div>';
+      document.getElementById('statsContainer').innerHTML = '<div style="text-align:center;padding:2rem;">Loading statistics...</div>';
+
       try {
         const data = await fetchData();
-        let html = '';
-        for(const game of GAMES){
-          const results = getGameResults(data, game.gameKey);
-          if(results.length === 0) continue;
-          
-          // Use the LATEST result to generate common numbers (constant for the day)
-          const latest = results[0];
-          const commonDigits = generateCommonDigits(latest.fr, latest.sr);
-          const houseNumbers = commonDigits.map(d => d * 10);
-          const endingNumbers = commonDigits;
-          const fullNumbers = getUniformCommonNumbers(commonDigits);
-          
-          // Display format: 2 rows, each row has 3 numbers (2 divs, each with 3 numbers)
-          const firstRow = fullNumbers.slice(0, 3);
-          const secondRow = fullNumbers.slice(3, 6);
-          
-          const historyRows = [];
-          let wins = 0, total = 0;
-          for(let i = 1; i < Math.min(results.length, 8); i++){
-            const prevResult = results[i];
-            const currentResult = results[i-1];
-            if(!prevResult || !currentResult) continue;
-            const predDigits = generateCommonDigits(prevResult.fr, prevResult.sr);
-            const hit = checkSuccess(predDigits, currentResult.fr, currentResult.sr);
-            if(hit) wins++;
-            total++;
-            const badge = hit ? '<span class="win-badge">✓ HIT</span>' : '<span class="loss-badge">✗ MISS</span>';
-            historyRows.push(`<tr><td style="padding:0.5rem;">${currentResult.date || 'N/A'}</td><td style="padding:0.5rem;"><span class="fr-sr-number">${currentResult.fr}</span></td><td style="padding:0.5rem;"><span class="fr-sr-number">${currentResult.sr}</span></td><td style="padding:0.5rem;">${badge}</td>`);
-          }
-          const successRate = total > 0 ? Math.round((wins/total)*100) : 50;
-          const houseDisplay = houseNumbers.map(n => n/10).join(', ');
-          const endingDisplay = endingNumbers.join(', ');
-          
-          html += `
-            <div class="game-card">
-              <div class="game-header">
-                <h2>${game.displayName}</h2>
-                <div class="date">Previous Result: ${latest.fr}-${latest.sr} (${latest.date || 'N/A'})</div>
-              </div>
-              <div class="game-body">
-                <div class="numbers-section">
-                  <div class="section-title">🏠 HOUSE ${houseDisplay} &nbsp;&nbsp;|&nbsp;&nbsp; 🔢 ENDING ${endingDisplay}</div>
-                </div>
-                <div class="numbers-section">
-                  <div class="section-title">📊 COMMON NUMBERS</div>
-                  <div class="common-numbers-grid">
-                    <div class="common-numbers-row">
-                      ${firstRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
-                    </div>
-                    <div class="common-numbers-row">
-                      ${secondRow.map(n => `<span class="common-number-box full-box">${n.toString().padStart(2,'0')}</span>`).join('')}
-                    </div>
-                  </div>
-                  <div class="percentage">📈 Success Rate (last ${total} days): <strong style="color:${successRate>=60?'#22c55e':'#f59e0b'}">${successRate}%</strong> (${wins}/${total})</div>
-                </div>
-                <div class="history-wrapper">
-                  <table class="history-table">
-                    <thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Result</th></tr></thead>
-                    <tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4" style="text-align:center;">No history available</td></tr>'}</tbody>
-                  </table>
-                </div>
-                <div class="stats-row">
-                  <span>📅 Based on last ${total} days</span>
-                  <span>🎯 Hit rate: ${successRate}%</span>
-                </div>
-              </div>
-            </div>
-          `;
-        }
-        container.innerHTML = html;
-        document.getElementById('lastUpdated').innerHTML = `📅 Last Updated: ${new Date().toLocaleString()} | Common numbers are constant for the day and will refresh when new results are added with timestamps.`;
-      } catch(e){
+        renderCommonSection(data);
+        renderStatsSection(data);
+      } catch (e) {
         console.error(e);
-        container.innerHTML = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load data. Please ensure all-results.json exists.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
+        const errorHtml = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load all-results.json.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
+        document.getElementById('gamesContainer').innerHTML = errorHtml;
+        document.getElementById('statsContainer').innerHTML = errorHtml;
       }
     }
 
-    const initDarkMode = () => {
+    function initDarkMode() {
       const toggle = document.getElementById('darkModeToggle');
-      const isDark = localStorage.getItem('darkModeCommon') === 'true';
-      if(isDark) document.body.classList.add('dark');
+      const isDark = localStorage.getItem('darkModeCommonStats') === 'true';
+      if (isDark) document.body.classList.add('dark');
+      toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
       toggle.addEventListener('click', () => {
         document.body.classList.toggle('dark');
-        localStorage.setItem('darkModeCommon', document.body.classList.contains('dark'));
-        toggle.textContent = document.body.classList.contains('dark') ? '☀️ Light' : '🌓 Dark';
+        const darkEnabled = document.body.classList.contains('dark');
+        localStorage.setItem('darkModeCommonStats', darkEnabled);
+        toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
       });
-      toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
-    };
+    }
+
     document.getElementById('refreshPage')?.addEventListener('click', () => location.reload());
     document.getElementById('ThisYear').innerHTML = new Date().getFullYear();
     initDarkMode();
