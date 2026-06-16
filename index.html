@@ -383,8 +383,7 @@
   <script>
     (function() {
       const DATA_URL = './data/all-results.json';
-      const MAX_RESULT_AGE_HOURS = 22;
-      const MAX_RESULT_AGE_MS = MAX_RESULT_AGE_HOURS * 60 * 60 * 1000;
+      const FRESH_HOURS = 22;
 
       const games = [
         { title: "Shillong Teer Results", key: "shillong", gameId: "SD", timingFR: "11:30 AM", timingSR: "4:00 PM" },
@@ -397,127 +396,114 @@
         { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JM", timingFR: "9:45 AM", timingSR: "10:45 AM" }
       ];
 
+      const gameData = {};
+      games.forEach(game => {
+        gameData[game.key] = { fr: 'XX', sr: 'XX' };
+      });
+
       let allResults = [];
-      let gameData = {};
 
-      function parseDate(dateStr) {
-        if (!dateStr) return null;
-
-        let match = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-        if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-
-        match = String(dateStr).match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-        if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
-
-        const parsed = new Date(dateStr);
-        return isNaN(parsed.getTime()) ? null : parsed;
+      function getISTDateObject(date = new Date()) {
+        return new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
       }
 
-      function formatDate(dateStr) {
-        const d = parseDate(dateStr);
-        if (!d) return dateStr || '';
-        return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
+      function formatYMD(date) {
+        const d = getISTDateObject(date);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
       }
 
       function todayIST() {
-        const now = new Date();
-        const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
-        return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, '0')}-${String(ist.getDate()).padStart(2, '0')}`;
+        return formatYMD(new Date());
       }
 
-      function normalizeNumber(value) {
+      function displayDate(ymd) {
+        if (!ymd) return '';
+        const match = String(ymd).match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!match) return ymd;
+        return `${match[3]}-${match[2]}-${match[1]}`;
+      }
+
+      function dateMinusDays(days) {
+        const d = getISTDateObject();
+        d.setDate(d.getDate() - days);
+        return formatYMD(d);
+      }
+
+      function cleanNumber(value) {
         if (value === undefined || value === null) return 'XX';
-        const text = String(value).trim().toLowerCase();
-
-        if (['', 'xx', 'x', 'na', 'n/a', '-', '—', 'off', 'null', 'undefined'].includes(text)) {
-          return 'XX';
-        }
-
-        const num = Number.parseInt(text, 10);
+        const str = String(value).trim();
+        if (!str || ['xx', 'x', '-', '—', 'na', 'null', 'undefined'].includes(str.toLowerCase())) return 'XX';
+        const num = parseInt(str, 10);
         if (Number.isNaN(num) || num < 0 || num > 99) return 'XX';
-
         return String(num).padStart(2, '0');
       }
 
-      function isResultFresh(record, round) {
-        if (!record) return false;
-
-        const value = normalizeNumber(round === 'fr' ? record.fr : record.sr);
-        if (value === 'XX') return false;
-
-        const timestampField = round === 'fr' ? record.frUpdatedAt : record.srUpdatedAt;
-        const timestamp = timestampField || '';
-
-        if (timestamp) {
-          const updatedAt = new Date(timestamp);
-          if (!Number.isNaN(updatedAt.getTime())) {
-            return Date.now() - updatedAt.getTime() <= MAX_RESULT_AGE_MS;
-          }
-        }
-
-        // Fallback for older records without frUpdatedAt/srUpdatedAt:
-        // show only today's result, otherwise display XX.
-        return record.date === todayIST();
+      function isFresh(timestamp) {
+        if (!timestamp) return true; // If today's result has no timestamp, trust today's date.
+        const time = new Date(timestamp).getTime();
+        if (Number.isNaN(time)) return true;
+        const ageMs = Date.now() - time;
+        return ageMs >= 0 && ageMs <= FRESH_HOURS * 60 * 60 * 1000;
       }
 
-      function getLatestRecordForGame(gameId) {
-        return allResults
-          .filter(item => String(item.gameId || '').trim() === gameId)
-          .sort((a, b) => {
-            const dateA = parseDate(a.date);
-            const dateB = parseDate(b.date);
-            if (!dateA && !dateB) return 0;
-            if (!dateA) return 1;
-            if (!dateB) return -1;
-            return dateB - dateA;
-          })[0] || null;
+      function findRecord(gameId, date) {
+        return allResults.find(item => String(item.gameId).trim() === gameId && String(item.date).trim() === date);
       }
 
-      function getTodayRecordForGame(gameId) {
+      function getCurrentValue(record, round) {
+        if (!record || record.date !== todayIST()) return 'XX';
+
+        const value = cleanNumber(round === 'fr' ? record.fr : record.sr);
+        if (value === 'XX') return 'XX';
+
+        const timestamp = round === 'fr'
+          ? (record.frUpdatedAt || record.lastCheckedAt)
+          : (record.srUpdatedAt || record.lastCheckedAt);
+
+        return isFresh(timestamp) ? value : 'XX';
+      }
+
+      function loadCurrentCardsFromJson() {
         const today = todayIST();
-        return allResults.find(item => String(item.gameId || '').trim() === gameId && item.date === today) || null;
-      }
-
-      function getDisplayRecordForGame(gameId) {
-        return getTodayRecordForGame(gameId) || getLatestRecordForGame(gameId);
+        games.forEach(game => {
+          const record = findRecord(game.gameId, today);
+          gameData[game.key] = {
+            fr: getCurrentValue(record, 'fr'),
+            sr: getCurrentValue(record, 'sr')
+          };
+        });
       }
 
       function formatFrSr(fr, sr) {
-        return `${fr || 'XX'}-${sr || 'XX'}`;
+        return `${cleanNumber(fr)}-${cleanNumber(sr)}`;
       }
 
-      function setDefaultGameData() {
-        games.forEach(game => {
-          gameData[game.key] = { fr: 'XX', sr: 'XX' };
-        });
-      }
+      function buildHistoryRows() {
+        const rows = [];
+        for (let i = 0; i < 7; i++) {
+          const date = dateMinusDays(i);
+          const row = { date };
 
-      function updateGameDataFromJson() {
-        setDefaultGameData();
+          games.forEach(game => {
+            const record = findRecord(game.gameId, date);
+            row[game.key] = record ? formatFrSr(record.fr, record.sr) : 'XX-XX';
+          });
 
-        games.forEach(game => {
-          const record = getDisplayRecordForGame(game.gameId);
-
-          const fr = isResultFresh(record, 'fr') ? normalizeNumber(record.fr) : 'XX';
-          const sr = isResultFresh(record, 'sr') ? normalizeNumber(record.sr) : 'XX';
-
-          gameData[game.key] = { fr, sr };
-        });
+          rows.push(row);
+        }
+        return rows;
       }
 
       function renderCards() {
         const grid = document.getElementById('resultsGrid');
         if (!grid) return;
-
         grid.innerHTML = '';
 
         games.forEach(game => {
           const data = gameData[game.key] || { fr: 'XX', sr: 'XX' };
-
           const card = document.createElement('div');
           card.className = 'result-card';
           card.setAttribute('data-key', game.key);
-
           card.innerHTML = `
             <div class="card-title">${game.title}</div>
             <div class="game-timings">
@@ -536,9 +522,8 @@
                 <span class="time-badge">${game.timingSR}</span>
               </div>
             </div>
-            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result</button>
+            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result (FR & SR)</button>
           `;
-
           grid.appendChild(card);
         });
 
@@ -546,60 +531,23 @@
           btn.addEventListener('click', async () => {
             btn.disabled = true;
             btn.classList.add('loading');
-            btn.textContent = '⌛ Refreshing...';
-
-            await loadResults();
-
+            await loadResults(true);
             btn.disabled = false;
             btn.classList.remove('loading');
-            btn.textContent = '🔄 Refresh Result';
           });
-        });
-      }
-
-      function buildHistoryRows() {
-        const uniqueDates = [...new Set(
-          allResults
-            .map(item => item.date)
-            .filter(Boolean)
-        )]
-        .sort((a, b) => {
-          const dateA = parseDate(a);
-          const dateB = parseDate(b);
-          if (!dateA && !dateB) return 0;
-          if (!dateA) return 1;
-          if (!dateB) return -1;
-          return dateB - dateA;
-        })
-        .slice(0, 7);
-
-        return uniqueDates.map(date => {
-          const row = { date: formatDate(date) };
-
-          games.forEach(game => {
-            const record = allResults.find(item => String(item.gameId || '').trim() === game.gameId && item.date === date);
-            const fr = normalizeNumber(record && record.fr);
-            const sr = normalizeNumber(record && record.sr);
-            row[game.key] = formatFrSr(fr, sr);
-          });
-
-          return row;
         });
       }
 
       function renderHistoryTable() {
         const tbody = document.getElementById('historyBody');
         if (!tbody) return;
-
         tbody.innerHTML = '';
 
         const rows = buildHistoryRows();
-
         rows.forEach(row => {
           const tr = document.createElement('tr');
-
           tr.innerHTML = `
-            <td>${row.date}</td>
+            <td>${displayDate(row.date)}</td>
             <td>${row.shillong}</td>
             <td>${row.khanapara}</td>
             <td>${row.juwai}</td>
@@ -609,59 +557,43 @@
             <td>${row.khanapara_morning}</td>
             <td>${row.juwai_morning}</td>
           `;
-
           tbody.appendChild(tr);
         });
       }
 
-      async function loadResults() {
+      async function loadResults(forceRefresh = false) {
         try {
-          const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
+          const url = forceRefresh ? `${DATA_URL}?t=${Date.now()}` : DATA_URL;
+          const response = await fetch(url, { cache: 'no-store' });
+          if (!response.ok) throw new Error(`Could not load ${DATA_URL}`);
 
-          if (!response.ok) {
-            throw new Error(`Failed to load ${DATA_URL}. HTTP ${response.status}`);
-          }
+          const json = await response.json();
+          allResults = Array.isArray(json) ? json : [];
 
-          const data = await response.json();
-          allResults = Array.isArray(data) ? data : [];
-
-          updateGameDataFromJson();
+          loadCurrentCardsFromJson();
           renderCards();
           renderHistoryTable();
-
-          console.log(`Loaded ${allResults.length} records from all-results.json`);
         } catch (error) {
-          console.error(error);
-          setDefaultGameData();
+          console.error('Failed to load all-results.json:', error);
           renderCards();
           renderHistoryTable();
         }
       }
 
-      function initDarkMode() {
+      const initDarkMode = () => {
         const toggle = document.getElementById('darkModeToggle');
         if (!toggle) return;
-
         const isDark = localStorage.getItem('darkMode') === 'true';
-
-        if (isDark) {
-          document.body.classList.add('dark');
-          toggle.textContent = '☀️ Light';
-        } else {
-          toggle.textContent = '🌓 Dark';
-        }
-
+        if (isDark) document.body.classList.add('dark');
+        toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
         toggle.addEventListener('click', () => {
           document.body.classList.toggle('dark');
           const darkEnabled = document.body.classList.contains('dark');
           localStorage.setItem('darkMode', darkEnabled);
           toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
         });
-      }
+      };
 
-      setDefaultGameData();
-      renderCards();
-      renderHistoryTable();
       initDarkMode();
       loadResults();
     })();
