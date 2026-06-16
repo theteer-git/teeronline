@@ -319,7 +319,7 @@
       .hero h1 {
         font-size: 1.5rem;
       }
-    }
+    }.card-title,.game-timings{text-align:CENTER}
   </style>
 </head>
 <body>
@@ -341,7 +341,7 @@
   <main class="container">
     <div class="hero">
       <h1>Shillong Teer Results Live Dashboard | FR & SR Timings</h1>
-      <p>Get accurate First Round (FR) and Second Round (SR) results for Shillong Teer, Khanapara Teer, Juwai Teer including Morning & Night sessions. Each game has specific timings. This dashboard provides live-updated results with mock refresh functionality. All data is informational and updated after official declarations.</p>
+      <p>Get accurate First Round (FR) and Second Round (SR) results for Shillong Teer, Khanapara Teer, Juwai Teer including Morning & Night sessions. Each game has specific timings. This dashboard provides live-updated results fetched from the all-results.json data file. All data is informational and updated after official declarations.</p>
     </div>
 
     <div class="results-grid" id="resultsGrid"></div>
@@ -361,7 +361,7 @@
     <div class="seo-content">
       <h2>Complete Teer Results: First Round & Second Round with Specific Timings</h2>
       <p><strong>Shillong Teer Result Today</strong> follows a fixed schedule: First Round (FR) at 11:30 AM and Second Round (SR) at 4:00 PM. <strong>Khanapara Teer Result Today</strong> also maintains FR at 11:45 AM and SR at 4:15 PM. For <strong>Juwai Teer Result Today</strong>, FR is declared at 12:00 PM and SR at 4:30 PM. Morning sessions: Shillong Morning Teer (FR: 9:00 AM, SR: 10:00 AM), Khanapara Morning (FR: 9:30 AM, SR: 10:30 AM), Juwai Morning (FR: 9:45 AM, SR: 10:45 AM). Night sessions: Shillong Night Teer (FR: 6:00 PM, SR: 7:00 PM) and Shillong Night Teer 2 (FR: 7:30 PM, SR: 8:30 PM).</p>
-      <p>Our dashboard provides <strong>Teer Result Live</strong> updates for every game's FR and SR. You can refresh each card manually to simulate latest result updates. The <strong>Shillong Morning Teer Result</strong> and <strong>Shillong Night Teer Result</strong> are crucial for daily tracking. We also maintain a 7-day historical record showing FR and SR outcomes combined as "FR/SR" (e.g., 45-72). All information is strictly educational and does not promote gambling or prediction.</p>
+      <p>Our dashboard provides <strong>Teer Result Live</strong> updates for every game's FR and SR. You can refresh each card manually to reload the latest stored results. The <strong>Shillong Morning Teer Result</strong> and <strong>Shillong Night Teer Result</strong> are crucial for daily tracking. We also maintain a 7-day historical record showing FR and SR outcomes combined as "FR/SR" (e.g., 45-72). All information is strictly educational and does not promote gambling or prediction.</p>
       <p>Check daily updated results for Shillong, Khanapara, Juwai, and their morning/night variants. The FR and SR structure is based on traditional archery arrow counts. This platform helps enthusiasts maintain historical data without any guarantee of future outcomes.</p>
     </div>
   </main>
@@ -375,7 +375,7 @@
         <a href="#">About</a>
       </div>
       <div class="disclaimer">
-        ⚠️ Disclaimer: This website is for informational purposes only. Teer results are based on archery events. We do not promote gambling, betting, or prediction. All data is mock/representational for demonstration. Users must verify with official sources.
+        ⚠️ Disclaimer: This website is for informational purposes only. Teer results are based on archery events. We do not promote gambling, betting, or prediction. Users must verify results with official sources.
       </div>
     </div>
   </footer>
@@ -385,118 +385,150 @@
       const DATA_URL = './data/all-results.json';
       const FRESH_HOURS = 22;
 
+      // IMPORTANT: These gameId values match your all-results.json
       const games = [
-        { title: "Shillong Teer Results", key: "shillong", gameId: "SD", timingFR: "11:30 AM", timingSR: "4:00 PM" },
-        { title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SM", timingFR: "9:00 AM", timingSR: "10:00 AM" },
-        { title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SN", timingFR: "6:00 PM", timingSR: "7:00 PM" },
-        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SN2", timingFR: "7:30 PM", timingSR: "8:30 PM" },
+        { title: "Shillong Teer Results", key: "shillong", gameId: "SHD", timingFR: "11:30 AM", timingSR: "4:00 PM" },
+        { title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM", timingFR: "9:00 AM", timingSR: "10:00 AM" },
+        { title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1", timingFR: "6:00 PM", timingSR: "7:00 PM" },
+        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2", timingFR: "7:30 PM", timingSR: "8:30 PM" },
         { title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", timingFR: "11:45 AM", timingSR: "4:15 PM" },
-        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KM", timingFR: "9:30 AM", timingSR: "10:30 AM" },
-        { title: "Juwai Teer Results", key: "juwai", gameId: "JD", timingFR: "12:00 PM", timingSR: "4:30 PM" },
-        { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JM", timingFR: "9:45 AM", timingSR: "10:45 AM" }
+        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM", timingFR: "9:30 AM", timingSR: "10:30 AM" },
+        { title: "Juwai Teer Results", key: "juwai", gameId: "JWD", timingFR: "12:00 PM", timingSR: "4:30 PM" },
+        { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM", timingFR: "9:45 AM", timingSR: "10:45 AM" }
       ];
 
-      const gameData = {};
-      games.forEach(game => {
-        gameData[game.key] = { fr: 'XX', sr: 'XX' };
-      });
+      const byKey = Object.fromEntries(games.map(game => [game.key, game]));
+      let allRecords = [];
+      let gameData = {};
 
-      let allResults = [];
+      function parseDate(dateStr) {
+        if (!dateStr) return null;
 
-      function getISTDateObject(date = new Date()) {
-        return new Date(date.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+        let match = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if (match) {
+          return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+        }
+
+        match = String(dateStr).match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+        if (match) {
+          return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+        }
+
+        const parsed = new Date(dateStr);
+        return isNaN(parsed.getTime()) ? null : parsed;
       }
 
-      function formatYMD(date) {
-        const d = getISTDateObject(date);
-        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+      function formatDateDisplay(dateStr) {
+        const date = parseDate(dateStr);
+        if (!date) return dateStr || '';
+        return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
       }
 
       function todayIST() {
-        return formatYMD(new Date());
+        const now = new Date();
+        const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+        return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, '0')}-${String(ist.getDate()).padStart(2, '0')}`;
       }
 
-      function displayDate(ymd) {
-        if (!ymd) return '';
-        const match = String(ymd).match(/^(\d{4})-(\d{2})-(\d{2})$/);
-        if (!match) return ymd;
-        return `${match[3]}-${match[2]}-${match[1]}`;
+      function nowISTTime() {
+        const now = new Date();
+        return new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
       }
 
-      function dateMinusDays(days) {
-        const d = getISTDateObject();
-        d.setDate(d.getDate() - days);
-        return formatYMD(d);
-      }
-
-      function cleanNumber(value) {
+      function normalizeNumber(value) {
         if (value === undefined || value === null) return 'XX';
-        const str = String(value).trim();
-        if (!str || ['xx', 'x', '-', '—', 'na', 'null', 'undefined'].includes(str.toLowerCase())) return 'XX';
-        const num = parseInt(str, 10);
-        if (Number.isNaN(num) || num < 0 || num > 99) return 'XX';
-        return String(num).padStart(2, '0');
+        const clean = String(value).trim();
+        if (!/^\d{1,2}$/.test(clean)) return 'XX';
+        return clean.padStart(2, '0');
+      }
+
+      function parseTimestamp(value) {
+        if (!value) return null;
+        const date = new Date(value);
+        return isNaN(date.getTime()) ? null : date;
       }
 
       function isFresh(timestamp) {
-        if (!timestamp) return true; // If today's result has no timestamp, trust today's date.
-        const time = new Date(timestamp).getTime();
-        if (Number.isNaN(time)) return true;
-        const ageMs = Date.now() - time;
-        return ageMs >= 0 && ageMs <= FRESH_HOURS * 60 * 60 * 1000;
+        const parsed = parseTimestamp(timestamp);
+        if (!parsed) return false;
+        const diffMs = new Date() - parsed;
+        return diffMs >= 0 && diffMs <= FRESH_HOURS * 60 * 60 * 1000;
       }
 
-      function findRecord(gameId, date) {
-        return allResults.find(item => String(item.gameId).trim() === gameId && String(item.date).trim() === date);
+      function getLatestRecordForGame(gameId) {
+        return allRecords
+          .filter(item => String(item.gameId || '').toUpperCase() === String(gameId).toUpperCase())
+          .sort((a, b) => parseDate(b.date) - parseDate(a.date))[0] || null;
       }
 
-      function getCurrentValue(record, round) {
-        if (!record || record.date !== todayIST()) return 'XX';
+      function getRecordForDate(gameId, date) {
+        return allRecords.find(item =>
+          String(item.gameId || '').toUpperCase() === String(gameId).toUpperCase() &&
+          item.date === date
+        ) || null;
+      }
 
-        const value = cleanNumber(round === 'fr' ? record.fr : record.sr);
-        if (value === 'XX') return 'XX';
+      function getCurrentCardValue(record, round) {
+        if (!record) return 'XX';
 
-        const timestamp = round === 'fr'
+        // Current cards must show today's result only.
+        if (record.date !== todayIST()) return 'XX';
+
+        const value = round === 'fr' ? record.fr : record.sr;
+        const updatedAt = round === 'fr'
           ? (record.frUpdatedAt || record.lastCheckedAt)
           : (record.srUpdatedAt || record.lastCheckedAt);
 
-        return isFresh(timestamp) ? value : 'XX';
-      }
-
-      function loadCurrentCardsFromJson() {
-        const today = todayIST();
-        games.forEach(game => {
-          const record = findRecord(game.gameId, today);
-          gameData[game.key] = {
-            fr: getCurrentValue(record, 'fr'),
-            sr: getCurrentValue(record, 'sr')
-          };
-        });
+        if (!isFresh(updatedAt)) return 'XX';
+        return normalizeNumber(value);
       }
 
       function formatFrSr(fr, sr) {
-        return `${cleanNumber(fr)}-${cleanNumber(sr)}`;
+        return `${normalizeNumber(fr)}-${normalizeNumber(sr)}`;
       }
 
-      function buildHistoryRows() {
-        const rows = [];
-        for (let i = 0; i < 7; i++) {
-          const date = dateMinusDays(i);
-          const row = { date };
+      function formatHistoricalFrSr(record) {
+        if (!record) return 'XX-XX';
+        return formatFrSr(record.fr, record.sr);
+      }
 
+      async function loadResults() {
+        try {
+          const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+
+          const data = await response.json();
+          if (!Array.isArray(data)) throw new Error('all-results.json must be an array');
+
+          allRecords = data.filter(item => item && item.date && item.gameId);
+          syncCurrentCardsFromJson();
+          renderCards();
+          buildHistoryFromJson();
+        } catch (error) {
+          console.error('Failed to load all-results.json:', error);
+          allRecords = [];
           games.forEach(game => {
-            const record = findRecord(game.gameId, date);
-            row[game.key] = record ? formatFrSr(record.fr, record.sr) : 'XX-XX';
+            gameData[game.key] = { fr: 'XX', sr: 'XX' };
           });
-
-          rows.push(row);
+          renderCards();
+          renderHistoryTable([]);
         }
-        return rows;
+      }
+
+      function syncCurrentCardsFromJson() {
+        games.forEach(game => {
+          const latest = getLatestRecordForGame(game.gameId);
+          gameData[game.key] = {
+            fr: getCurrentCardValue(latest, 'fr'),
+            sr: getCurrentCardValue(latest, 'sr')
+          };
+        });
       }
 
       function renderCards() {
         const grid = document.getElementById('resultsGrid');
         if (!grid) return;
+
         grid.innerHTML = '';
 
         games.forEach(game => {
@@ -522,32 +554,76 @@
                 <span class="time-badge">${game.timingSR}</span>
               </div>
             </div>
-            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result (FR & SR)</button>
+            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result</button>
           `;
           grid.appendChild(card);
         });
 
         document.querySelectorAll('.refresh-btn').forEach(btn => {
           btn.addEventListener('click', async () => {
+            const key = btn.getAttribute('data-key');
+            const frDiv = document.getElementById(`fr-${key}`);
+            const srDiv = document.getElementById(`sr-${key}`);
+            const game = byKey[key];
+            if (!frDiv || !srDiv || !game) return;
+
+            frDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
+            srDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
             btn.disabled = true;
             btn.classList.add('loading');
-            await loadResults(true);
+
+            await loadResults();
+
             btn.disabled = false;
             btn.classList.remove('loading');
           });
         });
       }
 
-      function renderHistoryTable() {
+      function getLast7AvailableDates() {
+        const uniqueDates = [...new Set(
+          allRecords
+            .map(item => item.date)
+            .filter(Boolean)
+        )];
+
+        uniqueDates.sort((a, b) => parseDate(b) - parseDate(a));
+        return uniqueDates.slice(0, 7);
+      }
+
+      function buildHistoryFromJson() {
+        const dates = getLast7AvailableDates();
+        const rows = dates.map(date => {
+          const row = { date: formatDateDisplay(date) };
+
+          games.forEach(game => {
+            const record = getRecordForDate(game.gameId, date);
+            row[game.key] = formatHistoricalFrSr(record);
+          });
+
+          return row;
+        });
+
+        renderHistoryTable(rows);
+      }
+
+      function renderHistoryTable(rows) {
         const tbody = document.getElementById('historyBody');
         if (!tbody) return;
+
         tbody.innerHTML = '';
 
-        const rows = buildHistoryRows();
+        if (!rows.length) {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `<td colspan="9">No historical results found in all-results.json</td>`;
+          tbody.appendChild(tr);
+          return;
+        }
+
         rows.forEach(row => {
           const tr = document.createElement('tr');
           tr.innerHTML = `
-            <td>${displayDate(row.date)}</td>
+            <td>${row.date}</td>
             <td>${row.shillong}</td>
             <td>${row.khanapara}</td>
             <td>${row.juwai}</td>
@@ -561,38 +637,21 @@
         });
       }
 
-      async function loadResults(forceRefresh = false) {
-        try {
-          const url = forceRefresh ? `${DATA_URL}?t=${Date.now()}` : DATA_URL;
-          const response = await fetch(url, { cache: 'no-store' });
-          if (!response.ok) throw new Error(`Could not load ${DATA_URL}`);
-
-          const json = await response.json();
-          allResults = Array.isArray(json) ? json : [];
-
-          loadCurrentCardsFromJson();
-          renderCards();
-          renderHistoryTable();
-        } catch (error) {
-          console.error('Failed to load all-results.json:', error);
-          renderCards();
-          renderHistoryTable();
-        }
-      }
-
-      const initDarkMode = () => {
+      function initDarkMode() {
         const toggle = document.getElementById('darkModeToggle');
         if (!toggle) return;
+
         const isDark = localStorage.getItem('darkMode') === 'true';
         if (isDark) document.body.classList.add('dark');
         toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
+
         toggle.addEventListener('click', () => {
           document.body.classList.toggle('dark');
           const darkEnabled = document.body.classList.contains('dark');
           localStorage.setItem('darkMode', darkEnabled);
           toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
         });
-      };
+      }
 
       initDarkMode();
       loadResults();
