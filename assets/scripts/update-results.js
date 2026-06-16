@@ -9,7 +9,7 @@ const GAMES = [
   { gameId: "SHD", game: "shillong day", city: "Shillong", url: "https://teertooday.com/", parser: parseShillongDay },
   { gameId: "KH", game: "khanapara day", city: "Khanapara", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("KHANAPARA TEER RESULT TODAY") },
   { gameId: "JWD", game: "juwai day", city: "Juwai", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("JUWAI TEER RESULT TODAY") },
-  { gameId: "JWM", game: "juwai morning", city: "Juwai", url: "https://juwaimorningresult.com/", parser: parseJuwaiMorning },
+  { gameId: "JWM", game: "juwai morning", city: "Juwai", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("JUWAI MORNING TEER RESULT") },,
   { gameId: "KHM", game: "khanapara morning", city: "Khanapara", url: "https://www.khanaparateermorning.com/", parser: parseKhanaparaMorning },
   { gameId: "SHM", game: "shillong morning", city: "Shillong", url: "https://morningsundayteer.com/", parser: parseShillongMorning },
   { gameId: "SHN1", game: "Shillong Night", city: "Shillong", url: "https://www.shillonghillsnightteer.com/", parser: parseShillongNight1 },
