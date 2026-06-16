@@ -382,44 +382,142 @@
 
   <script>
     (function() {
-      // Game definitions with specific timings and keys
+      const DATA_URL = './data/all-results.json';
+      const MAX_RESULT_AGE_HOURS = 22;
+      const MAX_RESULT_AGE_MS = MAX_RESULT_AGE_HOURS * 60 * 60 * 1000;
+
       const games = [
-        { title: "Shillong Teer Results", key: "shillong", timingFR: "11:30 AM", timingSR: "4:00 PM" },
-        { title: "Shillong Morning Teer Results", key: "shillong_morning", timingFR: "9:00 AM", timingSR: "10:00 AM" },
-        { title: "Shillong Night Teer Results", key: "shillong_night", timingFR: "6:00 PM", timingSR: "7:00 PM" },
-        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", timingFR: "7:30 PM", timingSR: "8:30 PM" },
-        { title: "Khanapara Teer Results", key: "khanapara", timingFR: "11:45 AM", timingSR: "4:15 PM" },
-        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", timingFR: "9:30 AM", timingSR: "10:30 AM" },
-        { title: "Juwai Teer Results", key: "juwai", timingFR: "12:00 PM", timingSR: "4:30 PM" },
-        { title: "Juwai Morning Teer Results", key: "juwai_morning", timingFR: "9:45 AM", timingSR: "10:45 AM" }
+        { title: "Shillong Teer Results", key: "shillong", gameId: "SD", timingFR: "11:30 AM", timingSR: "4:00 PM" },
+        { title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SM", timingFR: "9:00 AM", timingSR: "10:00 AM" },
+        { title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SN", timingFR: "6:00 PM", timingSR: "7:00 PM" },
+        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SN2", timingFR: "7:30 PM", timingSR: "8:30 PM" },
+        { title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", timingFR: "11:45 AM", timingSR: "4:15 PM" },
+        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KM", timingFR: "9:30 AM", timingSR: "10:30 AM" },
+        { title: "Juwai Teer Results", key: "juwai", gameId: "JD", timingFR: "12:00 PM", timingSR: "4:30 PM" },
+        { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JM", timingFR: "9:45 AM", timingSR: "10:45 AM" }
       ];
 
-      // State for FR and SR numbers per game
+      let allResults = [];
       let gameData = {};
-      const randomNum = () => Math.floor(Math.random() * 100).toString().padStart(2, '0');
-      
-      games.forEach(game => {
-        gameData[game.key] = {
-          fr: randomNum(),
-          sr: randomNum()
-        };
-      });
 
-      const getTodayDate = () => {
-        const d = new Date();
-        return `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
-      };
+      function parseDate(dateStr) {
+        if (!dateStr) return null;
 
-      // Render all cards with FR/SR displays
-      const renderCards = () => {
+        let match = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+
+        match = String(dateStr).match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+        if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+
+        const parsed = new Date(dateStr);
+        return isNaN(parsed.getTime()) ? null : parsed;
+      }
+
+      function formatDate(dateStr) {
+        const d = parseDate(dateStr);
+        if (!d) return dateStr || '';
+        return `${String(d.getDate()).padStart(2, '0')}-${String(d.getMonth() + 1).padStart(2, '0')}-${d.getFullYear()}`;
+      }
+
+      function todayIST() {
+        const now = new Date();
+        const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+        return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, '0')}-${String(ist.getDate()).padStart(2, '0')}`;
+      }
+
+      function normalizeNumber(value) {
+        if (value === undefined || value === null) return 'XX';
+        const text = String(value).trim().toLowerCase();
+
+        if (['', 'xx', 'x', 'na', 'n/a', '-', '—', 'off', 'null', 'undefined'].includes(text)) {
+          return 'XX';
+        }
+
+        const num = Number.parseInt(text, 10);
+        if (Number.isNaN(num) || num < 0 || num > 99) return 'XX';
+
+        return String(num).padStart(2, '0');
+      }
+
+      function isResultFresh(record, round) {
+        if (!record) return false;
+
+        const value = normalizeNumber(round === 'fr' ? record.fr : record.sr);
+        if (value === 'XX') return false;
+
+        const timestampField = round === 'fr' ? record.frUpdatedAt : record.srUpdatedAt;
+        const timestamp = timestampField || '';
+
+        if (timestamp) {
+          const updatedAt = new Date(timestamp);
+          if (!Number.isNaN(updatedAt.getTime())) {
+            return Date.now() - updatedAt.getTime() <= MAX_RESULT_AGE_MS;
+          }
+        }
+
+        // Fallback for older records without frUpdatedAt/srUpdatedAt:
+        // show only today's result, otherwise display XX.
+        return record.date === todayIST();
+      }
+
+      function getLatestRecordForGame(gameId) {
+        return allResults
+          .filter(item => String(item.gameId || '').trim() === gameId)
+          .sort((a, b) => {
+            const dateA = parseDate(a.date);
+            const dateB = parseDate(b.date);
+            if (!dateA && !dateB) return 0;
+            if (!dateA) return 1;
+            if (!dateB) return -1;
+            return dateB - dateA;
+          })[0] || null;
+      }
+
+      function getTodayRecordForGame(gameId) {
+        const today = todayIST();
+        return allResults.find(item => String(item.gameId || '').trim() === gameId && item.date === today) || null;
+      }
+
+      function getDisplayRecordForGame(gameId) {
+        return getTodayRecordForGame(gameId) || getLatestRecordForGame(gameId);
+      }
+
+      function formatFrSr(fr, sr) {
+        return `${fr || 'XX'}-${sr || 'XX'}`;
+      }
+
+      function setDefaultGameData() {
+        games.forEach(game => {
+          gameData[game.key] = { fr: 'XX', sr: 'XX' };
+        });
+      }
+
+      function updateGameDataFromJson() {
+        setDefaultGameData();
+
+        games.forEach(game => {
+          const record = getDisplayRecordForGame(game.gameId);
+
+          const fr = isResultFresh(record, 'fr') ? normalizeNumber(record.fr) : 'XX';
+          const sr = isResultFresh(record, 'sr') ? normalizeNumber(record.sr) : 'XX';
+
+          gameData[game.key] = { fr, sr };
+        });
+      }
+
+      function renderCards() {
         const grid = document.getElementById('resultsGrid');
         if (!grid) return;
+
         grid.innerHTML = '';
+
         games.forEach(game => {
-          const data = gameData[game.key];
+          const data = gameData[game.key] || { fr: 'XX', sr: 'XX' };
+
           const card = document.createElement('div');
           card.className = 'result-card';
           card.setAttribute('data-key', game.key);
+
           card.innerHTML = `
             <div class="card-title">${game.title}</div>
             <div class="game-timings">
@@ -438,76 +536,68 @@
                 <span class="time-badge">${game.timingSR}</span>
               </div>
             </div>
-            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result (FR & SR)</button>
+            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result</button>
           `;
+
           grid.appendChild(card);
         });
 
-        // Attach refresh events
         document.querySelectorAll('.refresh-btn').forEach(btn => {
-          btn.addEventListener('click', async (e) => {
-            const key = btn.getAttribute('data-key');
-            const frDiv = document.getElementById(`fr-${key}`);
-            const srDiv = document.getElementById(`sr-${key}`);
-            if (!frDiv || !srDiv) return;
-            
-            const originalFr = frDiv.innerText;
-            const originalSr = srDiv.innerText;
-            frDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
-            srDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
+          btn.addEventListener('click', async () => {
             btn.disabled = true;
             btn.classList.add('loading');
-            
-            await new Promise(resolve => setTimeout(resolve, 1400));
-            
-            const newFr = randomNum();
-            const newSr = randomNum();
-            gameData[key].fr = newFr;
-            gameData[key].sr = newSr;
-            frDiv.innerHTML = newFr;
-            srDiv.innerHTML = newSr;
+            btn.textContent = '⌛ Refreshing...';
+
+            await loadResults();
+
             btn.disabled = false;
             btn.classList.remove('loading');
-            
-            // Update table's first row to reflect new FR/SR values (format "FR-SR")
-            updateHistoryWithCurrentData();
+            btn.textContent = '🔄 Refresh Result';
           });
         });
-      };
+      }
 
-      // Helper: format FR/SR as "45-72"
-      const formatFrSr = (fr, sr) => `${fr}-${sr}`;
-      
-      // Generate last 7 days historical data (mock with FR/SR pairs)
-      const generateHistoryData = () => {
-        const dates = [];
-        for (let i = 6; i >= 0; i--) {
-          const d = new Date();
-          d.setDate(d.getDate() - i);
-          const dateStr = `${d.getFullYear()}-${(d.getMonth()+1).toString().padStart(2,'0')}-${d.getDate().toString().padStart(2,'0')}`;
-          dates.push(dateStr);
-        }
-        return dates.map(date => ({
-          date: date,
-          shillong: formatFrSr(randomNum(), randomNum()),
-          khanapara: formatFrSr(randomNum(), randomNum()),
-          juwai: formatFrSr(randomNum(), randomNum()),
-          shillong_morning: formatFrSr(randomNum(), randomNum()),
-          shillong_night: formatFrSr(randomNum(), randomNum()),
-          shillong_night2: formatFrSr(randomNum(), randomNum()),
-          khanapara_morning: formatFrSr(randomNum(), randomNum()),
-          juwai_morning: formatFrSr(randomNum(), randomNum())
-        }));
-      };
-      
-      let historicalRows = generateHistoryData();
-      
-      const renderHistoryTable = () => {
+      function buildHistoryRows() {
+        const uniqueDates = [...new Set(
+          allResults
+            .map(item => item.date)
+            .filter(Boolean)
+        )]
+        .sort((a, b) => {
+          const dateA = parseDate(a);
+          const dateB = parseDate(b);
+          if (!dateA && !dateB) return 0;
+          if (!dateA) return 1;
+          if (!dateB) return -1;
+          return dateB - dateA;
+        })
+        .slice(0, 7);
+
+        return uniqueDates.map(date => {
+          const row = { date: formatDate(date) };
+
+          games.forEach(game => {
+            const record = allResults.find(item => String(item.gameId || '').trim() === game.gameId && item.date === date);
+            const fr = normalizeNumber(record && record.fr);
+            const sr = normalizeNumber(record && record.sr);
+            row[game.key] = formatFrSr(fr, sr);
+          });
+
+          return row;
+        });
+      }
+
+      function renderHistoryTable() {
         const tbody = document.getElementById('historyBody');
         if (!tbody) return;
+
         tbody.innerHTML = '';
-        historicalRows.forEach(row => {
+
+        const rows = buildHistoryRows();
+
+        rows.forEach(row => {
           const tr = document.createElement('tr');
+
           tr.innerHTML = `
             <td>${row.date}</td>
             <td>${row.shillong}</td>
@@ -519,58 +609,61 @@
             <td>${row.khanapara_morning}</td>
             <td>${row.juwai_morning}</td>
           `;
+
           tbody.appendChild(tr);
         });
-      };
-      
-      const updateHistoryWithCurrentData = () => {
-        if (historicalRows.length === 0) return;
-        const todayRow = historicalRows[0];
-        todayRow.shillong = formatFrSr(gameData['shillong'].fr, gameData['shillong'].sr);
-        todayRow.shillong_morning = formatFrSr(gameData['shillong_morning'].fr, gameData['shillong_morning'].sr);
-        todayRow.shillong_night = formatFrSr(gameData['shillong_night'].fr, gameData['shillong_night'].sr);
-        todayRow.shillong_night2 = formatFrSr(gameData['shillong_night2'].fr, gameData['shillong_night2'].sr);
-        todayRow.khanapara = formatFrSr(gameData['khanapara'].fr, gameData['khanapara'].sr);
-        todayRow.khanapara_morning = formatFrSr(gameData['khanapara_morning'].fr, gameData['khanapara_morning'].sr);
-        todayRow.juwai = formatFrSr(gameData['juwai'].fr, gameData['juwai'].sr);
-        todayRow.juwai_morning = formatFrSr(gameData['juwai_morning'].fr, gameData['juwai_morning'].sr);
-        renderHistoryTable();
-      };
-      
-      const initialSyncTable = () => {
-        if (historicalRows.length) {
-          historicalRows[0].shillong = formatFrSr(gameData['shillong'].fr, gameData['shillong'].sr);
-          historicalRows[0].shillong_morning = formatFrSr(gameData['shillong_morning'].fr, gameData['shillong_morning'].sr);
-          historicalRows[0].shillong_night = formatFrSr(gameData['shillong_night'].fr, gameData['shillong_night'].sr);
-          historicalRows[0].shillong_night2 = formatFrSr(gameData['shillong_night2'].fr, gameData['shillong_night2'].sr);
-          historicalRows[0].khanapara = formatFrSr(gameData['khanapara'].fr, gameData['khanapara'].sr);
-          historicalRows[0].khanapara_morning = formatFrSr(gameData['khanapara_morning'].fr, gameData['khanapara_morning'].sr);
-          historicalRows[0].juwai = formatFrSr(gameData['juwai'].fr, gameData['juwai'].sr);
-          historicalRows[0].juwai_morning = formatFrSr(gameData['juwai_morning'].fr, gameData['juwai_morning'].sr);
+      }
+
+      async function loadResults() {
+        try {
+          const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
+
+          if (!response.ok) {
+            throw new Error(`Failed to load ${DATA_URL}. HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          allResults = Array.isArray(data) ? data : [];
+
+          updateGameDataFromJson();
+          renderCards();
           renderHistoryTable();
-        } else {
+
+          console.log(`Loaded ${allResults.length} records from all-results.json`);
+        } catch (error) {
+          console.error(error);
+          setDefaultGameData();
+          renderCards();
           renderHistoryTable();
         }
-      };
-      
-      // Dark mode
-      const initDarkMode = () => {
+      }
+
+      function initDarkMode() {
         const toggle = document.getElementById('darkModeToggle');
+        if (!toggle) return;
+
         const isDark = localStorage.getItem('darkMode') === 'true';
-        if (isDark) document.body.classList.add('dark');
+
+        if (isDark) {
+          document.body.classList.add('dark');
+          toggle.textContent = '☀️ Light';
+        } else {
+          toggle.textContent = '🌓 Dark';
+        }
+
         toggle.addEventListener('click', () => {
           document.body.classList.toggle('dark');
           const darkEnabled = document.body.classList.contains('dark');
           localStorage.setItem('darkMode', darkEnabled);
           toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
         });
-        if (isDark) toggle.textContent = '☀️ Light';
-        else toggle.textContent = '🌓 Dark';
-      };
-      
+      }
+
+      setDefaultGameData();
       renderCards();
-      initialSyncTable();
+      renderHistoryTable();
       initDarkMode();
+      loadResults();
     })();
   </script>
 </body>
