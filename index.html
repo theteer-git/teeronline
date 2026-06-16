@@ -384,44 +384,38 @@
     (function() {
       const DATA_URL = './data/all-results.json';
       const FRESH_HOURS = 22;
+      const AUTO_REFRESH_MS = 30000;
 
-      // IMPORTANT: These gameId values match your all-results.json
       const games = [
-        { title: "Shillong Teer Results", key: "shillong", gameId: "SHD", timingFR: "11:30 AM", timingSR: "4:00 PM" },
-        { title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM", timingFR: "9:00 AM", timingSR: "10:00 AM" },
-        { title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1", timingFR: "6:00 PM", timingSR: "7:00 PM" },
-        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2", timingFR: "7:30 PM", timingSR: "8:30 PM" },
-        { title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", timingFR: "11:45 AM", timingSR: "4:15 PM" },
-        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM", timingFR: "9:30 AM", timingSR: "10:30 AM" },
-        { title: "Juwai Teer Results", key: "juwai", gameId: "JWD", timingFR: "12:00 PM", timingSR: "4:30 PM" },
-        { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM", timingFR: "9:45 AM", timingSR: "10:45 AM" }
+        { title: "Shillong Teer Results", key: "shillong", gameId: "SHD", fallbackFR: "4:15 PM", fallbackSR: "5:15 PM" },
+        { title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM", fallbackFR: "10:30 AM", fallbackSR: "11:30 AM" },
+        { title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1", fallbackFR: "8:45 PM", fallbackSR: "9:45 PM" },
+        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2", fallbackFR: "11:10 PM", fallbackSR: "12:10 AM" },
+        { title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", fallbackFR: "4:25 PM", fallbackSR: "5:00 PM" },
+        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM", fallbackFR: "11:00 AM", fallbackSR: "12:00 PM" },
+        { title: "Juwai Teer Results", key: "juwai", gameId: "JWD", fallbackFR: "2:30 PM", fallbackSR: "3:15 PM" },
+        { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM", fallbackFR: "10:30 AM", fallbackSR: "11:30 AM" }
       ];
 
-      const byKey = Object.fromEntries(games.map(game => [game.key, game]));
       let allRecords = [];
       let gameData = {};
 
       function parseDate(dateStr) {
         if (!dateStr) return null;
 
-        let match = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-        if (match) {
-          return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
-        }
+        let match = String(dateStr).trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+        if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
 
-        match = String(dateStr).match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-        if (match) {
-          return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
-        }
+        match = String(dateStr).trim().match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+        if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
 
         const parsed = new Date(dateStr);
         return isNaN(parsed.getTime()) ? null : parsed;
       }
 
-      function formatDateDisplay(dateStr) {
-        const date = parseDate(dateStr);
-        if (!date) return dateStr || '';
-        return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
+      function dateValue(dateStr) {
+        const d = parseDate(dateStr);
+        return d ? d.getTime() : 0;
       }
 
       function todayIST() {
@@ -430,99 +424,104 @@
         return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, '0')}-${String(ist.getDate()).padStart(2, '0')}`;
       }
 
-      function nowISTTime() {
-        const now = new Date();
-        return new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
+      function formatDateDisplay(dateStr) {
+        const date = parseDate(dateStr);
+        if (!date) return dateStr || '';
+        return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
       }
 
-      function normalizeNumber(value) {
-        if (value === undefined || value === null) return 'XX';
-        const clean = String(value).trim();
-        if (!/^\d{1,2}$/.test(clean)) return 'XX';
-        return clean.padStart(2, '0');
+      function isValidNumber(value) {
+        const v = String(value || '').trim().toLowerCase();
+        if (['', 'xx', 'x', '-', '—', 'na', 'n/a', 'off', 'null', 'undefined'].includes(v)) return false;
+        if (!/^\d{1,2}$/.test(v)) return false;
+        const n = Number(v);
+        return n >= 0 && n <= 99;
       }
 
-      function parseTimestamp(value) {
-        if (!value) return null;
-        const date = new Date(value);
-        return isNaN(date.getTime()) ? null : date;
+      function formatNumber(value) {
+        return isValidNumber(value) ? String(Number(value)).padStart(2, '0') : 'XX';
       }
 
-      function isFresh(timestamp) {
-        const parsed = parseTimestamp(timestamp);
-        if (!parsed) return false;
-        const diffMs = new Date() - parsed;
-        return diffMs >= 0 && diffMs <= FRESH_HOURS * 60 * 60 * 1000;
+      function parseTimestamp(ts) {
+        if (!ts) return null;
+        const d = new Date(ts);
+        return isNaN(d.getTime()) ? null : d;
       }
 
-      function getLatestRecordForGame(gameId) {
+      function formatTimeFromTimestamp(ts) {
+        const d = parseTimestamp(ts);
+        if (!d) return '';
+        return d.toLocaleTimeString('en-IN', {
+          timeZone: 'Asia/Kolkata',
+          hour: 'numeric',
+          minute: '2-digit',
+          hour12: true
+        }).toUpperCase();
+      }
+
+      function isFresh(updatedAt) {
+        const d = parseTimestamp(updatedAt);
+        if (!d) return false;
+        const ageMs = Date.now() - d.getTime();
+        return ageMs >= 0 && ageMs <= FRESH_HOURS * 60 * 60 * 1000;
+      }
+
+      function recordsForGame(gameId) {
         return allRecords
-          .filter(item => String(item.gameId || '').toUpperCase() === String(gameId).toUpperCase())
-          .sort((a, b) => parseDate(b.date) - parseDate(a.date))[0] || null;
+          .filter(item => item && item.gameId === gameId && item.date)
+          .sort((a, b) => dateValue(b.date) - dateValue(a.date));
       }
 
-      function getRecordForDate(gameId, date) {
-        return allRecords.find(item =>
-          String(item.gameId || '').toUpperCase() === String(gameId).toUpperCase() &&
-          item.date === date
-        ) || null;
+      function findRecord(gameId, date) {
+        return allRecords.find(item => item && item.gameId === gameId && item.date === date);
       }
 
-      function getCurrentCardValue(record, round) {
-        if (!record) return 'XX';
+      function latestPreviousRecord(gameId) {
+        const today = todayIST();
+        return recordsForGame(gameId).find(item => item.date < today && (isValidNumber(item.fr) || isValidNumber(item.sr))) || null;
+      }
 
-        // Current cards must show today's result only.
-        if (record.date !== todayIST()) return 'XX';
+      function getGameTimings(game) {
+        const previous = latestPreviousRecord(game.gameId);
+        const frTime = formatTimeFromTimestamp(previous?.frUpdatedAt) || game.fallbackFR;
+        const srTime = formatTimeFromTimestamp(previous?.srUpdatedAt) || game.fallbackSR;
+        return { frTime, srTime };
+      }
 
+      function getCurrentDisplayValue(record, round) {
+        if (!record || record.date !== todayIST()) return 'XX';
         const value = round === 'fr' ? record.fr : record.sr;
-        const updatedAt = round === 'fr'
-          ? (record.frUpdatedAt || record.lastCheckedAt)
-          : (record.srUpdatedAt || record.lastCheckedAt);
+        const updatedAt = round === 'fr' ? record.frUpdatedAt : record.srUpdatedAt;
 
-        if (!isFresh(updatedAt)) return 'XX';
-        return normalizeNumber(value);
+        if (!isValidNumber(value)) return 'XX';
+
+        // 22-hour rule applies only to today's live result cards.
+        return isFresh(updatedAt) ? formatNumber(value) : 'XX';
       }
 
-      function formatFrSr(fr, sr) {
-        return `${normalizeNumber(fr)}-${normalizeNumber(sr)}`;
-      }
+      function buildGameData() {
+        const today = todayIST();
 
-      function formatHistoricalFrSr(record) {
-        if (!record) return 'XX-XX';
-        return formatFrSr(record.fr, record.sr);
-      }
-
-      async function loadResults() {
-        try {
-          const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
-          if (!response.ok) throw new Error(`HTTP ${response.status}`);
-
-          const data = await response.json();
-          if (!Array.isArray(data)) throw new Error('all-results.json must be an array');
-
-          allRecords = data.filter(item => item && item.date && item.gameId);
-          syncCurrentCardsFromJson();
-          renderCards();
-          buildHistoryFromJson();
-        } catch (error) {
-          console.error('Failed to load all-results.json:', error);
-          allRecords = [];
-          games.forEach(game => {
-            gameData[game.key] = { fr: 'XX', sr: 'XX' };
-          });
-          renderCards();
-          renderHistoryTable([]);
-        }
-      }
-
-      function syncCurrentCardsFromJson() {
+        gameData = {};
         games.forEach(game => {
-          const latest = getLatestRecordForGame(game.gameId);
+          const todayRecord = findRecord(game.gameId, today);
+          const timings = getGameTimings(game);
+
           gameData[game.key] = {
-            fr: getCurrentCardValue(latest, 'fr'),
-            sr: getCurrentCardValue(latest, 'sr')
+            fr: getCurrentDisplayValue(todayRecord, 'fr'),
+            sr: getCurrentDisplayValue(todayRecord, 'sr'),
+            timingFR: timings.frTime,
+            timingSR: timings.srTime
           };
         });
+      }
+
+      async function fetchResultsJson() {
+        const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
+        if (!response.ok) throw new Error(`Failed to load ${DATA_URL}. HTTP ${response.status}`);
+        const data = await response.json();
+        if (!Array.isArray(data)) throw new Error('all-results.json must contain an array');
+        return data;
       }
 
       function renderCards() {
@@ -532,48 +531,44 @@
         grid.innerHTML = '';
 
         games.forEach(game => {
-          const data = gameData[game.key] || { fr: 'XX', sr: 'XX' };
+          const data = gameData[game.key] || { fr: 'XX', sr: 'XX', timingFR: game.fallbackFR, timingSR: game.fallbackSR };
+
           const card = document.createElement('div');
           card.className = 'result-card';
           card.setAttribute('data-key', game.key);
+
           card.innerHTML = `
             <div class="card-title">${game.title}</div>
             <div class="game-timings">
-              <span>🏹 FR: ${game.timingFR}</span>
-              <span>🎯 SR: ${game.timingSR}</span>
+              <span>🏹 FR: ${data.timingFR}</span>
+              <span>🎯 SR: ${data.timingSR}</span>
             </div>
             <div class="fr-sr-container">
               <div class="fr-box">
                 <div class="fr-label">FIRST ROUND (FR)</div>
                 <div class="fr-value" id="fr-${game.key}">${data.fr}</div>
-                <span class="time-badge">${game.timingFR}</span>
+                <span class="time-badge">${data.timingFR}</span>
               </div>
               <div class="sr-box">
                 <div class="sr-label">SECOND ROUND (SR)</div>
                 <div class="sr-value" id="sr-${game.key}">${data.sr}</div>
-                <span class="time-badge">${game.timingSR}</span>
+                <span class="time-badge">${data.timingSR}</span>
               </div>
             </div>
-            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Result</button>
+            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Latest Result</button>
           `;
+
           grid.appendChild(card);
         });
 
         document.querySelectorAll('.refresh-btn').forEach(btn => {
           btn.addEventListener('click', async () => {
-            const key = btn.getAttribute('data-key');
-            const frDiv = document.getElementById(`fr-${key}`);
-            const srDiv = document.getElementById(`sr-${key}`);
-            const game = byKey[key];
-            if (!frDiv || !srDiv || !game) return;
-
-            frDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
-            srDiv.innerHTML = '<span style="font-size:0.9rem;">⌛ loading...</span>';
             btn.disabled = true;
             btn.classList.add('loading');
-
-            await loadResults();
-
+            const oldText = btn.textContent;
+            btn.textContent = '⏳ Refreshing...';
+            await loadResults(false);
+            btn.textContent = oldText;
             btn.disabled = false;
             btn.classList.remove('loading');
           });
@@ -581,60 +576,83 @@
       }
 
       function getLast7AvailableDates() {
-        const uniqueDates = [...new Set(
+        const dates = [...new Set(
           allRecords
+            .filter(item => item && item.date)
             .map(item => item.date)
-            .filter(Boolean)
         )];
 
-        uniqueDates.sort((a, b) => parseDate(b) - parseDate(a));
-        return uniqueDates.slice(0, 7);
+        dates.sort((a, b) => dateValue(b) - dateValue(a));
+        return dates.slice(0, 7);
       }
 
-      function buildHistoryFromJson() {
-        const dates = getLast7AvailableDates();
-        const rows = dates.map(date => {
-          const row = { date: formatDateDisplay(date) };
-
-          games.forEach(game => {
-            const record = getRecordForDate(game.gameId, date);
-            row[game.key] = formatHistoricalFrSr(record);
-          });
-
-          return row;
-        });
-
-        renderHistoryTable(rows);
+      function formatFrSrForTable(record) {
+        if (!record) return 'XX-XX';
+        const fr = formatNumber(record.fr);
+        const sr = formatNumber(record.sr);
+        return `${fr}-${sr}`;
       }
 
-      function renderHistoryTable(rows) {
+      function renderHistoryTable() {
         const tbody = document.getElementById('historyBody');
         if (!tbody) return;
 
+        const dates = getLast7AvailableDates();
         tbody.innerHTML = '';
 
-        if (!rows.length) {
-          const tr = document.createElement('tr');
-          tr.innerHTML = `<td colspan="9">No historical results found in all-results.json</td>`;
-          tbody.appendChild(tr);
+        if (!dates.length) {
+          tbody.innerHTML = `<tr><td colspan="9">No result history available</td></tr>`;
           return;
         }
 
-        rows.forEach(row => {
+        dates.forEach(date => {
           const tr = document.createElement('tr');
-          tr.innerHTML = `
-            <td>${row.date}</td>
-            <td>${row.shillong}</td>
-            <td>${row.khanapara}</td>
-            <td>${row.juwai}</td>
-            <td>${row.shillong_morning}</td>
-            <td>${row.shillong_night}</td>
-            <td>${row.shillong_night2}</td>
-            <td>${row.khanapara_morning}</td>
-            <td>${row.juwai_morning}</td>
-          `;
+
+          const cells = [
+            formatDateDisplay(date),
+            formatFrSrForTable(findRecord('SHD', date)),
+            formatFrSrForTable(findRecord('KH', date)),
+            formatFrSrForTable(findRecord('JWD', date)),
+            formatFrSrForTable(findRecord('SHM', date)),
+            formatFrSrForTable(findRecord('SHN1', date)),
+            formatFrSrForTable(findRecord('SHN2', date)),
+            formatFrSrForTable(findRecord('KHM', date)),
+            formatFrSrForTable(findRecord('JWM', date))
+          ];
+
+          tr.innerHTML = cells.map(cell => `<td>${cell}</td>`).join('');
           tbody.appendChild(tr);
         });
+      }
+
+      async function loadResults(showLoading = true) {
+        const grid = document.getElementById('resultsGrid');
+        const tbody = document.getElementById('historyBody');
+
+        if (showLoading && grid && !grid.children.length) {
+          grid.innerHTML = '<div class="result-card">Loading latest results...</div>';
+        }
+
+        try {
+          allRecords = await fetchResultsJson();
+          buildGameData();
+          renderCards();
+          renderHistoryTable();
+        } catch (error) {
+          console.error(error);
+          if (grid) {
+            grid.innerHTML = `
+              <div class="result-card">
+                <div class="card-title">Unable to load results</div>
+                <p style="color:var(--text-light);margin-top:0.5rem;">${error.message}</p>
+                <button class="refresh-btn" onclick="location.reload()">Retry</button>
+              </div>
+            `;
+          }
+          if (tbody) {
+            tbody.innerHTML = `<tr><td colspan="9">Unable to load result history</td></tr>`;
+          }
+        }
       }
 
       function initDarkMode() {
@@ -654,7 +672,8 @@
       }
 
       initDarkMode();
-      loadResults();
+      loadResults(true);
+      setInterval(() => loadResults(false), AUTO_REFRESH_MS);
     })();
   </script>
 </body>
