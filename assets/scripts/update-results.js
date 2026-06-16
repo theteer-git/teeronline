@@ -6,62 +6,14 @@ const cheerio = require("cheerio");
 const DATA_FILE = path.join(__dirname, "../../data/all-results.json");
 
 const GAMES = [
-  {
-    gameId: "SHD",
-    game: "shillong day",
-    city: "Shillong",
-    url: "https://teertooday.com/",
-    parser: parseShillongDay
-  },
-  {
-    gameId: "KH",
-    game: "khanapara day",
-    city: "Khanapara",
-    url: "https://khanaparateerresult.tv/",
-    parser: parseElementorGame("KHANAPARA TEER RESULT TODAY")
-  },
-  {
-    gameId: "JWD",
-    game: "juwai day",
-    city: "Juwai",
-    url: "https://khanaparateerresult.tv/",
-    parser: parseElementorGame("JUWAI TEER RESULT TODAY")
-  },
-  {
-    gameId: "JWM",
-    game: "juwai morning",
-    city: "Juwai",
-    url: "https://juwaimorningresult.com/",
-    parser: parseJuwaiMorning
-  },
-  {
-    gameId: "KHM",
-    game: "khanapara morning",
-    city: "Khanapara",
-    url: "https://www.khanaparateermorning.com/",
-    parser: parseKhanaparaMorning
-  },
-  {
-    gameId: "SHM",
-    game: "shillong morning",
-    city: "Shillong",
-    url: "https://morningsundayteer.com/",
-    parser: parseShillongMorning
-  },
-  {
-    gameId: "SHN1",
-    game: "Shillong Night",
-    city: "Shillong",
-    url: "https://www.shillonghillsnightteer.com/",
-    parser: parseShillongNight1
-  },
-  {
-    gameId: "SHN2",
-    game: "Shillong Night 2",
-    city: "Shillong",
-    url: "https://nightteer.com/",
-    parser: parseShillongNight2
-  }
+  { gameId: "SHD", game: "shillong day", city: "Shillong", url: "https://teertooday.com/", parser: parseShillongDay },
+  { gameId: "KH", game: "khanapara day", city: "Khanapara", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("KHANAPARA TEER RESULT TODAY") },
+  { gameId: "JWD", game: "juwai day", city: "Juwai", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("JUWAI TEER RESULT TODAY") },
+  { gameId: "JWM", game: "juwai morning", city: "Juwai", url: "https://juwaimorningresult.com/", parser: parseJuwaiMorning },
+  { gameId: "KHM", game: "khanapara morning", city: "Khanapara", url: "https://www.khanaparateermorning.com/", parser: parseKhanaparaMorning },
+  { gameId: "SHM", game: "shillong morning", city: "Shillong", url: "https://morningsundayteer.com/", parser: parseShillongMorning },
+  { gameId: "SHN1", game: "Shillong Night", city: "Shillong", url: "https://www.shillonghillsnightteer.com/", parser: parseShillongNight1 },
+  { gameId: "SHN2", game: "Shillong Night 2", city: "Shillong", url: "https://nightteer.com/", parser: parseShillongNight2 }
 ];
 
 function getISTDateObject() {
@@ -238,9 +190,18 @@ function parseShillongMorning(html) {
 function parseJuwaiMorning(html) {
   const $ = cheerio.load(html);
 
+  let fr = $("#frResult").first().text().trim();
+  let sr = $("#srResult").first().text().trim();
+
+  if (!fr || !sr) {
+    const row = $("tr.result-row").first();
+    fr = row.find("td").eq(0).text().trim();
+    sr = row.find("td").eq(1).text().trim();
+  }
+
   return {
-    fr: normalizeNumber($("#frResult").text()),
-    sr: normalizeNumber($("#srResult").text())
+    fr: normalizeNumber(fr),
+    sr: normalizeNumber(sr)
   };
 }
 
@@ -265,11 +226,11 @@ function parseShillongNight1(html) {
     .filter((i, el) => $(el).text().toUpperCase().includes("SHILLONG HILLS NIGHT TEER"))
     .closest("table");
 
-  const resultRow = table.find("tr").eq(2);
+  const row = table.find("tr").eq(2);
 
   return {
-    fr: normalizeNumber(resultRow.find("td").eq(0).text()),
-    sr: normalizeNumber(resultRow.find("td").eq(1).text())
+    fr: normalizeNumber(row.find("td").eq(0).text()),
+    sr: normalizeNumber(row.find("td").eq(1).text())
   };
 }
 
@@ -280,11 +241,11 @@ function parseShillongNight2(html) {
     .filter((i, el) => $(el).text().toUpperCase().includes("SHILLONG NIGHT"))
     .closest("table");
 
-  const resultRow = table.find("tr").eq(2);
+  const row = table.find("tr").eq(2);
 
   return {
-    fr: normalizeNumber(resultRow.find("td").eq(0).text()),
-    sr: normalizeNumber(resultRow.find("td").eq(1).text())
+    fr: normalizeNumber(row.find("td").eq(0).text()),
+    sr: normalizeNumber(row.find("td").eq(1).text())
   };
 }
 
@@ -296,9 +257,7 @@ function parseElementorGame(titleText) {
     const title = titleText.toUpperCase();
 
     const startIndex = upper.indexOf(title);
-    if (startIndex === -1) {
-      return { fr: "", sr: "" };
-    }
+    if (startIndex === -1) return { fr: "", sr: "" };
 
     const block = fullText.slice(startIndex, startIndex + 900);
 
@@ -339,9 +298,7 @@ async function main() {
         continue;
       }
 
-      const didChange = updateRecord(data, game, result);
-
-      if (didChange) {
+      if (updateRecord(data, game, result)) {
         changed = true;
       }
     } catch (error) {
