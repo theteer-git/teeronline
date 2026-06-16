@@ -617,15 +617,16 @@
           const tr = document.createElement('tr');
 
           const cells = [
-			formatFrSrForTable(findRecord('SHD', date), 'SHD', date)
-            formatFrSrForTable(findRecord('KH', date), 'KH', date)
-			formatFrSrForTable(findRecord('JWD', date), 'JWD', date)
-			formatFrSrForTable(findRecord('SHM', date), 'SHM', date)
-			formatFrSrForTable(findRecord('SHN1', date), 'SHN1', date)
-			formatFrSrForTable(findRecord('SHN2', date), 'SHN2', date)
-			formatFrSrForTable(findRecord('KHM', date), 'KHM', date)
-			formatFrSrForTable(findRecord('JWM', date), 'JWM', date)
-          ];
+			  formatDateDisplay(date),
+			  formatFrSrForTable(findRecord('SHD', date), 'SHD', date),
+			  formatFrSrForTable(findRecord('KH', date), 'KH', date),
+			  formatFrSrForTable(findRecord('JWD', date), 'JWD', date),
+			  formatFrSrForTable(findRecord('SHM', date), 'SHM', date),
+			  formatFrSrForTable(findRecord('SHN1', date), 'SHN1', date),
+			  formatFrSrForTable(findRecord('SHN2', date), 'SHN2', date),
+			  formatFrSrForTable(findRecord('KHM', date), 'KHM', date),
+			  formatFrSrForTable(findRecord('JWM', date), 'JWM', date)
+			];
 
           tr.innerHTML = cells.map(cell => `<td>${cell}</td>`).join('');
           tbody.appendChild(tr);
