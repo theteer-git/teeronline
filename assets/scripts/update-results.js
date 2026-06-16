@@ -190,14 +190,25 @@ function parseShillongMorning(html) {
 function parseJuwaiMorning(html) {
   const $ = cheerio.load(html);
 
+  console.log("===== JWM DEBUG START =====");
+
+  console.log("frResult count:", $("#frResult").length);
+  console.log("srResult count:", $("#srResult").length);
+
+  console.log("result-row count:", $("tr.result-row").length);
+
+  if ($("#frResult").length) {
+    console.log("FR RAW:", $("#frResult").text());
+  }
+
+  if ($("#srResult").length) {
+    console.log("SR RAW:", $("#srResult").text());
+  }
+
+  console.log("===== JWM DEBUG END =====");
+
   let fr = $("#frResult").first().text().trim();
   let sr = $("#srResult").first().text().trim();
-
-  if (!fr || !sr) {
-    const row = $("tr.result-row").first();
-    fr = row.find("td").eq(0).text().trim();
-    sr = row.find("td").eq(1).text().trim();
-  }
 
   return {
     fr: normalizeNumber(fr),
