@@ -9,7 +9,7 @@ const GAMES = [
   { gameId: "SHD", game: "shillong day", city: "Shillong", url: "https://teertooday.com/", parser: parseShillongDay },
   { gameId: "KH", game: "khanapara day", city: "Khanapara", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("KHANAPARA TEER RESULT TODAY") },
   { gameId: "JWD", game: "juwai day", city: "Juwai", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("JUWAI TEER RESULT TODAY") },
-  { gameId: "JWM", game: "juwai morning", city: "Juwai", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("JUWAI MORNING TEER RESULT") },,
+  { gameId: "JWM", game: "juwai morning", city: "Juwai", url: "https://khanaparateerresult.tv/", parser: parseElementorGame("JUWAI MORNING TEER RESULT") },
   { gameId: "KHM", game: "khanapara morning", city: "Khanapara", url: "https://www.khanaparateermorning.com/", parser: parseKhanaparaMorning },
   { gameId: "SHM", game: "shillong morning", city: "Shillong", url: "https://morningsundayteer.com/", parser: parseShillongMorning },
   { gameId: "SHN1", game: "Shillong Night", city: "Shillong", url: "https://www.shillonghillsnightteer.com/", parser: parseShillongNight1 },
@@ -159,7 +159,6 @@ function updateRecord(data, game, result) {
 
 function parseShillongDay(html) {
   const $ = cheerio.load(html);
-
   const table = $("th")
     .filter((i, el) => $(el).text().trim().toUpperCase() === "SHILLONG")
     .closest("table");
@@ -174,7 +173,6 @@ function parseShillongDay(html) {
 
 function parseShillongMorning(html) {
   const $ = cheerio.load(html);
-
   const table = $("th")
     .filter((i, el) => $(el).text().toUpperCase().includes("SHILLONG"))
     .closest("table");
@@ -187,38 +185,8 @@ function parseShillongMorning(html) {
   };
 }
 
-function parseJuwaiMorning(html) {
-  const $ = cheerio.load(html);
-
-  console.log("===== JWM DEBUG START =====");
-
-  console.log("frResult count:", $("#frResult").length);
-  console.log("srResult count:", $("#srResult").length);
-
-  console.log("result-row count:", $("tr.result-row").length);
-
-  if ($("#frResult").length) {
-    console.log("FR RAW:", $("#frResult").text());
-  }
-
-  if ($("#srResult").length) {
-    console.log("SR RAW:", $("#srResult").text());
-  }
-
-  console.log("===== JWM DEBUG END =====");
-
-  let fr = $("#frResult").first().text().trim();
-  let sr = $("#srResult").first().text().trim();
-
-  return {
-    fr: normalizeNumber(fr),
-    sr: normalizeNumber(sr)
-  };
-}
-
 function parseKhanaparaMorning(html) {
   const $ = cheerio.load(html);
-
   const text = $(".result_box").text().replace(/\s+/g, " ");
 
   const frMatch = text.match(/F\/R\s*:\s*(\d{1,2}|xx)/i);
@@ -232,7 +200,6 @@ function parseKhanaparaMorning(html) {
 
 function parseShillongNight1(html) {
   const $ = cheerio.load(html);
-
   const table = $("th")
     .filter((i, el) => $(el).text().toUpperCase().includes("SHILLONG HILLS NIGHT TEER"))
     .closest("table");
@@ -247,7 +214,6 @@ function parseShillongNight1(html) {
 
 function parseShillongNight2(html) {
   const $ = cheerio.load(html);
-
   const table = $("th")
     .filter((i, el) => $(el).text().toUpperCase().includes("SHILLONG NIGHT"))
     .closest("table");
@@ -270,7 +236,7 @@ function parseElementorGame(titleText) {
     const startIndex = upper.indexOf(title);
     if (startIndex === -1) return { fr: "", sr: "" };
 
-    const block = fullText.slice(startIndex, startIndex + 900);
+    const block = fullText.slice(startIndex, startIndex + 1000);
 
     const frMatch = block.match(/FR\s*\(First Round\)\s*[\d: ]*[AP]M\s*(\d{1,2}|xx)/i);
     const srMatch = block.match(/SR\s*\(Second Round\)\s*[\d: ]*[AP]M\s*(\d{1,2}|xx)/i);
