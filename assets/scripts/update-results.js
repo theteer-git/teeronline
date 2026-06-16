@@ -7,7 +7,7 @@ const DATA_FILE = path.join(__dirname, "../../data/all-results.json");
 
 const GAMES = [
   {
-    gameId: "SD",
+    gameId: "SHD",
     game: "shillong day",
     city: "Shillong",
     sources: ["https://teertooday.com/", "https://www.teerresults.com/"],
@@ -21,43 +21,43 @@ const GAMES = [
     keywords: ["KHANAPARA", "KHANAPARA TEER"]
   },
   {
-    gameId: "JD",
+    gameId: "JWD",
     game: "juwai day",
     city: "Juwai",
     sources: ["https://khanaparateerresult.tv/", "https://www.teerresults.com/"],
     keywords: ["JUWAI", "JOWAI", "JUWAI TEER", "JOWAI TEER"]
   },
   {
-    gameId: "JM",
+    gameId: "JWM",
     game: "juwai morning",
     city: "Juwai",
     sources: ["https://juwaimorningresult.com/", "https://khanaparateerresult.tv/"],
     keywords: ["JUWAI MORNING", "JOWAI MORNING"]
   },
   {
-    gameId: "KM",
+    gameId: "KHM",
     game: "khanapara morning",
     city: "Khanapara",
     sources: ["https://www.khanaparateermorning.com/"],
     keywords: ["KHANAPARA MORNING"]
   },
   {
-    gameId: "SM",
+    gameId: "SHM",
     game: "shillong morning",
     city: "Shillong",
     sources: ["https://morningsundayteer.com/"],
     keywords: ["SHILLONG MORNING", "MORNING SUNDAY"]
   },
   {
-    gameId: "SN",
-    game: "shillong night",
+    gameId: "SHN1",
+    game: "Shillong Night",
     city: "Shillong",
     sources: ["https://www.shillonghillsnightteer.com/"],
     keywords: ["SHILLONG HILLS NIGHT", "SHILLONG NIGHT"]
   },
   {
-    gameId: "SN2",
-    game: "shillong night 2",
+    gameId: "SHN2",
+    game: "Shillong Night 2",
     city: "Shillong",
     sources: ["https://nightteer.com/"],
     keywords: ["NIGHT TEER", "SHILLONG NIGHT"]
@@ -76,47 +76,41 @@ function todayIST() {
   return `${yyyy}-${mm}-${dd}`;
 }
 
-function nowISO() {
-  return new Date().toISOString();
-}
-
-function getISTMinutes() {
+function nowISTISO() {
   const ist = getISTDateObject();
-  return ist.getHours() * 60 + ist.getMinutes();
+  const yyyy = ist.getFullYear();
+  const mm = String(ist.getMonth() + 1).padStart(2, "0");
+  const dd = String(ist.getDate()).padStart(2, "0");
+  const hh = String(ist.getHours()).padStart(2, "0");
+  const min = String(ist.getMinutes()).padStart(2, "0");
+  const ss = String(ist.getSeconds()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}T${hh}:${min}:${ss}+05:30`;
 }
 
-function toMinutes(time) {
-  const [h, m] = time.split(":").map(Number);
-  return h * 60 + m;
+function isInvalidValue(value) {
+  const v = String(value || "").trim().toLowerCase();
+  return ["", "xx", "x", "-", "—", "na", "n/a", "null", "undefined", "off"].includes(v);
 }
 
-function isWithinWindow(gameId) {
-  const windows = {
-    SM: ["10:15", "11:30"],
-    KM: ["10:15", "11:30"],
-    JM: ["10:15", "11:30"],
-
-    SD: ["15:30", "16:45"],
-    KH: ["15:30", "16:45"],
-    JD: ["15:30", "16:45"],
-
-    SN: ["19:30", "20:45"],
-    SN2: ["20:00", "21:15"]
-  };
-
-  const range = windows[gameId];
-
-  if (!range) return true;
-
-  const current = getISTMinutes();
-  return current >= toMinutes(range[0]) && current <= toMinutes(range[1]);
+function isValidResultNumber(value) {
+  if (isInvalidValue(value)) return false;
+  const v = String(value).trim();
+  if (!/^\d{1,2}$/.test(v)) return false;
+  const n = Number(v);
+  return n >= 0 && n <= 99;
 }
 
 function normalizeNumber(value) {
-  if (!value) return "";
-  const match = String(value).match(/\b\d{1,2}\b/);
-  if (!match) return "";
-  return match[0].padStart(2, "0");
+  if (!isValidResultNumber(value)) return "";
+  return String(Number(value)).padStart(2, "0");
+}
+
+function isCompleted(record) {
+  return (
+    record &&
+    isValidResultNumber(record.fr) &&
+    isValidResultNumber(record.sr)
+  );
 }
 
 function cleanText(html) {
@@ -132,12 +126,11 @@ function extractFromText(text, keywords) {
     const index = upper.indexOf(keyword.toUpperCase());
     if (index === -1) continue;
 
-    const block = text.slice(index, index + 800);
+    const block = text.slice(index, index + 1000);
 
     const numbers = [...block.matchAll(/\b\d{1,2}\b/g)]
       .map(m => normalizeNumber(m[0]))
-      .filter(n => /^\d{2}$/.test(n))
-      .filter(n => Number(n) >= 0 && Number(n) <= 99);
+      .filter(Boolean);
 
     if (numbers.length >= 2) {
       return {
@@ -174,8 +167,8 @@ async function fetchResult(game) {
 
       if (result && (result.fr || result.sr)) {
         return {
-          fr: result.fr,
-          sr: result.sr,
+          fr: result.fr || "",
+          sr: result.sr || "",
           source
         };
       }
@@ -209,61 +202,82 @@ function saveData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2) + "\n");
 }
 
-function updateRecord(data, game, result) {
+function findTodayRecord(data, game) {
   const date = todayIST();
-  const checkedAt = nowISO();
 
-  let record = data.find(item => item.gameId === game.gameId && item.date === date);
+  return data.find(item =>
+    item.gameId === game.gameId &&
+    item.date === date
+  );
+}
+
+function createTodayRecord(data, game) {
+  const date = todayIST();
+  const checkedAt = nowISTISO();
+
+  const record = {
+    id: `${game.gameId}-${date}`,
+    game: game.game,
+    city: game.city,
+    gameId: game.gameId,
+    date,
+    fr: "",
+    frUpdatedAt: "",
+    sr: "",
+    srUpdatedAt: "",
+    status: "pending",
+    source: "",
+    timestampType: "live",
+    lastCheckedAt: checkedAt
+  };
+
+  data.push(record);
+  return record;
+}
+
+function updateRecord(data, game, result) {
+  let record = findTodayRecord(data, game);
 
   if (!record) {
-    record = {
-      id: `${game.gameId}-${date}`,
-      game: game.game,
-      city: game.city,
-      gameId: game.gameId,
-      date,
-      fr: "",
-      frUpdatedAt: "",
-      sr: "",
-      srUpdatedAt: "",
-      status: "PENDING",
-      source: "",
-      lastCheckedAt: checkedAt
-    };
-
-    data.push(record);
+    record = createTodayRecord(data, game);
   }
 
+  const checkedAt = nowISTISO();
   let changed = false;
 
-  if (result.fr && result.fr !== record.fr) {
-    record.fr = result.fr;
-    record.frUpdatedAt = checkedAt;
-    changed = true;
-  }
-
-  if (result.sr && result.sr !== record.sr) {
-    record.sr = result.sr;
-    record.srUpdatedAt = checkedAt;
-    changed = true;
-  }
-
+  record.id = `${game.gameId}-${todayIST()}`;
   record.game = game.game;
   record.city = game.city;
   record.gameId = game.gameId;
-  record.id = `${game.gameId}-${date}`;
+  record.date = todayIST();
+  record.timestampType = record.timestampType || "live";
   record.lastCheckedAt = checkedAt;
 
   if (result.source) {
     record.source = result.source;
   }
 
-  if (record.fr && record.sr) {
-    record.status = "COMPLETE";
-  } else if (record.fr || record.sr) {
-    record.status = "PARTIAL";
+  const newFr = normalizeNumber(result.fr);
+  const newSr = normalizeNumber(result.sr);
+
+  if (newFr && newFr !== record.fr) {
+    record.fr = newFr;
+    record.frUpdatedAt = checkedAt;
+    changed = true;
+  }
+
+  if (newSr && newSr !== record.sr) {
+    record.sr = newSr;
+    record.srUpdatedAt = checkedAt;
+    changed = true;
+  }
+
+  if (isCompleted(record)) {
+    record.status = "completed";
+  } else if (isValidResultNumber(record.fr) || isValidResultNumber(record.sr)) {
+    record.status = "partial";
   } else {
-    record.status = "PENDING";
+    record.status = "pending";
   }
 
   return changed;
@@ -274,22 +288,10 @@ async function main() {
   let changed = false;
 
   for (const game of GAMES) {
-    if (!isWithinWindow(game.gameId)) {
-      console.log(`Skipping ${game.game}. Outside update window.`);
-      continue;
-    }
+    const todayRecord = findTodayRecord(data, game);
 
-    const existingToday = data.find(
-      item =>
-        item.gameId === game.gameId &&
-        item.date === todayIST() &&
-        item.status === "COMPLETE" &&
-        item.fr &&
-        item.sr
-    );
-
-    if (existingToday) {
-      console.log(`Skipping ${game.game}. Today's result already complete.`);
+    if (isCompleted(todayRecord)) {
+      console.log(`Skipping ${game.game}. Today's FR and SR already completed.`);
       continue;
     }
 
