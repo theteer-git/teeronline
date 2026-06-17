@@ -3,8 +3,8 @@ name: Update Teer Results
 on:
   workflow_dispatch:
   # Enable this only after manual testing is successful
-  # schedule:
-  #   - cron: "*/5 * * * *"
+  schedule:
+  - cron: "*/5 * * * *"
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
