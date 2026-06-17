@@ -337,6 +337,36 @@
       color: var(--text-light);
     }
 
+	.footer-nav{
+	  display:flex;
+	  justify-content:center;
+	  align-items:center;
+	  flex-wrap:wrap;
+	  gap:1rem;
+	  padding:1rem 0;
+	  border-top:1px solid var(--border);
+	}
+
+	.footer-nav a{
+	  text-decoration:none;
+	  color:var(--text-light);
+	  font-weight:500;
+	  padding:.5rem .75rem;
+	}
+
+	.footer-nav a:hover{
+	  color:var(--text-light);
+	  background:none;
+	}
+
+	.footer-copyright{
+	  text-align:center;
+	  padding:1rem 0 2rem;
+	  color:var(--text-light);
+	  font-size:.9rem;
+	}
+
+
     footer {
       background: #111111;
       color: #ffffff;
@@ -344,49 +374,11 @@
       margin-top: 2rem;
     }
 
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.4fr repeat(3, 1fr);
-      gap: 2rem;
-      align-items: start;
-    }
-
-    .footer-brand img {
-      width: 115px;
-      height: auto;
-      display: block;
-      margin-bottom: 0.6rem;
-    }
-
-    .footer-brand strong {
-      color: var(--accent);
-      font-size: 1.2rem;
-    }
-
-    .footer-brand p,
     .footer-note,
     .copyright {
       color: #cbd5e1;
       font-size: 0.82rem;
       margin-top: 0.6rem;
-    }
-
-    .footer-column h3 {
-      color: var(--accent);
-      font-size: 1rem;
-      margin-bottom: 0.7rem;
-    }
-
-    .footer-column a {
-      display: block;
-      text-decoration: none;
-      color: #e5e7eb;
-      font-size: 0.86rem;
-      margin: 0.45rem 0;
-    }
-
-    .footer-column a:hover {
-      color: var(--accent);
     }
 
     .footer-bottom {
@@ -521,8 +513,6 @@
         <a href="common-numbers">Common Numbers</a>
         <a href="dream-numbers">Dream Numbers</a>
         <a href="teer-formula">Teer Formula</a>
-        <a href="statistics">Statistics</a>
-        <a href="blog">Blog</a>
         <a href="contact">Contact</a>
         <button class="dark-toggle" id="darkModeToggle" type="button">🌓</button>
       </nav>
@@ -565,45 +555,27 @@
 
   <footer>
     <div class="container">
-      <div class="footer-grid">
-        <div class="footer-brand">
-          <img src="./assets/img/logo.png" alt="TeerOnline Logo" width="120" height="120">
-          <strong>TeerOnline.com</strong>
-          <p>Fast • Accurate • Reliable</p>
-          <p class="footer-note">All Teer, One Place</p>
-        </div>
+      <div class="footer-nav">
+		  <a href="about">About</a>
+		  <span>•</span>
+		  <a href="contact">Contact</a>
+		  <span>•</span>
+		  <a href="privacy-policy">Privacy Policy</a>
+		  <span>•</span>
+		  <a href="terms-and-conditions">Terms & Conditions</a>
+		  <span>•</span>
+		  <a href="disclaimer">Disclaimer</a>
+	</div>
 
-        <div class="footer-column">
-          <h3>Results</h3>
-          <a href="/">Live Results</a>
-          <a href="shillong-teer-result">Shillong Teer</a>
-          <a href="khanapara-teer-result">Khanapara Teer</a>
-          <a href="juwai-teer-result">Juwai Teer</a>
-        </div>
-
-        <div class="footer-column">
-          <h3>Resources</h3>
-          <a href="common-numbers">Common Numbers</a>
-          <a href="dream-numbers">Dream Numbers</a>
-          <a href="teer-formula">Teer Formula</a>
-          <a href="statistics">Statistics</a>
-        </div>
-
-        <div class="footer-column">
-          <h3>Website</h3>
-          <a href="about">About</a>
-          <a href="contact">Contact</a>
-          <a href="privacy-policy">Privacy Policy</a>
-          <a href="terms-and-conditions">Terms & Conditions</a>
-          <a href="disclaimer">Disclaimer</a>
-        </div>
-      </div>
+	<div class="footer-copyright">
+	  TeerOnline.com <br>• Fast • Accurate • Reliable
+	</div>
 
       <div class="footer-bottom">
         <div class="disclaimer">
           ⚠️ Disclaimer: This website is for informational purposes only. Teer results are based on archery events. We do not promote gambling, betting, or prediction. Users must verify results with official sources.
         </div>
-        <p class="copyright">© 2026 TeerOnline.com. All rights reserved.</p>
+        <p class="copyright">© <span id="copyrightYear"></span> TeerOnline.com. All rights reserved.</p>
       </div>
     </div>
   </footer>
@@ -935,6 +907,10 @@
 	  loadAll();
 	  setInterval(loadLiveOnly, AUTO_REFRESH_MS);
 	})();
+	const copyrightYear = document.getElementById("copyrightYear");
+	if (copyrightYear) {
+	  copyrightYear.textContent = new Date().getFullYear();
+	}
 	</script>
 </body>
 </html>
