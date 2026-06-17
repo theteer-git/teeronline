@@ -668,20 +668,17 @@
 	  }
 
 	  async function loadAll() {
-		renderCards();
-
-		try {
-		  await Promise.all([
-			fetchLiveResults(),
-			fetchHistoryResults()
-		  ]);
-
-		  renderCards();
-		  renderHistoryTable();
-		} catch (err) {
-		  console.error(err);
+		  try {
+			await Promise.all([
+			  fetchLiveResults(),
+			  fetchHistoryResults()
+			]);
+			renderCards();
+			renderHistoryTable();
+		  } catch (err) {
+			console.error(err);
+		  }
 		}
-	  }
 
 	  function initDarkMode() {
 		const toggle = document.getElementById("darkModeToggle");
