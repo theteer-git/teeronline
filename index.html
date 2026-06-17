@@ -381,287 +381,323 @@
   </footer>
 
   <script>
-	(function () {
-	  const LIVE_API_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
-	  const HISTORY_JSON_URL = "./data/all-results.json";
-	  const AUTO_REFRESH_MS = 5000;
+(function () {
+  const LIVE_API_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
+  const HISTORY_JSON_URL = "./data/all-results.json";
+  const AUTO_REFRESH_MS = 5000;
 
-	  const games = [
-		{ title: "Shillong Teer Results", key: "shillong", gameId: "SHD" },
-		{ title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM" },
-		{ title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1" },
-		{ title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2" },
-		{ title: "Khanapara Teer Results", key: "khanapara", gameId: "KH" },
-		{ title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM" },
-		{ title: "Juwai Teer Results", key: "juwai", gameId: "JWD" },
-		{ title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM" }
-	  ];
+  const games = [
+    { title: "Shillong Teer Results", key: "shillong", gameId: "SHD" },
+    { title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM" },
+    { title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1" },
+    { title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2" },
+    { title: "Khanapara Teer Results", key: "khanapara", gameId: "KH" },
+    { title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM" },
+    { title: "Juwai Teer Results", key: "juwai", gameId: "JWD" },
+    { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM" }
+  ];
 
-	  let liveRecords = {};
-	  let historyRecords = [];
+  let liveDate = "";
+  let liveLastUpdatedAt = "";
+  let liveRecords = {};
+  let historyRecords = [];
 
-	  function isValidNumber(value) {
-		const v = String(value || "").trim();
-		return /^\d{1,2}$/.test(v);
-	  }
+  function todayIST() {
+    const now = new Date();
+    const ist = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
+    return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, "0")}-${String(ist.getDate()).padStart(2, "0")}`;
+  }
 
-	  function formatNumber(value) {
-		return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX";
-	  }
+  function isValidNumber(value) {
+    const v = String(value || "").trim();
+    return /^\d{1,2}$/.test(v);
+  }
 
-	  function parseDate(dateStr) {
-		if (!dateStr) return null;
+  function formatNumber(value) {
+    return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX";
+  }
 
-		let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-		if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  function parseDate(dateStr) {
+    if (!dateStr) return null;
 
-		m = String(dateStr).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
-		if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+    let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
 
-		const d = new Date(dateStr);
-		return isNaN(d.getTime()) ? null : d;
-	  }
+    m = String(dateStr).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+    if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
 
-	  function dateValue(dateStr) {
-		const d = parseDate(dateStr);
-		return d ? d.getTime() : 0;
-	  }
+    const d = new Date(dateStr);
+    return isNaN(d.getTime()) ? null : d;
+  }
 
-	  function formatDateDisplay(dateStr) {
-		const d = parseDate(dateStr);
-		if (!d) return dateStr || "";
-		return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
-	  }
+  function dateValue(dateStr) {
+    const d = parseDate(dateStr);
+    return d ? d.getTime() : 0;
+  }
 
-	  function formatTimeFromTimestamp(ts) {
-		if (!ts) return "";
-		const d = new Date(ts);
-		if (isNaN(d.getTime())) return "";
+  function formatDateDisplay(dateStr) {
+    const d = parseDate(dateStr);
+    if (!d) return dateStr || "";
+    return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
+  }
 
-		return d.toLocaleTimeString("en-IN", {
-		  timeZone: "Asia/Kolkata",
-		  hour: "numeric",
-		  minute: "2-digit",
-		  hour12: true
-		}).toUpperCase();
-	  }
+  function formatTimeFromTimestamp(ts) {
+    if (!ts) return "";
+    const d = new Date(ts);
+    if (isNaN(d.getTime())) return "";
 
-	  function getRoundTime(record, round) {
-		if (!record) return "";
+    return d.toLocaleTimeString("en-IN", {
+      timeZone: "Asia/Kolkata",
+      hour: "numeric",
+      minute: "2-digit",
+      hour12: true
+    }).toUpperCase();
+  }
 
-		if (round === "fr") {
-		  return record.frDeclaredTime || formatTimeFromTimestamp(record.frUpdatedAt) || "";
-		}
+  function getDeclaredTime(record, round) {
+    if (!record) return "";
+    return round === "fr" ? (record.frDeclaredTime || "") : (record.srDeclaredTime || "");
+  }
 
-		return record.srDeclaredTime || formatTimeFromTimestamp(record.srUpdatedAt) || "";
-	  }
+  function getDisplayTime(record, round) {
+    if (!record) return "Updating";
 
-	  async function fetchLiveResults() {
-		const res = await fetch(`${LIVE_API_URL}?v=${Date.now()}`, {
-		  cache: "no-store"
-		});
+    const value = round === "fr" ? record.fr : record.sr;
+    const updatedAt = round === "fr" ? record.frUpdatedAt : record.srUpdatedAt;
+    const declared = getDeclaredTime(record, round);
 
-		if (!res.ok) throw new Error("Unable to fetch live results");
+    // If result is available, show the actual captured/update time.
+    // If result is pending, show declared source time.
+    if (isValidNumber(value)) {
+      return formatTimeFromTimestamp(updatedAt) || declared || "Updated";
+    }
 
-		const data = await res.json();
-		liveRecords = data.records || {};
-	  }
+    return declared || "Updating";
+  }
 
-	  async function fetchHistoryResults() {
-		const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, {
-		  cache: "no-store"
-		});
+  function getRoundMeta(record, round) {
+    if (!record) return "Pending";
 
-		if (!res.ok) {
-		  historyRecords = [];
-		  return;
-		}
+    const value = round === "fr" ? record.fr : record.sr;
+    const updatedAt = round === "fr" ? record.frUpdatedAt : record.srUpdatedAt;
+    const declared = getDeclaredTime(record, round);
 
-		const data = await res.json();
-		historyRecords = Array.isArray(data) ? data : [];
-	  }
+    if (isValidNumber(value)) {
+      const updateTime = formatTimeFromTimestamp(updatedAt);
+      return updateTime ? `Updated: ${updateTime}` : "Updated";
+    }
 
-	  function renderCards() {
-		const grid = document.getElementById("resultsGrid");
-		if (!grid) return;
+    return declared ? `Expected: ${declared}` : "Pending";
+  }
 
-		grid.innerHTML = "";
+  async function fetchLiveResults() {
+    const res = await fetch(`${LIVE_API_URL}?v=${Date.now()}`, { cache: "no-store" });
+    if (!res.ok) throw new Error("Unable to fetch live results");
 
-		games.forEach(game => {
-		  const record = liveRecords[game.gameId] || {};
+    const data = await res.json();
+    liveDate = data.date || "";
+    liveLastUpdatedAt = data.lastUpdatedAt || "";
+    liveRecords = data.records || {};
+  }
 
-		  const fr = formatNumber(record.fr);
-		  const sr = formatNumber(record.sr);
+  async function fetchHistoryResults() {
+    const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
 
-		  const frTime = getRoundTime(record, "fr") || "Updating";
-		  const srTime = getRoundTime(record, "sr") || "Updating";
+    if (!res.ok) {
+      historyRecords = [];
+      return;
+    }
 
-		  const card = document.createElement("div");
-		  card.className = "result-card";
+    const data = await res.json();
+    historyRecords = Array.isArray(data) ? data : [];
+  }
 
-		  card.innerHTML = `
-			<div class="card-title">${game.title}</div>
+  function renderCards() {
+    const grid = document.getElementById("resultsGrid");
+    if (!grid) return;
 
-			<div class="game-timings">
-			  <span>🏹 FR: ${frTime}</span>
-			  <span>🎯 SR: ${srTime}</span>
-			</div>
+    grid.innerHTML = "";
 
-			<div class="fr-sr-container">
-			  <div class="fr-box">
-				<div class="fr-label">FIRST ROUND (FR)</div>
-				<div class="fr-value">${fr}</div>
-				<span class="time-badge">${frTime}</span>
-			  </div>
+    games.forEach(game => {
+      const record = liveRecords[game.gameId] || {};
+      const resultDate = record.date || liveDate || todayIST();
 
-			  <div class="sr-box">
-				<div class="sr-label">SECOND ROUND (SR)</div>
-				<div class="sr-value">${sr}</div>
-				<span class="time-badge">${srTime}</span>
-			  </div>
-			</div>
+      const fr = formatNumber(record.fr);
+      const sr = formatNumber(record.sr);
 
-			<button class="refresh-btn" data-refresh="1">🔄 Refresh Latest Result</button>
-		  `;
+      const frTime = getDisplayTime(record, "fr");
+      const srTime = getDisplayTime(record, "sr");
 
-		  grid.appendChild(card);
-		});
+      const frMeta = getRoundMeta(record, "fr");
+      const srMeta = getRoundMeta(record, "sr");
 
-		document.querySelectorAll("[data-refresh='1']").forEach(btn => {
-		  btn.addEventListener("click", async () => {
-			btn.textContent = "⏳ Refreshing...";
-			btn.disabled = true;
-			await loadLiveOnly();
-			btn.textContent = "🔄 Refresh Latest Result";
-			btn.disabled = false;
-		  });
-		});
-	  }
+      const statusText = record.status ? String(record.status).toUpperCase() : "PENDING";
 
-	  function findHistoryRecord(gameId, date) {
-		return historyRecords.find(item => item && item.gameId === gameId && item.date === date);
-	  }
+      const card = document.createElement("div");
+      card.className = "result-card";
 
-	  function formatFrSrForTable(record, gameId, date) {
-		const d = parseDate(date);
+      card.innerHTML = `
+        <div class="card-title">${game.title}</div>
 
-		if (
-		  d &&
-		  d.getDay() === 0 &&
-		  ["SHD", "KH", "JWD"].includes(gameId)
-		) {
-		  return "OFF";
-		}
+        <div style="text-align:center;font-size:0.78rem;color:var(--text-light);margin:0.25rem 0 0.55rem;">
+          📅 Result Date: <strong>${formatDateDisplay(resultDate)}</strong>
+          ${statusText ? ` &nbsp;|&nbsp; Status: <strong>${statusText}</strong>` : ""}
+        </div>
 
-		if (!record) return "XX-XX";
+        <div class="game-timings">
+          <span>🏹 FR: ${frTime}</span>
+          <span>🎯 SR: ${srTime}</span>
+        </div>
 
-		return `${formatNumber(record.fr)}-${formatNumber(record.sr)}`;
-	  }
+        <div class="fr-sr-container">
+          <div class="fr-box">
+            <div class="fr-label">FIRST ROUND (FR)</div>
+            <div class="fr-value">${fr}</div>
+            <span class="time-badge">${frMeta}</span>
+          </div>
 
-	  function getHistoryDates() {
-		const dates = new Set();
+          <div class="sr-box">
+            <div class="sr-label">SECOND ROUND (SR)</div>
+            <div class="sr-value">${sr}</div>
+            <span class="time-badge">${srMeta}</span>
+          </div>
+        </div>
 
-		historyRecords.forEach(item => {
-		  if (item && item.date) dates.add(item.date);
-		});
+        <button class="refresh-btn" data-refresh="1">🔄 Refresh Latest Result</button>
+      `;
 
-		Object.values(liveRecords).forEach(item => {
-		  if (item && item.date) dates.add(item.date);
-		});
+      grid.appendChild(card);
+    });
 
-		return [...dates].sort((a, b) => dateValue(b) - dateValue(a)).slice(0, 7);
-	  }
+    document.querySelectorAll("[data-refresh='1']").forEach(btn => {
+      btn.addEventListener("click", async () => {
+        btn.textContent = "⏳ Refreshing...";
+        btn.disabled = true;
+        await loadLiveOnly();
+        btn.textContent = "🔄 Refresh Latest Result";
+        btn.disabled = false;
+      });
+    });
+  }
 
-	  function renderHistoryTable() {
-		const tbody = document.getElementById("historyBody");
-		if (!tbody) return;
+  function findHistoryRecord(gameId, date) {
+    return historyRecords.find(item => item && item.gameId === gameId && item.date === date);
+  }
 
-		const dates = getHistoryDates();
-		tbody.innerHTML = "";
+  function formatFrSrForTable(record, gameId, date) {
+    const d = parseDate(date);
 
-		if (!dates.length) {
-		  tbody.innerHTML = `<tr><td colspan="9">No result history available</td></tr>`;
-		  return;
-		}
+    if (d && d.getDay() === 0 && ["SHD", "KH", "JWD"].includes(gameId)) {
+      return "OFF";
+    }
 
-		dates.forEach(date => {
-		  const tr = document.createElement("tr");
+    if (!record) return "XX-XX";
 
-		  const cells = [
-			formatDateDisplay(date),
-			formatFrSrForTable(liveRecords.SHD?.date === date ? liveRecords.SHD : findHistoryRecord("SHD", date), "SHD", date),
-			formatFrSrForTable(liveRecords.KH?.date === date ? liveRecords.KH : findHistoryRecord("KH", date), "KH", date),
-			formatFrSrForTable(liveRecords.JWD?.date === date ? liveRecords.JWD : findHistoryRecord("JWD", date), "JWD", date),
-			formatFrSrForTable(liveRecords.SHM?.date === date ? liveRecords.SHM : findHistoryRecord("SHM", date), "SHM", date),
-			formatFrSrForTable(liveRecords.SHN1?.date === date ? liveRecords.SHN1 : findHistoryRecord("SHN1", date), "SHN1", date),
-			formatFrSrForTable(liveRecords.SHN2?.date === date ? liveRecords.SHN2 : findHistoryRecord("SHN2", date), "SHN2", date),
-			formatFrSrForTable(liveRecords.KHM?.date === date ? liveRecords.KHM : findHistoryRecord("KHM", date), "KHM", date),
-			formatFrSrForTable(liveRecords.JWM?.date === date ? liveRecords.JWM : findHistoryRecord("JWM", date), "JWM", date)
-		  ];
+    return `${formatNumber(record.fr)}-${formatNumber(record.sr)}`;
+  }
 
-		  tr.innerHTML = cells.map(cell => `<td>${cell}</td>`).join("");
-		  tbody.appendChild(tr);
-		});
-	  }
+  function getHistoryDatesTillYesterday() {
+    const today = todayIST();
+    const dates = new Set();
 
-	  async function loadLiveOnly() {
-		try {
-		  await fetchLiveResults();
-		  renderCards();
-		  renderHistoryTable();
-		} catch (err) {
-		  console.error(err);
-		}
-	  }
+    historyRecords.forEach(item => {
+      if (item && item.date && item.date < today) {
+        dates.add(item.date);
+      }
+    });
 
-	  async function loadAll() {
-		const grid = document.getElementById("resultsGrid");
-		if (grid) grid.innerHTML = `<div class="result-card">Loading latest results...</div>`;
+    // Do NOT include today's live records in the Last 7 Days table.
+    // This table is only for completed previous dates till yesterday.
+    return [...dates].sort((a, b) => dateValue(b) - dateValue(a)).slice(0, 7);
+  }
 
-		try {
-		  await Promise.all([
-			fetchLiveResults(),
-			fetchHistoryResults()
-		  ]);
+  function renderHistoryTable() {
+    const tbody = document.getElementById("historyBody");
+    if (!tbody) return;
 
-		  renderCards();
-		  renderHistoryTable();
-		} catch (err) {
-		  console.error(err);
+    const dates = getHistoryDatesTillYesterday();
+    tbody.innerHTML = "";
 
-		  if (grid) {
-			grid.innerHTML = `
-			  <div class="result-card">
-				<div class="card-title">Unable to load live results</div>
-				<p style="color:var(--text-light);margin-top:0.5rem;">${err.message}</p>
-				<button class="refresh-btn" onclick="location.reload()">Retry</button>
-			  </div>
-			`;
-		  }
-		}
-	  }
+    if (!dates.length) {
+      tbody.innerHTML = `<tr><td colspan="9">No previous result history available</td></tr>`;
+      return;
+    }
 
-	  function initDarkMode() {
-		const toggle = document.getElementById("darkModeToggle");
-		if (!toggle) return;
+    dates.forEach(date => {
+      const tr = document.createElement("tr");
 
-		const isDark = localStorage.getItem("darkMode") === "true";
-		if (isDark) document.body.classList.add("dark");
+      const cells = [
+        formatDateDisplay(date),
+        formatFrSrForTable(findHistoryRecord("SHD", date), "SHD", date),
+        formatFrSrForTable(findHistoryRecord("KH", date), "KH", date),
+        formatFrSrForTable(findHistoryRecord("JWD", date), "JWD", date),
+        formatFrSrForTable(findHistoryRecord("SHM", date), "SHM", date),
+        formatFrSrForTable(findHistoryRecord("SHN1", date), "SHN1", date),
+        formatFrSrForTable(findHistoryRecord("SHN2", date), "SHN2", date),
+        formatFrSrForTable(findHistoryRecord("KHM", date), "KHM", date),
+        formatFrSrForTable(findHistoryRecord("JWM", date), "JWM", date)
+      ];
 
-		toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
+      tr.innerHTML = cells.map(cell => `<td>${cell}</td>`).join("");
+      tbody.appendChild(tr);
+    });
+  }
 
-		toggle.addEventListener("click", () => {
-		  document.body.classList.toggle("dark");
-		  const darkEnabled = document.body.classList.contains("dark");
-		  localStorage.setItem("darkMode", darkEnabled);
-		  toggle.textContent = darkEnabled ? "☀️ Light" : "🌓 Dark";
-		});
-	  }
+  async function loadLiveOnly() {
+    try {
+      await fetchLiveResults();
+      renderCards();
+      // History table intentionally remains till yesterday.
+      renderHistoryTable();
+    } catch (err) {
+      console.error(err);
+    }
+  }
 
-	  initDarkMode();
-	  loadAll();
-	  setInterval(loadLiveOnly, AUTO_REFRESH_MS);
-	})();
+  async function loadAll() {
+    const grid = document.getElementById("resultsGrid");
+    if (grid) grid.innerHTML = `<div class="result-card">Loading latest results...</div>`;
+
+    try {
+      await Promise.all([fetchLiveResults(), fetchHistoryResults()]);
+      renderCards();
+      renderHistoryTable();
+    } catch (err) {
+      console.error(err);
+
+      if (grid) {
+        grid.innerHTML = `
+          <div class="result-card">
+            <div class="card-title">Unable to load live results</div>
+            <p style="color:var(--text-light);margin-top:0.5rem;">${err.message}</p>
+            <button class="refresh-btn" onclick="location.reload()">Retry</button>
+          </div>
+        `;
+      }
+    }
+  }
+
+  function initDarkMode() {
+    const toggle = document.getElementById("darkModeToggle");
+    if (!toggle) return;
+
+    const isDark = localStorage.getItem("darkMode") === "true";
+    if (isDark) document.body.classList.add("dark");
+
+    toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
+
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const darkEnabled = document.body.classList.contains("dark");
+      localStorage.setItem("darkMode", darkEnabled);
+      toggle.textContent = darkEnabled ? "☀️ Light" : "🌓 Dark";
+    });
+  }
+
+  initDarkMode();
+  loadAll();
+  setInterval(loadLiveOnly, AUTO_REFRESH_MS);
+})();
 </script>
 </body>
 </html>
