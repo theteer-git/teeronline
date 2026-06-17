@@ -381,308 +381,287 @@
   </footer>
 
   <script>
-    (function() {
-      const DATA_URL = './data/all-results.json';
-      const FRESH_HOURS = 22;
-      const AUTO_REFRESH_MS = 5000;
+	(function () {
+	  const LIVE_API_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
+	  const HISTORY_JSON_URL = "./data/all-results.json";
+	  const AUTO_REFRESH_MS = 5000;
 
-      const games = [
-        { title: "Shillong Teer Results", key: "shillong", gameId: "SHD", fallbackFR: "4:15 PM", fallbackSR: "5:15 PM" },
-        { title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM", fallbackFR: "10:30 AM", fallbackSR: "11:30 AM" },
-        { title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1", fallbackFR: "8:45 PM", fallbackSR: "9:45 PM" },
-        { title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2", fallbackFR: "11:10 PM", fallbackSR: "12:10 AM" },
-        { title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", fallbackFR: "4:25 PM", fallbackSR: "5:00 PM" },
-        { title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM", fallbackFR: "11:00 AM", fallbackSR: "12:00 PM" },
-        { title: "Juwai Teer Results", key: "juwai", gameId: "JWD", fallbackFR: "2:30 PM", fallbackSR: "3:15 PM" },
-        { title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM", fallbackFR: "10:30 AM", fallbackSR: "11:30 AM" }
-      ];
+	  const games = [
+		{ title: "Shillong Teer Results", key: "shillong", gameId: "SHD" },
+		{ title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM" },
+		{ title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1" },
+		{ title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2" },
+		{ title: "Khanapara Teer Results", key: "khanapara", gameId: "KH" },
+		{ title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM" },
+		{ title: "Juwai Teer Results", key: "juwai", gameId: "JWD" },
+		{ title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM" }
+	  ];
 
-      let allRecords = [];
-      let gameData = {};
+	  let liveRecords = {};
+	  let historyRecords = [];
 
-      function parseDate(dateStr) {
-        if (!dateStr) return null;
+	  function isValidNumber(value) {
+		const v = String(value || "").trim();
+		return /^\d{1,2}$/.test(v);
+	  }
 
-        let match = String(dateStr).trim().match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-        if (match) return new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+	  function formatNumber(value) {
+		return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX";
+	  }
 
-        match = String(dateStr).trim().match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
-        if (match) return new Date(Number(match[3]), Number(match[2]) - 1, Number(match[1]));
+	  function parseDate(dateStr) {
+		if (!dateStr) return null;
 
-        const parsed = new Date(dateStr);
-        return isNaN(parsed.getTime()) ? null : parsed;
-      }
+		let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+		if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
 
-      function dateValue(dateStr) {
-        const d = parseDate(dateStr);
-        return d ? d.getTime() : 0;
-      }
+		m = String(dateStr).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+		if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
 
-      function todayIST() {
-        const now = new Date();
-        const ist = new Date(now.toLocaleString('en-US', { timeZone: 'Asia/Kolkata' }));
-        return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, '0')}-${String(ist.getDate()).padStart(2, '0')}`;
-      }
+		const d = new Date(dateStr);
+		return isNaN(d.getTime()) ? null : d;
+	  }
 
-      function formatDateDisplay(dateStr) {
-        const date = parseDate(dateStr);
-        if (!date) return dateStr || '';
-        return `${String(date.getDate()).padStart(2, '0')}-${String(date.getMonth() + 1).padStart(2, '0')}-${date.getFullYear()}`;
-      }
+	  function dateValue(dateStr) {
+		const d = parseDate(dateStr);
+		return d ? d.getTime() : 0;
+	  }
 
-      function isValidNumber(value) {
-        const v = String(value || '').trim().toLowerCase();
-        if (['', 'xx', 'x', '-', '—', 'na', 'n/a', 'off', 'null', 'undefined'].includes(v)) return false;
-        if (!/^\d{1,2}$/.test(v)) return false;
-        const n = Number(v);
-        return n >= 0 && n <= 99;
-      }
+	  function formatDateDisplay(dateStr) {
+		const d = parseDate(dateStr);
+		if (!d) return dateStr || "";
+		return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
+	  }
 
-      function formatNumber(value) {
-        return isValidNumber(value) ? String(Number(value)).padStart(2, '0') : 'XX';
-      }
+	  function formatTimeFromTimestamp(ts) {
+		if (!ts) return "";
+		const d = new Date(ts);
+		if (isNaN(d.getTime())) return "";
 
-      function parseTimestamp(ts) {
-        if (!ts) return null;
-        const d = new Date(ts);
-        return isNaN(d.getTime()) ? null : d;
-      }
+		return d.toLocaleTimeString("en-IN", {
+		  timeZone: "Asia/Kolkata",
+		  hour: "numeric",
+		  minute: "2-digit",
+		  hour12: true
+		}).toUpperCase();
+	  }
 
-      function formatTimeFromTimestamp(ts) {
-        const d = parseTimestamp(ts);
-        if (!d) return '';
-        return d.toLocaleTimeString('en-IN', {
-          timeZone: 'Asia/Kolkata',
-          hour: 'numeric',
-          minute: '2-digit',
-          hour12: true
-        }).toUpperCase();
-      }
+	  function getRoundTime(record, round) {
+		if (!record) return "";
 
-      function isFresh(updatedAt) {
-        const d = parseTimestamp(updatedAt);
-        if (!d) return false;
-        const ageMs = Date.now() - d.getTime();
-        return ageMs >= 0 && ageMs <= FRESH_HOURS * 60 * 60 * 1000;
-      }
-
-      function recordsForGame(gameId) {
-        return allRecords
-          .filter(item => item && item.gameId === gameId && item.date)
-          .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-      }
-
-      function findRecord(gameId, date) {
-        return allRecords.find(item => item && item.gameId === gameId && item.date === date);
-      }
-
-      function latestPreviousRecord(gameId) {
-        const today = todayIST();
-        return recordsForGame(gameId).find(item => item.date < today && (isValidNumber(item.fr) || isValidNumber(item.sr))) || null;
-      }
-
-      function getGameTimings(game) {
-        const previous = latestPreviousRecord(game.gameId);
-        const frTime = formatTimeFromTimestamp(previous?.frUpdatedAt) || game.fallbackFR;
-        const srTime = formatTimeFromTimestamp(previous?.srUpdatedAt) || game.fallbackSR;
-        return { frTime, srTime };
-      }
-
-      function getCurrentDisplayValue(record, round) {
-        if (!record || record.date !== todayIST()) return 'XX';
-        const value = round === 'fr' ? record.fr : record.sr;
-        const updatedAt = round === 'fr' ? record.frUpdatedAt : record.srUpdatedAt;
-
-        if (!isValidNumber(value)) return 'XX';
-
-        // 22-hour rule applies only to today's live result cards.
-        return isFresh(updatedAt) ? formatNumber(value) : 'XX';
-      }
-
-      function buildGameData() {
-        const today = todayIST();
-
-        gameData = {};
-        games.forEach(game => {
-          const todayRecord = findRecord(game.gameId, today);
-          const timings = getGameTimings(game);
-
-          gameData[game.key] = {
-            fr: getCurrentDisplayValue(todayRecord, 'fr'),
-            sr: getCurrentDisplayValue(todayRecord, 'sr'),
-            timingFR: timings.frTime,
-            timingSR: timings.srTime
-          };
-        });
-      }
-
-      async function fetchResultsJson() {
-        const response = await fetch(`${DATA_URL}?v=${Date.now()}`, { cache: 'no-store' });
-        if (!response.ok) throw new Error(`Failed to load ${DATA_URL}. HTTP ${response.status}`);
-        const data = await response.json();
-        if (!Array.isArray(data)) throw new Error('all-results.json must contain an array');
-        return data;
-      }
-
-      function renderCards() {
-        const grid = document.getElementById('resultsGrid');
-        if (!grid) return;
-
-        grid.innerHTML = '';
-
-        games.forEach(game => {
-          const data = gameData[game.key] || { fr: 'XX', sr: 'XX', timingFR: game.fallbackFR, timingSR: game.fallbackSR };
-
-          const card = document.createElement('div');
-          card.className = 'result-card';
-          card.setAttribute('data-key', game.key);
-
-          card.innerHTML = `
-            <div class="card-title">${game.title}</div>
-            <div class="game-timings">
-              <span>🏹 FR: ${data.timingFR}</span>
-              <span>🎯 SR: ${data.timingSR}</span>
-            </div>
-            <div class="fr-sr-container">
-              <div class="fr-box">
-                <div class="fr-label">FIRST ROUND (FR)</div>
-                <div class="fr-value" id="fr-${game.key}">${data.fr}</div>
-                <span class="time-badge">${data.timingFR}</span>
-              </div>
-              <div class="sr-box">
-                <div class="sr-label">SECOND ROUND (SR)</div>
-                <div class="sr-value" id="sr-${game.key}">${data.sr}</div>
-                <span class="time-badge">${data.timingSR}</span>
-              </div>
-            </div>
-            <button class="refresh-btn" data-key="${game.key}">🔄 Refresh Latest Result</button>
-          `;
-
-          grid.appendChild(card);
-        });
-
-        document.querySelectorAll('.refresh-btn').forEach(btn => {
-          btn.addEventListener('click', async () => {
-            btn.disabled = true;
-            btn.classList.add('loading');
-            const oldText = btn.textContent;
-            btn.textContent = '⏳ Refreshing...';
-            await loadResults(false);
-            btn.textContent = oldText;
-            btn.disabled = false;
-            btn.classList.remove('loading');
-          });
-        });
-      }
-
-      function getLast7AvailableDates() {
-        const dates = [...new Set(
-          allRecords
-            .filter(item => item && item.date)
-            .map(item => item.date)
-        )];
-
-        dates.sort((a, b) => dateValue(b) - dateValue(a));
-        return dates.slice(0, 7);
-      }
-
-      function formatFrSrForTable(record, gameId, date) {
-		  const d = parseDate(date);
-		  if (
-			d &&
-			d.getDay() === 0 &&
-			["SHD", "KH", "JWD"].includes(gameId)
-		  ) {
-			return "OFF";
-		  }
-		  if (!record) return "XX-XX";
-		  const fr = formatNumber(record.fr);
-		  const sr = formatNumber(record.sr);
-		  return `${fr}-${sr}`;
+		if (round === "fr") {
+		  return record.frDeclaredTime || formatTimeFromTimestamp(record.frUpdatedAt) || "";
 		}
 
-      function renderHistoryTable() {
-        const tbody = document.getElementById('historyBody');
-        if (!tbody) return;
+		return record.srDeclaredTime || formatTimeFromTimestamp(record.srUpdatedAt) || "";
+	  }
 
-        const dates = getLast7AvailableDates();
-        tbody.innerHTML = '';
+	  async function fetchLiveResults() {
+		const res = await fetch(`${LIVE_API_URL}?v=${Date.now()}`, {
+		  cache: "no-store"
+		});
 
-        if (!dates.length) {
-          tbody.innerHTML = `<tr><td colspan="9">No result history available</td></tr>`;
-          return;
-        }
+		if (!res.ok) throw new Error("Unable to fetch live results");
 
-        dates.forEach(date => {
-          const tr = document.createElement('tr');
+		const data = await res.json();
+		liveRecords = data.records || {};
+	  }
 
-          const cells = [
-			  formatDateDisplay(date),
-			  formatFrSrForTable(findRecord('SHD', date), 'SHD', date),
-			  formatFrSrForTable(findRecord('KH', date), 'KH', date),
-			  formatFrSrForTable(findRecord('JWD', date), 'JWD', date),
-			  formatFrSrForTable(findRecord('SHM', date), 'SHM', date),
-			  formatFrSrForTable(findRecord('SHN1', date), 'SHN1', date),
-			  formatFrSrForTable(findRecord('SHN2', date), 'SHN2', date),
-			  formatFrSrForTable(findRecord('KHM', date), 'KHM', date),
-			  formatFrSrForTable(findRecord('JWM', date), 'JWM', date)
-			];
+	  async function fetchHistoryResults() {
+		const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, {
+		  cache: "no-store"
+		});
 
-          tr.innerHTML = cells.map(cell => `<td>${cell}</td>`).join('');
-          tbody.appendChild(tr);
-        });
-      }
+		if (!res.ok) {
+		  historyRecords = [];
+		  return;
+		}
 
-      async function loadResults(showLoading = true) {
-        const grid = document.getElementById('resultsGrid');
-        const tbody = document.getElementById('historyBody');
+		const data = await res.json();
+		historyRecords = Array.isArray(data) ? data : [];
+	  }
 
-        if (showLoading && grid && !grid.children.length) {
-          grid.innerHTML = '<div class="result-card">Loading latest results...</div>';
-        }
+	  function renderCards() {
+		const grid = document.getElementById("resultsGrid");
+		if (!grid) return;
 
-        try {
-          allRecords = await fetchResultsJson();
-          buildGameData();
-          renderCards();
-          renderHistoryTable();
-        } catch (error) {
-          console.error(error);
-          if (grid) {
-            grid.innerHTML = `
-              <div class="result-card">
-                <div class="card-title">Unable to load results</div>
-                <p style="color:var(--text-light);margin-top:0.5rem;">${error.message}</p>
-                <button class="refresh-btn" onclick="location.reload()">Retry</button>
-              </div>
-            `;
-          }
-          if (tbody) {
-            tbody.innerHTML = `<tr><td colspan="9">Unable to load result history</td></tr>`;
-          }
-        }
-      }
+		grid.innerHTML = "";
 
-      function initDarkMode() {
-        const toggle = document.getElementById('darkModeToggle');
-        if (!toggle) return;
+		games.forEach(game => {
+		  const record = liveRecords[game.gameId] || {};
 
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        if (isDark) document.body.classList.add('dark');
-        toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark';
+		  const fr = formatNumber(record.fr);
+		  const sr = formatNumber(record.sr);
 
-        toggle.addEventListener('click', () => {
-          document.body.classList.toggle('dark');
-          const darkEnabled = document.body.classList.contains('dark');
-          localStorage.setItem('darkMode', darkEnabled);
-          toggle.textContent = darkEnabled ? '☀️ Light' : '🌓 Dark';
-        });
-      }
+		  const frTime = getRoundTime(record, "fr") || "Updating";
+		  const srTime = getRoundTime(record, "sr") || "Updating";
 
-      initDarkMode();
-      loadResults(true);
-      setInterval(() => loadResults(false), AUTO_REFRESH_MS);
-    })();
-  </script>
+		  const card = document.createElement("div");
+		  card.className = "result-card";
+
+		  card.innerHTML = `
+			<div class="card-title">${game.title}</div>
+
+			<div class="game-timings">
+			  <span>🏹 FR: ${frTime}</span>
+			  <span>🎯 SR: ${srTime}</span>
+			</div>
+
+			<div class="fr-sr-container">
+			  <div class="fr-box">
+				<div class="fr-label">FIRST ROUND (FR)</div>
+				<div class="fr-value">${fr}</div>
+				<span class="time-badge">${frTime}</span>
+			  </div>
+
+			  <div class="sr-box">
+				<div class="sr-label">SECOND ROUND (SR)</div>
+				<div class="sr-value">${sr}</div>
+				<span class="time-badge">${srTime}</span>
+			  </div>
+			</div>
+
+			<button class="refresh-btn" data-refresh="1">🔄 Refresh Latest Result</button>
+		  `;
+
+		  grid.appendChild(card);
+		});
+
+		document.querySelectorAll("[data-refresh='1']").forEach(btn => {
+		  btn.addEventListener("click", async () => {
+			btn.textContent = "⏳ Refreshing...";
+			btn.disabled = true;
+			await loadLiveOnly();
+			btn.textContent = "🔄 Refresh Latest Result";
+			btn.disabled = false;
+		  });
+		});
+	  }
+
+	  function findHistoryRecord(gameId, date) {
+		return historyRecords.find(item => item && item.gameId === gameId && item.date === date);
+	  }
+
+	  function formatFrSrForTable(record, gameId, date) {
+		const d = parseDate(date);
+
+		if (
+		  d &&
+		  d.getDay() === 0 &&
+		  ["SHD", "KH", "JWD"].includes(gameId)
+		) {
+		  return "OFF";
+		}
+
+		if (!record) return "XX-XX";
+
+		return `${formatNumber(record.fr)}-${formatNumber(record.sr)}`;
+	  }
+
+	  function getHistoryDates() {
+		const dates = new Set();
+
+		historyRecords.forEach(item => {
+		  if (item && item.date) dates.add(item.date);
+		});
+
+		Object.values(liveRecords).forEach(item => {
+		  if (item && item.date) dates.add(item.date);
+		});
+
+		return [...dates].sort((a, b) => dateValue(b) - dateValue(a)).slice(0, 7);
+	  }
+
+	  function renderHistoryTable() {
+		const tbody = document.getElementById("historyBody");
+		if (!tbody) return;
+
+		const dates = getHistoryDates();
+		tbody.innerHTML = "";
+
+		if (!dates.length) {
+		  tbody.innerHTML = `<tr><td colspan="9">No result history available</td></tr>`;
+		  return;
+		}
+
+		dates.forEach(date => {
+		  const tr = document.createElement("tr");
+
+		  const cells = [
+			formatDateDisplay(date),
+			formatFrSrForTable(liveRecords.SHD?.date === date ? liveRecords.SHD : findHistoryRecord("SHD", date), "SHD", date),
+			formatFrSrForTable(liveRecords.KH?.date === date ? liveRecords.KH : findHistoryRecord("KH", date), "KH", date),
+			formatFrSrForTable(liveRecords.JWD?.date === date ? liveRecords.JWD : findHistoryRecord("JWD", date), "JWD", date),
+			formatFrSrForTable(liveRecords.SHM?.date === date ? liveRecords.SHM : findHistoryRecord("SHM", date), "SHM", date),
+			formatFrSrForTable(liveRecords.SHN1?.date === date ? liveRecords.SHN1 : findHistoryRecord("SHN1", date), "SHN1", date),
+			formatFrSrForTable(liveRecords.SHN2?.date === date ? liveRecords.SHN2 : findHistoryRecord("SHN2", date), "SHN2", date),
+			formatFrSrForTable(liveRecords.KHM?.date === date ? liveRecords.KHM : findHistoryRecord("KHM", date), "KHM", date),
+			formatFrSrForTable(liveRecords.JWM?.date === date ? liveRecords.JWM : findHistoryRecord("JWM", date), "JWM", date)
+		  ];
+
+		  tr.innerHTML = cells.map(cell => `<td>${cell}</td>`).join("");
+		  tbody.appendChild(tr);
+		});
+	  }
+
+	  async function loadLiveOnly() {
+		try {
+		  await fetchLiveResults();
+		  renderCards();
+		  renderHistoryTable();
+		} catch (err) {
+		  console.error(err);
+		}
+	  }
+
+	  async function loadAll() {
+		const grid = document.getElementById("resultsGrid");
+		if (grid) grid.innerHTML = `<div class="result-card">Loading latest results...</div>`;
+
+		try {
+		  await Promise.all([
+			fetchLiveResults(),
+			fetchHistoryResults()
+		  ]);
+
+		  renderCards();
+		  renderHistoryTable();
+		} catch (err) {
+		  console.error(err);
+
+		  if (grid) {
+			grid.innerHTML = `
+			  <div class="result-card">
+				<div class="card-title">Unable to load live results</div>
+				<p style="color:var(--text-light);margin-top:0.5rem;">${err.message}</p>
+				<button class="refresh-btn" onclick="location.reload()">Retry</button>
+			  </div>
+			`;
+		  }
+		}
+	  }
+
+	  function initDarkMode() {
+		const toggle = document.getElementById("darkModeToggle");
+		if (!toggle) return;
+
+		const isDark = localStorage.getItem("darkMode") === "true";
+		if (isDark) document.body.classList.add("dark");
+
+		toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
+
+		toggle.addEventListener("click", () => {
+		  document.body.classList.toggle("dark");
+		  const darkEnabled = document.body.classList.contains("dark");
+		  localStorage.setItem("darkMode", darkEnabled);
+		  toggle.textContent = darkEnabled ? "☀️ Light" : "🌓 Dark";
+		});
+	  }
+
+	  initDarkMode();
+	  loadAll();
+	  setInterval(loadLiveOnly, AUTO_REFRESH_MS);
+	})();
+</script>
 </body>
 </html>

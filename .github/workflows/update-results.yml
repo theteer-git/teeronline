@@ -1,8 +1,6 @@
-name: Update Teer Results
+name: Update Teer Results Backup
 
 on:
-  schedule:
-    - cron: '*/5 * * * *'
   workflow_dispatch:
 
 permissions:
@@ -39,5 +37,5 @@ jobs:
             exit 0
           fi
 
-          git commit -m "Auto update teer results"
+          git commit -m "Backup update teer results"
           git push
