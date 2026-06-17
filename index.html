@@ -600,6 +600,31 @@
 
 		return [...dates].sort((a, b) => dateValue(b) - dateValue(a)).slice(0, 7);
 	  }
+	  
+	  function renderHistorySkeleton() {
+		  const tbody = document.getElementById("historyBody");
+		  if (!tbody) return;
+
+		  tbody.innerHTML = "";
+
+		  for (let i = 0; i < 7; i++) {
+			const tr = document.createElement("tr");
+
+			tr.innerHTML = `
+			  <td>--</td>
+			  <td>--</td>
+			  <td>--</td>
+			  <td>--</td>
+			  <td>--</td>
+			  <td>--</td>
+			  <td>--</td>
+			  <td>--</td>
+			  <td>--</td>
+			`;
+
+			tbody.appendChild(tr);
+		  }
+		}
 
 	  function renderHistoryTable() {
 		const tbody = document.getElementById("historyBody");
