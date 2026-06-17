@@ -320,6 +320,74 @@
         font-size: 1.5rem;
       }
     }.card-title,.game-timings{text-align:CENTER}
+
+
+    /* Mobile-friendly history table: desktop table becomes stacked cards */
+    @media (max-width: 768px) {
+      .table-wrapper {
+        overflow-x: visible;
+        border: 0;
+        background: transparent;
+      }
+
+      .results-table {
+        min-width: 0;
+        border: 0;
+        font-size: 0.82rem;
+      }
+
+      .results-table thead {
+        display: none;
+      }
+
+      .results-table,
+      .results-table tbody,
+      .results-table tr,
+      .results-table td {
+        display: block;
+        width: 100%;
+      }
+
+      .results-table tr {
+        margin-bottom: 1rem;
+        border: 1px solid var(--border);
+        border-radius: 1rem;
+        background: var(--surface);
+        box-shadow: var(--card-shadow);
+        overflow: hidden;
+      }
+
+      .results-table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        text-align: right;
+        padding: 0.7rem 0.95rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .results-table td:last-child {
+        border-bottom: 0;
+      }
+
+      .results-table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--text-light);
+        text-align: left;
+      }
+
+      .results-table td[colspan] {
+        display: block;
+        text-align: center;
+      }
+
+      .results-table td[colspan]::before {
+        content: "";
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -645,7 +713,22 @@
 			formatFrSrForTable(findHistoryRecord("JWM", date), "JWM", date)
 		  ];
 
-		  tr.innerHTML = cells.map(cell => `<td>${cell}</td>`).join("");
+		  const labels = [
+			"Date",
+			"Shillong",
+			"Khanapara",
+			"Juwai",
+			"Shillong Morning",
+			"Shillong Night",
+			"Shillong Night 2",
+			"Khanapara Morning",
+			"Juwai Morning"
+		  ];
+
+		  tr.innerHTML = cells
+			.map((cell, index) => `<td data-label="${labels[index]}">${cell}</td>`)
+			.join("");
+
 		  tbody.appendChild(tr);
 		});
 		localStorage.setItem(
