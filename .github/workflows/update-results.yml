@@ -46,12 +46,6 @@ jobs:
             return ist.toISOString().replace("Z", "+05:30");
           }
 
-          function todayIST() {
-            const now = new Date();
-            const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
-            return ist.toISOString().slice(0, 10);
-          }
-
           function cleanNumber(value) {
             if (value === undefined || value === null) return "";
             const v = String(value).trim();
@@ -62,18 +56,20 @@ jobs:
 
           function getApiRecords(apiData) {
             if (Array.isArray(apiData)) return apiData;
-
             if (Array.isArray(apiData.results)) return apiData.results;
             if (Array.isArray(apiData.data)) return apiData.data;
+
+            if (apiData.records && typeof apiData.records === "object") {
+              return Object.values(apiData.records);
+            }
 
             const records = [];
 
             for (const [key, value] of Object.entries(apiData)) {
               if (!value || typeof value !== "object") continue;
-
               records.push({
                 ...value,
-                gameId: value.gameId || value.id || key
+                gameId: value.gameId || key
               });
             }
 
@@ -81,18 +77,19 @@ jobs:
           }
 
           function normalizeRecord(raw) {
-            const gameId = String(raw.gameId || raw.game_id || raw.id || "").toUpperCase().trim();
+            const gameId = String(raw.gameId || "").toUpperCase().trim();
             if (!GAME_MAP[gameId]) return null;
 
-            const date = raw.date || todayIST();
-            const now = istNow();
+            const date = raw.date || "";
+            if (!date) return null;
 
-            const fr = cleanNumber(raw.fr || raw.firstRound || raw.first_round || raw.FR);
-            const sr = cleanNumber(raw.sr || raw.secondRound || raw.second_round || raw.SR);
+            const fr = cleanNumber(raw.fr);
+            const sr = cleanNumber(raw.sr);
 
             if (!fr && !sr) return null;
 
-            const existingStatus = String(raw.status || "").toLowerCase();
+            const now = istNow();
+
             const status = fr && sr ? "completed" : "partial";
 
             return {
@@ -102,11 +99,13 @@ jobs:
               gameId,
               date,
               fr,
-              frUpdatedAt: fr ? (raw.frUpdatedAt || raw.fr_updated_at || now) : "",
+              frUpdatedAt: fr ? (raw.frUpdatedAt || now) : "",
               sr,
-              srUpdatedAt: sr ? (raw.srUpdatedAt || raw.sr_updated_at || now) : "",
-              status: existingStatus === "completed" || existingStatus === "complete" ? "completed" : status,
-              lastCheckedAt: now
+              srUpdatedAt: sr ? (raw.srUpdatedAt || now) : "",
+              frDeclaredTime: raw.frDeclaredTime || "",
+              srDeclaredTime: raw.srDeclaredTime || "",
+              status,
+              lastCheckedAt: raw.lastCheckedAt || now
             };
           }
 
@@ -114,11 +113,13 @@ jobs:
             console.log("Fetching:", API_URL);
 
             const response = await fetch(API_URL, { cache: "no-store" });
+
             if (!response.ok) {
-              throw new Error(`API failed: ${response.status}`);
+              throw new Error(`API failed with HTTP ${response.status}`);
             }
 
             const apiData = await response.json();
+
             const apiRecords = getApiRecords(apiData)
               .map(normalizeRecord)
               .filter(Boolean);
@@ -134,8 +135,11 @@ jobs:
             const existing = Array.isArray(existingRaw) ? existingRaw : [];
 
             const map = new Map();
+
             for (const item of existing) {
-              if (item && item.id) map.set(item.id, item);
+              if (item && item.id) {
+                map.set(item.id, item);
+              }
             }
 
             let changed = false;
@@ -152,14 +156,23 @@ jobs:
 
               const merged = {
                 ...old,
-                ...record,
+                game: record.game,
+                city: record.city,
+                gameId: record.gameId,
+                date: record.date,
                 fr: record.fr || old.fr || "",
                 sr: record.sr || old.sr || "",
-                frUpdatedAt: record.fr ? (old.fr === record.fr && old.frUpdatedAt ? old.frUpdatedAt : record.frUpdatedAt) : old.frUpdatedAt || "",
-                srUpdatedAt: record.sr ? (old.sr === record.sr && old.srUpdatedAt ? old.srUpdatedAt : record.srUpdatedAt) : old.srUpdatedAt || "",
+                frDeclaredTime: record.frDeclaredTime || old.frDeclaredTime || "",
+                srDeclaredTime: record.srDeclaredTime || old.srDeclaredTime || "",
+                frUpdatedAt: record.fr
+                  ? (old.fr === record.fr && old.frUpdatedAt ? old.frUpdatedAt : record.frUpdatedAt)
+                  : old.frUpdatedAt || "",
+                srUpdatedAt: record.sr
+                  ? (old.sr === record.sr && old.srUpdatedAt ? old.srUpdatedAt : record.srUpdatedAt)
+                  : old.srUpdatedAt || "",
+                status: (record.fr || old.fr) && (record.sr || old.sr) ? "completed" : "partial",
+                lastCheckedAt: record.lastCheckedAt || istNow()
               };
-
-              merged.status = merged.fr && merged.sr ? "completed" : "partial";
 
               if (JSON.stringify(old) !== JSON.stringify(merged)) {
                 map.set(record.id, merged);
@@ -175,15 +188,15 @@ jobs:
 
             fs.writeFileSync(JSON_PATH, JSON.stringify(finalData, null, 2) + "\n");
 
-            if (!changed) {
-              console.log("No changes detected.");
-            } else {
+            if (changed) {
               console.log("JSON updated successfully.");
+            } else {
+              console.log("No changes detected.");
             }
           }
 
-          main().catch(err => {
-            console.error(err);
+          main().catch(error => {
+            console.error(error);
             process.exit(1);
           });
           NODE
