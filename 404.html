@@ -225,11 +225,12 @@ body{
 </section>
 
 <div class="footer-note">
-    © 2026 TeerOnline • Shillong, Khanapara, Juwai Morning & Night Teer Results
+    <p class="copyright">© <span id="copyrightYear"></span> TeerOnline.com. All rights reserved.</p>
 </div>
-```
-
 </div>
-
+	<script>
+	// Set copyright year
+    document.getElementById('ThisYear').innerHTML = new Date().getFullYear();initDarkMode();
+  </script>
 </body>
 </html>
