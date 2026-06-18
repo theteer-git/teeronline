@@ -437,13 +437,12 @@
 
     .game-row {
       display: grid;
-      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
+      grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
       gap: 1.25rem;
-      align-items: stretch;
+      align-items: start;
     }
 
     .game-row .result-card {
-      height: 100%;
       margin: 0;
     }
 
@@ -453,15 +452,15 @@
       padding: 1.1rem;
       box-shadow: var(--card-shadow);
       border: 1px solid var(--border);
-      height: 100%;
     }
 
     .history-title {
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 800;
       margin-bottom: 0.75rem;
       color: var(--text);
       text-align: center;
+      line-height: 1.3;
     }
 
     .mini-history-list {
@@ -818,6 +817,12 @@
 		`).join("");
 	  }
 
+	  function cleanGameName(title) {
+		return String(title || "")
+		  .replace(/ Results$/i, "")
+		  .trim();
+	  }
+
 	  function renderDashboard() {
 		const dashboard = document.getElementById("gameDashboard");
 		if (!dashboard) return;
@@ -865,12 +870,11 @@
 			  <button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh Latest Result</button>
 			</div>
 
-			<aside class="game-history-card" aria-label="Previous 7 days for ${game.title}">
-			  <div class="history-title">📅 Previous 7 Results</div>
+			<aside class="game-history-card" aria-label="Previous 7 results of ${cleanGameName(game.title)}">
+			  <div class="history-title">📅 Previous 7 Results of ${cleanGameName(game.title)}</div>
 			  <div class="mini-history-list">
 				${buildMiniHistoryHTML(game)}
 			  </div>
-			  <a class="previous-link" href="${game.previousUrl}">Open Full Archive →</a>
 			</aside>
 		  `;
 
