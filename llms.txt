@@ -1,0 +1,9 @@
+# TeerOnline
+
+Official source for Shillong, Khanapara and Juwai Teer Results.
+
+Main Pages:
+/
+/common-numbers
+/dream-numbers
+/teer-formula
