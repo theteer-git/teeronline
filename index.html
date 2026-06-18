@@ -218,7 +218,7 @@
       font-size: 0.7rem;
       color: var(--accent);
       font-weight: 500;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.55rem;
       display: flex;
       gap: 0.8rem;
       flex-wrap: wrap;
@@ -438,26 +438,28 @@
     .game-row {
       display: grid;
       grid-template-columns: minmax(0, 1fr) minmax(300px, 360px);
-      gap: 1.25rem;
-      align-items: start;
+      gap: 1rem;
+      align-items: stretch;
     }
 
     .game-row .result-card {
       margin: 0;
+      height: 100%;
     }
 
     .game-history-card {
       background: var(--surface);
       border-radius: 1.25rem;
-      padding: 1.1rem;
+      padding: 0.95rem;
       box-shadow: var(--card-shadow);
       border: 1px solid var(--border);
+      height: 100%;
     }
 
     .history-title {
       font-size: 0.95rem;
       font-weight: 800;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.55rem;
       color: var(--text);
       text-align: center;
       line-height: 1.3;
@@ -465,7 +467,7 @@
 
     .mini-history-list {
       display: grid;
-      gap: 0.45rem;
+      gap: 0.24rem;
     }
 
     .mini-history-row {
@@ -475,9 +477,9 @@
       gap: 0.8rem;
       background: var(--bg);
       border: 1px solid var(--border);
-      border-radius: 0.8rem;
-      padding: 0.55rem 0.7rem;
-      font-size: 0.8rem;
+      border-radius: 0.65rem;
+      padding: 0.36rem 0.6rem;
+      font-size: 0.76rem;
     }
 
     .mini-history-date {
@@ -488,7 +490,7 @@
 
     .mini-history-result {
       font-family: monospace;
-      font-size: 1rem;
+      font-size: 0.9rem;
       font-weight: 800;
       color: var(--text);
       white-space: nowrap;
@@ -637,7 +639,7 @@
   <main class="container">
     <div class="hero">
       <h1>Live Shillong, Khanapara & Juwai Teer Results</h1>
-      <p>All Teer results in one place. Fast • Accurate • Reliable. Live cards are updated automatically, while previous results remain available for easy reference.</p>
+      <p>All Teer results in one place. Fast • Accurate • Reliable. Use the refresh button to load the latest result, while previous results remain available for easy reference.</p>
     </div>
 
     <section class="game-dashboard" id="gameDashboard" aria-label="Live results with previous 7 days history">
@@ -682,18 +684,17 @@
 	(function () {
 	  const LIVE_API_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
 	  const HISTORY_JSON_URL = "./data/all-results.json";
-	  const AUTO_REFRESH_MS = 5000;
 	  const FRESH_HOURS = 20;
 
 	  const games = [
-		{ title: "Juwai Teer Results", key: "juwai", gameId: "JWD", previousUrl: "juwai-teer-previous-results" },
-		{ title: "Shillong Teer Results", key: "shillong", gameId: "SHD", previousUrl: "shillong-teer-previous-results" },
-		{ title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", previousUrl: "khanapara-teer-previous-results" },
-		{ title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM", previousUrl: "shillong-morning-teer-previous-results" },
-		{ title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM", previousUrl: "juwai-morning-teer-previous-results" },
-		{ title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM", previousUrl: "khanapara-morning-teer-previous-results" },
-		{ title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1", previousUrl: "shillong-night-teer-previous-results" },
-		{ title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2", previousUrl: "shillong-night-2-teer-previous-results" }
+		{ title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM", defaultFrTime: "10:30 AM" },
+		{ title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM", defaultFrTime: "10:30 AM" },
+		{ title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM", defaultFrTime: "11:00 AM" },
+		{ title: "Juwai Teer Results", key: "juwai", gameId: "JWD", defaultFrTime: "2:30 PM" },
+		{ title: "Shillong Teer Results", key: "shillong", gameId: "SHD", defaultFrTime: "4:15 PM" },
+		{ title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", defaultFrTime: "4:25 PM" },
+		{ title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1", defaultFrTime: "8:45 PM" },
+		{ title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2", defaultFrTime: "11:10 PM" }
 	  ];
 
 	  let liveRecords = {};
@@ -752,6 +753,23 @@
 		if (!record) return "";
 		if (round === "fr") return formatTimeFromTimestamp(record.frUpdatedAt) || record.frDeclaredTime || "";
 		return formatTimeFromTimestamp(record.srUpdatedAt) || record.srDeclaredTime || "";
+	  }
+
+	  function timeToMinutes(timeStr) {
+		if (!timeStr) return 9999;
+		const m = String(timeStr).trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/);
+		if (!m) return 9999;
+		let h = Number(m[1]);
+		const min = Number(m[2]);
+		const ap = m[3];
+		if (ap === "PM" && h !== 12) h += 12;
+		if (ap === "AM" && h === 12) h = 0;
+		return h * 60 + min;
+	  }
+
+	  function gameSortValue(game) {
+		const record = liveRecords[game.gameId] || {};
+		return timeToMinutes(record.frDeclaredTime || game.defaultFrTime);
 	  }
 
 	  function todayIST() {
@@ -829,7 +847,7 @@
 
 		dashboard.innerHTML = "";
 
-		games.forEach(game => {
+		[...games].sort((a, b) => gameSortValue(a) - gameSortValue(b)).forEach(game => {
 		  const record = liveRecords[game.gameId] || {};
 		  const fr = isFresh(record.frUpdatedAt) ? formatNumber(record.fr) : "XX";
 		  const sr = isFresh(record.srUpdatedAt) ? formatNumber(record.sr) : "XX";
@@ -866,7 +884,6 @@
 			  </div>
 
 			  <div style="text-align:center;"><span class="status-pill">${statusLabel}</span></div>
-			  <a class="previous-link" href="${game.previousUrl}">View ${game.title.replace(" Results", "")} Previous Results →</a>
 			  <button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh Latest Result</button>
 			</div>
 
@@ -931,7 +948,6 @@
 
 	  initDarkMode();
 	  loadAll();
-	  setInterval(loadLiveOnly, AUTO_REFRESH_MS);
 	})();
 
 	const copyrightYear = document.getElementById("copyrightYear");
