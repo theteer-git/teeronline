@@ -429,6 +429,122 @@
     .card-title,.game-timings{text-align:center; justify-content:center;}
 
 
+    .game-dashboard {
+      display: grid;
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .game-row {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.75fr);
+      gap: 1.25rem;
+      align-items: stretch;
+    }
+
+    .game-row .result-card {
+      height: 100%;
+      margin: 0;
+    }
+
+    .game-history-card {
+      background: var(--surface);
+      border-radius: 1.25rem;
+      padding: 1.1rem;
+      box-shadow: var(--card-shadow);
+      border: 1px solid var(--border);
+      height: 100%;
+    }
+
+    .history-title {
+      font-size: 1rem;
+      font-weight: 800;
+      margin-bottom: 0.75rem;
+      color: var(--text);
+      text-align: center;
+    }
+
+    .mini-history-list {
+      display: grid;
+      gap: 0.45rem;
+    }
+
+    .mini-history-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.8rem;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 0.8rem;
+      padding: 0.55rem 0.7rem;
+      font-size: 0.8rem;
+    }
+
+    .mini-history-date {
+      color: var(--text-light);
+      font-weight: 700;
+      white-space: nowrap;
+    }
+
+    .mini-history-result {
+      font-family: monospace;
+      font-size: 1rem;
+      font-weight: 800;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .previous-link {
+      display: block;
+      width: 100%;
+      text-align: center;
+      text-decoration: none;
+      background: var(--accent);
+      color: #ffffff;
+      padding: 0.6rem 1rem;
+      border-radius: 999px;
+      font-weight: 800;
+      font-size: 0.85rem;
+      margin-top: 0.8rem;
+      transition: 0.2s;
+    }
+
+    .previous-link:hover {
+      background: var(--accent-dark);
+      color: #ffffff;
+    }
+
+    .status-pill {
+      display: inline-block;
+      margin-top: 0.45rem;
+      padding: 0.25rem 0.65rem;
+      border-radius: 999px;
+      background: rgba(255, 106, 0, 0.12);
+      color: var(--accent);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .dashboard-loading {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 1.25rem;
+      padding: 2rem;
+      text-align: center;
+      color: var(--text-light);
+      font-weight: 700;
+    }
+
+    @media (max-width: 900px) {
+      .game-row {
+        grid-template-columns: 1fr;
+      }
+    }
+
+
     /* Mobile-friendly history table: desktop table becomes stacked cards */
     @media (max-width: 768px) {
       .table-wrapper {
@@ -525,25 +641,9 @@
       <p>All Teer results in one place. Fast • Accurate • Reliable. Live cards are updated automatically, while previous results remain available for easy reference.</p>
     </div>
 
-    <div class="results-grid" id="resultsGrid"></div>
-
-    <div class="history-section">
-      <h2 class="section-title">📅 Last 7 Days Teer Results (FR/SR Combined)</h2>
-      <div class="table-wrapper">
-        <table class="results-table" id="historyTable">
-          <thead>
-            <tr><th>Date</th><th>Shillong FR/SR</th><th>Khanapara FR/SR</th><th>Juwai FR/SR</th><th>Shillong Morning FR/SR</th><th>Shillong Night FR/SR</th><th>Shillong Night Teer 2 FR/SR</th><th>Khanapara Morning FR/SR</th><th>Juwai Morning FR/SR</th></tr>
-          </thead>
-			<tbody id="historyBody">
-			  <tr>
-				<td colspan="9" style="text-align:center;">
-				  Fetching latest historical results...
-				</td>
-			  </tr>
-			</tbody>
-        </table>
-      </div>
-    </div>
+    <section class="game-dashboard" id="gameDashboard" aria-label="Live results with previous 7 days history">
+      <div class="dashboard-loading">Fetching latest Teer results...</div>
+    </section>
 
     <div class="seo-content">
       <h2>Complete Teer Results: First Round & Second Round with Specific Timings</h2>
@@ -587,29 +687,18 @@
 	  const FRESH_HOURS = 20;
 
 	  const games = [
-		{ title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM" },
-		{ title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM" },
-		{ title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM" },
-		{ title: "Juwai Teer Results", key: "juwai", gameId: "JWD" },
-		{ title: "Shillong Teer Results", key: "shillong", gameId: "SHD" },
-		{ title: "Khanapara Teer Results", key: "khanapara", gameId: "KH" },
-		{ title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1" },
-		{ title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2" }
+		{ title: "Juwai Teer Results", key: "juwai", gameId: "JWD", previousUrl: "juwai-teer-previous-results" },
+		{ title: "Shillong Teer Results", key: "shillong", gameId: "SHD", previousUrl: "shillong-teer-previous-results" },
+		{ title: "Khanapara Teer Results", key: "khanapara", gameId: "KH", previousUrl: "khanapara-teer-previous-results" },
+		{ title: "Shillong Morning Teer Results", key: "shillong_morning", gameId: "SHM", previousUrl: "shillong-morning-teer-previous-results" },
+		{ title: "Juwai Morning Teer Results", key: "juwai_morning", gameId: "JWM", previousUrl: "juwai-morning-teer-previous-results" },
+		{ title: "Khanapara Morning Teer Results", key: "khanapara_morning", gameId: "KHM", previousUrl: "khanapara-morning-teer-previous-results" },
+		{ title: "Shillong Night Teer Results", key: "shillong_night", gameId: "SHN1", previousUrl: "shillong-night-teer-previous-results" },
+		{ title: "Shillong Night Teer 2 Results", key: "shillong_night2", gameId: "SHN2", previousUrl: "shillong-night-2-teer-previous-results" }
 	  ];
 
 	  let liveRecords = {};
 	  let historyRecords = [];
-	  
-	  document.addEventListener("DOMContentLoaded", () => {
-		  const cachedTable = localStorage.getItem("historyTable");
-
-		  if (
-			cachedTable &&
-			document.getElementById("historyBody")
-		  ) {
-			document.getElementById("historyBody").innerHTML = cachedTable;
-		  }
-		});
 
 	  function isValidNumber(value) {
 		return /^\d{1,2}$/.test(String(value || "").trim());
@@ -623,20 +712,16 @@
 		if (!updatedAt) return false;
 		const d = new Date(updatedAt);
 		if (isNaN(d.getTime())) return false;
-
 		const ageMs = Date.now() - d.getTime();
 		return ageMs >= 0 && ageMs <= FRESH_HOURS * 60 * 60 * 1000;
 	  }
 
 	  function parseDate(dateStr) {
 		if (!dateStr) return null;
-
 		let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
 		if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-
 		m = String(dateStr).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
 		if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
-
 		const d = new Date(dateStr);
 		return isNaN(d.getTime()) ? null : d;
 	  }
@@ -656,7 +741,6 @@
 		if (!ts) return "";
 		const d = new Date(ts);
 		if (isNaN(d.getTime())) return "";
-
 		return d.toLocaleTimeString("en-IN", {
 		  timeZone: "Asia/Kolkata",
 		  hour: "numeric",
@@ -667,78 +751,94 @@
 
 	  function getRoundTime(record, round) {
 		if (!record) return "";
-
-		if (round === "fr") {
-		  return formatTimeFromTimestamp(record.frUpdatedAt) || record.frDeclaredTime || "";
-		}
-
+		if (round === "fr") return formatTimeFromTimestamp(record.frUpdatedAt) || record.frDeclaredTime || "";
 		return formatTimeFromTimestamp(record.srUpdatedAt) || record.srDeclaredTime || "";
 	  }
 
-	  function timeToMinutes(timeStr) {
-		if (!timeStr) return 9999;
-
-		const m = String(timeStr).trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/);
-		if (!m) return 9999;
-
-		let h = Number(m[1]);
-		const min = Number(m[2]);
-		const ap = m[3];
-
-		if (ap === "PM" && h !== 12) h += 12;
-		if (ap === "AM" && h === 12) h = 0;
-
-		return h * 60 + min;
+	  function todayIST() {
+		const istString = new Date().toLocaleString("en-US", { timeZone: "Asia/Kolkata" });
+		const ist = new Date(istString);
+		return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, "0")}-${String(ist.getDate()).padStart(2, "0")}`;
 	  }
 
-	  function getGameSortTime(game) {
-		const record = liveRecords[game.gameId] || {};
-		const frTime = record.frDeclaredTime || getRoundTime(record, "fr");
-		return timeToMinutes(frTime);
+	  function getStatusLabel(record, fr, sr) {
+		if (!record || (!record.fr && !record.sr)) return "Pending";
+		if (fr !== "XX" && sr !== "XX") return "Completed";
+		return "Partial";
+	  }
+
+	  function normalizeApiRecords(data) {
+		if (!data) return {};
+		if (data.records && typeof data.records === "object") return data.records;
+		if (Array.isArray(data)) {
+		  return data.reduce((acc, item) => {
+			if (item && item.gameId) acc[item.gameId] = item;
+			return acc;
+		  }, {});
+		}
+		return {};
 	  }
 
 	  async function fetchLiveResults() {
 		const res = await fetch(`${LIVE_API_URL}?v=${Date.now()}`, { cache: "no-store" });
 		if (!res.ok) throw new Error("Unable to fetch live results");
-
 		const data = await res.json();
-		liveRecords = data.records || {};
+		liveRecords = normalizeApiRecords(data);
 	  }
 
 	  async function fetchHistoryResults() {
 		const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
-
 		if (!res.ok) {
 		  historyRecords = [];
 		  return;
 		}
-
 		const data = await res.json();
 		historyRecords = Array.isArray(data) ? data : [];
 	  }
 
-	  function renderCards() {
-		const grid = document.getElementById("resultsGrid");
-		if (!grid) return;
+	  function getPreviousRecords(gameId) {
+		const today = todayIST();
+		return historyRecords
+		  .filter(item => item && item.gameId === gameId && item.date && item.date < today)
+		  .sort((a, b) => dateValue(b.date) - dateValue(a.date))
+		  .slice(0, 7);
+	  }
 
-		grid.innerHTML = "";
+	  function buildMiniHistoryHTML(game) {
+		const records = getPreviousRecords(game.gameId);
+		if (!records.length) {
+		  return `<div class="mini-history-row"><span class="mini-history-date">History</span><span class="mini-history-result">Not available</span></div>`;
+		}
 
-		[...games]
-		  .sort((a, b) => getGameSortTime(a) - getGameSortTime(b))
-		  .forEach(game => {
-			const record = liveRecords[game.gameId] || {};
+		return records.map(record => `
+		  <div class="mini-history-row">
+			<span class="mini-history-date">${formatDateDisplay(record.date)}</span>
+			<span class="mini-history-result">${formatNumber(record.fr)}-${formatNumber(record.sr)}</span>
+		  </div>
+		`).join("");
+	  }
 
-			const fr = isFresh(record.frUpdatedAt) ? formatNumber(record.fr) : "XX";
-			const sr = isFresh(record.srUpdatedAt) ? formatNumber(record.sr) : "XX";
+	  function renderDashboard() {
+		const dashboard = document.getElementById("gameDashboard");
+		if (!dashboard) return;
 
-			const frTime = getRoundTime(record, "fr") || "Updating";
-			const srTime = getRoundTime(record, "sr") || "Updating";
-			const resultDate = record.date ? formatDateDisplay(record.date) : "Today";
+		dashboard.innerHTML = "";
 
-			const card = document.createElement("div");
-			card.className = "result-card";
+		games.forEach(game => {
+		  const record = liveRecords[game.gameId] || {};
+		  const fr = isFresh(record.frUpdatedAt) ? formatNumber(record.fr) : "XX";
+		  const sr = isFresh(record.srUpdatedAt) ? formatNumber(record.sr) : "XX";
+		  const frTime = getRoundTime(record, "fr") || "Updating";
+		  const srTime = getRoundTime(record, "sr") || "Updating";
+		  const resultDate = record.date ? formatDateDisplay(record.date) : "Today";
+		  const statusLabel = getStatusLabel(record, fr, sr);
 
-			card.innerHTML = `
+		  const section = document.createElement("section");
+		  section.className = "game-row";
+		  section.id = `result-${game.gameId}`;
+
+		  section.innerHTML = `
+			<div class="result-card">
 			  <div class="card-title">${game.title}</div>
 			  <div class="game-timings">
 				<span>📅 Result Date: ${resultDate}</span>
@@ -760,11 +860,22 @@
 				</div>
 			  </div>
 
-			  <button class="refresh-btn" data-refresh="1">🔄 Refresh Latest Result</button>
-			`;
+			  <div style="text-align:center;"><span class="status-pill">${statusLabel}</span></div>
+			  <a class="previous-link" href="${game.previousUrl}">View ${game.title.replace(" Results", "")} Previous Results →</a>
+			  <button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh Latest Result</button>
+			</div>
 
-			grid.appendChild(card);
-		  });
+			<aside class="game-history-card" aria-label="Previous 7 days for ${game.title}">
+			  <div class="history-title">📅 Previous 7 Results</div>
+			  <div class="mini-history-list">
+				${buildMiniHistoryHTML(game)}
+			  </div>
+			  <a class="previous-link" href="${game.previousUrl}">Open Full Archive →</a>
+			</aside>
+		  `;
+
+		  dashboard.appendChild(section);
+		});
 
 		document.querySelectorAll("[data-refresh='1']").forEach(btn => {
 		  btn.addEventListener("click", async () => {
@@ -777,124 +888,35 @@
 		});
 	  }
 
-	  function findHistoryRecord(gameId, date) {
-		return historyRecords.find(item => item && item.gameId === gameId && item.date === date);
-	  }
-
-	  function formatFrSrForTable(record, gameId, date) {
-		const d = parseDate(date);
-
-		if (d && d.getDay() === 0 && ["SHD", "KH", "JWD"].includes(gameId)) {
-		  return "OFF";
-		}
-
-		if (!record) return "XX-XX";
-
-		return `${formatNumber(record.fr)}-${formatNumber(record.sr)}`;
-	  }
-
-	  function todayIST() {
-		const now = new Date();
-		const ist = new Date(now.toLocaleString("en-US", { timeZone: "Asia/Kolkata" }));
-		return `${ist.getFullYear()}-${String(ist.getMonth() + 1).padStart(2, "0")}-${String(ist.getDate()).padStart(2, "0")}`;
-	  }
-
-	  function getHistoryDatesTillYesterday() {
-		const today = todayIST();
-		const dates = new Set();
-
-		historyRecords.forEach(item => {
-		  if (item && item.date && item.date < today) {
-			dates.add(item.date);
-		  }
-		});
-
-		return [...dates].sort((a, b) => dateValue(b) - dateValue(a)).slice(0, 7);
-	  }
-
-	  function renderHistoryTable() {
-		const tbody = document.getElementById("historyBody");
-		if (!tbody) return;
-
-		const dates = getHistoryDatesTillYesterday();
-		tbody.innerHTML = "";
-
-		if (!dates.length) {
-		  tbody.innerHTML = `<tr><td colspan="9">No previous result history available</td></tr>`;
-		  return;
-		}
-
-		dates.forEach(date => {
-		  const tr = document.createElement("tr");
-
-		  const cells = [
-			formatDateDisplay(date),
-			formatFrSrForTable(findHistoryRecord("SHD", date), "SHD", date),
-			formatFrSrForTable(findHistoryRecord("KH", date), "KH", date),
-			formatFrSrForTable(findHistoryRecord("JWD", date), "JWD", date),
-			formatFrSrForTable(findHistoryRecord("SHM", date), "SHM", date),
-			formatFrSrForTable(findHistoryRecord("SHN1", date), "SHN1", date),
-			formatFrSrForTable(findHistoryRecord("SHN2", date), "SHN2", date),
-			formatFrSrForTable(findHistoryRecord("KHM", date), "KHM", date),
-			formatFrSrForTable(findHistoryRecord("JWM", date), "JWM", date)
-		  ];
-
-		  const labels = [
-			"Date",
-			"Shillong",
-			"Khanapara",
-			"Juwai",
-			"Shillong Morning",
-			"Shillong Night",
-			"Shillong Night 2",
-			"Khanapara Morning",
-			"Juwai Morning"
-		  ];
-
-		  tr.innerHTML = cells
-			.map((cell, index) => `<td data-label="${labels[index]}">${cell}</td>`)
-			.join("");
-
-		  tbody.appendChild(tr);
-		});
-		localStorage.setItem(
-		  "historyTable",
-		  tbody.innerHTML
-		);
-	  }
-
 	  async function loadLiveOnly() {
 		try {
 		  await fetchLiveResults();
-		  renderCards();
+		  renderDashboard();
 		} catch (err) {
 		  console.error(err);
 		}
 	  }
 
 	  async function loadAll() {
-		  renderCards();
-		  try {
-			await Promise.all([
-			  fetchLiveResults(),
-			  fetchHistoryResults()
-			]);
-			renderCards();
-			renderHistoryTable();
-		  } catch (err) {
-			console.error(err);
+		renderDashboard();
+		try {
+		  await Promise.all([fetchLiveResults(), fetchHistoryResults()]);
+		  renderDashboard();
+		} catch (err) {
+		  console.error(err);
+		  const dashboard = document.getElementById("gameDashboard");
+		  if (dashboard && !dashboard.children.length) {
+			dashboard.innerHTML = `<div class="dashboard-loading">Unable to load latest results. Please refresh the page.</div>`;
 		  }
 		}
+	  }
 
 	  function initDarkMode() {
 		const toggle = document.getElementById("darkModeToggle");
 		if (!toggle) return;
-
 		const isDark = localStorage.getItem("darkMode") === "true";
 		if (isDark) document.body.classList.add("dark");
-
 		toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
-
 		toggle.addEventListener("click", () => {
 		  document.body.classList.toggle("dark");
 		  const darkEnabled = document.body.classList.contains("dark");
@@ -907,6 +929,7 @@
 	  loadAll();
 	  setInterval(loadLiveOnly, AUTO_REFRESH_MS);
 	})();
+
 	const copyrightYear = document.getElementById("copyrightYear");
 	if (copyrightYear) {
 	  copyrightYear.textContent = new Date().getFullYear();
