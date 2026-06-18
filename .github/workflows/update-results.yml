@@ -1,7 +1,9 @@
-name: Update Teer Results Backup
+name: Update Teer Results From API
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: "*/5 * * * *"
 
 permissions:
   contents: write
@@ -11,31 +13,191 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
+      - name: Checkout repo
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install dependencies without modifying repo
-        run: npm install axios cheerio --no-save
-
-      - name: Run result updater
-        run: node assets/scripts/update-results.js
-
-      - name: Commit updated JSON
+      - name: Fetch API and update all-results.json
         run: |
-          git config user.name "github-actions"
-          git config user.email "github-actions@github.com"
+          node <<'NODE'
+          const fs = require("fs");
+
+          const API_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
+          const JSON_PATH = "data/all-results.json";
+
+          const GAME_MAP = {
+            SHD:  { game: "shillong day", city: "Shillong" },
+            KH:   { game: "khanapara day", city: "Khanapara" },
+            JWD:  { game: "juwai day", city: "Juwai" },
+            SHM:  { game: "shillong morning", city: "Shillong" },
+            KHM:  { game: "khanapara morning", city: "Khanapara" },
+            JWM:  { game: "juwai morning", city: "Juwai" },
+            SHN1: { game: "Shillong Night", city: "Shillong" },
+            SHN2: { game: "Shillong Night 2", city: "Shillong" }
+          };
+
+          function istNow() {
+            const now = new Date();
+            const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+            return ist.toISOString().replace("Z", "+05:30");
+          }
+
+          function todayIST() {
+            const now = new Date();
+            const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
+            return ist.toISOString().slice(0, 10);
+          }
+
+          function cleanNumber(value) {
+            if (value === undefined || value === null) return "";
+            const v = String(value).trim();
+            if (!v || ["xx", "na", "-", "--", "null", "undefined"].includes(v.toLowerCase())) return "";
+            if (!/^\d{1,2}$/.test(v)) return "";
+            return v.padStart(2, "0");
+          }
+
+          function getApiRecords(apiData) {
+            if (Array.isArray(apiData)) return apiData;
+
+            if (Array.isArray(apiData.results)) return apiData.results;
+            if (Array.isArray(apiData.data)) return apiData.data;
+
+            const records = [];
+
+            for (const [key, value] of Object.entries(apiData)) {
+              if (!value || typeof value !== "object") continue;
+
+              records.push({
+                ...value,
+                gameId: value.gameId || value.id || key
+              });
+            }
+
+            return records;
+          }
+
+          function normalizeRecord(raw) {
+            const gameId = String(raw.gameId || raw.game_id || raw.id || "").toUpperCase().trim();
+            if (!GAME_MAP[gameId]) return null;
+
+            const date = raw.date || todayIST();
+            const now = istNow();
+
+            const fr = cleanNumber(raw.fr || raw.firstRound || raw.first_round || raw.FR);
+            const sr = cleanNumber(raw.sr || raw.secondRound || raw.second_round || raw.SR);
+
+            if (!fr && !sr) return null;
+
+            const existingStatus = String(raw.status || "").toLowerCase();
+            const status = fr && sr ? "completed" : "partial";
+
+            return {
+              id: `${gameId}-${date}`,
+              game: GAME_MAP[gameId].game,
+              city: GAME_MAP[gameId].city,
+              gameId,
+              date,
+              fr,
+              frUpdatedAt: fr ? (raw.frUpdatedAt || raw.fr_updated_at || now) : "",
+              sr,
+              srUpdatedAt: sr ? (raw.srUpdatedAt || raw.sr_updated_at || now) : "",
+              status: existingStatus === "completed" || existingStatus === "complete" ? "completed" : status,
+              lastCheckedAt: now
+            };
+          }
+
+          async function main() {
+            console.log("Fetching:", API_URL);
+
+            const response = await fetch(API_URL, { cache: "no-store" });
+            if (!response.ok) {
+              throw new Error(`API failed: ${response.status}`);
+            }
+
+            const apiData = await response.json();
+            const apiRecords = getApiRecords(apiData)
+              .map(normalizeRecord)
+              .filter(Boolean);
+
+            console.log("Valid API records:", apiRecords.length);
+
+            if (!fs.existsSync(JSON_PATH)) {
+              fs.mkdirSync("data", { recursive: true });
+              fs.writeFileSync(JSON_PATH, "[]");
+            }
+
+            const existingRaw = JSON.parse(fs.readFileSync(JSON_PATH, "utf8"));
+            const existing = Array.isArray(existingRaw) ? existingRaw : [];
+
+            const map = new Map();
+            for (const item of existing) {
+              if (item && item.id) map.set(item.id, item);
+            }
+
+            let changed = false;
+
+            for (const record of apiRecords) {
+              const old = map.get(record.id);
+
+              if (!old) {
+                map.set(record.id, record);
+                changed = true;
+                console.log("Added:", record.id);
+                continue;
+              }
+
+              const merged = {
+                ...old,
+                ...record,
+                fr: record.fr || old.fr || "",
+                sr: record.sr || old.sr || "",
+                frUpdatedAt: record.fr ? (old.fr === record.fr && old.frUpdatedAt ? old.frUpdatedAt : record.frUpdatedAt) : old.frUpdatedAt || "",
+                srUpdatedAt: record.sr ? (old.sr === record.sr && old.srUpdatedAt ? old.srUpdatedAt : record.srUpdatedAt) : old.srUpdatedAt || "",
+              };
+
+              merged.status = merged.fr && merged.sr ? "completed" : "partial";
+
+              if (JSON.stringify(old) !== JSON.stringify(merged)) {
+                map.set(record.id, merged);
+                changed = true;
+                console.log("Updated:", record.id);
+              }
+            }
+
+            const finalData = Array.from(map.values()).sort((a, b) => {
+              if (a.date !== b.date) return b.date.localeCompare(a.date);
+              return String(a.gameId).localeCompare(String(b.gameId));
+            });
+
+            fs.writeFileSync(JSON_PATH, JSON.stringify(finalData, null, 2) + "\n");
+
+            if (!changed) {
+              console.log("No changes detected.");
+            } else {
+              console.log("JSON updated successfully.");
+            }
+          }
+
+          main().catch(err => {
+            console.error(err);
+            process.exit(1);
+          });
+          NODE
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
           git add data/all-results.json
 
           if git diff --cached --quiet; then
-            echo "No JSON changes found."
-            exit 0
+            echo "No JSON changes to commit."
+          else
+            git commit -m "Update all-results.json from Teer API"
+            git push
           fi
-
-          git commit -m "Backup update teer results"
-          git push
