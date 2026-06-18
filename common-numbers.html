@@ -168,6 +168,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 </div>
 <div class="related-links"><a href="./shillong-teer-previous-results">Shillong Teer Previous Results</a><a href="./khanapara-teer-previous-results">Khanapara Teer Previous Results</a><a href="./juwai-teer-previous-results">Juwai Teer Previous Results</a><a href="./shillong-morning-teer-previous-results">Shillong Morning Teer Previous Results</a><a href="./khanapara-morning-teer-previous-results">Khanapara Morning Teer Previous Results</a><a href="./juwai-morning-teer-previous-results">Juwai Morning Teer Previous Results</a><a href="./shillong-night-teer-previous-results">Shillong Night Teer Previous Results</a><a href="./shillong-night-teer-2-previous-results">Shillong Night Teer 2 Previous Results</a></div>
 </main>
+<footer>
 <div class="container">
 <nav aria-label="Footer navigation" class="footer-nav">
 <a href="./about">About</a><span>•</span>
@@ -249,7 +250,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
       const paths = ['data/all-results.json', './data/all-results.json', '../data/all-results.json', 'all-results.json'];
       for (const path of paths) {
         try {
-          const res = await fetch(path);
+          const res = await fetch(path + '?v=' + Date.now(), { cache: 'no-store' });
           if (res.ok) return await res.json();
         } catch (e) {}
       }
@@ -543,7 +544,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
         renderStatsSection(data);
       } catch (e) {
         console.error(e);
-        const errorHtml = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load all-results.json.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
+        const errorHtml = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load data/all-results.json. Please check that the file exists in the data folder.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
         document.getElementById('gamesContainer').innerHTML = errorHtml;
         document.getElementById('statsContainer').innerHTML = errorHtml;
       }
@@ -563,7 +564,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
     }
 
     document.getElementById('refreshPage')?.addEventListener('click', () => location.reload());
-    document.getElementById('ThisYear').innerHTML = new Date().getFullYear();
+    const thisYearEl = document.getElementById('ThisYear'); if (thisYearEl) thisYearEl.textContent = new Date().getFullYear(); const copyrightYearEl = document.getElementById('copyrightYear'); if (copyrightYearEl) copyrightYearEl.textContent = new Date().getFullYear();
     initDarkMode();
     render();
   </script>
