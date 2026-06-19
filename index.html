@@ -10,8 +10,7 @@
 <meta content="TeerOnline.com" name="author"/>
 <meta content="index, follow, max-image-preview:large" name="robots"/>
 <meta content="#ff6a00" name="theme-color"/>
-<link crossorigin="" href="https://teer-api.maya-digital-rkn.workers.dev" rel="preconnect"/>
-<link href="//teer-api.maya-digital-rkn.workers.dev" rel="dns-prefetch"/>
+
 <link href="./assets/img/favicon.ico" rel="icon" sizes="any"/>
 <link href="./assets/img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
 <link href="./assets/img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
@@ -209,7 +208,7 @@ body.dark .time-badge{background:#fdba74;color:#111111}
 <a href="./khanapara-morning-teer-previous-results">Khanapara Morning Teer Previous Results</a>
 <a href="./juwai-morning-teer-previous-results">Juwai Morning Teer Previous Results</a>
 <a href="./shillong-night-teer-previous-results">Shillong Night Teer Previous Results</a>
-<a href="./shillong-night-2-teer-previous-results">Shillong Night 2 Teer Previous Results</a>
+<a href="./shillong-night-teer-2-previous-results">Shillong Night 2 Teer Previous Results</a>
 </div>
 <p>Each game section shows the latest available FR and SR number along with the declared result timing. Beside or below every result card, you can check the <strong>previous 7 results</strong> for the same game.</p>
 <h3>Available Teer Result Sections</h3>
@@ -239,7 +238,8 @@ body.dark .time-badge{background:#fdba74;color:#111111}
 </footer>
 <script>
   (function(){
-    const LIVE_API_URL="https://teer-api.maya-digital-rkn.workers.dev/latest";
+    /* Visitor-safe setup: homepage reads only static GitHub Pages JSON files. No browser request goes to Cloudflare Worker/KV. */
+    const LIVE_JSON_URL="./data/latest-results.json";
     const HISTORY_JSON_URL="./data/recent-results.json";
     const FRESH_HOURS=20;
     const games=[
@@ -269,7 +269,7 @@ body.dark .time-badge{background:#fdba74;color:#111111}
     function getStatusLabel(record,fr,sr){const status=String(record.status||"").toLowerCase();if(fr!=="XX"&&sr!=="XX")return"Completed";if(fr!=="XX"||sr!=="XX")return"Partial";if(status==="pending")return"Pending";return"Waiting"}
     function findHistoryRecords(gameId){return historyRecords.filter(item=>item&&item.gameId===gameId&&item.date&&isValidNumber(item.fr)&&isValidNumber(item.sr)).sort((a,b)=>dateValue(b.date)-dateValue(a.date)).slice(0,7)}
     function buildMiniHistoryHTML(game){const records=findHistoryRecords(game.gameId);const rows=records.map(record=>`<div class="mini-history-row"><span class="mini-history-date">${formatDateDisplay(record.date)}</span><span class="mini-history-result">${formatNumber(record.fr)}-${formatNumber(record.sr)}</span></div>`);while(rows.length<7){rows.push(`<div class="mini-history-row" aria-hidden="true"><span class="mini-history-date">--</span><span class="mini-history-result">XX-XX</span></div>`)}return rows.join("")}
-    async function fetchLiveResults(){const res=await fetch(`${LIVE_API_URL}?v=${Date.now()}`,{cache:"no-store"});if(!res.ok)throw new Error("Unable to fetch live results");const data=await res.json();liveRecords=data.records||{}}
+    async function fetchLiveResults(){const res=await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`,{cache:"no-store"});if(!res.ok)throw new Error("Unable to fetch latest-results.json");const data=await res.json();liveRecords=data.records||{}}
     async function fetchHistoryResults(){const res=await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`,{cache:"no-store"});if(!res.ok){historyRecords=[];return}const data=await res.json();historyRecords=Array.isArray(data)?data:[]}
     function renderDashboard(){const dashboard=document.getElementById("gameDashboard");if(!dashboard)return;dashboard.innerHTML="";orderedGames().forEach(game=>{const record=liveRecords[game.gameId]||{};const fr=isFresh(record.frUpdatedAt)?formatNumber(record.fr):"XX";const sr=isFresh(record.srUpdatedAt)?formatNumber(record.sr):"XX";const frTime=getRoundTime(record,"fr")||game.defaultFrTime||"Updating";const srTime=getRoundTime(record,"sr")||record.srDeclaredTime||"Updating";const resultDate=record.date?formatDateDisplay(record.date):"Today";const statusLabel=getStatusLabel(record,fr,sr);const gameName=cleanGameName(game.title);const section=document.createElement("section");section.className="game-row";section.id=`result-${game.gameId}`;section.innerHTML=`<article class="result-card" aria-labelledby="title-${game.gameId}"><h2 class="card-title" id="title-${game.gameId}">${game.title}</h2><div class="game-timings"><span>📅 ${resultDate}</span><span>🏹 FR: ${frTime}</span><span>🎯 SR: ${srTime}</span></div><div class="fr-sr-container"><div class="fr-box"><div class="fr-label">First Round (FR)</div><div class="fr-value">${fr}</div><span class="time-badge">${frTime}</span></div><div class="sr-box"><div class="sr-label">Second Round (SR)</div><div class="sr-value">${sr}</div><span class="time-badge">${srTime}</span></div></div><div class="status-wrap"><span class="status-pill">${statusLabel}</span></div><button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh Latest Result</button></article><aside class="game-history-card" aria-label="Previous 7 results of ${gameName}"><h3 class="history-title">📅 Previous 7 Results of ${gameName}</h3><div class="mini-history-list">${buildMiniHistoryHTML(game)}</div></aside>`;dashboard.appendChild(section)});dashboard.querySelectorAll("[data-refresh='1']").forEach(btn=>{btn.addEventListener("click",async()=>{btn.textContent="⏳ Refreshing...";btn.disabled=true;await loadAll(false);btn.textContent="🔄 Refresh Latest Result";btn.disabled=false})})}
     async function loadAll(showLoading=false){const dashboard=document.getElementById("gameDashboard");/* skeleton already rendered to prevent CLS */try{await Promise.all([fetchLiveResults(),fetchHistoryResults()]);renderDashboard()}catch(err){console.error(err);if(dashboard)dashboard.innerHTML='<div class="dashboard-loading">Unable to load latest results. Please use the refresh button or try again later.</div>'}}
