@@ -34,14 +34,14 @@ jobs:
           const RECENT_PER_GAME = 10;
 
           const GAME_MAP = {
-            SHD:  { game: "shillong day", city: "Shillong" },
-            KH:   { game: "khanapara day", city: "Khanapara" },
-            JWD:  { game: "juwai day", city: "Juwai" },
-            SHM:  { game: "shillong morning", city: "Shillong" },
-            KHM:  { game: "khanapara morning", city: "Khanapara" },
-            JWM:  { game: "juwai morning", city: "Juwai" },
-            SHN1: { game: "Shillong Night", city: "Shillong" },
-            SHN2: { game: "Shillong Night 2", city: "Shillong" }
+            SHD:  { game: "shillong day", city: "Shillong", frDeclaredTime: "4:15 PM",  srDeclaredTime: "5:15 PM" },
+            KH:   { game: "khanapara day", city: "Khanapara", frDeclaredTime: "4:25 PM", srDeclaredTime: "5:00 PM" },
+            JWD:  { game: "juwai day", city: "Juwai", frDeclaredTime: "2:30 PM", srDeclaredTime: "3:15 PM" },
+            SHM:  { game: "shillong morning", city: "Shillong", frDeclaredTime: "10:30 AM", srDeclaredTime: "11:30 AM" },
+            KHM:  { game: "khanapara morning", city: "Khanapara", frDeclaredTime: "11:00 AM", srDeclaredTime: "12:00 PM" },
+            JWM:  { game: "juwai morning", city: "Juwai", frDeclaredTime: "10:30 AM", srDeclaredTime: "11:30 AM" },
+            SHN1: { game: "Shillong Night", city: "Shillong", frDeclaredTime: "8:45 PM", srDeclaredTime: "9:45 PM" },
+            SHN2: { game: "Shillong Night 2", city: "Shillong", frDeclaredTime: "11:10 PM", srDeclaredTime: "12:10 AM" }
           };
 
           const GAME_IDS = Object.keys(GAME_MAP);
@@ -50,6 +50,10 @@ jobs:
             const now = new Date();
             const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
             return ist.toISOString().replace("Z", "+05:30");
+          }
+
+          function istDateToday() {
+            return istNow().slice(0, 10);
           }
 
           function cleanNumber(value) {
@@ -73,11 +77,7 @@ jobs:
             if (Array.isArray(apiData)) return apiData;
             if (Array.isArray(apiData.results)) return apiData.results;
             if (Array.isArray(apiData.data)) return apiData.data;
-
-            if (apiData.records && typeof apiData.records === "object") {
-              return Object.values(apiData.records);
-            }
-
+            if (apiData.records && typeof apiData.records === "object") return Object.values(apiData.records);
             return [];
           }
 
@@ -90,23 +90,44 @@ jobs:
 
             const fr = cleanNumber(raw.fr);
             const sr = cleanNumber(raw.sr);
+            const meta = GAME_MAP[gameId];
             const now = istNow();
             const status = fr && sr ? "completed" : (fr || sr ? "partial" : "pending");
 
             return {
               id: `${gameId}-${date}`,
-              game: GAME_MAP[gameId].game,
-              city: GAME_MAP[gameId].city,
+              game: meta.game,
+              city: meta.city,
               gameId,
               date,
               fr,
               frUpdatedAt: fr ? (raw.frUpdatedAt || now) : "",
               sr,
               srUpdatedAt: sr ? (raw.srUpdatedAt || now) : "",
-              frDeclaredTime: raw.frDeclaredTime || "",
-              srDeclaredTime: raw.srDeclaredTime || "",
+              frDeclaredTime: raw.frDeclaredTime || meta.frDeclaredTime || "",
+              srDeclaredTime: raw.srDeclaredTime || meta.srDeclaredTime || "",
               status,
               lastCheckedAt: raw.lastCheckedAt || now
+            };
+          }
+
+          function pendingRecord(gameId, date) {
+            const meta = GAME_MAP[gameId];
+            const now = istNow();
+            return {
+              id: `${gameId}-${date}`,
+              game: meta.game,
+              city: meta.city,
+              gameId,
+              date,
+              fr: "",
+              frUpdatedAt: "",
+              sr: "",
+              srUpdatedAt: "",
+              frDeclaredTime: meta.frDeclaredTime || "",
+              srDeclaredTime: meta.srDeclaredTime || "",
+              status: "pending",
+              lastCheckedAt: now
             };
           }
 
@@ -136,76 +157,26 @@ jobs:
             });
           }
 
-          function latestCompletedFromArchive(allData, gameId) {
-            return allData
-              .filter(item =>
-                item &&
-                item.gameId === gameId &&
-                item.date &&
-                isValidNumber(item.fr) &&
-                isValidNumber(item.sr) &&
-                String(item.status || "").toLowerCase() === "completed"
-              )
-              .sort((a, b) => dateValue(b.date) - dateValue(a.date))[0] || null;
-          }
-
-          function betterLatest(apiRecord, archiveRecord) {
-            // If archive has completed data and API is pending/partial/blank, prefer archive.
-            if (
-              archiveRecord &&
-              isValidNumber(archiveRecord.fr) &&
-              isValidNumber(archiveRecord.sr) &&
-              (
-                !apiRecord ||
-                !isValidNumber(apiRecord.fr) ||
-                !isValidNumber(apiRecord.sr) ||
-                String(apiRecord.status || "").toLowerCase() !== "completed"
-              )
-            ) {
-              return archiveRecord;
-            }
-
-            // If API is completed, prefer API.
-            if (apiRecord && isValidNumber(apiRecord.fr) && isValidNumber(apiRecord.sr)) {
-              return apiRecord;
-            }
-
-            // Otherwise use archive if available.
-            if (archiveRecord) return archiveRecord;
-
-            return apiRecord || null;
-          }
-
           async function main() {
             console.log("Fetching:", API_URL);
 
-            if (!fs.existsSync("data")) {
-              fs.mkdirSync("data", { recursive: true });
-            }
-
-            if (!fs.existsSync(ALL_JSON_PATH)) {
-              fs.writeFileSync(ALL_JSON_PATH, "[]");
-            }
+            if (!fs.existsSync("data")) fs.mkdirSync("data", { recursive: true });
+            if (!fs.existsSync(ALL_JSON_PATH)) fs.writeFileSync(ALL_JSON_PATH, "[]");
 
             const existingRaw = JSON.parse(fs.readFileSync(ALL_JSON_PATH, "utf8"));
             const existing = Array.isArray(existingRaw) ? existingRaw : [];
 
             const response = await fetch(API_URL, { cache: "no-store" });
-
-            if (!response.ok) {
-              throw new Error(`API failed with HTTP ${response.status}`);
-            }
+            if (!response.ok) throw new Error(`API failed with HTTP ${response.status}`);
 
             const apiData = await response.json();
+            const currentDate = apiData.date || istDateToday();
 
-            const apiRecords = getApiRecords(apiData)
-              .map(normalizeRecord)
-              .filter(Boolean);
-
+            const apiRecords = getApiRecords(apiData).map(normalizeRecord).filter(Boolean);
             console.log("Valid API records:", apiRecords.length);
+            console.log("Current active date:", currentDate);
 
             const map = new Map();
-
             for (const item of existing) {
               if (item && item.id) map.set(item.id, item);
             }
@@ -256,60 +227,54 @@ jobs:
               return String(a.gameId).localeCompare(String(b.gameId));
             });
 
-            fs.writeFileSync(
-              ALL_JSON_PATH,
-              JSON.stringify(finalAllData, null, 2) + "\n"
-            );
+            fs.writeFileSync(ALL_JSON_PATH, JSON.stringify(finalAllData, null, 2) + "\n");
 
-            const apiRecordByGameId = {};
-            for (const record of apiRecords) {
-              apiRecordByGameId[record.gameId] = record;
-            }
+            const apiByGameId = {};
+            for (const record of apiRecords) apiByGameId[record.gameId] = record;
 
             const latestRecords = {};
-            const now = istNow();
 
             for (const gameId of GAME_IDS) {
-              const apiRecord = apiRecordByGameId[gameId] || null;
-              const archiveRecord = latestCompletedFromArchive(finalAllData, gameId);
-              const selected = betterLatest(apiRecord, archiveRecord);
+              const apiRecord = apiByGameId[gameId] || null;
 
-              latestRecords[gameId] = selected || {
-                id: `${gameId}-${apiData.date || now.slice(0, 10)}`,
-                game: GAME_MAP[gameId].game,
-                city: GAME_MAP[gameId].city,
-                gameId,
-                date: apiData.date || now.slice(0, 10),
-                fr: "",
-                frUpdatedAt: "",
-                sr: "",
-                srUpdatedAt: "",
-                frDeclaredTime: "",
-                srDeclaredTime: "",
-                status: "pending",
-                lastCheckedAt: now
-              };
+              // IMPORTANT:
+              // latest-results.json must always represent the current active date.
+              // If API has current date pending, use pending current date.
+              // Do NOT show yesterday's completed result as today's live card.
+              if (apiRecord && apiRecord.date === currentDate) {
+                latestRecords[gameId] = apiRecord;
+              } else {
+                latestRecords[gameId] = pendingRecord(gameId, currentDate);
+              }
+
+              // If all-results.json already has completed data for the same current date,
+              // use that completed same-date data.
+              const sameDateArchive = finalAllData.find(item =>
+                item &&
+                item.gameId === gameId &&
+                item.date === currentDate &&
+                isValidNumber(item.fr) &&
+                isValidNumber(item.sr) &&
+                String(item.status || "").toLowerCase() === "completed"
+              );
+
+              if (sameDateArchive) {
+                latestRecords[gameId] = sameDateArchive;
+              }
 
               console.log(`latest ${gameId}: ${latestRecords[gameId].id} ${latestRecords[gameId].status}`);
             }
 
             const latestJson = {
-              date: apiData.date || now.slice(0, 10),
-              lastUpdatedAt: apiData.lastUpdatedAt || now,
+              date: currentDate,
+              lastUpdatedAt: apiData.lastUpdatedAt || istNow(),
               records: latestRecords
             };
 
-            fs.writeFileSync(
-              LATEST_JSON_PATH,
-              JSON.stringify(latestJson, null, 2) + "\n"
-            );
+            fs.writeFileSync(LATEST_JSON_PATH, JSON.stringify(latestJson, null, 2) + "\n");
 
             const recentData = generateRecentResults(finalAllData);
-
-            fs.writeFileSync(
-              RECENT_JSON_PATH,
-              JSON.stringify(recentData, null, 2) + "\n"
-            );
+            fs.writeFileSync(RECENT_JSON_PATH, JSON.stringify(recentData, null, 2) + "\n");
 
             console.log(`all-results.json records: ${finalAllData.length}`);
             console.log(`latest-results.json records: ${Object.keys(latestRecords).length}`);
