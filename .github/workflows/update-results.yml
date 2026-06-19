@@ -78,17 +78,7 @@ jobs:
               return Object.values(apiData.records);
             }
 
-            const records = [];
-
-            for (const [key, value] of Object.entries(apiData)) {
-              if (!value || typeof value !== "object") continue;
-              records.push({
-                ...value,
-                gameId: value.gameId || key
-              });
-            }
-
-            return records;
+            return [];
           }
 
           function normalizeRecord(raw) {
@@ -100,7 +90,6 @@ jobs:
 
             const fr = cleanNumber(raw.fr);
             const sr = cleanNumber(raw.sr);
-
             const now = istNow();
             const status = fr && sr ? "completed" : (fr || sr ? "partial" : "pending");
 
@@ -147,6 +136,46 @@ jobs:
             });
           }
 
+          function latestCompletedFromArchive(allData, gameId) {
+            return allData
+              .filter(item =>
+                item &&
+                item.gameId === gameId &&
+                item.date &&
+                isValidNumber(item.fr) &&
+                isValidNumber(item.sr) &&
+                String(item.status || "").toLowerCase() === "completed"
+              )
+              .sort((a, b) => dateValue(b.date) - dateValue(a.date))[0] || null;
+          }
+
+          function betterLatest(apiRecord, archiveRecord) {
+            // If archive has completed data and API is pending/partial/blank, prefer archive.
+            if (
+              archiveRecord &&
+              isValidNumber(archiveRecord.fr) &&
+              isValidNumber(archiveRecord.sr) &&
+              (
+                !apiRecord ||
+                !isValidNumber(apiRecord.fr) ||
+                !isValidNumber(apiRecord.sr) ||
+                String(apiRecord.status || "").toLowerCase() !== "completed"
+              )
+            ) {
+              return archiveRecord;
+            }
+
+            // If API is completed, prefer API.
+            if (apiRecord && isValidNumber(apiRecord.fr) && isValidNumber(apiRecord.sr)) {
+              return apiRecord;
+            }
+
+            // Otherwise use archive if available.
+            if (archiveRecord) return archiveRecord;
+
+            return apiRecord || null;
+          }
+
           async function main() {
             console.log("Fetching:", API_URL);
 
@@ -157,6 +186,9 @@ jobs:
             if (!fs.existsSync(ALL_JSON_PATH)) {
               fs.writeFileSync(ALL_JSON_PATH, "[]");
             }
+
+            const existingRaw = JSON.parse(fs.readFileSync(ALL_JSON_PATH, "utf8"));
+            const existing = Array.isArray(existingRaw) ? existingRaw : [];
 
             const response = await fetch(API_URL, { cache: "no-store" });
 
@@ -172,53 +204,10 @@ jobs:
 
             console.log("Valid API records:", apiRecords.length);
 
-            const latestRecords = {};
-            for (const gameId of GAME_IDS) {
-              const found = apiRecords.find(record => record.gameId === gameId);
-              if (found) {
-                latestRecords[gameId] = found;
-              } else {
-                const now = istNow();
-                latestRecords[gameId] = {
-                  id: `${gameId}-${apiData.date || now.slice(0, 10)}`,
-                  game: GAME_MAP[gameId].game,
-                  city: GAME_MAP[gameId].city,
-                  gameId,
-                  date: apiData.date || now.slice(0, 10),
-                  fr: "",
-                  frUpdatedAt: "",
-                  sr: "",
-                  srUpdatedAt: "",
-                  frDeclaredTime: "",
-                  srDeclaredTime: "",
-                  status: "pending",
-                  lastCheckedAt: now
-                };
-              }
-            }
-
-            const latestJson = {
-              date: apiData.date || istNow().slice(0, 10),
-              lastUpdatedAt: apiData.lastUpdatedAt || istNow(),
-              records: latestRecords
-            };
-
-            fs.writeFileSync(
-              LATEST_JSON_PATH,
-              JSON.stringify(latestJson, null, 2) + "\n"
-            );
-
-            console.log("latest-results.json written");
-
-            const existingRaw = JSON.parse(fs.readFileSync(ALL_JSON_PATH, "utf8"));
-            const existing = Array.isArray(existingRaw) ? existingRaw : [];
-
             const map = new Map();
 
             for (const item of existing) {
-              if (item && item.id) {
-                map.set(item.id, item);
-              }
+              if (item && item.id) map.set(item.id, item);
             }
 
             let allChanged = false;
@@ -272,6 +261,49 @@ jobs:
               JSON.stringify(finalAllData, null, 2) + "\n"
             );
 
+            const apiRecordByGameId = {};
+            for (const record of apiRecords) {
+              apiRecordByGameId[record.gameId] = record;
+            }
+
+            const latestRecords = {};
+            const now = istNow();
+
+            for (const gameId of GAME_IDS) {
+              const apiRecord = apiRecordByGameId[gameId] || null;
+              const archiveRecord = latestCompletedFromArchive(finalAllData, gameId);
+              const selected = betterLatest(apiRecord, archiveRecord);
+
+              latestRecords[gameId] = selected || {
+                id: `${gameId}-${apiData.date || now.slice(0, 10)}`,
+                game: GAME_MAP[gameId].game,
+                city: GAME_MAP[gameId].city,
+                gameId,
+                date: apiData.date || now.slice(0, 10),
+                fr: "",
+                frUpdatedAt: "",
+                sr: "",
+                srUpdatedAt: "",
+                frDeclaredTime: "",
+                srDeclaredTime: "",
+                status: "pending",
+                lastCheckedAt: now
+              };
+
+              console.log(`latest ${gameId}: ${latestRecords[gameId].id} ${latestRecords[gameId].status}`);
+            }
+
+            const latestJson = {
+              date: apiData.date || now.slice(0, 10),
+              lastUpdatedAt: apiData.lastUpdatedAt || now,
+              records: latestRecords
+            };
+
+            fs.writeFileSync(
+              LATEST_JSON_PATH,
+              JSON.stringify(latestJson, null, 2) + "\n"
+            );
+
             const recentData = generateRecentResults(finalAllData);
 
             fs.writeFileSync(
@@ -280,6 +312,7 @@ jobs:
             );
 
             console.log(`all-results.json records: ${finalAllData.length}`);
+            console.log(`latest-results.json records: ${Object.keys(latestRecords).length}`);
             console.log(`recent-results.json records: ${recentData.length}`);
             console.log(allChanged ? "JSON updated successfully." : "No all-results changes, latest/recent regenerated.");
           }
