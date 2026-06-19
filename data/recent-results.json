@@ -135,21 +135,6 @@
     "lastCheckedAt": "2026-06-18T11:37:12+05:30"
   },
   {
-	  "id": "SHN2-2026-06-18",
-	  "game": "Shillong Night 2",
-	  "city": "Shillong",
-	  "gameId": "SHN2",
-	  "date": "2026-06-18",
-	  "fr": "54",
-	  "frUpdatedAt": "",
-	  "sr": "92",
-	  "srUpdatedAt": "",
-	  "frDeclaredTime": "11:10 PM",
-	  "srDeclaredTime": "12:10 AM",
-	  "status": "completed",
-	  "lastCheckedAt": "2026-06-18T23:59:00+05:30"
-	},
-  {
     "id": "SHN1-2026-06-18",
     "game": "Shillong Night",
     "city": "Shillong",
@@ -163,6 +148,21 @@
     "srDeclaredTime": "9:45 PM",
     "status": "completed",
     "lastCheckedAt": "2026-06-18T21:45:12+05:30"
+  },
+  {
+    "id": "SHN2-2026-06-18",
+    "game": "Shillong Night 2",
+    "city": "Shillong",
+    "gameId": "SHN2",
+    "date": "2026-06-18",
+    "fr": "54",
+    "frUpdatedAt": "",
+    "sr": "92",
+    "srUpdatedAt": "",
+    "frDeclaredTime": "11:10 PM",
+    "srDeclaredTime": "12:10 AM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-18T23:59:00+05:30"
   },
   {
     "id": "JWD-2026-06-17",
@@ -1060,18 +1060,5 @@
     "srUpdatedAt": "2026-06-08T15:45:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-08T15:45:00+05:30"
-  },
-  {
-    "id": "SHN2-2026-06-08",
-    "game": "Shillong Night 2",
-    "city": "Shillong",
-    "gameId": "SHN2",
-    "date": "2026-06-08",
-    "fr": "93",
-    "frUpdatedAt": "2026-06-08T20:00:00+05:30",
-    "sr": "30",
-    "srUpdatedAt": "2026-06-08T20:15:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-08T20:15:00+05:30"
   }
 ]
