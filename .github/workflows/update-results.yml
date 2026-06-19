@@ -21,13 +21,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Fetch API and update all-results.json
+      - name: Fetch API and update JSON files
         run: |
           node <<'NODE'
           const fs = require("fs");
 
           const API_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
-          const JSON_PATH = "data/all-results.json";
+
+          const ALL_JSON_PATH = "data/all-results.json";
+          const LATEST_JSON_PATH = "data/latest-results.json";
+          const RECENT_JSON_PATH = "data/recent-results.json";
+          const RECENT_PER_GAME = 10;
 
           const GAME_MAP = {
             SHD:  { game: "shillong day", city: "Shillong" },
@@ -39,6 +43,8 @@ jobs:
             SHN1: { game: "Shillong Night", city: "Shillong" },
             SHN2: { game: "Shillong Night 2", city: "Shillong" }
           };
+
+          const GAME_IDS = Object.keys(GAME_MAP);
 
           function istNow() {
             const now = new Date();
@@ -52,6 +58,15 @@ jobs:
             if (!v || ["xx", "na", "-", "--", "null", "undefined"].includes(v.toLowerCase())) return "";
             if (!/^\d{1,2}$/.test(v)) return "";
             return v.padStart(2, "0");
+          }
+
+          function isValidNumber(value) {
+            return /^\d{1,2}$/.test(String(value || "").trim());
+          }
+
+          function dateValue(date) {
+            const d = new Date(date);
+            return isNaN(d.getTime()) ? 0 : d.getTime();
           }
 
           function getApiRecords(apiData) {
@@ -86,11 +101,8 @@ jobs:
             const fr = cleanNumber(raw.fr);
             const sr = cleanNumber(raw.sr);
 
-            if (!fr && !sr) return null;
-
             const now = istNow();
-
-            const status = fr && sr ? "completed" : "partial";
+            const status = fr && sr ? "completed" : (fr || sr ? "partial" : "pending");
 
             return {
               id: `${gameId}-${date}`,
@@ -109,8 +121,42 @@ jobs:
             };
           }
 
+          function generateRecentResults(allData) {
+            const recent = [];
+
+            for (const gameId of GAME_IDS) {
+              const records = allData
+                .filter(item =>
+                  item &&
+                  item.gameId === gameId &&
+                  item.date &&
+                  isValidNumber(item.fr) &&
+                  isValidNumber(item.sr) &&
+                  String(item.status || "").toLowerCase() === "completed"
+                )
+                .sort((a, b) => dateValue(b.date) - dateValue(a.date))
+                .slice(0, RECENT_PER_GAME);
+
+              recent.push(...records);
+              console.log(`recent ${gameId}: ${records.length}`);
+            }
+
+            return recent.sort((a, b) => {
+              if (a.date !== b.date) return String(b.date).localeCompare(String(a.date));
+              return String(a.gameId).localeCompare(String(b.gameId));
+            });
+          }
+
           async function main() {
             console.log("Fetching:", API_URL);
+
+            if (!fs.existsSync("data")) {
+              fs.mkdirSync("data", { recursive: true });
+            }
+
+            if (!fs.existsSync(ALL_JSON_PATH)) {
+              fs.writeFileSync(ALL_JSON_PATH, "[]");
+            }
 
             const response = await fetch(API_URL, { cache: "no-store" });
 
@@ -126,12 +172,45 @@ jobs:
 
             console.log("Valid API records:", apiRecords.length);
 
-            if (!fs.existsSync(JSON_PATH)) {
-              fs.mkdirSync("data", { recursive: true });
-              fs.writeFileSync(JSON_PATH, "[]");
+            const latestRecords = {};
+            for (const gameId of GAME_IDS) {
+              const found = apiRecords.find(record => record.gameId === gameId);
+              if (found) {
+                latestRecords[gameId] = found;
+              } else {
+                const now = istNow();
+                latestRecords[gameId] = {
+                  id: `${gameId}-${apiData.date || now.slice(0, 10)}`,
+                  game: GAME_MAP[gameId].game,
+                  city: GAME_MAP[gameId].city,
+                  gameId,
+                  date: apiData.date || now.slice(0, 10),
+                  fr: "",
+                  frUpdatedAt: "",
+                  sr: "",
+                  srUpdatedAt: "",
+                  frDeclaredTime: "",
+                  srDeclaredTime: "",
+                  status: "pending",
+                  lastCheckedAt: now
+                };
+              }
             }
 
-            const existingRaw = JSON.parse(fs.readFileSync(JSON_PATH, "utf8"));
+            const latestJson = {
+              date: apiData.date || istNow().slice(0, 10),
+              lastUpdatedAt: apiData.lastUpdatedAt || istNow(),
+              records: latestRecords
+            };
+
+            fs.writeFileSync(
+              LATEST_JSON_PATH,
+              JSON.stringify(latestJson, null, 2) + "\n"
+            );
+
+            console.log("latest-results.json written");
+
+            const existingRaw = JSON.parse(fs.readFileSync(ALL_JSON_PATH, "utf8"));
             const existing = Array.isArray(existingRaw) ? existingRaw : [];
 
             const map = new Map();
@@ -142,14 +221,16 @@ jobs:
               }
             }
 
-            let changed = false;
+            let allChanged = false;
 
             for (const record of apiRecords) {
+              if (!record.fr && !record.sr) continue;
+
               const old = map.get(record.id);
 
               if (!old) {
                 map.set(record.id, record);
-                changed = true;
+                allChanged = true;
                 console.log("Added:", record.id);
                 continue;
               }
@@ -176,23 +257,31 @@ jobs:
 
               if (JSON.stringify(old) !== JSON.stringify(merged)) {
                 map.set(record.id, merged);
-                changed = true;
+                allChanged = true;
                 console.log("Updated:", record.id);
               }
             }
 
-            const finalData = Array.from(map.values()).sort((a, b) => {
-              if (a.date !== b.date) return b.date.localeCompare(a.date);
+            const finalAllData = Array.from(map.values()).sort((a, b) => {
+              if (a.date !== b.date) return String(b.date).localeCompare(String(a.date));
               return String(a.gameId).localeCompare(String(b.gameId));
             });
 
-            fs.writeFileSync(JSON_PATH, JSON.stringify(finalData, null, 2) + "\n");
+            fs.writeFileSync(
+              ALL_JSON_PATH,
+              JSON.stringify(finalAllData, null, 2) + "\n"
+            );
 
-            if (changed) {
-              console.log("JSON updated successfully.");
-            } else {
-              console.log("No changes detected.");
-            }
+            const recentData = generateRecentResults(finalAllData);
+
+            fs.writeFileSync(
+              RECENT_JSON_PATH,
+              JSON.stringify(recentData, null, 2) + "\n"
+            );
+
+            console.log(`all-results.json records: ${finalAllData.length}`);
+            console.log(`recent-results.json records: ${recentData.length}`);
+            console.log(allChanged ? "JSON updated successfully." : "No all-results changes, latest/recent regenerated.");
           }
 
           main().catch(error => {
@@ -201,16 +290,16 @@ jobs:
           });
           NODE
 
-      - name: Commit and push changes
+      - name: Commit and push JSON changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add data/all-results.json
+          git add data/all-results.json data/latest-results.json data/recent-results.json
 
           if git diff --cached --quiet; then
             echo "No JSON changes to commit."
           else
-            git commit -m "Update all-results.json from Teer API"
+            git commit -m "Update Teer JSON files from API"
             git push
           fi
