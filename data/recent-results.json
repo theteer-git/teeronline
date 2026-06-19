@@ -135,6 +135,21 @@
     "lastCheckedAt": "2026-06-18T11:37:12+05:30"
   },
   {
+	  "id": "SHN2-2026-06-18",
+	  "game": "Shillong Night 2",
+	  "city": "Shillong",
+	  "gameId": "SHN2",
+	  "date": "2026-06-18",
+	  "fr": "54",
+	  "frUpdatedAt": "",
+	  "sr": "92",
+	  "srUpdatedAt": "",
+	  "frDeclaredTime": "11:10 PM",
+	  "srDeclaredTime": "12:10 AM",
+	  "status": "completed",
+	  "lastCheckedAt": "2026-06-18T23:59:00+05:30"
+	},
+  {
     "id": "SHN1-2026-06-18",
     "game": "Shillong Night",
     "city": "Shillong",
