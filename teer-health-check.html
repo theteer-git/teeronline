@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Teer Health Check</title>
+<style>
+body{font-family:Arial,sans-serif;background:#fff7ed;color:#111;padding:20px}
+h1{color:#c2410c}
+button{background:#c2410c;color:white;border:0;padding:10px 18px;border-radius:8px;font-weight:bold;cursor:pointer}
+.card{background:white;border:1px solid #fdba74;border-radius:10px;padding:12px;margin:12px 0}
+.pass{color:green;font-weight:bold}
+.fail{color:red;font-weight:bold}
+.warn{color:#b45309;font-weight:bold}
+pre{background:#111;color:#eee;padding:10px;border-radius:8px;overflow:auto}
+</style>
+</head>
+<body>
+
+<h1>Teer Website Health Check</h1>
+<button onclick="runTests()">Run Test</button>
+
+<div id="output"></div>
+
+<script>
+const WORKER = "https://teer-api.maya-digital-rkn.workers.dev";
+const SITE = "https://teeronline.com";
+
+const games = ["SHM","JWM","KHM","JWD","SHD","KH","SHN1","SHN2"];
+
+const sourceTests = [
+  ["SHM", "khanaparaTv"],
+  ["JWM", "khanaparaTv"],
+  ["KHM", "khanaparaMorning"],
+  ["JWD", "teerresults"],
+  ["SHD", "teertooday"],
+  ["KH", "khanaparaTv"],
+  ["SHN1", "teertooday"],
+  ["SHN2", "teertooday"]
+];
+
+function todayIST(){
+  return new Date().toLocaleDateString("en-CA", {timeZone:"Asia/Kolkata"});
+}
+
+function ok(msg){return `<div class="pass">✅ ${msg}</div>`}
+function fail(msg){return `<div class="fail">❌ ${msg}</div>`}
+function warn(msg){return `<div class="warn">⚠️ ${msg}</div>`}
+
+async function getJSON(url){
+  const res = await fetch(url + (url.includes("?") ? "&" : "?") + "t=" + Date.now(), {cache:"no-store"});
+  if(!res.ok) throw new Error(res.status + " " + res.statusText);
+  return await res.json();
+}
+
+async function runTests(){
+  const out = document.getElementById("output");
+  out.innerHTML = "<p>Testing...</p>";
+
+  let html = "";
+  const today = todayIST();
+
+  // 1. Worker root
+  try{
+    const root = await getJSON(WORKER + "/");
+    html += `<div class="card"><h2>Worker API</h2>`;
+    html += root.ok ? ok("Worker is running") : fail("Worker root returned not ok");
+    html += `</div>`;
+  }catch(e){
+    html += `<div class="card"><h2>Worker API</h2>${fail("Worker unreachable: " + e.message)}</div>`;
+  }
+
+  // 2. Latest endpoint
+  let latest = null;
+  try{
+    latest = await getJSON(WORKER + "/latest");
+    html += `<div class="card"><h2>/latest Check</h2>`;
+    html += latest.date === today ? ok("Latest date is today: " + today) : fail("Latest date mismatch. Expected " + today + ", got " + latest.date);
+
+    for(const g of games){
+      const r = latest.records?.[g];
+      if(!r){
+        html += fail(g + " missing in /latest");
+      }else{
+        const fr = r.fr || "XX";
+        const sr = r.sr || "XX";
+        const status = r.status || "unknown";
+        html += `<div>${g}: <b>${fr}-${sr}</b> (${status})</div>`;
+      }
+    }
+    html += `</div>`;
+  }catch(e){
+    html += `<div class="card"><h2>/latest Check</h2>${fail("/latest failed: " + e.message)}</div>`;
+  }
+
+  // 3. Source parser checks
+  html += `<div class="card"><h2>Source Parser Checks</h2>`;
+  for(const [game, source] of sourceTests){
+    try{
+      const data = await getJSON(`${WORKER}/debug-source?source=${source}&game=${game}`);
+      if(data.parsed && data.parsed.sourceDate === today){
+        html += ok(`${game} / ${source}: parsed today (${data.parsed.fr || "XX"}-${data.parsed.sr || "XX"})`);
+      }else if(data.parsed){
+        html += warn(`${game} / ${source}: parsed but date is ${data.parsed.sourceDate || "missing"}`);
+      }else{
+        html += warn(`${game} / ${source}: parsed null. Source may not have published yet or parser needs check.`);
+      }
+    }catch(e){
+      html += fail(`${game} / ${source}: debug failed - ${e.message}`);
+    }
+  }
+  html += `</div>`;
+
+  // 4. recent-results.json check
+  try{
+    const recent = await getJSON(SITE + "/data/recent-results.json");
+    html += `<div class="card"><h2>recent-results.json Check</h2>`;
+    html += Array.isArray(recent) ? ok("recent-results.json loaded") : fail("recent-results.json is not array");
+
+    for(const g of games){
+      const records = recent.filter(x => x.gameId === g);
+      if(records.length === 0){
+        html += fail(`${g}: no recent records`);
+      }else{
+        html += `<div>${g}: latest history = <b>${records[0].date}</b> ${records[0].fr}-${records[0].sr}</div>`;
+      }
+    }
+
+    const yesterday = new Date(Date.now() - 86400000).toLocaleDateString("en-CA", {timeZone:"Asia/Kolkata"});
+    const missingYesterday = games.filter(g => !recent.some(x => x.gameId === g && x.date === yesterday));
+    if(missingYesterday.length){
+      html += warn("Yesterday missing for: " + missingYesterday.join(", "));
+    }else{
+      html += ok("Yesterday records present for all games");
+    }
+
+    html += `</div>`;
+  }catch(e){
+    html += `<div class="card"><h2>recent-results.json Check</h2>${fail("recent-results.json failed: " + e.message)}</div>`;
+  }
+
+  // 5. Final diagnosis
+  html += `<div class="card"><h2>How to Read This</h2>
+  <p>${ok("Worker running + /latest correct")} means backend is fine.</p>
+  <p>${warn("debug-source parsed null")} means source not published yet or parser issue.</p>
+  <p>${warn("recent-results missing yesterday")} means data/all-results.json or recent-results generator needs fixing.</p>
+  <p>${fail("Website shows XX but /latest has numbers")} means index.html/frontend/caching issue.</p>
+  </div>`;
+
+  out.innerHTML = html;
+}
+</script>
+
+</body>
+</html>
