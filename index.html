@@ -239,7 +239,7 @@ body.dark .time-badge{background:#fdba74;color:#111111}
 <script>
   (function(){
     /* Visitor-safe setup: homepage reads only static GitHub Pages JSON files. No browser request goes to Cloudflare Worker/KV. */
-    const LIVE_JSON_URL="./data/latest-results.json"; // optional; page falls back to recent-results.json if missing
+    const LIVE_JSON_URL="https://teer-api.maya-digital-rkn.workers.dev/latest";// optional; page falls back to recent-results.json if missing
     const HISTORY_JSON_URL="./data/recent-results.json";
     const FRESH_HOURS=20;
     const games=[
