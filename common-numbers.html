@@ -75,26 +75,51 @@
 <div class="modal-backdrop" id="numberPopup" aria-hidden="true">
   <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="popupTitle">
     <div class="modal-head"><h3 id="popupTitle">Numbers</h3><button class="modal-close" type="button" aria-label="Close popup">×</button></div>
-    <div class="modal-body"><div class="modal-meta" id="popupMeta"></div><div class="modal-number-grid" id="popupNumbers"></div><div class="modal-note">These are the full numbers for the selected group or point based on the Teer formula reference.</div></div>
+    <div class="modal-body"><div class="modal-meta" id="popupMeta"></div><div class="modal-number-grid" id="popupNumbers"></div><div class="modal-note">These are the full numbers for the selected group or point as per the Teer formula reference.</div></div>
   </div>
 </div>
 <script>
 const GAMES=[{name:'🌄 Juwai Morning Teer',gameId:'JWM',names:['juwai morning'],frTime:'10:30'},{name:'🎯 Khanapara Morning Teer',gameId:'KHM',names:['khanapara morning'],frTime:'10:30'},{name:'🌅 Shillong Morning Teer',gameId:'SHM',names:['shillong morning'],frTime:'11:30'},{name:'🏹 Juwai Day Teer',gameId:'JWD',names:['juwai day','jowai day'],frTime:'15:30'},{name:'🎯 Khanapara Day Teer',gameId:'KH',names:['khanapara day'],frTime:'16:00'},{name:'🏹 Shillong Day Teer',gameId:'SHD',names:['shillong day'],frTime:'15:45'},{name:'🌙 Shillong Night Teer',gameId:'SHN1',names:['shillong night'],frTime:'20:00'},{name:'🌙 Shillong Night Teer 2',gameId:'SHN2',names:['shillong night 2','night teer 2'],frTime:'20:30'}];
 const DAYS=['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
 const FORMULA_GROUPS={
-  G0:['22','27','72','77'],
-  G1:['11','16','61','66'],
-  G2:['12','21','17','71','62','26','67','76'],
-  G3:['13','31','18','81','63','36','68','86'],
-  G4:['14','41','19','91','64','46','69','96'],
-  G5:['00','05','50','55'],
-  G6:['01','10','15','51','56','65','60','06'],
-  G7:['02','20','25','52','57','75','70','07'],
-  G8:['03','30','35','53','58','85','80','08'],
-  G9:['04','40','45','54','59','95','90','09']
+  G0:['00','05','50','55'],
+  G1:['01','10','15','51','56','65','60','06'],
+  G2:['02','20','25','52','75','57','70','07'],
+  G3:['03','30','35','53','58','85','80','08'],
+  G4:['04','40','45','54','59','95','90','09'],
+  G10:['10','01','51','15','56','65','60','06'],
+  G11:['11','16','61','66'],
+  G12:['12','21','26','62','67','76','17','71'],
+  G13:['13','31','18','81','36','63','86','68'],
+  G14:['14','41','19','91','69','96','64','46'],
+  G22:['22','27','72','77'],
+  G23:['23','32','28','82','73','37','78','87'],
+  G24:['24','42','47','74','29','92','97','79'],
+  G33:['33','38','83','88'],
+  G34:['34','43','39','93','84','48','89','98'],
+  G44:['44','49','94','99']
 };
-function buildFormulaPoints(){const out={};for(let p=0;p<=9;p++){out['P'+p]=[];for(let a=0;a<=p;a++)out['P'+p].push(String(a)+String(p-a));}return out}
-const FORMULA_POINTS=buildFormulaPoints();
+const FORMULA_POINTS={
+  P0:['00'],
+  P1:['01','10'],
+  P2:['02','20','11'],
+  P3:['03','30','12','21'],
+  P4:['04','40','13','31','22'],
+  P5:['05','50','14','41','23','32'],
+  P6:['06','60','15','51','24','42','33'],
+  P7:['16','61','25','52','34','43','07','70'],
+  P8:['08','80','17','71','26','62','35','53','44'],
+  P9:['90','09','18','81','27','72','36','63','45','54'],
+  P10:['55','46','64','37','73','28','82','19','91'],
+  P11:['56','65','47','74','38','83','29','92'],
+  P12:['66','57','75','48','84','39','93'],
+  P13:['58','85','67','76','49','94'],
+  P14:['77','86','68','95','59'],
+  P15:['96','69','78','87'],
+  P16:['97','79','88'],
+  P17:['98','89'],
+  P18:['99']
+};
 
 const TEER_GROUPS=[[10,15,50,55],[1,6,10,15,51,56,60,65],[2,7,20,25,52,57,70,75],[3,8,30,35,53,58,80,85],[4,9,40,45,54,59,90,95],[1,6,10,15,51,56,60,65],[11,16,61,66],[12,17,21,26,62,67,71,76],[13,18,31,36,63,68,81,86],[14,19,41,46,64,69,91,96],[22,27,72,77],[23,28,32,37,73,78,82,87],[24,29,42,47,74,79,92,97],[33,38,83,88],[34,39,43,48,84,89,93,98],[44,49,94,99]];
 const dateCache=new Map();
@@ -138,7 +163,7 @@ function group(results,mode='both'){return formulaMissing(results,'group')}
 function point(results,mode='both'){return formulaMissing(results,'point')}
 function groupNumbers(label){return formulaSet(label,'group')}
 function pointNumbers(label){return formulaSet(label,'point')}
-function chipPopup(label,days,type){const nums=(type==='group'?groupNumbers(label):pointNumbers(label)).join(',');const title=(type==='group'?'Group ':'Point ')+label.replace(type==='group'?'G':'P','');return`<button type="button" class="mini-chip" data-popup-title="${title}" data-popup-days="${days}" data-popup-type="${type}" data-popup-nums="${nums}"><b>${label}</b> · ${days}d</button>`}
+function chipPopup(label,days,type){const nums=(type==='group'?groupNumbers(label):pointNumbers(label)).join(',');const raw=label.replace(type==='group'?'G':'P','');const nice=type==='group'?(raw.length===1?'0'+raw:raw):raw;const title=(type==='group'?'Group ':'Point ')+nice;return`<button type="button" class="mini-chip" data-popup-title="${title}" data-popup-days="${days}" data-popup-type="${type}" data-popup-nums="${nums}"><b>${label}</b> · ${days}d</button>`}
 function formulaMissingHTML(results){const groups=group(results,'both'),points=point(results,'both');return`<div class="formula-panel"><h4>🧮 Group & Point Missing</h4><div class="formula-grid"><div class="formula-block"><b>Groups not seen</b>${groups.map(x=>chipPopup(x.label,x.days,'group')).join('')}</div><div class="formula-block"><b>Points not seen</b>${points.map(x=>chipPopup(x.label,x.days,'point')).join('')}</div></div></div>`}
 function insightBlocks(results,m){const d=insightData(results);const box=(title,badge,content)=>`<div class="insight-box"><div class="metric-title"><h4>${title}</h4>${pctBadge(badge)}</div>${content}</div>`;return{hot:box('🔥 Hot Numbers',m.hot,d.hot.map(n=>`<span class="chip">${pad2(n)}</span>`).join('')),cold:box('❄️ Cold Numbers',m.cold,d.cold.map(n=>`<span class="chip cold">${pad2(n)}</span>`).join('')),repeat:box('⭐ Repeated Numbers',m.repeat,d.recent.map(n=>`<span class="chip">${pad2(n)}</span>`).join('')),pairs:box('🎯 Repeated Pairs',m.pairs,d.pairs.map(p=>`<span class="chip pair">${p}</span>`).join(''))}}
 function insightChips(results,type){const d=insightData(results);if(type==='pairs')return d.pairs.map(p=>`<span class="chip pair">${p}</span>`).join('');if(type==='repeat')return d.recent.map(n=>`<span class="chip">${pad2(n)}</span>`).join('');return ''}
