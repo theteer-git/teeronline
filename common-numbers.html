@@ -121,6 +121,28 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 #gamesContainer,#statsContainer{min-height:1200px;content-visibility:auto;contain-intrinsic-size:1200px;}
 #gamesContainer .loading-card,#statsContainer .loading-card{min-height:320px;background:var(--surface);border:1px solid var(--border);border-radius:.95rem;box-shadow:var(--card-shadow);display:flex;align-items:center;justify-content:center;color:var(--text-light);font-weight:750;}
 .game-card,.stat-card{content-visibility:auto;contain-intrinsic-size:420px;}
+
+/* Combined common-number + statistics display */
+#combinedGamesContainer{min-height:1600px;content-visibility:auto;contain-intrinsic-size:1600px;}
+.combined-games{display:grid;grid-template-columns:1fr;gap:1.1rem;margin:1rem 0 1.6rem;}
+.game-combo-card{background:var(--surface);border:1px solid var(--border);border-radius:.95rem;box-shadow:var(--card-shadow);overflow:hidden;content-visibility:auto;contain-intrinsic-size:620px;}
+.combo-header{background:#9a3412;color:#fff;padding:.8rem 1rem;display:flex;align-items:center;justify-content:space-between;gap:.8rem;}
+.combo-header h3{font-size:1.05rem;margin:0;line-height:1.2;color:#fff;}
+.combo-header .sub{font-size:.74rem;opacity:.9;margin-top:.15rem;}
+.combo-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);min-height:420px;}
+.combo-panel{padding:1rem;border-right:1px solid var(--border);} 
+.combo-panel:last-child{border-right:0;}
+.combo-label{display:inline-flex;align-items:center;gap:.35rem;background:#fff7ed;border:1px solid var(--border);border-radius:999px;padding:.28rem .65rem;font-size:.76rem;font-weight:850;color:var(--accent);margin-bottom:.8rem;}
+body.dark .combo-label{background:#151515;color:var(--accent)}
+.combo-panel h4{font-size:.95rem;margin:.15rem 0 .6rem;color:var(--text);}
+.combo-panel .result-strip{margin-bottom:.85rem;}
+.combo-panel .digit-panels{grid-template-columns:1fr 1fr;}
+.combo-panel .direct-block,.combo-panel .stat-highlight{margin-top:.8rem;}
+.combo-panel .stats-mini-grid{grid-template-columns:1fr;gap:.65rem;}
+.combo-panel .stat-panel{padding:.75rem;}
+.combo-panel .note-box{margin-top:.65rem;}
+@media(max-width:768px){#combinedGamesContainer{min-height:4300px;contain-intrinsic-size:4300px}.combo-grid{grid-template-columns:1fr;min-height:auto}.combo-panel{border-right:0;border-bottom:1px solid var(--border);padding:.85rem}.combo-panel:last-child{border-bottom:0}.combo-header{align-items:flex-start}.game-combo-card{contain-intrinsic-size:760px}.combo-panel .digit-panels{grid-template-columns:1fr 1fr}}
+
 @media(max-width:768px){#gamesContainer,#statsContainer{min-height:2600px;contain-intrinsic-size:2600px}.game-card,.stat-card{contain-intrinsic-size:520px}}
 </style><link href="https://teeronline.com/common-numbers" rel="canonical"/><script async="" src="https://www.googletagmanager.com/gtag/js?id=G-R7H1L7VWZS"></script><script>
   window.dataLayer = window.dataLayer || [];
@@ -170,14 +192,10 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 <h1>Teer Common Numbers Today for Shillong, Khanapara and Juwai</h1>
 <p>Check today's Teer house, ending and direct common numbers with historical statistics for Shillong Teer, Khanapara Teer, Juwai Teer, Morning Teer and Night Teer.</p>
 </div>
-<h2 class="page-section-title">🔢 Teer Common Number Today: House, Ending and Direct Numbers</h2>
-<p class="page-section-subtitle">Updated from the latest available FR and SR result for every supported Teer game.</p>
-<div class="games-grid" id="gamesContainer"></div>
-<div class="last-updated" id="commonLastUpdated"></div>
-<h2 class="page-section-title">📊 Teer Statistics: Same Date, Day-Wise and Recent Trend Analysis</h2>
-<p class="page-section-subtitle">Use historical Teer result data to compare recent patterns, same-date history and day-wise number frequency.</p>
-<div class="stats-grid" id="statsContainer"></div>
-<div class="last-updated" id="statsLastUpdated"></div>
+<h2 class="page-section-title">🔢 Teer Common Numbers with Statistics</h2>
+<p class="page-section-subtitle">Each game is displayed in one clean block: common numbers on the left and statistics on the right for desktop; common numbers on top and statistics below for mobile.</p>
+<div class="combined-games" id="combinedGamesContainer"></div>
+<div class="last-updated" id="combinedLastUpdated"></div>
 <div class="seo-content">
 <h2>Teer Common Numbers Today</h2>
 <p><strong>Teer common numbers today</strong> are prepared from the latest available Teer results and historical result patterns. This page focuses on Shillong Teer common number, Khanapara Teer common number and Juwai Teer common number, including Morning, Day, Night and Night Teer 2 games where data is available.</p>
@@ -608,19 +626,113 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
       document.getElementById('statsLastUpdated').innerHTML = `📅 Statistics Last Updated: ${new Date().toLocaleString()} | Based on latest available results${sundayNote}`;
     }
 
+    function buildCommonPanel(game, results) {
+      if (results.length === 0) return '<div class="combo-panel"><span class="combo-label">🔢 Common Numbers</span><p>No valid common-number data available.</p></div>';
+      const latest = results[0];
+      const commonDigits = generateCommonDigits(latest.fr, latest.sr);
+      const fullNumbers = getUniformCommonNumbers(commonDigits);
+      let wins = 0, total = 0;
+      const historyRows = [];
+      for (let i = 1; i < Math.min(results.length, 8); i++) {
+        const prevResult = results[i];
+        const currentResult = results[i - 1];
+        if (!prevResult || !currentResult) continue;
+        const predDigits = generateCommonDigits(prevResult.fr, prevResult.sr);
+        const hit = checkSuccess(predDigits, currentResult.fr, currentResult.sr);
+        if (hit) wins++;
+        total++;
+        historyRows.push(`<tr><td>${currentResult.date || 'N/A'}</td><td><span class="fr-sr-number">${pad2(currentResult.fr)}</span></td><td><span class="fr-sr-number">${pad2(currentResult.sr)}</span></td><td>${hit ? '<span class="win-badge">✓ HIT</span>' : '<span class="loss-badge">✗ MISS</span>'}</td></tr>`);
+      }
+      const successRate = total > 0 ? Math.round((wins / total) * 100) : 0;
+      const digitsHtml = commonDigits.length ? commonDigits.map(d => `<span class="digit-pill">${d}</span>`).join('') : '<span class="digit-pill">N/A</span>';
+      const directHtml = fullNumbers.map(n => `<span class="direct-number">${pad2(n)}</span>`).join('');
+      return `
+        <section class="combo-panel combo-common" aria-label="${game.displayName} common number">
+          <span class="combo-label">🔢 Common Numbers</span>
+          <div class="result-strip" aria-label="Latest result details">
+            <div class="result-box"><span class="result-label">FR</span><span class="result-value">${pad2(latest.fr)}</span></div>
+            <div class="result-box"><span class="result-label">SR</span><span class="result-value">${pad2(latest.sr)}</span></div>
+            <div class="result-box"><span class="result-label">Date</span><span class="result-value" style="font-size:.8rem">${latest.date || 'N/A'}</span></div>
+          </div>
+          <div class="digit-panels">
+            <div class="mini-panel"><h4>House Numbers</h4><div class="digit-list">${digitsHtml}</div></div>
+            <div class="mini-panel"><h4>Ending Numbers</h4><div class="digit-list">${digitsHtml}</div></div>
+          </div>
+          <div class="direct-block"><h4>Direct Common Numbers</h4><div class="direct-grid">${directHtml}</div></div>
+          <div class="accuracy-card">
+            <div style="flex:1"><strong>Recent accuracy</strong><br>${wins} hit from last ${total} checks<div class="mini-bar" aria-hidden="true"><span style="width:${successRate}%"></span></div></div>
+            <strong style="font-size:1rem;color:${successRate >= 60 ? '#16a34a' : '#f59e0b'}">${successRate}%</strong>
+          </div>
+          <details class="history-toggle"><summary>View last 7 checks</summary><div class="history-wrapper"><table class="history-table"><thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Check</th></tr></thead><tbody>${historyRows.length ? historyRows.join('') : '<tr><td colspan="4">No history available</td></tr>'}</tbody></table></div></details>
+        </section>`;
+    }
+
+    function buildStatsPanel(game, results) {
+      if (results.length === 0) return '<div class="combo-panel"><span class="combo-label">📊 Statistics</span><p>No statistics available.</p></div>';
+      const today = new Date();
+      const todayDay = DAYS[today.getDay()];
+      const latestResult = results[0];
+      const latestResultDate = parseDate(latestResult.date);
+      let effectiveDate = today;
+      if (game.type === 'day' && latestResultDate && todayDay === 'Sunday') {
+        const daysDiff = Math.floor((today - latestResultDate) / (1000 * 60 * 60 * 24));
+        if (daysDiff <= 1) effectiveDate = latestResultDate;
+      }
+      const effectiveDateStr = `${effectiveDate.getFullYear()}-${String(effectiveDate.getMonth()+1).padStart(2,'0')}-${String(effectiveDate.getDate()).padStart(2,'0')}`;
+      const effectiveDay = DAYS[effectiveDate.getDay()];
+      const statsNumbers = generateStatisticsNumbers(results, effectiveDateStr, effectiveDay);
+      const sameDateHistory = getSameDateHistory(results, effectiveDateStr);
+      const dayWiseNumbers = getDayWiseNumbers(results, effectiveDay);
+      const recentTrends = getRecentTrendNumbers(results);
+      return `
+        <section class="combo-panel combo-stats" aria-label="${game.displayName} statistics">
+          <span class="combo-label">📊 Statistics</span>
+          <div class="stat-highlight">
+            <h4>Today Statistical Numbers</h4>
+            <div class="numbers-grid">${statsNumbers.length ? statsNumbers.map(n => `<span class="stat-number">${pad2(n)}</span>`).join('') : '<span>Insufficient data</span>'}</div>
+            <div class="note-box">For ${effectiveDay}, ${effectiveDateStr}</div>
+          </div>
+          <div class="stats-mini-grid">
+            <div class="stat-panel"><h4>Same Date History</h4><div class="numbers-grid">${sameDateHistory.slice(0, 6).map(r => `<span class="stat-number stat-number-warning">${pad2(r.fr)}-${pad2(r.sr)}</span>`).join('') || '<span>No historical data</span>'}</div></div>
+            <div class="stat-panel"><h4>${effectiveDay} Pattern</h4><div class="numbers-grid">${dayWiseNumbers.length ? dayWiseNumbers.slice(0, 6).map(n => `<span class="stat-number stat-number-info">${pad2(n)}</span>`).join('') : '<span>Insufficient data</span>'}</div></div>
+            <div class="stat-panel"><h4>Last 7 Days Trend</h4><div class="numbers-grid">${recentTrends.length ? recentTrends.slice(0, 6).map(n => `<span class="stat-number">${pad2(n)}</span>`).join('') : '<span>Insufficient data</span>'}</div></div>
+          </div>
+          <div class="note-box">Total records checked: <strong>${results.length}</strong></div>
+        </section>`;
+    }
+
+    function renderCombinedSection(data) {
+      const container = document.getElementById('combinedGamesContainer');
+      let html = '';
+      for (const game of GAMES) {
+        const results = getResultsForGame(data, game);
+        const latestText = results.length ? `Latest previous result: ${pad2(results[0].fr)}-${pad2(results[0].sr)} • ${results[0].date || 'N/A'}` : 'No valid records found';
+        html += `
+          <article class="game-combo-card" aria-label="${game.displayName} common numbers and statistics">
+            <div class="combo-header">
+              <div><h3>${game.displayName} Common Number and Statistics</h3><div class="sub">${latestText}</div></div>
+              <span class="game-chip">${game.gameId}</span>
+            </div>
+            <div class="combo-grid">
+              ${buildCommonPanel(game, results)}
+              ${buildStatsPanel(game, results)}
+            </div>
+          </article>`;
+      }
+      container.innerHTML = html;
+      document.getElementById('combinedLastUpdated').innerHTML = `📅 Last Updated: ${new Date().toLocaleString()} | Common numbers and statistics are shown game-wise.`;
+    }
+
     async function render() {
-      document.getElementById('gamesContainer').innerHTML = '<div class="loading-card">Loading common numbers...</div>';
-      document.getElementById('statsContainer').innerHTML = '<div class="loading-card">Loading statistics...</div>';
+      document.getElementById('combinedGamesContainer').innerHTML = '<div class="loading-card">Loading Teer common numbers and statistics...</div>';
 
       try {
         const data = await fetchData();
-        renderCommonSection(data);
-        renderStatsSection(data);
+        renderCombinedSection(data);
       } catch (e) {
         console.error(e);
         const errorHtml = `<div style="text-align:center;padding:2rem;color:#ef4444;">⚠️ Unable to load data/all-results.json. Please check that the file exists in the data folder.<br><button onclick="location.reload()" style="margin-top:1rem;background:var(--accent);border:none;padding:0.5rem 1rem;border-radius:2rem;cursor:pointer;">Retry</button></div>`;
-        document.getElementById('gamesContainer').innerHTML = errorHtml;
-        document.getElementById('statsContainer').innerHTML = errorHtml;
+        document.getElementById('combinedGamesContainer').innerHTML = errorHtml;
       }
     }
 
