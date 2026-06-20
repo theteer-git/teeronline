@@ -4,6 +4,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 
 const DATA_FILE = path.join(__dirname, "../../data/all-results.json");
+const RECENT_FILE = path.join(__dirname, "../../data/recent-results.json");
 
 const GAMES = [
   { gameId: "SHD", game: "shillong day", city: "Shillong", url: "https://teertooday.com/", parser: parseShillongDay },
@@ -39,10 +40,7 @@ function normalizeNumber(value) {
 
   if (!/^\d{1,2}$/.test(v)) return "";
 
-  const n = Number(v);
-  if (n < 0 || n > 99) return "";
-
-  return String(n).padStart(2, "0");
+  return String(Number(v)).padStart(2, "0");
 }
 
 function isComplete(record) {
@@ -64,13 +62,10 @@ async function fetchHtml(url) {
 
 function loadData() {
   if (!fs.existsSync(DATA_FILE)) return [];
-
   try {
-    const raw = fs.readFileSync(DATA_FILE, "utf8");
-    const data = JSON.parse(raw);
+    const data = JSON.parse(fs.readFileSync(DATA_FILE, "utf8"));
     return Array.isArray(data) ? data : [];
-  } catch (error) {
-    console.error("Invalid JSON:", error.message);
+  } catch {
     return [];
   }
 }
@@ -84,13 +79,29 @@ function saveData(data) {
   fs.writeFileSync(DATA_FILE, JSON.stringify(data, null, 2) + "\n");
 }
 
+function saveRecentResults(data) {
+  const recent = data
+    .filter(item =>
+      item &&
+      item.gameId &&
+      item.date &&
+      normalizeNumber(item.fr) &&
+      normalizeNumber(item.sr)
+    )
+    .sort((a, b) => {
+      if (a.date !== b.date) return b.date.localeCompare(a.date);
+      return String(a.gameId).localeCompare(String(b.gameId));
+    })
+    .slice(0, 100);
+
+  fs.writeFileSync(RECENT_FILE, JSON.stringify(recent, null, 2) + "\n");
+}
+
 function findTodayRecord(data, game) {
   return data.find(item => item.gameId === game.gameId && item.date === todayIST());
 }
 
 function createTodayRecord(data, game) {
-  const checkedAt = nowISTISO();
-
   const record = {
     id: `${game.gameId}-${todayIST()}`,
     game: game.game,
@@ -102,7 +113,7 @@ function createTodayRecord(data, game) {
     sr: "",
     srUpdatedAt: "",
     status: "pending",
-    lastCheckedAt: checkedAt
+    lastCheckedAt: nowISTISO()
   };
 
   data.push(record);
@@ -111,10 +122,7 @@ function createTodayRecord(data, game) {
 
 function updateRecord(data, game, result) {
   let record = findTodayRecord(data, game);
-
-  if (!record) {
-    record = createTodayRecord(data, game);
-  }
+  if (!record) record = createTodayRecord(data, game);
 
   const checkedAt = nowISTISO();
   let changed = false;
@@ -144,31 +152,20 @@ function updateRecord(data, game, result) {
     changed = true;
   }
 
-  if (isComplete(record)) {
-    record.status = "completed";
-  } else if (normalizeNumber(record.fr) || normalizeNumber(record.sr)) {
-    record.status = "partial";
-  } else {
-    record.status = "pending";
-  }
+  record.status = isComplete(record)
+    ? "completed"
+    : normalizeNumber(record.fr) || normalizeNumber(record.sr)
+      ? "partial"
+      : "pending";
 
   return changed;
 }
 
-/* ---------------- SOURCE-SPECIFIC PARSERS ---------------- */
-
 function parseShillongDay(html) {
   const $ = cheerio.load(html);
-  const table = $("th")
-    .filter((i, el) => $(el).text().trim().toUpperCase() === "SHILLONG")
-    .closest("table");
-
-  const row = table.find("tr").eq(2);
-
-  return {
-    fr: normalizeNumber(row.find("td").eq(0).text()),
-    sr: normalizeNumber(row.find("td").eq(1).text())
-  };
+  const text = $("body").text().replace(/\s+/g, " ");
+  const m = text.match(/SHILLONG\s+F\/R\s*\([^)]*\)\s*S\/R\s*\([^)]*\)\s*(\d{1,2}|xx)\s+(\d{1,2}|xx)/i);
+  return { fr: normalizeNumber(m?.[1]), sr: normalizeNumber(m?.[2]) };
 }
 
 function parseShillongMorning(html) {
@@ -178,7 +175,6 @@ function parseShillongMorning(html) {
     .closest("table");
 
   const row = table.find("tr").eq(2);
-
   return {
     fr: normalizeNumber(row.find("td").eq(0).text()),
     sr: normalizeNumber(row.find("td").eq(1).text())
@@ -187,7 +183,7 @@ function parseShillongMorning(html) {
 
 function parseKhanaparaMorning(html) {
   const $ = cheerio.load(html);
-  const text = $(".result_box").text().replace(/\s+/g, " ");
+  const text = $("body").text().replace(/\s+/g, " ");
 
   const frMatch = text.match(/F\/R\s*:\s*(\d{1,2}|xx)/i);
   const srMatch = text.match(/S\/R\s*:\s*(\d{1,2}|xx)/i);
@@ -205,7 +201,6 @@ function parseShillongNight1(html) {
     .closest("table");
 
   const row = table.find("tr").eq(2);
-
   return {
     fr: normalizeNumber(row.find("td").eq(0).text()),
     sr: normalizeNumber(row.find("td").eq(1).text())
@@ -219,7 +214,6 @@ function parseShillongNight2(html) {
     .closest("table");
 
   const row = table.find("tr").eq(2);
-
   return {
     fr: normalizeNumber(row.find("td").eq(0).text()),
     sr: normalizeNumber(row.find("td").eq(1).text())
@@ -236,7 +230,7 @@ function parseElementorGame(titleText) {
     const startIndex = upper.indexOf(title);
     if (startIndex === -1) return { fr: "", sr: "" };
 
-    const block = fullText.slice(startIndex, startIndex + 1000);
+    const block = fullText.slice(startIndex, startIndex + 1200);
 
     const frMatch = block.match(/FR\s*\(First Round\)\s*[\d: ]*[AP]M\s*(\d{1,2}|xx)/i);
     const srMatch = block.match(/SR\s*\(Second Round\)\s*[\d: ]*[AP]M\s*(\d{1,2}|xx)/i);
@@ -247,8 +241,6 @@ function parseElementorGame(titleText) {
     };
   };
 }
-
-/* ---------------- MAIN ---------------- */
 
 async function main() {
   const data = loadData();
@@ -275,9 +267,7 @@ async function main() {
         continue;
       }
 
-      if (updateRecord(data, game, result)) {
-        changed = true;
-      }
+      if (updateRecord(data, game, result)) changed = true;
     } catch (error) {
       console.log(`Failed ${game.game}: ${error.message}`);
     }
@@ -289,6 +279,9 @@ async function main() {
   } else {
     console.log("No new result changes.");
   }
+
+  saveRecentResults(data);
+  console.log("recent-results.json rebuilt.");
 }
 
 main().catch(error => {
