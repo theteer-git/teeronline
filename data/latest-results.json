@@ -1,6 +1,6 @@
 {
   "date": "2026-06-20",
-  "lastUpdatedAt": "2026-06-20T15:20:51.088+05:30",
+  "lastUpdatedAt": "2026-06-20T17:11:03.992+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-20",
@@ -8,14 +8,14 @@
       "city": "Shillong",
       "gameId": "SHD",
       "date": "2026-06-20",
-      "fr": "",
-      "frUpdatedAt": "",
-      "sr": "",
-      "srUpdatedAt": "",
+      "fr": "15",
+      "frUpdatedAt": "2026-06-20T16:15:03.987+05:30",
+      "sr": "65",
+      "srUpdatedAt": "2026-06-20T17:11:03.992+05:30",
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-20T11:23:33.523+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-20T17:11:03.992+05:30"
     },
     "KH": {
       "id": "KH-2026-06-20",
@@ -23,14 +23,14 @@
       "city": "Khanapara",
       "gameId": "KH",
       "date": "2026-06-20",
-      "fr": "",
-      "frUpdatedAt": "",
-      "sr": "",
-      "srUpdatedAt": "",
+      "fr": "39",
+      "frUpdatedAt": "2026-06-20T16:52:03.986+05:30",
+      "sr": "43",
+      "srUpdatedAt": "2026-06-20T17:04:03.987+05:30",
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-20T11:23:33.523+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-20T17:04:03.987+05:30"
     },
     "JWD": {
       "id": "JWD-2026-06-20",
@@ -40,12 +40,12 @@
       "date": "2026-06-20",
       "fr": "68",
       "frUpdatedAt": "2026-06-20T14:44:03.986+05:30",
-      "sr": "",
-      "srUpdatedAt": "",
+      "sr": "20",
+      "srUpdatedAt": "2026-06-20T15:25:03.986+05:30",
       "frDeclaredTime": "2:30 PM",
       "srDeclaredTime": "3:15 PM",
-      "status": "partial",
-      "lastCheckedAt": "2026-06-20T14:57:03.997+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-20T15:25:03.986+05:30"
     },
     "SHM": {
       "id": "SHM-2026-06-20",
@@ -68,14 +68,14 @@
       "city": "Khanapara",
       "gameId": "KHM",
       "date": "2026-06-20",
-      "fr": "",
-      "frUpdatedAt": "",
-      "sr": "",
-      "srUpdatedAt": "",
+      "fr": "41",
+      "frUpdatedAt": "2026-06-20T16:21:44.344+05:30",
+      "sr": "27",
+      "srUpdatedAt": "2026-06-20T16:22:25.198+05:30",
       "frDeclaredTime": "11:00 AM",
       "srDeclaredTime": "12:00 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-20T11:23:33.523+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-20T16:22:25.198+05:30"
     },
     "JWM": {
       "id": "JWM-2026-06-20",
