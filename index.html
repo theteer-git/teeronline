@@ -267,7 +267,25 @@ body.dark .time-badge{background:#fdba74;color:#111111}
     function orderedGames(){return [...games].sort((a,b)=>getGameTime(a)-getGameTime(b))}
     function cleanGameName(title){return String(title||"").replace(/ Results$/i,"").trim()}
     function getStatusLabel(record,fr,sr){const status=String(record.status||"").toLowerCase();if(fr!=="XX"&&sr!=="XX")return"Completed";if(fr!=="XX"||sr!=="XX")return"Partial";if(status==="pending")return"Pending";return"Waiting"}
-    function findHistoryRecords(gameId){return historyRecords.filter(item=>item&&item.gameId===gameId&&item.date&&isValidNumber(item.fr)&&isValidNumber(item.sr)).sort((a,b)=>dateValue(b.date)-dateValue(a.date)).slice(0,7)}
+    function todayISTDate(){
+	  return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+	}
+
+	function findHistoryRecords(gameId){
+	  const today = todayISTDate();
+
+	  return historyRecords
+		.filter(item =>
+		  item &&
+		  item.gameId === gameId &&
+		  item.date &&
+		  item.date !== today &&
+		  isValidNumber(item.fr) &&
+		  isValidNumber(item.sr)
+		)
+		.sort((a,b) => dateValue(b.date) - dateValue(a.date))
+		.slice(0,7);
+	}
     function buildMiniHistoryHTML(game){const records=findHistoryRecords(game.gameId);const rows=records.map(record=>`<div class="mini-history-row"><span class="mini-history-date">${formatDateDisplay(record.date)}</span><span class="mini-history-result">${formatNumber(record.fr)}-${formatNumber(record.sr)}</span></div>`);while(rows.length<7){rows.push(`<div class="mini-history-row" aria-hidden="true"><span class="mini-history-date">--</span><span class="mini-history-result">XX-XX</span></div>`)}return rows.join("")}
     async function fetchLiveResults(){
       liveRecords={};
