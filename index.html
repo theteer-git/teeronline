@@ -286,6 +286,29 @@ body.dark .time-badge{background:#fdba74;color:#111111}
 		.sort((a,b) => dateValue(b.date) - dateValue(a.date))
 		.slice(0,7);
 	}
+	function getBestRecord(gameId){
+	  const live = liveRecords[gameId] || {};
+	  const latestHistory = historyRecords
+		.filter(item => item && item.gameId === gameId && item.date)
+		.sort((a,b) => dateValue(b.date) - dateValue(a.date))[0] || {};
+	  if (!live.date) return latestHistory;
+	  if (latestHistory.date === live.date) {
+		return {
+		  ...live,
+		  fr: isValidNumber(live.fr) ? live.fr : latestHistory.fr,
+		  sr: isValidNumber(live.sr) ? live.sr : latestHistory.sr,
+		  frUpdatedAt: live.frUpdatedAt || latestHistory.frUpdatedAt,
+		  srUpdatedAt: live.srUpdatedAt || latestHistory.srUpdatedAt,
+		  status: isValidNumber(live.fr || latestHistory.fr) && isValidNumber(live.sr || latestHistory.sr)
+			? "completed"
+			: (live.status || latestHistory.status || "pending")
+		};
+	  }
+	  if (dateValue(latestHistory.date) > dateValue(live.date)) {
+		return latestHistory;
+	  }
+	  return live;
+	}
     function buildMiniHistoryHTML(game){const records=findHistoryRecords(game.gameId);const rows=records.map(record=>`<div class="mini-history-row"><span class="mini-history-date">${formatDateDisplay(record.date)}</span><span class="mini-history-result">${formatNumber(record.fr)}-${formatNumber(record.sr)}</span></div>`);while(rows.length<7){rows.push(`<div class="mini-history-row" aria-hidden="true"><span class="mini-history-date">--</span><span class="mini-history-result">XX-XX</span></div>`)}return rows.join("")}
     async function fetchLiveResults(){
       liveRecords={};
@@ -315,7 +338,10 @@ body.dark .time-badge{background:#fdba74;color:#111111}
       });
     }
     async function fetchHistoryResults(){const res=await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`,{cache:"no-store"});if(!res.ok){historyRecords=[];return}const data=await res.json();historyRecords=Array.isArray(data)?data:[]}
-    function renderDashboard(){const dashboard=document.getElementById("gameDashboard");if(!dashboard)return;dashboard.innerHTML="";orderedGames().forEach(game=>{const record=liveRecords[game.gameId]||{};const fr=isFresh(record.frUpdatedAt)?formatNumber(record.fr):"XX";const sr=isFresh(record.srUpdatedAt)?formatNumber(record.sr):"XX";const frTime=getRoundTime(record,"fr")||game.defaultFrTime||"Updating";const srTime=getRoundTime(record,"sr")||record.srDeclaredTime||"Updating";const resultDate=record.date?formatDateDisplay(record.date):"Today";const statusLabel=getStatusLabel(record,fr,sr);const gameName=cleanGameName(game.title);const section=document.createElement("section");section.className="game-row";section.id=`result-${game.gameId}`;section.innerHTML=`<article class="result-card" aria-labelledby="title-${game.gameId}"><h2 class="card-title" id="title-${game.gameId}">${game.title}</h2><div class="game-timings"><span>📅 ${resultDate}</span><span>🏹 FR: ${frTime}</span><span>🎯 SR: ${srTime}</span></div><div class="fr-sr-container"><div class="fr-box"><div class="fr-label">First Round (FR)</div><div class="fr-value">${fr}</div><span class="time-badge">${frTime}</span></div><div class="sr-box"><div class="sr-label">Second Round (SR)</div><div class="sr-value">${sr}</div><span class="time-badge">${srTime}</span></div></div><div class="status-wrap"><span class="status-pill">${statusLabel}</span></div><div class="action-buttons"><a class="prev-page-link" href="${game.previousUrl}" aria-label="View full previous results of ${gameName}">📅 Previous Results</a><button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh</button></div></article><aside class="game-history-card" aria-label="Previous 7 results of ${gameName}"><h3 class="history-title">📅 Previous 7 Results of ${gameName}</h3><div class="mini-history-list">${buildMiniHistoryHTML(game)}</div></aside>`;dashboard.appendChild(section)});dashboard.querySelectorAll("[data-refresh='1']").forEach(btn=>{btn.addEventListener("click",async()=>{btn.textContent="⏳ Refreshing...";btn.disabled=true;await loadAll(false);btn.textContent="🔄 Refresh Latest Result";btn.disabled=false})})}
+    function renderDashboard(){const dashboard=document.getElementById("gameDashboard");if(!dashboard)return;dashboard.innerHTML="";orderedGames().forEach(game=>{const record=getBestRecord(game.gameId)||{};const fr=isFresh(record.frUpdatedAt)?formatNumber(record.fr):"XX";const sr=isFresh(record.srUpdatedAt)?formatNumber(record.sr):"XX";const frTime=getRoundTime(record,"fr")||game.defaultFrTime||"Updating";const srTime=getRoundTime(record,"sr")||record.srDeclaredTime||"Updating";const hasFreshResult = isFresh(record.frUpdatedAt) || isFresh(record.srUpdatedAt);
+const resultDate = hasFreshResult && record.date
+  ? formatDateDisplay(record.date)
+  : formatDateDisplay(todayISTDate());const statusLabel=getStatusLabel(record,fr,sr);const gameName=cleanGameName(game.title);const section=document.createElement("section");section.className="game-row";section.id=`result-${game.gameId}`;section.innerHTML=`<article class="result-card" aria-labelledby="title-${game.gameId}"><h2 class="card-title" id="title-${game.gameId}">${game.title}</h2><div class="game-timings"><span>📅 ${resultDate}</span><span>🏹 FR: ${frTime}</span><span>🎯 SR: ${srTime}</span></div><div class="fr-sr-container"><div class="fr-box"><div class="fr-label">First Round (FR)</div><div class="fr-value">${fr}</div><span class="time-badge">${frTime}</span></div><div class="sr-box"><div class="sr-label">Second Round (SR)</div><div class="sr-value">${sr}</div><span class="time-badge">${srTime}</span></div></div><div class="status-wrap"><span class="status-pill">${statusLabel}</span></div><div class="action-buttons"><a class="prev-page-link" href="${game.previousUrl}" aria-label="View full previous results of ${gameName}">📅 Previous Results</a><button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh</button></div></article><aside class="game-history-card" aria-label="Previous 7 results of ${gameName}"><h3 class="history-title">📅 Previous 7 Results of ${gameName}</h3><div class="mini-history-list">${buildMiniHistoryHTML(game)}</div></aside>`;dashboard.appendChild(section)});dashboard.querySelectorAll("[data-refresh='1']").forEach(btn=>{btn.addEventListener("click",async()=>{btn.textContent="⏳ Refreshing...";btn.disabled=true;await loadAll(false);btn.textContent="🔄 Refresh Latest Result";btn.disabled=false})})}
     async function loadAll(showLoading=false){const dashboard=document.getElementById("gameDashboard");/* skeleton already rendered to prevent CLS */try{await Promise.all([fetchLiveResults(),fetchHistoryResults()]);renderDashboard()}catch(err){console.error(err);if(dashboard)dashboard.innerHTML='<div class="dashboard-loading">Unable to load result data. Please check data/recent-results.json and try again.</div>'}}
     function initDarkMode(){const toggle=document.getElementById("darkModeToggle");if(!toggle)return;const isDark=localStorage.getItem("darkMode")==="true";if(isDark)document.body.classList.add("dark");toggle.textContent=isDark?"☀️ Light":"🌓 Dark";toggle.addEventListener("click",()=>{document.body.classList.toggle("dark");const darkEnabled=document.body.classList.contains("dark");localStorage.setItem("darkMode",darkEnabled);toggle.textContent=darkEnabled?"☀️ Light":"🌓 Dark"})}
     initDarkMode();
