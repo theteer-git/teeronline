@@ -15,6 +15,21 @@
     "lastCheckedAt": "2026-06-22T11:47:13.929+05:30"
   },
   {
+    "id": "KH-2026-06-22",
+    "game": "khanapara day",
+    "city": "Khanapara",
+    "gameId": "KH",
+    "date": "2026-06-22",
+    "fr": "42",
+    "frUpdatedAt": "2026-06-22T17:15:58.113+05:30",
+    "sr": "11",
+    "srUpdatedAt": "2026-06-22T17:16:35.500+05:30",
+    "frDeclaredTime": "4:25 PM",
+    "srDeclaredTime": "5:00 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-22T17:16:35.500+05:30"
+  },
+  {
     "id": "KHM-2026-06-22",
     "game": "khanapara morning",
     "city": "Khanapara",
@@ -28,6 +43,21 @@
     "srDeclaredTime": "12:00 PM",
     "status": "completed",
     "lastCheckedAt": "2026-06-22T12:00:13.942+05:30"
+  },
+  {
+    "id": "SHD-2026-06-22",
+    "game": "shillong day",
+    "city": "Shillong",
+    "gameId": "SHD",
+    "date": "2026-06-22",
+    "fr": "28",
+    "frUpdatedAt": "2026-06-22T17:15:14.341+05:30",
+    "sr": "04",
+    "srUpdatedAt": "2026-06-22T17:17:21.907+05:30",
+    "frDeclaredTime": "4:15 PM",
+    "srDeclaredTime": "5:15 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-22T17:17:21.907+05:30"
   },
   {
     "id": "SHM-2026-06-22",
@@ -1063,19 +1093,6 @@
     "lastCheckedAt": "2026-06-10T15:15:00+05:30"
   },
   {
-    "id": "KH-2026-06-10",
-    "game": "khanapara day",
-    "city": "Khanapara",
-    "gameId": "KH",
-    "date": "2026-06-10",
-    "fr": "79",
-    "frUpdatedAt": "2026-06-10T16:25:00+05:30",
-    "sr": "60",
-    "srUpdatedAt": "2026-06-10T17:00:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-10T17:00:00+05:30"
-  },
-  {
     "id": "SHD-2026-06-10",
     "game": "shillong day",
     "city": "Shillong",
@@ -1087,18 +1104,5 @@
     "srUpdatedAt": "2026-06-10T15:45:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-10T15:45:00+05:30"
-  },
-  {
-    "id": "SHD-2026-06-09",
-    "game": "shillong day",
-    "city": "Shillong",
-    "gameId": "SHD",
-    "date": "2026-06-09",
-    "fr": "00",
-    "frUpdatedAt": "2026-06-09T15:30:00+05:30",
-    "sr": "51",
-    "srUpdatedAt": "2026-06-09T15:45:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-09T15:45:00+05:30"
   }
 ]

@@ -1,6 +1,6 @@
 {
   "date": "2026-06-21",
-  "lastUpdatedAt": "2026-06-22T12:00:13.942+05:30",
+  "lastUpdatedAt": "2026-06-22T21:07:08.168+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-21",
@@ -15,7 +15,7 @@
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-21T14:50:54.860+05:30"
+      "lastCheckedAt": "2026-06-22T21:38:07.577+05:30"
     },
     "KH": {
       "id": "KH-2026-06-21",
@@ -30,7 +30,7 @@
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-21T14:50:54.860+05:30"
+      "lastCheckedAt": "2026-06-22T21:38:07.578+05:30"
     },
     "JWD": {
       "id": "JWD-2026-06-21",
