@@ -1,6 +1,6 @@
 {
   "date": "2026-06-23",
-  "lastUpdatedAt": "2026-06-23T17:15:54.387+05:30",
+  "lastUpdatedAt": "2026-06-23T20:51:54.391+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-23",
@@ -98,14 +98,14 @@
       "city": "Shillong",
       "gameId": "SHN1",
       "date": "2026-06-23",
-      "fr": "",
-      "frUpdatedAt": "",
+      "fr": "67",
+      "frUpdatedAt": "2026-06-23T20:51:54.391+05:30",
       "sr": "",
       "srUpdatedAt": "",
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-23T17:43:39.713+05:30"
+      "status": "partial",
+      "lastCheckedAt": "2026-06-23T20:51:54.391+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-06-23",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-23T17:43:39.714+05:30"
+      "lastCheckedAt": "2026-06-23T20:57:14.370+05:30"
     }
   }
 }
