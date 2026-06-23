@@ -1,5 +1,50 @@
 [
   {
+    "id": "JWM-2026-06-23",
+    "game": "juwai morning",
+    "city": "Juwai",
+    "gameId": "JWM",
+    "date": "2026-06-23",
+    "fr": "59",
+    "frUpdatedAt": "2026-06-23T12:17:54.397+05:30",
+    "sr": "21",
+    "srUpdatedAt": "2026-06-23T12:17:54.397+05:30",
+    "frDeclaredTime": "10:30 AM",
+    "srDeclaredTime": "11:30 AM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-23T12:17:54.397+05:30"
+  },
+  {
+    "id": "KHM-2026-06-23",
+    "game": "khanapara morning",
+    "city": "Khanapara",
+    "gameId": "KHM",
+    "date": "2026-06-23",
+    "fr": "73",
+    "frUpdatedAt": "2026-06-23T12:17:54.397+05:30",
+    "sr": "49",
+    "srUpdatedAt": "2026-06-23T12:17:54.397+05:30",
+    "frDeclaredTime": "11:00 AM",
+    "srDeclaredTime": "12:00 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-23T12:17:54.397+05:30"
+  },
+  {
+    "id": "SHM-2026-06-23",
+    "game": "shillong morning",
+    "city": "Shillong",
+    "gameId": "SHM",
+    "date": "2026-06-23",
+    "fr": "16",
+    "frUpdatedAt": "2026-06-23T11:56:46.497+05:30",
+    "sr": "29",
+    "srUpdatedAt": "2026-06-23T11:57:54.389+05:30",
+    "frDeclaredTime": "10:30 AM",
+    "srDeclaredTime": "11:30 AM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-23T11:57:54.389+05:30"
+  },
+  {
     "id": "JWM-2026-06-22",
     "game": "juwai morning",
     "city": "Juwai",
@@ -88,6 +133,20 @@
     "srDeclaredTime": "9:45 PM",
     "status": "completed",
     "lastCheckedAt": "2026-06-22T21:52:08.158+05:30"
+  },
+  {
+    "id": "SHN2-2026-06-22",
+    "game": "Shillong Night 2",
+    "city": "Shillong",
+    "gameId": "SHN2",
+    "date": "2026-06-22",
+    "fr": "88",
+    "sr": "33",
+    "frUpdatedAt": "2026-06-22T23:10:00+05:30",
+    "srUpdatedAt": "2026-06-23T00:10:00+05:30",
+    "frDeclaredTime": "11:10 PM",
+    "srDeclaredTime": "12:10 AM",
+    "status": "completed"
   },
   {
     "id": "JWM-2026-06-21",
@@ -900,19 +959,6 @@
     "lastCheckedAt": "2026-06-13T15:15:00+05:30"
   },
   {
-    "id": "JWM-2026-06-13",
-    "game": "juwai morning",
-    "city": "Juwai",
-    "gameId": "JWM",
-    "date": "2026-06-13",
-    "fr": "94",
-    "frUpdatedAt": "2026-06-13T10:30:00+05:30",
-    "sr": "63",
-    "srUpdatedAt": "2026-06-13T11:30:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-13T11:30:00+05:30"
-  },
-  {
     "id": "KH-2026-06-13",
     "game": "khanapara day",
     "city": "Khanapara",
@@ -926,19 +972,6 @@
     "lastCheckedAt": "2026-06-13T17:00:00+05:30"
   },
   {
-    "id": "KHM-2026-06-13",
-    "game": "khanapara morning",
-    "city": "Khanapara",
-    "gameId": "KHM",
-    "date": "2026-06-13",
-    "fr": "36",
-    "frUpdatedAt": "2026-06-13T11:00:00+05:30",
-    "sr": "94",
-    "srUpdatedAt": "2026-06-13T12:00:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-13T12:00:00+05:30"
-  },
-  {
     "id": "SHD-2026-06-13",
     "game": "shillong day",
     "city": "Shillong",
@@ -950,19 +983,6 @@
     "srUpdatedAt": "2026-06-13T17:15:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-13T17:15:00+05:30"
-  },
-  {
-    "id": "SHM-2026-06-13",
-    "game": "shillong morning",
-    "city": "Shillong",
-    "gameId": "SHM",
-    "date": "2026-06-13",
-    "fr": "37",
-    "frUpdatedAt": "2026-06-13T10:30:00+05:30",
-    "sr": "65",
-    "srUpdatedAt": "2026-06-13T11:30:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-13T11:30:00+05:30"
   },
   {
     "id": "SHN1-2026-06-13",
@@ -1028,19 +1048,6 @@
     "srUpdatedAt": "2026-06-12T17:15:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-12T17:15:00+05:30"
-  },
-  {
-    "id": "SHN2-2026-06-12",
-    "game": "Shillong Night 2",
-    "city": "Shillong",
-    "gameId": "SHN2",
-    "date": "2026-06-12",
-    "fr": "18",
-    "frUpdatedAt": "2026-06-12T23:10:00+05:30",
-    "sr": "06",
-    "srUpdatedAt": "2026-06-12T00:10:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-12T00:10:00+05:30"
   },
   {
     "id": "JWD-2026-06-11",
