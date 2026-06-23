@@ -1,6 +1,6 @@
 {
   "date": "2026-06-23",
-  "lastUpdatedAt": "2026-06-23T12:17:54.397+05:30",
+  "lastUpdatedAt": "2026-06-23T17:15:54.387+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-23",
@@ -8,14 +8,14 @@
       "city": "Shillong",
       "gameId": "SHD",
       "date": "2026-06-23",
-      "fr": "",
-      "frUpdatedAt": "",
-      "sr": "",
-      "srUpdatedAt": "",
+      "fr": "15",
+      "frUpdatedAt": "2026-06-23T16:15:54.387+05:30",
+      "sr": "19",
+      "srUpdatedAt": "2026-06-23T17:15:54.387+05:30",
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-23T14:29:40.528+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-23T17:15:54.387+05:30"
     },
     "KH": {
       "id": "KH-2026-06-23",
@@ -23,14 +23,14 @@
       "city": "Khanapara",
       "gameId": "KH",
       "date": "2026-06-23",
-      "fr": "",
-      "frUpdatedAt": "",
-      "sr": "",
-      "srUpdatedAt": "",
+      "fr": "85",
+      "frUpdatedAt": "2026-06-23T16:28:54.391+05:30",
+      "sr": "83",
+      "srUpdatedAt": "2026-06-23T17:02:54.389+05:30",
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-23T14:29:40.529+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-23T17:02:54.389+05:30"
     },
     "JWD": {
       "id": "JWD-2026-06-23",
@@ -38,14 +38,14 @@
       "city": "Juwai",
       "gameId": "JWD",
       "date": "2026-06-23",
-      "fr": "",
-      "frUpdatedAt": "",
-      "sr": "",
-      "srUpdatedAt": "",
+      "fr": "31",
+      "frUpdatedAt": "2026-06-23T14:43:54.387+05:30",
+      "sr": "28",
+      "srUpdatedAt": "2026-06-23T15:27:54.388+05:30",
       "frDeclaredTime": "2:30 PM",
       "srDeclaredTime": "3:15 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-23T14:29:40.530+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-23T15:27:54.388+05:30"
     },
     "SHM": {
       "id": "SHM-2026-06-23",
@@ -105,7 +105,7 @@
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-23T14:29:40.531+05:30"
+      "lastCheckedAt": "2026-06-23T17:43:39.713+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-06-23",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-23T14:29:40.532+05:30"
+      "lastCheckedAt": "2026-06-23T17:43:39.714+05:30"
     }
   }
 }
