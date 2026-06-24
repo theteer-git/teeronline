@@ -450,54 +450,48 @@
     }
 
     function getBestRecord(gameId) {
-      const live = liveRecords[gameId] || {};
-      const today = todayISTDate();
-      const currentMinutes = getISTTimeInMinutes();
-      
-      // For SHN1, check if we have results
-      if (gameId === "SHN1") {
-        // If live record has FR result (even if SR is pending), show it
-        if (live.date === today && isValidNumber(live.fr)) {
-          return live;
-        }
-        
-        // Check history for previous completed results
-        const historyItems = historyRecords
-          .filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr))
-          .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-        
-        // Before 6:45 PM, show yesterday's completed results
-        if (currentMinutes < 18 * 60 + 45) {
-          const completedHistory = historyItems.find(item => 
-            isValidNumber(item.fr) && isValidNumber(item.sr)
-          );
-          if (completedHistory) {
-            return completedHistory;
-          }
-        }
-        
-        // After 6:45 PM, show today's results (even if partial)
-        if (live.date === today) {
-          return live;
-        }
-        
-        // Fallback to latest history with results
-        const latestWithResults = historyItems.find(item => isValidNumber(item.fr));
-        return latestWithResults || live;
-      }
-      
-      // For other games, use the live record if available
-      if (live.date === today) {
-        return live;
-      }
-      
-      // Fallback to latest history
+  const live = liveRecords[gameId] || {};
+  const today = todayISTDate();
+  const currentMinutes = getISTTimeInMinutes();
+  
+  // For SHN1
+  if (gameId === "SHN1") {
+    // If live record has today's FR result, use it
+    if (live.date === today && isValidNumber(live.fr)) {
+      console.log(`SHN1: Using live record with FR: ${live.fr}`);
+      return live;
+    }
+    
+    // Before 6:45 PM, show yesterday's completed results
+    if (currentMinutes < 18 * 60 + 45) {
       const historyItems = historyRecords
-        .filter(item => item && item.gameId === gameId && item.date)
+        .filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr) && isValidNumber(item.sr))
         .sort((a, b) => dateValue(b.date) - dateValue(a.date));
       
-      return historyItems[0] || {};
+      if (historyItems.length > 0) {
+        console.log(`SHN1: Using yesterday's history record`);
+        return historyItems[0];
+      }
     }
+    
+    // After 6:45 PM, show today's live record (even if partial)
+    if (live.date === today) {
+      return live;
+    }
+  }
+  
+  // For all other games, use live record first
+  if (live.date === today && (isValidNumber(live.fr) || isValidNumber(live.sr))) {
+    return live;
+  }
+  
+  // Fallback to history
+  const historyItems = historyRecords
+    .filter(item => item && item.gameId === gameId && item.date)
+    .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+  
+  return historyItems[0] || {};
+}
 
     function findHistoryRecords(gameId) {
       const today = todayISTDate();
@@ -532,20 +526,22 @@
     }
 
     async function fetchLiveResults() {
-      liveRecords = {};
-      try {
-        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.records && typeof data.records === "object") {
-            liveRecords = data.records;
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn("Could not fetch live results:", e);
-      }
-    }
+	  liveRecords = {};
+	  try {
+		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
+		if (res.ok) {
+		  const data = await res.json();
+		  if (data && data.records && typeof data.records === "object") {
+			// Store all records from the worker
+			liveRecords = data.records;
+			console.log("Live records loaded from worker:", Object.keys(liveRecords));
+			return;
+		  }
+		}
+	  } catch (e) {
+		console.warn("Could not fetch live results:", e);
+	  }
+	}
 
     async function fetchHistoryResults() {
       // Try to get history from the worker first (using latest data)
