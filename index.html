@@ -369,7 +369,6 @@
     function isValidNumber(value) {
       return /^\d{1,2}$/.test(String(value || "").trim());
     }
-    
     function formatNumber(value) {
       return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX";
     }
