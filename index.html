@@ -512,52 +512,55 @@
 					.slice(0, 7);
 			}
 
+			// In your index.html, update the getBestRecord function
 			function getBestRecord(gameId) {
-				const live = liveRecords[gameId] || {};
-				const today = todayISTDate();
-				const yesterday = new Date();
-				yesterday.setDate(yesterday.getDate() - 1);
-				const yesterdayStr = yesterday.toISOString().slice(0, 10);
-
-				// Get history records sorted by date
+			  const live = liveRecords[gameId] || {};
+			  const today = todayISTDate();
+			  const currentMinutes = getISTTimeInMinutes();
+			  
+			  // For SHN1, check if we have results
+			  if (gameId === "SHN1") {
+				// If live record has FR result (even if SR is pending), show it
+				if (live.date === today && isValidNumber(live.fr)) {
+				  return live;
+				}
+				
+				// Check history for previous completed results
 				const historyItems = historyRecords
-					.filter(item => item && item.gameId === gameId && item.date)
-					.sort((a, b) => dateValue(b.date) - dateValue(a.date));
-
-				const latestHistory = historyItems[0] || {};
-
-				// If we have a live record for today with results, use it
-				if (live.date === today && isValidNumber(live.fr) && isValidNumber(live.sr)) {
-					return live;
-				}
-
-				// If we have a live record for today but no results yet (XX-XX)
-				// Check if we have a completed record from yesterday that should be shown
-				if (live.date === today) {
-					// If results are empty (XX-XX), show the latest completed history record instead
-					if (!isValidNumber(live.fr) || !isValidNumber(live.sr)) {
-						// Find the most recent completed history record
-						const completedHistory = historyItems.find(item =>
-							isValidNumber(item.fr) && isValidNumber(item.sr)
-						);
-						if (completedHistory) {
-							return completedHistory;
-						}
-					}
-					return live;
-				}
-
-				// If live date is not today, use it if it has results
-				if (isValidNumber(live.fr) && isValidNumber(live.sr)) {
-					return live;
-				}
-
-				// Fallback to latest history record with results
-				const completedHistory = historyItems.find(item =>
+				  .filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr))
+				  .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+				
+				// Before 6:45 PM, show yesterday's completed results
+				if (currentMinutes < 18 * 60 + 45) {
+				  const completedHistory = historyItems.find(item => 
 					isValidNumber(item.fr) && isValidNumber(item.sr)
-				);
-
-				return completedHistory || latestHistory || {};
+				  );
+				  if (completedHistory) {
+					return completedHistory;
+				  }
+				}
+				
+				// After 6:45 PM, show today's results (even if partial)
+				if (live.date === today) {
+				  return live;
+				}
+				
+				// Fallback to latest history with results
+				const latestWithResults = historyItems.find(item => isValidNumber(item.fr));
+				return latestWithResults || live;
+			  }
+			  
+			  // For other games, use the live record if available
+			  if (live.date === today) {
+				return live;
+			  }
+			  
+			  // Fallback to latest history
+			  const historyItems = historyRecords
+				.filter(item => item && item.gameId === gameId && item.date)
+				.sort((a, b) => dateValue(b.date) - dateValue(a.date));
+			  
+			  return historyItems[0] || {};
 			}
 
 			function buildMiniHistoryHTML(game) {
