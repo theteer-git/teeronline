@@ -15,7 +15,7 @@
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-24T05:12:47.349+05:30"
+      "lastCheckedAt": "2026-06-24T07:17:36.197+05:30"
     },
     "KH": {
       "id": "KH-2026-06-24",
@@ -30,7 +30,7 @@
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-24T05:12:47.349+05:30"
+      "lastCheckedAt": "2026-06-24T07:17:36.197+05:30"
     },
     "JWD": {
       "id": "JWD-2026-06-24",
@@ -45,7 +45,7 @@
       "frDeclaredTime": "2:30 PM",
       "srDeclaredTime": "3:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-24T05:12:47.350+05:30"
+      "lastCheckedAt": "2026-06-24T07:17:36.198+05:30"
     },
     "SHM": {
       "id": "SHM-2026-06-24",
@@ -60,7 +60,7 @@
       "frDeclaredTime": "10:30 AM",
       "srDeclaredTime": "11:30 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-24T05:12:47.351+05:30"
+      "lastCheckedAt": "2026-06-24T07:17:36.199+05:30"
     },
     "KHM": {
       "id": "KHM-2026-06-24",
@@ -75,7 +75,7 @@
       "frDeclaredTime": "11:00 AM",
       "srDeclaredTime": "12:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-24T05:12:47.351+05:30"
+      "lastCheckedAt": "2026-06-24T07:17:36.199+05:30"
     },
     "JWM": {
       "id": "JWM-2026-06-24",
@@ -90,7 +90,7 @@
       "frDeclaredTime": "10:30 AM",
       "srDeclaredTime": "11:30 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-24T05:12:47.352+05:30"
+      "lastCheckedAt": "2026-06-24T07:17:36.199+05:30"
     },
     "SHN1": {
       "id": "SHN1-2026-06-24",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-24T05:12:47.353+05:30"
+      "lastCheckedAt": "2026-06-24T07:17:36.200+05:30"
     }
   }
 }
