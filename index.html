@@ -347,435 +347,397 @@
         </div>
     </footer>
     <script>
-        (function() {
-			/* Visitor-safe setup: homepage reads only static GitHub Pages JSON files. No browser request goes to Cloudflare Worker/KV. */
-			const LIVE_JSON_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest"; // optional; page falls back to recent-results.json if missing
-			const HISTORY_JSON_URL = "./data/recent-results.json";
-			const FRESH_HOURS = 20;
-			const games = [{
-					title: "Shillong Morning Teer Results",
-					gameId: "SHM",
-					defaultFrTime: "10:30 AM",
-					previousUrl: "./shillong-morning-teer-previous-results"
-				},
-				{
-					title: "Juwai Morning Teer Results",
-					gameId: "JWM",
-					defaultFrTime: "10:30 AM",
-					previousUrl: "./juwai-morning-teer-previous-results"
-				},
-				{
-					title: "Khanapara Morning Teer Results",
-					gameId: "KHM",
-					defaultFrTime: "11:00 AM",
-					previousUrl: "./khanapara-morning-teer-previous-results"
-				},
-				{
-					title: "Juwai Teer Results",
-					gameId: "JWD",
-					defaultFrTime: "2:30 PM",
-					previousUrl: "./juwai-teer-previous-results"
-				},
-				{
-					title: "Shillong Teer Results",
-					gameId: "SHD",
-					defaultFrTime: "4:15 PM",
-					previousUrl: "./shillong-teer-previous-results"
-				},
-				{
-					title: "Khanapara Teer Results",
-					gameId: "KH",
-					defaultFrTime: "4:25 PM",
-					previousUrl: "./khanapara-teer-previous-results"
-				},
-				{
-					title: "Shillong Night Teer Results",
-					gameId: "SHN1",
-					defaultFrTime: "8:45 PM",
-					previousUrl: "./shillong-night-teer-previous-results"
-				},
-				{
-					title: "Shillong Night Teer 2 Results",
-					gameId: "SHN2",
-					defaultFrTime: "11:10 PM",
-					previousUrl: "./shillong-night-teer-2-previous-results"
-				}
-			];
-			let liveRecords = {},
-				historyRecords = [];
+  (function(){
+    const LIVE_JSON_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
+    const HISTORY_JSON_URL = "./data/recent-results.json";
+    const FRESH_HOURS = 20;
+    
+    const games = [
+      {title:"Shillong Morning Teer Results",gameId:"SHM",defaultFrTime:"10:30 AM",previousUrl:"./shillong-morning-teer-previous-results"},
+      {title:"Juwai Morning Teer Results",gameId:"JWM",defaultFrTime:"10:30 AM",previousUrl:"./juwai-morning-teer-previous-results"},
+      {title:"Khanapara Morning Teer Results",gameId:"KHM",defaultFrTime:"11:00 AM",previousUrl:"./khanapara-morning-teer-previous-results"},
+      {title:"Juwai Teer Results",gameId:"JWD",defaultFrTime:"2:30 PM",previousUrl:"./juwai-teer-previous-results"},
+      {title:"Shillong Teer Results",gameId:"SHD",defaultFrTime:"4:15 PM",previousUrl:"./shillong-teer-previous-results"},
+      {title:"Khanapara Teer Results",gameId:"KH",defaultFrTime:"4:25 PM",previousUrl:"./khanapara-teer-previous-results"},
+      {title:"Shillong Night Teer Results",gameId:"SHN1",defaultFrTime:"8:45 PM",previousUrl:"./shillong-night-teer-previous-results"},
+      {title:"Shillong Night Teer 2 Results",gameId:"SHN2",defaultFrTime:"11:10 PM",previousUrl:"./shillong-night-teer-2-previous-results"}
+    ];
+    
+    let liveRecords = {};
+    let historyRecords = [];
 
-			function isValidNumber(value) {
-				return /^\d{1,2}$/.test(String(value || "").trim())
-			}
+    function isValidNumber(value) {
+      return /^\d{1,2}$/.test(String(value || "").trim());
+    }
+    
+    function formatNumber(value) {
+      return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX";
+    }
+    
+    function parseDate(dateStr) {
+      if (!dateStr) return null;
+      let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+      if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+      m = String(dateStr).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
+      if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
+      const d = new Date(dateStr);
+      return isNaN(d.getTime()) ? null : d;
+    }
+    
+    function dateValue(dateStr) {
+      const d = parseDate(dateStr);
+      return d ? d.getTime() : 0;
+    }
+    
+    function formatDateDisplay(dateStr) {
+      const d = parseDate(dateStr);
+      if (!d) return dateStr || "";
+      return `${String(d.getDate()).padStart(2, "0")}-${String(d.getMonth() + 1).padStart(2, "0")}-${d.getFullYear()}`;
+    }
+    
+    function formatTimeFromTimestamp(ts) {
+      if (!ts) return "";
+      const d = new Date(ts);
+      if (isNaN(d.getTime())) return "";
+      return d.toLocaleTimeString("en-IN", {timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", hour12: true}).toUpperCase();
+    }
+    
+    function getRoundTime(record, round) {
+      if (!record) return "";
+      return round === "fr" ? (formatTimeFromTimestamp(record.frUpdatedAt) || record.frDeclaredTime || "") : (formatTimeFromTimestamp(record.srUpdatedAt) || record.srDeclaredTime || "");
+    }
+    
+    function timeToMinutes(timeStr) {
+      if (!timeStr) return 9999;
+      const m = String(timeStr).trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/);
+      if (!m) return 9999;
+      let h = Number(m[1]);
+      const min = Number(m[2]);
+      const ap = m[3];
+      if (ap === "PM" && h !== 12) h += 12;
+      if (ap === "AM" && h === 12) h = 0;
+      return h * 60 + min;
+    }
+    
+    function getGameTime(game) {
+      return timeToMinutes(game.defaultFrTime);
+    }
+    
+    function orderedGames() {
+      return [...games].sort((a, b) => getGameTime(a) - getGameTime(b));
+    }
+    
+    function cleanGameName(title) {
+      return String(title || "").replace(/ Results$/i, "").trim();
+    }
+    
+    function getStatusLabel(record, fr, sr) {
+      const status = String(record.status || "").toLowerCase();
+      if (fr !== "XX" && sr !== "XX") return "Completed";
+      if (fr !== "XX" || sr !== "XX") return "Partial";
+      if (status === "pending") return "Pending";
+      return "Waiting";
+    }
+    
+    function todayISTDate() {
+      return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+    }
+    
+    function getISTTimeInMinutes() {
+      const now = new Date();
+      const istTime = now.toLocaleTimeString("en-US", {timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", hour12: false});
+      const [hour, minute] = istTime.split(":").map(Number);
+      return hour * 60 + minute;
+    }
 
-			function formatNumber(value) {
-				return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX"
-			}
+    function getBestRecord(gameId) {
+      const live = liveRecords[gameId] || {};
+      const today = todayISTDate();
+      const currentMinutes = getISTTimeInMinutes();
+      
+      // For SHN1, check if we have results
+      if (gameId === "SHN1") {
+        // If live record has FR result (even if SR is pending), show it
+        if (live.date === today && isValidNumber(live.fr)) {
+          return live;
+        }
+        
+        // Check history for previous completed results
+        const historyItems = historyRecords
+          .filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr))
+          .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+        
+        // Before 6:45 PM, show yesterday's completed results
+        if (currentMinutes < 18 * 60 + 45) {
+          const completedHistory = historyItems.find(item => 
+            isValidNumber(item.fr) && isValidNumber(item.sr)
+          );
+          if (completedHistory) {
+            return completedHistory;
+          }
+        }
+        
+        // After 6:45 PM, show today's results (even if partial)
+        if (live.date === today) {
+          return live;
+        }
+        
+        // Fallback to latest history with results
+        const latestWithResults = historyItems.find(item => isValidNumber(item.fr));
+        return latestWithResults || live;
+      }
+      
+      // For other games, use the live record if available
+      if (live.date === today) {
+        return live;
+      }
+      
+      // Fallback to latest history
+      const historyItems = historyRecords
+        .filter(item => item && item.gameId === gameId && item.date)
+        .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+      
+      return historyItems[0] || {};
+    }
 
-			function isFresh(updatedAt) {
-				if (!updatedAt) return false;
-				const d = new Date(updatedAt);
-				if (isNaN(d.getTime())) return false;
-				const ageMs = Date.now() - d.getTime();
-				return ageMs >= 0 && ageMs <= FRESH_HOURS * 60 * 60 * 1000
-			}
+    function findHistoryRecords(gameId) {
+      const today = todayISTDate();
+      return historyRecords
+        .filter(item =>
+          item &&
+          item.gameId === gameId &&
+          item.date &&
+          item.date !== today &&
+          isValidNumber(item.fr) &&
+          isValidNumber(item.sr)
+        )
+        .sort((a, b) => dateValue(b.date) - dateValue(a.date))
+        .slice(0, 7);
+    }
 
-			function parseDate(dateStr) {
-				if (!dateStr) return null;
-				let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-				if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
-				m = String(dateStr).match(/^(\d{1,2})[-/](\d{1,2})[-/](\d{4})$/);
-				if (m) return new Date(Number(m[3]), Number(m[2]) - 1, Number(m[1]));
-				const d = new Date(dateStr);
-				return isNaN(d.getTime()) ? null : d
-			}
+    function buildMiniHistoryHTML(game) {
+      const records = findHistoryRecords(game.gameId);
+      const rows = records.map(record => 
+        `<div class="mini-history-row">
+          <span class="mini-history-date">${formatDateDisplay(record.date)}</span>
+          <span class="mini-history-result">${formatNumber(record.fr)}-${formatNumber(record.sr)}</span>
+        </div>`
+      );
+      while (rows.length < 7) {
+        rows.push(`<div class="mini-history-row" aria-hidden="true">
+          <span class="mini-history-date">--</span>
+          <span class="mini-history-result">XX-XX</span>
+        </div>`);
+      }
+      return rows.join("");
+    }
 
-			function dateValue(dateStr) {
-				const d = parseDate(dateStr);
-				return d ? d.getTime() : 0
-			}
+    async function fetchLiveResults() {
+      liveRecords = {};
+      try {
+        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.records && typeof data.records === "object") {
+            liveRecords = data.records;
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Could not fetch live results:", e);
+      }
+    }
 
-			function formatDateDisplay(dateStr) {
-				const d = parseDate(dateStr);
-				if (!d) return dateStr || "";
-				return `${String(d.getDate()).padStart(2,"0")}-${String(d.getMonth()+1).padStart(2,"0")}-${d.getFullYear()}`
-			}
+    async function fetchHistoryResults() {
+      // Try to get history from the worker first (using latest data)
+      try {
+        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.records) {
+            // Convert records to history array
+            const history = [];
+            for (const [gameId, record] of Object.entries(data.records)) {
+              if (record.date && (isValidNumber(record.fr) || isValidNumber(record.sr))) {
+                // Only add if it has some result
+                if (isValidNumber(record.fr) || isValidNumber(record.sr)) {
+                  history.push({
+                    gameId: record.gameId || gameId,
+                    date: record.date,
+                    fr: record.fr || "",
+                    sr: record.sr || "",
+                    status: record.status || "pending"
+                  });
+                }
+              }
+            }
+            if (history.length > 0) {
+              historyRecords = history;
+              return;
+            }
+          }
+        }
+      } catch (e) {
+        console.warn("Could not fetch history from worker:", e);
+      }
 
-			function formatTimeFromTimestamp(ts) {
-				if (!ts) return "";
-				const d = new Date(ts);
-				if (isNaN(d.getTime())) return "";
-				return d.toLocaleTimeString("en-IN", {
-					timeZone: "Asia/Kolkata",
-					hour: "numeric",
-					minute: "2-digit",
-					hour12: true
-				}).toUpperCase()
-			}
+      // Fallback to local JSON
+      try {
+        const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
+        if (!res.ok) {
+          console.warn("History JSON not found, using empty array");
+          historyRecords = [];
+          return;
+        }
+        const data = await res.json();
+        historyRecords = Array.isArray(data) ? data : [];
+      } catch (e) {
+        console.warn("Failed to load history, using empty array");
+        historyRecords = [];
+      }
+    }
 
-			function getRoundTime(record, round) {
-				if (!record) return "";
-				return round === "fr" ? (formatTimeFromTimestamp(record.frUpdatedAt) || record.frDeclaredTime || "") : (formatTimeFromTimestamp(record.srUpdatedAt) || record.srDeclaredTime || "")
-			}
+    function renderDashboard() {
+      const dashboard = document.getElementById("gameDashboard");
+      if (!dashboard) return;
+      dashboard.innerHTML = "";
+      
+      orderedGames().forEach(game => {
+        const record = getBestRecord(game.gameId) || {};
+        const today = todayISTDate();
+        const currentMinutes = getISTTimeInMinutes();
+        let displayDate = record.date || today;
+        let displayFr = isValidNumber(record.fr) ? formatNumber(record.fr) : "XX";
+        let displaySr = isValidNumber(record.sr) ? formatNumber(record.sr) : "XX";
+        let statusLabel = getStatusLabel(record, displayFr, displaySr);
+        
+        // Special handling for SHN1
+        if (game.gameId === "SHN1") {
+          // If we have FR result, show it even if SR is pending
+          if (isValidNumber(record.fr)) {
+            displayFr = formatNumber(record.fr);
+            if (isValidNumber(record.sr)) {
+              displaySr = formatNumber(record.sr);
+              statusLabel = "Completed";
+            } else {
+              statusLabel = "Partial";
+            }
+          }
+          
+          // Before 6:45 PM, show yesterday's completed results
+          if (currentMinutes < 18 * 60 + 45) {
+            const historyItems = historyRecords
+              .filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr) && isValidNumber(item.sr))
+              .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+            
+            if (historyItems.length > 0) {
+              const yesterdayRecord = historyItems[0];
+              displayDate = yesterdayRecord.date;
+              displayFr = formatNumber(yesterdayRecord.fr);
+              displaySr = formatNumber(yesterdayRecord.sr);
+              statusLabel = "Completed";
+            }
+          }
+        }
+        
+        const frTime = getRoundTime(record, "fr") || game.defaultFrTime || "Updating";
+        const srTime = getRoundTime(record, "sr") || record.srDeclaredTime || "Updating";
+        const gameName = cleanGameName(game.title);
+        
+        const section = document.createElement("section");
+        section.className = "game-row";
+        section.id = `result-${game.gameId}`;
+        section.innerHTML = `
+          <article class="result-card" aria-labelledby="title-${game.gameId}">
+            <h2 class="card-title" id="title-${game.gameId}">${game.title}</h2>
+            <div class="game-timings">
+              <span>📅 ${formatDateDisplay(displayDate)}</span>
+              <span>🏹 FR: ${frTime}</span>
+              <span>🎯 SR: ${srTime}</span>
+            </div>
+            <div class="fr-sr-container">
+              <div class="fr-box">
+                <div class="fr-label">First Round (FR)</div>
+                <div class="fr-value">${displayFr}</div>
+                <span class="time-badge">${frTime}</span>
+              </div>
+              <div class="sr-box">
+                <div class="sr-label">Second Round (SR)</div>
+                <div class="fr-value">${displaySr}</div>
+                <span class="time-badge">${srTime}</span>
+              </div>
+            </div>
+            <div class="status-wrap"><span class="status-pill">${statusLabel}</span></div>
+            <div class="action-buttons">
+              <a class="prev-page-link" href="${game.previousUrl}" aria-label="View full previous results of ${gameName}">📅 Previous Results</a>
+              <button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh</button>
+            </div>
+          </article>
+          <aside class="game-history-card" aria-label="Previous 7 results of ${gameName}">
+            <h3 class="history-title">📅 Previous 7 Results of ${gameName}</h3>
+            <div class="mini-history-list">${buildMiniHistoryHTML(game)}</div>
+          </aside>
+        `;
+        dashboard.appendChild(section);
+      });
+      
+      dashboard.querySelectorAll("[data-refresh='1']").forEach(btn => {
+        btn.addEventListener("click", async () => {
+          btn.textContent = "⏳ Refreshing...";
+          btn.disabled = true;
+          await loadAll(false);
+          btn.textContent = "🔄 Refresh Latest Result";
+          btn.disabled = false;
+        });
+      });
+    }
 
-			function timeToMinutes(timeStr) {
-				if (!timeStr) return 9999;
-				const m = String(timeStr).trim().toUpperCase().match(/^(\d{1,2}):(\d{2})\s*([AP]M)$/);
-				if (!m) return 9999;
-				let h = Number(m[1]);
-				const min = Number(m[2]);
-				const ap = m[3];
-				if (ap === "PM" && h !== 12) h += 12;
-				if (ap === "AM" && h === 12) h = 0;
-				return h * 60 + min
-			}
+    async function loadAll(showLoading = false) {
+      const dashboard = document.getElementById("gameDashboard");
+      try {
+        await Promise.all([fetchLiveResults(), fetchHistoryResults()]);
+        renderDashboard();
+      } catch (err) {
+        console.error(err);
+        if (dashboard) {
+          dashboard.innerHTML = '<div class="dashboard-loading">Unable to load result data. Please refresh the page or try again later.</div>';
+        }
+      }
+    }
 
-			function getGameTime(game) {
-				return timeToMinutes(game.defaultFrTime)
-			}
+    function initDarkMode() {
+      const toggle = document.getElementById("darkModeToggle");
+      if (!toggle) return;
+      const isDark = localStorage.getItem("darkMode") === "true";
+      if (isDark) document.body.classList.add("dark");
+      toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
+      toggle.addEventListener("click", () => {
+        document.body.classList.toggle("dark");
+        const darkEnabled = document.body.classList.contains("dark");
+        localStorage.setItem("darkMode", darkEnabled);
+        toggle.textContent = darkEnabled ? "☀️ Light" : "🌓 Dark";
+      });
+    }
+    
+    initDarkMode();
 
-			function orderedGames() {
-				return [...games].sort((a, b) => getGameTime(a) - getGameTime(b))
-			}
+    function startDataLoad() {
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(() => loadAll(false), { timeout: 1500 });
+      } else {
+        setTimeout(() => loadAll(false), 300);
+      }
+    }
 
-			function cleanGameName(title) {
-				return String(title || "").replace(/ Results$/i, "").trim()
-			}
-
-			function getStatusLabel(record, fr, sr) {
-				const status = String(record.status || "").toLowerCase();
-				if (fr !== "XX" && sr !== "XX") return "Completed";
-				if (fr !== "XX" || sr !== "XX") return "Partial";
-				if (status === "pending") return "Pending";
-				return "Waiting"
-			}
-
-			function todayISTDate() {
-				return new Date().toLocaleDateString("en-CA", {
-					timeZone: "Asia/Kolkata"
-				});
-			}
-
-			function findHistoryRecords(gameId) {
-				const today = todayISTDate();
-
-				return historyRecords
-					.filter(item =>
-						item &&
-						item.gameId === gameId &&
-						item.date &&
-						item.date !== today &&
-						isValidNumber(item.fr) &&
-						isValidNumber(item.sr)
-					)
-					.sort((a, b) => dateValue(b.date) - dateValue(a.date))
-					.slice(0, 7);
-			}
-
-			function getBestRecord(gameId) {
-				const live = liveRecords[gameId] || {};
-				const today = todayISTDate();
-				const yesterday = new Date();
-				yesterday.setDate(yesterday.getDate() - 1);
-				const yesterdayStr = yesterday.toISOString().slice(0, 10);
-
-				// Get history records sorted by date
-				const historyItems = historyRecords
-					.filter(item => item && item.gameId === gameId && item.date)
-					.sort((a, b) => dateValue(b.date) - dateValue(a.date));
-
-				const latestHistory = historyItems[0] || {};
-
-				// If we have a live record for today with results, use it
-				if (live.date === today && isValidNumber(live.fr) && isValidNumber(live.sr)) {
-					return live;
-				}
-
-				// If we have a live record for today but no results yet (XX-XX)
-				// Check if we have a completed record from yesterday that should be shown
-				if (live.date === today) {
-					// If results are empty (XX-XX), show the latest completed history record instead
-					if (!isValidNumber(live.fr) || !isValidNumber(live.sr)) {
-						// Find the most recent completed history record
-						const completedHistory = historyItems.find(item =>
-							isValidNumber(item.fr) && isValidNumber(item.sr)
-						);
-						if (completedHistory) {
-							return completedHistory;
-						}
-					}
-					return live;
-				}
-
-				// If live date is not today, use it if it has results
-				if (isValidNumber(live.fr) && isValidNumber(live.sr)) {
-					return live;
-				}
-
-				// Fallback to latest history record with results
-				const completedHistory = historyItems.find(item =>
-					isValidNumber(item.fr) && isValidNumber(item.sr)
-				);
-
-				return completedHistory || latestHistory || {};
-			}
-
-			function buildMiniHistoryHTML(game) {
-				const records = findHistoryRecords(game.gameId);
-				const rows = records.map(record => `<div class="mini-history-row"><span class="mini-history-date">${formatDateDisplay(record.date)}</span><span class="mini-history-result">${formatNumber(record.fr)}-${formatNumber(record.sr)}</span></div>`);
-				while (rows.length < 7) {
-					rows.push(`<div class="mini-history-row" aria-hidden="true"><span class="mini-history-date">--</span><span class="mini-history-result">XX-XX</span></div>`)
-				}
-				return rows.join("")
-			}
-			async function fetchLiveResults() {
-				liveRecords = {};
-				try {
-					const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
-						cache: "no-store"
-					});
-					if (res.ok) {
-						const data = await res.json();
-						if (data && data.records && typeof data.records === "object") {
-							liveRecords = data.records;
-							return;
-						}
-					}
-				} catch (e) {
-					console.warn("latest-results.json not available, falling back to recent-results.json", e);
-				}
-
-				const fallback = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, {
-					cache: "no-store"
-				});
-				if (!fallback.ok) throw new Error("Unable to fetch recent-results.json fallback");
-				const recent = await fallback.json();
-				if (!Array.isArray(recent)) throw new Error("recent-results.json must be an array");
-
-				games.forEach(game => {
-					const latest = recent
-						.filter(item => item && item.gameId === game.gameId && item.date)
-						.sort((a, b) => dateValue(b.date) - dateValue(a.date))[0];
-					if (latest) liveRecords[game.gameId] = latest;
-				});
-			}
-			async function fetchHistoryResults() {
-				const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, {
-					cache: "no-store"
-				});
-				if (!res.ok) {
-					historyRecords = [];
-					return
-				}
-				const data = await res.json();
-				historyRecords = Array.isArray(data) ? data : []
-			}
-
-			function renderDashboard(){
-			  const dashboard = document.getElementById("gameDashboard");
-			  if(!dashboard) return;
-			  dashboard.innerHTML = "";
-			  orderedGames().forEach(game => {
-				const record = getBestRecord(game.gameId) || {};
-				const today = todayISTDate();
-				const gameDate = record.date || today;
-				
-				// Check if this is SHN1 and we should show previous day's results
-				let displayDate = gameDate;
-				let displayFr = isValidNumber(record.fr) ? formatNumber(record.fr) : "XX";
-				let displaySr = isValidNumber(record.sr) ? formatNumber(record.sr) : "XX";
-				let statusLabel = getStatusLabel(record, displayFr, displaySr);
-				
-				// For SHN1: If today's date is showing with XX-XX, check if we have yesterday's completed results
-				if (game.gameId === "SHN1" && gameDate === today && (!isValidNumber(record.fr) || !isValidNumber(record.sr))) {
-				  // Find the most recent completed history record
-				  const historyItems = historyRecords
-					.filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr) && isValidNumber(item.sr))
-					.sort((a, b) => dateValue(b.date) - dateValue(a.date));
-				  
-				  if (historyItems.length > 0) {
-					const yesterdayRecord = historyItems[0];
-					displayDate = yesterdayRecord.date;
-					displayFr = formatNumber(yesterdayRecord.fr);
-					displaySr = formatNumber(yesterdayRecord.sr);
-					statusLabel = "Completed";
-				  }
-				}
-				
-				// For SHN1: Before 6:45 PM, show yesterday's results, after 6:45 PM show today's pending
-				const now = new Date();
-				const istTime = now.toLocaleTimeString("en-US", {timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit"});
-				const [hour, minute] = istTime.split(":").map(Number);
-				const totalMinutes = (hour % 12) * 60 + minute;
-				const cutoffMinutes = 18 * 60 + 45; // 6:45 PM
-				
-				if (game.gameId === "SHN1") {
-				  const historyItems = historyRecords
-					.filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr) && isValidNumber(item.sr))
-					.sort((a, b) => dateValue(b.date) - dateValue(a.date));
-				  
-				  if (historyItems.length > 0) {
-					const yesterdayRecord = historyItems[0];
-					// Before 6:45 PM, show yesterday's completed results
-					if (totalMinutes < cutoffMinutes) {
-					  displayDate = yesterdayRecord.date;
-					  displayFr = formatNumber(yesterdayRecord.fr);
-					  displaySr = formatNumber(yesterdayRecord.sr);
-					  statusLabel = "Completed";
-					} else {
-					  // After 6:45 PM, show today's pending or completed results
-					  const todayRecord = liveRecords[game.gameId] || {};
-					  if (isValidNumber(todayRecord.fr) && isValidNumber(todayRecord.sr)) {
-						displayFr = formatNumber(todayRecord.fr);
-						displaySr = formatNumber(todayRecord.sr);
-						statusLabel = "Completed";
-					  } else {
-						displayFr = "XX";
-						displaySr = "XX";
-						statusLabel = "Pending";
-					  }
-					}
-				  }
-				}
-				
-				const frTime = getRoundTime(record, "fr") || game.defaultFrTime || "Updating";
-				const srTime = getRoundTime(record, "sr") || record.srDeclaredTime || "Updating";
-				const gameName = cleanGameName(game.title);
-				
-				const section = document.createElement("section");
-				section.className = "game-row";
-				section.id = `result-${game.gameId}`;
-				section.innerHTML = `
-				  <article class="result-card" aria-labelledby="title-${game.gameId}">
-					<h2 class="card-title" id="title-${game.gameId}">${game.title}</h2>
-					<div class="game-timings">
-					  <span>📅 ${formatDateDisplay(displayDate)}</span>
-					  <span>🏹 FR: ${frTime}</span>
-					  <span>🎯 SR: ${srTime}</span>
-					</div>
-					<div class="fr-sr-container">
-					  <div class="fr-box">
-						<div class="fr-label">First Round (FR)</div>
-						<div class="fr-value">${displayFr}</div>
-						<span class="time-badge">${frTime}</span>
-					  </div>
-					  <div class="sr-box">
-						<div class="sr-label">Second Round (SR)</div>
-						<div class="sr-value">${displaySr}</div>
-						<span class="time-badge">${srTime}</span>
-					  </div>
-					</div>
-					<div class="status-wrap"><span class="status-pill">${statusLabel}</span></div>
-					<div class="action-buttons">
-					  <a class="prev-page-link" href="${game.previousUrl}" aria-label="View full previous results of ${gameName}">📅 Previous Results</a>
-					  <button class="refresh-btn" data-refresh="1" type="button">🔄 Refresh</button>
-					</div>
-				  </article>
-				  <aside class="game-history-card" aria-label="Previous 7 results of ${gameName}">
-					<h3 class="history-title">📅 Previous 7 Results of ${gameName}</h3>
-					<div class="mini-history-list">${buildMiniHistoryHTML(game)}</div>
-				  </aside>
-				`;
-				dashboard.appendChild(section);
-			  });
-			  
-			  dashboard.querySelectorAll("[data-refresh='1']").forEach(btn => {
-				btn.addEventListener("click", async () => {
-				  btn.textContent = "⏳ Refreshing...";
-				  btn.disabled = true;
-				  await loadAll(false);
-				  btn.textContent = "🔄 Refresh Latest Result";
-				  btn.disabled = false;
-				});
-			  });
-			}
-			async function loadAll(showLoading = false) {
-				const dashboard = document.getElementById("gameDashboard"); /* skeleton already rendered to prevent CLS */
-				try {
-					await Promise.all([fetchLiveResults(), fetchHistoryResults()]);
-					renderDashboard()
-				} catch (err) {
-					console.error(err);
-					if (dashboard) dashboard.innerHTML = '<div class="dashboard-loading">Unable to load result data. Please check data/recent-results.json and try again.</div>'
-				}
-			}
-
-			function initDarkMode() {
-				const toggle = document.getElementById("darkModeToggle");
-				if (!toggle) return;
-				const isDark = localStorage.getItem("darkMode") === "true";
-				if (isDark) document.body.classList.add("dark");
-				toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
-				toggle.addEventListener("click", () => {
-					document.body.classList.toggle("dark");
-					const darkEnabled = document.body.classList.contains("dark");
-					localStorage.setItem("darkMode", darkEnabled);
-					toggle.textContent = darkEnabled ? "☀️ Light" : "🌓 Dark"
-				})
-			}
-			initDarkMode();
-
-			function startDataLoad() {
-				if ("requestIdleCallback" in window) {
-					requestIdleCallback(() => loadAll(false), {
-						timeout: 1500
-					});
-				} else {
-					setTimeout(() => loadAll(false), 300);
-				}
-			}
-
-			if (document.readyState === "complete") {
-				startDataLoad();
-			} else {
-				window.addEventListener("load", startDataLoad, {
-					once: true
-				});
-			}
-		})();
-		const copyrightYear = document.getElementById("copyrightYear");
-		if (copyrightYear) copyrightYear.textContent = new Date().getFullYear();
-    </script>
+    if (document.readyState === "complete") {
+      startDataLoad();
+    } else {
+      window.addEventListener("load", startDataLoad, { once: true });
+    }
+  })();
+  const copyrightYear = document.getElementById("copyrightYear");
+  if (copyrightYear) copyrightYear.textContent = new Date().getFullYear();
+</script>
 </body>
 
 </html>
