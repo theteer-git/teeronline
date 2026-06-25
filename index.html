@@ -369,6 +369,7 @@
     function isValidNumber(value) {
       return /^\d{1,2}$/.test(String(value || "").trim());
     }
+    
     function formatNumber(value) {
       return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX";
     }
@@ -450,48 +451,48 @@
     }
 
     function getBestRecord(gameId) {
-  const live = liveRecords[gameId] || {};
-  const today = todayISTDate();
-  const currentMinutes = getISTTimeInMinutes();
-  
-  // For SHN1
-  if (gameId === "SHN1") {
-    // If live record has today's FR result, use it
-    if (live.date === today && isValidNumber(live.fr)) {
-      console.log(`SHN1: Using live record with FR: ${live.fr}`);
-      return live;
-    }
-    
-    // Before 6:45 PM, show yesterday's completed results
-    if (currentMinutes < 18 * 60 + 45) {
+      const live = liveRecords[gameId] || {};
+      const today = todayISTDate();
+      const currentMinutes = getISTTimeInMinutes();
+      
+      // For SHN1
+      if (gameId === "SHN1") {
+        // If live record has today's FR result, use it
+        if (live.date === today && isValidNumber(live.fr)) {
+          console.log(`SHN1: Using live record with FR: ${live.fr}`);
+          return live;
+        }
+        
+        // Before 6:45 PM, show yesterday's completed results
+        if (currentMinutes < 18 * 60 + 45) {
+          const historyItems = historyRecords
+            .filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr) && isValidNumber(item.sr))
+            .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+          
+          if (historyItems.length > 0) {
+            console.log(`SHN1: Using yesterday's history record`);
+            return historyItems[0];
+          }
+        }
+        
+        // After 6:45 PM, show today's live record (even if partial)
+        if (live.date === today) {
+          return live;
+        }
+      }
+      
+      // For all other games, use live record first
+      if (live.date === today && (isValidNumber(live.fr) || isValidNumber(live.sr))) {
+        return live;
+      }
+      
+      // Fallback to history
       const historyItems = historyRecords
-        .filter(item => item && item.gameId === "SHN1" && item.date && isValidNumber(item.fr) && isValidNumber(item.sr))
+        .filter(item => item && item.gameId === gameId && item.date)
         .sort((a, b) => dateValue(b.date) - dateValue(a.date));
       
-      if (historyItems.length > 0) {
-        console.log(`SHN1: Using yesterday's history record`);
-        return historyItems[0];
-      }
+      return historyItems[0] || {};
     }
-    
-    // After 6:45 PM, show today's live record (even if partial)
-    if (live.date === today) {
-      return live;
-    }
-  }
-  
-  // For all other games, use live record first
-  if (live.date === today && (isValidNumber(live.fr) || isValidNumber(live.sr))) {
-    return live;
-  }
-  
-  // Fallback to history
-  const historyItems = historyRecords
-    .filter(item => item && item.gameId === gameId && item.date)
-    .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-  
-  return historyItems[0] || {};
-}
 
     function findHistoryRecords(gameId) {
       const today = todayISTDate();
@@ -526,70 +527,84 @@
     }
 
     async function fetchLiveResults() {
-	  liveRecords = {};
-	  try {
-		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
-		if (res.ok) {
-		  const data = await res.json();
-		  if (data && data.records && typeof data.records === "object") {
-			// Store all records from the worker
-			liveRecords = data.records;
-			console.log("Live records loaded from worker:", Object.keys(liveRecords));
-			return;
-		  }
-		}
-	  } catch (e) {
-		console.warn("Could not fetch live results:", e);
-	  }
-	}
+      liveRecords = {};
+      try {
+        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.records && typeof data.records === "object") {
+            liveRecords = data.records;
+            console.log("Live records loaded from worker:", Object.keys(liveRecords));
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("Could not fetch live results:", e);
+      }
+    }
 
     async function fetchHistoryResults() {
-      // Try to get history from the worker first (using latest data)
+      // DIRECTLY load from local JSON file (primary source for history)
+      try {
+        const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            // Filter to get only completed results with both FR and SR
+            historyRecords = data.filter(item => 
+              item && 
+              item.gameId && 
+              item.date && 
+              isValidNumber(item.fr) && 
+              isValidNumber(item.sr)
+            );
+            console.log(`✅ History loaded from JSON: ${historyRecords.length} records`);
+            
+            // Log SHN1 history for debugging
+            const shn1History = historyRecords.filter(r => r.gameId === "SHN1");
+            console.log(`✅ SHN1 history records: ${shn1History.length}`);
+            if (shn1History.length > 0) {
+              console.log("✅ SHN1 sample:", shn1History[0]);
+            }
+            return;
+          }
+        }
+      } catch (e) {
+        console.warn("⚠️ Could not load history from JSON:", e);
+      }
+
+      // Fallback: Try to get from worker (only has today's data)
       try {
         const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
           if (data && data.records) {
-            // Convert records to history array
             const history = [];
             for (const [gameId, record] of Object.entries(data.records)) {
-              if (record.date && (isValidNumber(record.fr) || isValidNumber(record.sr))) {
-                // Only add if it has some result
-                if (isValidNumber(record.fr) || isValidNumber(record.sr)) {
-                  history.push({
-                    gameId: record.gameId || gameId,
-                    date: record.date,
-                    fr: record.fr || "",
-                    sr: record.sr || "",
-                    status: record.status || "pending"
-                  });
-                }
+              if (record.date && isValidNumber(record.fr) && isValidNumber(record.sr)) {
+                history.push({
+                  gameId: record.gameId || gameId,
+                  date: record.date,
+                  fr: record.fr || "",
+                  sr: record.sr || "",
+                  status: record.status || "completed"
+                });
               }
             }
             if (history.length > 0) {
               historyRecords = history;
+              console.log(`✅ History from worker: ${historyRecords.length} records`);
               return;
             }
           }
         }
       } catch (e) {
-        console.warn("Could not fetch history from worker:", e);
+        console.warn("⚠️ Could not fetch history from worker:", e);
       }
 
-      // Fallback to local JSON
-      try {
-        const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
-        if (!res.ok) {
-          console.warn("History JSON not found, using empty array");
-          historyRecords = [];
-          return;
-        }
-        const data = await res.json();
-        historyRecords = Array.isArray(data) ? data : [];
-      } catch (e) {
-        console.warn("Failed to load history, using empty array");
-        historyRecords = [];
-      }
+      // If all fails, use empty array
+      historyRecords = [];
+      console.warn("⚠️ No history data available");
     }
 
     function renderDashboard() {
@@ -608,7 +623,6 @@
         
         // Special handling for SHN1
         if (game.gameId === "SHN1") {
-          // If we have FR result, show it even if SR is pending
           if (isValidNumber(record.fr)) {
             displayFr = formatNumber(record.fr);
             if (isValidNumber(record.sr)) {
