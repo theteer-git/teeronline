@@ -1,5 +1,35 @@
 [
   {
+    "id": "JWM-2026-06-25",
+    "game": "juwai morning",
+    "city": "Juwai",
+    "gameId": "JWM",
+    "date": "2026-06-25",
+    "fr": "82",
+    "frUpdatedAt": "2026-06-25T10:41:35.192+05:30",
+    "sr": "03",
+    "srUpdatedAt": "2026-06-25T11:41:35.193+05:30",
+    "frDeclaredTime": "10:30 AM",
+    "srDeclaredTime": "11:30 AM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-25T11:41:35.193+05:30"
+  },
+  {
+    "id": "KHM-2026-06-25",
+    "game": "khanapara morning",
+    "city": "Khanapara",
+    "gameId": "KHM",
+    "date": "2026-06-25",
+    "fr": "48",
+    "frUpdatedAt": "2026-06-25T11:00:35.195+05:30",
+    "sr": "07",
+    "srUpdatedAt": "2026-06-25T12:00:35.193+05:30",
+    "frDeclaredTime": "11:00 AM",
+    "srDeclaredTime": "12:00 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-25T12:00:35.193+05:30"
+  },
+  {
     "id": "SHM-2026-06-25",
     "game": "shillong morning",
     "city": "Shillong",
@@ -1000,19 +1030,6 @@
     "lastCheckedAt": "2026-06-15T15:15:00+05:30"
   },
   {
-    "id": "JWM-2026-06-15",
-    "game": "juwai morning",
-    "city": "Juwai",
-    "gameId": "JWM",
-    "date": "2026-06-15",
-    "fr": "41",
-    "frUpdatedAt": "2026-06-15T10:30:00+05:30",
-    "sr": "08",
-    "srUpdatedAt": "2026-06-15T11:30:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-15T11:30:00+05:30"
-  },
-  {
     "id": "KH-2026-06-15",
     "game": "khanapara day",
     "city": "Khanapara",
@@ -1024,19 +1041,6 @@
     "srUpdatedAt": "2026-06-15T17:00:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-15T17:00:00+05:30"
-  },
-  {
-    "id": "KHM-2026-06-15",
-    "game": "khanapara morning",
-    "city": "Khanapara",
-    "gameId": "KHM",
-    "date": "2026-06-15",
-    "fr": "13",
-    "frUpdatedAt": "2026-06-15T11:00:00+05:30",
-    "sr": "35",
-    "srUpdatedAt": "2026-06-15T12:00:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-15T12:00:00+05:30"
   },
   {
     "id": "SHD-2026-06-15",
