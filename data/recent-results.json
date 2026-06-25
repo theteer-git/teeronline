@@ -1,5 +1,20 @@
 [
   {
+    "id": "JWD-2026-06-25",
+    "game": "juwai day",
+    "city": "Juwai",
+    "gameId": "JWD",
+    "date": "2026-06-25",
+    "fr": "64",
+    "frUpdatedAt": "2026-06-25T14:41:35.194+05:30",
+    "sr": "48",
+    "srUpdatedAt": "2026-06-25T15:34:35.194+05:30",
+    "frDeclaredTime": "2:30 PM",
+    "srDeclaredTime": "3:15 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-25T15:34:35.194+05:30"
+  },
+  {
     "id": "JWM-2026-06-25",
     "game": "juwai morning",
     "city": "Juwai",
@@ -15,6 +30,21 @@
     "lastCheckedAt": "2026-06-25T11:41:35.193+05:30"
   },
   {
+    "id": "KH-2026-06-25",
+    "game": "khanapara day",
+    "city": "Khanapara",
+    "gameId": "KH",
+    "date": "2026-06-25",
+    "fr": "83",
+    "frUpdatedAt": "2026-06-25T16:28:35.193+05:30",
+    "sr": "56",
+    "srUpdatedAt": "2026-06-25T17:17:35.195+05:30",
+    "frDeclaredTime": "4:25 PM",
+    "srDeclaredTime": "5:00 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-25T17:17:35.195+05:30"
+  },
+  {
     "id": "KHM-2026-06-25",
     "game": "khanapara morning",
     "city": "Khanapara",
@@ -28,6 +58,21 @@
     "srDeclaredTime": "12:00 PM",
     "status": "completed",
     "lastCheckedAt": "2026-06-25T12:00:35.193+05:30"
+  },
+  {
+    "id": "SHD-2026-06-25",
+    "game": "shillong day",
+    "city": "Shillong",
+    "gameId": "SHD",
+    "date": "2026-06-25",
+    "fr": "95",
+    "frUpdatedAt": "2026-06-25T16:15:35.193+05:30",
+    "sr": "17",
+    "srUpdatedAt": "2026-06-25T17:11:35.195+05:30",
+    "frDeclaredTime": "4:15 PM",
+    "srDeclaredTime": "5:15 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-25T17:11:35.195+05:30"
   },
   {
     "id": "SHM-2026-06-25",
@@ -1095,19 +1140,6 @@
     "lastCheckedAt": "2026-06-13T15:15:00+05:30"
   },
   {
-    "id": "KH-2026-06-13",
-    "game": "khanapara day",
-    "city": "Khanapara",
-    "gameId": "KH",
-    "date": "2026-06-13",
-    "fr": "83",
-    "frUpdatedAt": "2026-06-13T16:25:00+05:30",
-    "sr": "79",
-    "srUpdatedAt": "2026-06-13T17:00:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-13T17:00:00+05:30"
-  },
-  {
     "id": "SHD-2026-06-13",
     "game": "shillong day",
     "city": "Shillong",
@@ -1119,31 +1151,5 @@
     "srUpdatedAt": "2026-06-13T17:15:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-13T17:15:00+05:30"
-  },
-  {
-    "id": "JWD-2026-06-12",
-    "game": "juwai day",
-    "city": "Juwai",
-    "gameId": "JWD",
-    "date": "2026-06-12",
-    "fr": "57",
-    "frUpdatedAt": "2026-06-12T14:30:00+05:30",
-    "sr": "63",
-    "srUpdatedAt": "2026-06-12T15:15:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-12T15:15:00+05:30"
-  },
-  {
-    "id": "SHD-2026-06-12",
-    "game": "shillong day",
-    "city": "Shillong",
-    "gameId": "SHD",
-    "date": "2026-06-12",
-    "fr": "06",
-    "frUpdatedAt": "2026-06-12T16:15:00+05:30",
-    "sr": "86",
-    "srUpdatedAt": "2026-06-12T17:15:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-12T17:15:00+05:30"
   }
 ]
