@@ -767,12 +767,50 @@
 	  }
 	}
 
+	function getSmartPollingInterval() {
+	  const now = getISTTimeInMinutes();
+
+	  const criticalWindows = [
+		// JWD FR/SR
+		[14 * 60, 15 * 60 + 35],
+
+		// SHD + KH FR/SR
+		[15 * 60 + 45, 17 * 60 + 35]
+	  ];
+
+	  const normalWindows = [
+		// Morning games
+		[10 * 60, 12 * 60 + 20],
+
+		// Night 1
+		[20 * 60 + 15, 22 * 60 + 10],
+
+		// Night 2
+		[22 * 60 + 40, 24 * 60 + 20]
+	  ];
+
+	  for (const [start, end] of criticalWindows) {
+		if (now >= start && now <= end) return 1000;
+	  }
+
+	  for (const [start, end] of normalWindows) {
+		if (now >= start && now <= end) return 5000;
+	  }
+
+	  return 30000;
+	}
+
 	function startSafeLivePolling() {
 	  if (livePollingTimer) clearInterval(livePollingTimer);
 
-	  livePollingTimer = setInterval(() => {
-		pollLiveLatestOnly();
-	  }, 5000);
+	  async function loop() {
+		await pollLiveLatestOnly();
+
+		const delay = getSmartPollingInterval();
+		livePollingTimer = setTimeout(loop, delay);
+	  }
+
+	  loop();
 	}
 
     if (document.readyState === "complete") {
