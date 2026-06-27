@@ -1,6 +1,6 @@
 {
   "date": "2026-06-27",
-  "lastUpdatedAt": "2026-06-27T12:00:10.192+05:30",
+  "lastUpdatedAt": "2026-06-27T14:44:10.186+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-27",
@@ -15,7 +15,7 @@
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-27T12:59:12.208+05:30"
+      "lastCheckedAt": "2026-06-27T15:08:36.619+05:30"
     },
     "KH": {
       "id": "KH-2026-06-27",
@@ -30,7 +30,7 @@
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-27T12:59:12.209+05:30"
+      "lastCheckedAt": "2026-06-27T15:08:36.620+05:30"
     },
     "JWD": {
       "id": "JWD-2026-06-27",
@@ -38,14 +38,14 @@
       "city": "Juwai",
       "gameId": "JWD",
       "date": "2026-06-27",
-      "fr": "",
-      "frUpdatedAt": "",
+      "fr": "24",
+      "frUpdatedAt": "2026-06-27T14:44:10.186+05:30",
       "sr": "",
       "srUpdatedAt": "",
       "frDeclaredTime": "2:30 PM",
       "srDeclaredTime": "3:15 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-27T12:59:12.210+05:30"
+      "status": "partial",
+      "lastCheckedAt": "2026-06-27T14:44:10.186+05:30"
     },
     "SHM": {
       "id": "SHM-2026-06-27",
@@ -105,7 +105,7 @@
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-27T12:59:12.211+05:30"
+      "lastCheckedAt": "2026-06-27T15:08:36.622+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-06-27",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-27T12:59:12.211+05:30"
+      "lastCheckedAt": "2026-06-27T15:08:36.622+05:30"
     }
   }
 }
