@@ -1,6 +1,6 @@
 {
   "date": "2026-06-27",
-  "lastUpdatedAt": "2026-06-27T16:30:10.199+05:30",
+  "lastUpdatedAt": "2026-06-27T17:11:10.184+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-27",
@@ -10,12 +10,12 @@
       "date": "2026-06-27",
       "fr": "70",
       "frUpdatedAt": "2026-06-27T16:17:10.197+05:30",
-      "sr": "",
-      "srUpdatedAt": "",
+      "sr": "98",
+      "srUpdatedAt": "2026-06-27T17:11:10.184+05:30",
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
-      "status": "partial",
-      "lastCheckedAt": "2026-06-27T16:17:10.197+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-27T17:11:10.184+05:30"
     },
     "KH": {
       "id": "KH-2026-06-27",
@@ -105,7 +105,7 @@
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-27T16:45:33.511+05:30"
+      "lastCheckedAt": "2026-06-27T18:17:03.369+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-06-27",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-27T16:45:33.512+05:30"
+      "lastCheckedAt": "2026-06-27T18:17:03.370+05:30"
     }
   }
 }
