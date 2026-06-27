@@ -1,6 +1,6 @@
 {
   "date": "2026-06-27",
-  "lastUpdatedAt": "2026-06-27T23:28:55.796+05:30",
+  "lastUpdatedAt": "2026-06-27T23:40:55.804+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-27",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "completed",
-      "lastCheckedAt": "2026-06-27T23:28:55.796+05:30"
+      "lastCheckedAt": "2026-06-27T23:40:55.804+05:30"
     }
   }
 }
