@@ -1,6 +1,6 @@
 {
   "date": "2026-06-28",
-  "lastUpdatedAt": "2026-06-28T14:56:32.657+05:30",
+  "lastUpdatedAt": "2026-06-28T19:17:43.349+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-28",
@@ -15,7 +15,7 @@
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T18:32:43.954+05:30"
+      "lastCheckedAt": "2026-06-28T20:25:38.399+05:30"
     },
     "KH": {
       "id": "KH-2026-06-28",
@@ -30,7 +30,7 @@
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T18:32:43.955+05:30"
+      "lastCheckedAt": "2026-06-28T20:25:38.400+05:30"
     },
     "JWD": {
       "id": "JWD-2026-06-28",
@@ -90,7 +90,7 @@
       "frDeclaredTime": "10:30 AM",
       "srDeclaredTime": "11:30 AM",
       "status": "completed",
-      "lastCheckedAt": "2026-06-28T12:00:55.615+05:30"
+      "lastCheckedAt": "2026-06-28T19:17:43.349+05:30"
     },
     "SHN1": {
       "id": "SHN1-2026-06-28",
@@ -105,7 +105,7 @@
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T18:32:43.956+05:30"
+      "lastCheckedAt": "2026-06-28T20:25:38.401+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-06-28",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T18:32:43.957+05:30"
+      "lastCheckedAt": "2026-06-28T20:25:38.401+05:30"
     }
   }
 }
