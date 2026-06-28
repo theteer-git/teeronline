@@ -348,7 +348,7 @@
     </footer>
     <script>
   (function(){
-    const LIVE_JSON_URL = "https://teer-api.maya-digital-rkn.workers.dev/live-latest";
+    const LIVE_JSON_URL = "https://teer-api-v2.maya-digital-rkn.workers.dev/results";
     const HISTORY_JSON_URL = "./data/recent-results.json";
     const FRESH_HOURS = 20;
     
@@ -532,11 +532,10 @@
         const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
-          if (data && data.records && typeof data.records === "object") {
-            liveRecords = data.records;
-            console.log("Live records loaded from worker:", Object.keys(liveRecords));
-            return;
-          }
+          if (data?.ok && data.records) {
+				liveRecords = data.records;
+				return;
+			}
         }
       } catch (e) {
         console.warn("Could not fetch live results:", e);
