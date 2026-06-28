@@ -1,6 +1,6 @@
 {
   "date": "2026-06-28",
-  "lastUpdatedAt": "2026-06-28T12:04:55.834+05:30",
+  "lastUpdatedAt": "2026-06-28T14:56:32.657+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-06-28",
@@ -15,7 +15,7 @@
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T12:05:11.055+05:30"
+      "lastCheckedAt": "2026-06-28T15:16:40.654+05:30"
     },
     "KH": {
       "id": "KH-2026-06-28",
@@ -30,7 +30,7 @@
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T12:05:11.056+05:30"
+      "lastCheckedAt": "2026-06-28T15:16:40.655+05:30"
     },
     "JWD": {
       "id": "JWD-2026-06-28",
@@ -38,14 +38,14 @@
       "city": "Juwai",
       "gameId": "JWD",
       "date": "2026-06-28",
-      "fr": "",
-      "frUpdatedAt": "",
-      "sr": "",
-      "srUpdatedAt": "",
+      "fr": "24",
+      "frUpdatedAt": "2026-06-27T14:44:10.186+05:30",
+      "sr": "85",
+      "srUpdatedAt": "2026-06-27T15:26:10.185+05:30",
       "frDeclaredTime": "2:30 PM",
       "srDeclaredTime": "3:15 PM",
-      "status": "pending",
-      "lastCheckedAt": "2026-06-28T12:05:11.056+05:30"
+      "status": "completed",
+      "lastCheckedAt": "2026-06-28T14:56:32.657+05:30"
     },
     "SHM": {
       "id": "SHM-2026-06-28",
@@ -75,7 +75,7 @@
       "frDeclaredTime": "11:00 AM",
       "srDeclaredTime": "12:00 PM",
       "status": "completed",
-      "lastCheckedAt": "2026-06-28T12:04:55.834+05:30"
+      "lastCheckedAt": "2026-06-28T12:30:55.923+05:30"
     },
     "JWM": {
       "id": "JWM-2026-06-28",
@@ -105,7 +105,7 @@
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T12:05:11.058+05:30"
+      "lastCheckedAt": "2026-06-28T15:16:40.656+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-06-28",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-28T12:05:11.058+05:30"
+      "lastCheckedAt": "2026-06-28T15:16:40.657+05:30"
     }
   }
 }

@@ -1,5 +1,20 @@
 [
   {
+    "id": "JWD-2026-06-28",
+    "game": "juwai day",
+    "city": "Juwai",
+    "gameId": "JWD",
+    "date": "2026-06-28",
+    "fr": "24",
+    "frUpdatedAt": "2026-06-27T14:44:10.186+05:30",
+    "sr": "85",
+    "srUpdatedAt": "2026-06-27T15:26:10.185+05:30",
+    "frDeclaredTime": "2:30 PM",
+    "srDeclaredTime": "3:15 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-28T14:56:32.657+05:30"
+  },
+  {
     "id": "JWM-2026-06-28",
     "game": "juwai morning",
     "city": "Juwai",
@@ -27,7 +42,7 @@
     "frDeclaredTime": "11:00 AM",
     "srDeclaredTime": "12:00 PM",
     "status": "completed",
-    "lastCheckedAt": "2026-06-28T12:04:55.834+05:30"
+    "lastCheckedAt": "2026-06-28T12:30:55.923+05:30"
   },
   {
     "id": "SHM-2026-06-28",
@@ -1172,18 +1187,5 @@
     "srUpdatedAt": "2026-06-16T17:15:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-16T17:15:00+05:30"
-  },
-  {
-    "id": "JWD-2026-06-15",
-    "game": "juwai day",
-    "city": "Juwai",
-    "gameId": "JWD",
-    "date": "2026-06-15",
-    "fr": "37",
-    "frUpdatedAt": "2026-06-15T14:30:00+05:30",
-    "sr": "82",
-    "srUpdatedAt": "2026-06-15T15:15:00+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-15T15:15:00+05:30"
   }
 ]
