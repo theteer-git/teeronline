@@ -350,8 +350,6 @@
   (function(){
     const LIVE_JSON_URL = "https://live.teeronline.com/results";
     const HISTORY_JSON_URL = "./data/recent-results.json";
-    const FRESH_HOURS = 20;
-    
     const games = [
       {title:"Shillong Morning Teer Results",gameId:"SHM",defaultFrTime:"10:30 AM",previousUrl:"./shillong-morning-teer-previous-results"},
       {title:"Juwai Morning Teer Results",gameId:"JWM",defaultFrTime:"10:30 AM",previousUrl:"./juwai-morning-teer-previous-results"},
@@ -459,7 +457,6 @@
       if (gameId === "SHN1") {
         // If live record has today's FR result, use it
         if (live.date === today && isValidNumber(live.fr)) {
-          console.log(`SHN1: Using live record with FR: ${live.fr}`);
           return live;
         }
         
@@ -470,7 +467,6 @@
             .sort((a, b) => dateValue(b.date) - dateValue(a.date));
           
           if (historyItems.length > 0) {
-            console.log(`SHN1: Using yesterday's history record`);
             return historyItems[0];
           }
         }
@@ -527,20 +523,21 @@
     }
 
     async function fetchLiveResults() {
-      liveRecords = {};
-      try {
-        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          if (data?.ok && data.records) {
-				liveRecords = data.records;
-				return;
-			}
-        }
-      } catch (e) {
-        console.warn("Could not fetch live results:", e);
-      }
-    }
+	  liveRecords = {};
+	  try {
+		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
+		  cache: "no-store",
+		  referrerPolicy: "no-referrer"
+		});
+		if (!res.ok) return;
+		const data = await res.json();
+		if (data?.ok && data.records && typeof data.records === "object") {
+		  liveRecords = data.records;
+		}
+	  } catch (e) {
+		liveRecords = {};
+	  }
+	}
 
     async function fetchHistoryResults() {
       // DIRECTLY load from local JSON file (primary source for history)
@@ -557,53 +554,13 @@
               isValidNumber(item.fr) && 
               isValidNumber(item.sr)
             );
-            console.log(`✅ History loaded from JSON: ${historyRecords.length} records`);
-            
-            // Log SHN1 history for debugging
-            const shn1History = historyRecords.filter(r => r.gameId === "SHN1");
-            console.log(`✅ SHN1 history records: ${shn1History.length}`);
-            if (shn1History.length > 0) {
-              console.log("✅ SHN1 sample:", shn1History[0]);
-            }
             return;
           }
         }
       } catch (e) {
-        console.warn("⚠️ Could not load history from JSON:", e);
-      }
-
-      // Fallback: Try to get from worker (only has today's data)
-      try {
-        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
-        if (res.ok) {
-          const data = await res.json();
-          if (data && data.records) {
-            const history = [];
-            for (const [gameId, record] of Object.entries(data.records)) {
-              if (record.date && isValidNumber(record.fr) && isValidNumber(record.sr)) {
-                history.push({
-                  gameId: record.gameId || gameId,
-                  date: record.date,
-                  fr: record.fr || "",
-                  sr: record.sr || "",
-                  status: record.status || "completed"
-                });
-              }
-            }
-            if (history.length > 0) {
-              historyRecords = history;
-              console.log(`✅ History from worker: ${historyRecords.length} records`);
-              return;
-            }
-          }
-        }
-      } catch (e) {
-        console.warn("⚠️ Could not fetch history from worker:", e);
-      }
-
-      // If all fails, use empty array
-      historyRecords = [];
-      console.warn("⚠️ No history data available");
+			console.error(e);
+			historyRecords = [];
+		}      
     }
 
     function renderDashboard() {
@@ -747,22 +704,26 @@
 
 	async function pollLiveLatestOnly() {
 	  try {
-		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
+		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
+		  cache: "no-store",
+		  referrerPolicy: "no-referrer"
+		});
+
 		if (!res.ok) return;
 
 		const data = await res.json();
-		if (!data || !data.records) return;
 
-		if (data.lastUpdatedAt && data.lastUpdatedAt === lastLiveUpdatedAt) {
-		  return;
-		}
+		if (!data?.ok || !data.records) return;
 
-		lastLiveUpdatedAt = data.lastUpdatedAt || "";
+		const next = JSON.stringify(data.records);
+		const current = JSON.stringify(liveRecords);
+
+		if (next === current) return;
+
 		liveRecords = data.records;
-
 		renderDashboard();
 	  } catch (e) {
-		console.warn("Live polling skipped:", e);
+		// silent fail
 	  }
 	}
 
