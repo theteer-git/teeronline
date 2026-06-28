@@ -349,6 +349,7 @@
     <script>
   (function(){
     const LIVE_JSON_URL = "https://live.teeronline.com/results";
+	const VERSION_URL = "https://live.teeronline.com/version";
     const HISTORY_JSON_URL = "./data/recent-results.json";
     const games = [
       {title:"Shillong Morning Teer Results",gameId:"SHM",defaultFrTime:"10:30 AM",previousUrl:"./shillong-morning-teer-previous-results"},
@@ -700,10 +701,26 @@
 	}
 
 	let livePollingTimer = null;
-	let lastLiveUpdatedAt = "";
+	let lastLiveVersion = "";
 
 	async function pollLiveLatestOnly() {
 	  try {
+		const versionRes = await fetch(`${VERSION_URL}?v=${Date.now()}`, {
+		  cache: "no-store",
+		  referrerPolicy: "no-referrer"
+		});
+
+		if (!versionRes.ok) return;
+
+		const versionData = await versionRes.json();
+		const nextVersion = versionData?.version || "";
+
+		if (!nextVersion || nextVersion === lastLiveVersion) {
+		  return;
+		}
+
+		lastLiveVersion = nextVersion;
+
 		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
 		  cache: "no-store",
 		  referrerPolicy: "no-referrer"
@@ -715,13 +732,9 @@
 
 		if (!data?.ok || !data.records) return;
 
-		const next = JSON.stringify(data.records);
-		const current = JSON.stringify(liveRecords);
-
-		if (next === current) return;
-
 		liveRecords = data.records;
 		renderDashboard();
+
 	  } catch (e) {
 		// silent fail
 	  }
@@ -761,17 +774,17 @@
 	}
 
 	function startSafeLivePolling() {
-	  if (livePollingTimer) clearInterval(livePollingTimer);
-
+	  if (livePollingTimer) {
+		clearTimeout(livePollingTimer);
+	  }
 	  async function loop() {
 		await pollLiveLatestOnly();
-
-		const delay = getSmartPollingInterval();
-		if (delay > 0) {
-		  livePollingTimer = setTimeout(loop, delay);
-		}
+		const activeDelay = getSmartPollingInterval();
+		livePollingTimer = setTimeout(
+		  loop,
+		  activeDelay > 0 ? activeDelay : 60000
+		);
 	  }
-
 	  loop();
 	}
 
