@@ -663,6 +663,15 @@
       try {
         await Promise.all([fetchLiveResults(), fetchHistoryResults()]);
         renderDashboard();
+		const versionRes = await fetch(VERSION_URL, {
+		  cache: "no-store",
+		  referrerPolicy: "no-referrer"
+		});
+
+		if (versionRes.ok) {
+		  const versionData = await versionRes.json();
+		  lastLiveVersion = versionData.version || "";
+		}
       } catch (err) {
         console.error(err);
         if (dashboard) {
@@ -715,9 +724,7 @@
 		const versionData = await versionRes.json();
 		const nextVersion = versionData?.version || "";
 
-		if (!nextVersion || nextVersion === lastLiveVersion) {
-		  return;
-		}
+		if (!nextVersion || nextVersion === lastLiveVersion) return;
 
 		lastLiveVersion = nextVersion;
 
