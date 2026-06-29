@@ -1,6 +1,6 @@
 {
   "date": "2026-06-29",
-  "lastUpdatedAt": "2026-06-29T17:11:03.874+05:30",
+  "lastUpdatedAt": "2026-06-29T17:12:03.932+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-29",
@@ -131,13 +131,13 @@
       "gameId": "SHD",
       "date": "2026-06-29",
       "fr": "21",
-      "sr": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-06-29T17:11:03.874+05:30",
+      "sr": "46",
+      "status": "completed",
+      "lastCheckedAt": "2026-06-29T17:12:03.932+05:30",
       "verificationStatus": "verified",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       }
     },
     "KH": {
@@ -148,7 +148,7 @@
       "fr": "33",
       "sr": "",
       "status": "partial",
-      "lastCheckedAt": "2026-06-29T17:10:03.979+05:30",
+      "lastCheckedAt": "2026-06-29T17:11:03.960+05:30",
       "verificationStatus": "verified",
       "confidence": {
         "fr": 100,
