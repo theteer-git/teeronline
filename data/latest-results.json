@@ -1,6 +1,6 @@
 {
   "date": "2026-06-29",
-  "lastUpdatedAt": "2026-06-29T15:27:04.133+05:30",
+  "lastUpdatedAt": "2026-06-29T15:28:03.131+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-29",
@@ -118,7 +118,7 @@
       "fr": "81",
       "sr": "",
       "status": "partial",
-      "lastCheckedAt": "2026-06-29T15:27:04.133+05:30",
+      "lastCheckedAt": "2026-06-29T15:28:03.131+05:30",
       "verificationStatus": "verified",
       "confidence": {
         "fr": 100,
