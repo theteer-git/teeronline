@@ -1,6 +1,6 @@
 {
-  "date": "2026-06-29",
-  "lastUpdatedAt": "2026-06-29T23:24:52.298+05:30",
+  "date": "2026-06-30",
+  "lastUpdatedAt": "2026-06-30T00:24:52.298+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-29",
@@ -98,13 +98,13 @@
       "date": "2026-06-29",
       "fr": "26",
       "frUpdatedAt": "2026-06-29T23:24:52.298+05:30",
-      "sr": "",
-      "srUpdatedAt": "",
+      "sr": "48",
+      "srUpdatedAt": "2026-06-30T00:24:52.298+05:30",
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
-      "status": "partial",
+      "status": "completed",
       "source": "shillongNight2",
-      "lastCheckedAt": "2026-06-29T23:24:52.298+05:30",
+      "lastCheckedAt": "2026-06-30T00:24:52.298+05:30",
       "verificationStatus": "single_source",
       "verifiedBy": [
         "shillongNight2"
