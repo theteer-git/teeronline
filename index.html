@@ -531,7 +531,7 @@
 		});
 		if (!res.ok) return;
 		const data = await res.json();
-		if (data?.ok && data.records && typeof data.records === "object") {
+		if (data?.records && typeof data.records === "object") {
 		  liveRecords = data.records;
 		}
 	  } catch (e) {
@@ -662,15 +662,6 @@
       try {
         await Promise.all([fetchLiveResults(), fetchHistoryResults()]);
         renderDashboard();
-		const versionRes = await fetch(VERSION_URL, {
-		  cache: "no-store",
-		  referrerPolicy: "no-referrer"
-		});
-
-		if (versionRes.ok) {
-		  const versionData = await versionRes.json();
-		  lastLiveVersion = versionData.version || "";
-		}
       } catch (err) {
         console.error(err);
         if (dashboard) {
@@ -698,7 +689,6 @@
     function startDataLoad() {
 	  const start = async () => {
 		await loadAll(false);
-		//startSafeLivePolling();
 	  };
 
 	  if ("requestIdleCallback" in window) {
@@ -706,92 +696,6 @@
 	  } else {
 		setTimeout(start, 300);
 	  }
-	}
-
-	let livePollingTimer = null;
-	let lastLiveVersion = "";
-
-	async function pollLiveLatestOnly() {
-	  try {
-		const versionRes = await fetch(`${VERSION_URL}?v=${Date.now()}`, {
-		  cache: "no-store",
-		  referrerPolicy: "no-referrer"
-		});
-
-		if (!versionRes.ok) return;
-
-		const versionData = await versionRes.json();
-		const nextVersion = versionData?.version || "";
-
-		if (!nextVersion || nextVersion === lastLiveVersion) return;
-
-		lastLiveVersion = nextVersion;
-
-		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
-		  cache: "no-store",
-		  referrerPolicy: "no-referrer"
-		});
-
-		if (!res.ok) return;
-
-		const data = await res.json();
-
-		if (!data?.ok || !data.records) return;
-
-		liveRecords = data.records;
-		renderDashboard();
-
-	  } catch (e) {
-		// silent fail
-	  }
-	}
-
-	function getSmartPollingInterval() {
-	  const now = getISTTimeInMinutes();
-
-	  const criticalWindows = [
-		// JWD FR/SR
-		[14 * 60, 15 * 60 + 35],
-
-		// SHD + KH FR/SR
-		[15 * 60 + 45, 17 * 60 + 35]
-	  ];
-
-	  const normalWindows = [
-		// Morning games
-		[10 * 60, 12 * 60 + 20],
-
-		// Night 1
-		[20 * 60 + 15, 22 * 60 + 10],
-
-		// Night 2
-		[22 * 60 + 40, 24 * 60 + 20]
-	  ];
-
-	  for (const [start, end] of criticalWindows) {
-		if (now >= start && now <= end) return 1000;
-	  }
-
-	  for (const [start, end] of normalWindows) {
-		if (now >= start && now <= end) return 5000;
-	  }
-
-	  return 0;
-	}
-
-	function startSafeLivePolling() {
-	  if (livePollingTimer) {
-		clearTimeout(livePollingTimer);
-	  }
-	  async function loop() {
-		await pollLiveLatestOnly();
-		const activeDelay = getSmartPollingInterval();
-		livePollingTimer = setTimeout(
-		  loop,
-		  activeDelay > 0 ? activeDelay : 60000
-		);
-	  }
-	  loop();
 	}
 
     if (document.readyState === "complete") {
@@ -804,5 +708,4 @@
   if (copyrightYear) copyrightYear.textContent = new Date().getFullYear();
 </script>
 </body>
-
 </html>
