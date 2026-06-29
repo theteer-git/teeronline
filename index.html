@@ -348,8 +348,7 @@
     </footer>
     <script>
   (function(){
-    const LIVE_JSON_URL = "https://live.teeronline.com/results";
-	const VERSION_URL = "https://live.teeronline.com/version";
+    const LIVE_JSON_URL = "/data/latest-results.json";
     const HISTORY_JSON_URL = "./data/recent-results.json";
     const games = [
       {title:"Shillong Morning Teer Results",gameId:"SHM",defaultFrTime:"10:30 AM",previousUrl:"./shillong-morning-teer-previous-results"},
@@ -699,7 +698,7 @@
     function startDataLoad() {
 	  const start = async () => {
 		await loadAll(false);
-		startSafeLivePolling();
+		//startSafeLivePolling();
 	  };
 
 	  if ("requestIdleCallback" in window) {
