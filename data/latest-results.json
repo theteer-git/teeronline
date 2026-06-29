@@ -1,6 +1,6 @@
 {
   "date": "2026-06-29",
-  "lastUpdatedAt": "2026-06-29T15:45:04.140+05:30",
+  "lastUpdatedAt": "2026-06-29T16:14:03.878+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-29",
@@ -119,6 +119,21 @@
       "sr": "",
       "status": "partial",
       "lastCheckedAt": "2026-06-29T15:45:04.140+05:30",
+      "verificationStatus": "verified",
+      "confidence": {
+        "fr": 100,
+        "sr": 0
+      }
+    },
+    "SHD": {
+      "id": "SHD-2026-06-29",
+      "game": "Shillong Teer",
+      "gameId": "SHD",
+      "date": "2026-06-29",
+      "fr": "21",
+      "sr": "",
+      "status": "partial",
+      "lastCheckedAt": "2026-06-29T16:14:03.878+05:30",
       "verificationStatus": "verified",
       "confidence": {
         "fr": 100,
