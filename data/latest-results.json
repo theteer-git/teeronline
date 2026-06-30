@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "lastUpdatedAt": "2026-06-30T10:30:52.690+05:30",
+  "lastUpdatedAt": "2026-06-30T10:30:52.296+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-30",
@@ -9,66 +9,52 @@
       "gameId": "SHM",
       "date": "2026-06-30",
       "fr": "78",
-      "frUpdatedAt": "2026-06-29T10:31:56.992+05:30",
-      "sr": "25",
-      "srUpdatedAt": "2026-06-29T11:31:01.875+05:30",
+      "frUpdatedAt": "2026-06-30T10:30:52.296+05:30",
+      "sr": "",
+      "srUpdatedAt": "",
       "frDeclaredTime": "10:30 AM",
       "srDeclaredTime": "11:30 AM",
-      "status": "completed",
+      "status": "partial",
       "source": "khanaparaTv",
-      "lastCheckedAt": "2026-06-30T10:30:52.690+05:30",
-      "verificationStatus": "verified",
-      "verifiedBy": [
-        "khanaparaTv"
-      ],
-      "confidence": {
-        "fr": 100,
-        "sr": 0
-      }
-    },
-    "JWM": {
-      "id": "JWM-2026-06-29",
-      "game": "juwai morning",
-      "city": "Juwai",
-      "gameId": "JWM",
-      "date": "2026-06-29",
-      "fr": "41",
-      "frUpdatedAt": "2026-06-29T10:41:57.027+05:30",
-      "sr": "54",
-      "srUpdatedAt": "2026-06-29T11:45:01.875+05:30",
-      "frDeclaredTime": "10:30 AM",
-      "srDeclaredTime": "11:30 AM",
-      "status": "completed",
-      "source": "khanaparaTv",
-      "lastCheckedAt": "2026-06-29T11:45:01.875+05:30",
+      "lastCheckedAt": "2026-06-30T10:30:52.296+05:30",
       "verificationStatus": "single_source",
       "verifiedBy": [
         "khanaparaTv"
       ]
     },
+    "JWM": {
+      "id": "JWM-2026-06-30",
+      "game": "juwai morning",
+      "city": "Juwai",
+      "gameId": "JWM",
+      "date": "2026-06-30",
+      "fr": "",
+      "frUpdatedAt": "",
+      "sr": "",
+      "srUpdatedAt": "",
+      "frDeclaredTime": "10:30 AM",
+      "srDeclaredTime": "11:30 AM",
+      "status": "pending",
+      "source": "",
+      "lastCheckedAt": "2026-06-30T10:30:52.575+05:30",
+      "verificationStatus": "single_source"
+    },
     "KHM": {
-      "id": "KHM-2026-06-29",
+      "id": "KHM-2026-06-30",
       "game": "khanapara morning",
       "city": "Khanapara",
       "gameId": "KHM",
-      "date": "2026-06-29",
-      "fr": "93",
-      "frUpdatedAt": "2026-06-29T11:00:56.994+05:30",
-      "sr": "50",
-      "srUpdatedAt": "2026-06-29T12:00:01.875+05:30",
+      "date": "2026-06-30",
+      "fr": "",
+      "frUpdatedAt": "",
+      "sr": "",
+      "srUpdatedAt": "",
       "frDeclaredTime": "11:00 AM",
       "srDeclaredTime": "12:00 PM",
-      "status": "completed",
-      "source": "khanaparaMorning",
-      "lastCheckedAt": "2026-06-29T12:00:02.820+05:30",
-      "verificationStatus": "verified",
-      "verifiedBy": [
-        "khanaparaMorning"
-      ],
-      "confidence": {
-        "fr": 100,
-        "sr": 100
-      }
+      "status": "pending",
+      "source": "",
+      "lastCheckedAt": "2026-06-30T10:30:52.595+05:30",
+      "verificationStatus": "single_source"
     },
     "SHN1": {
       "id": "SHN1-2026-06-29",
