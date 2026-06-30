@@ -26,7 +26,7 @@ jobs:
           node <<'NODE'
           const fs = require("fs");
 
-          const API_URL = "https://teer-api.maya-digital-rkn.workers.dev/latest";
+          const API_URL = "https://teer-api-v2.maya-digital-rkn.workers.dev/latest";
 
           const ALL_JSON_PATH = "data/all-results.json";
           const LATEST_JSON_PATH = "data/latest-results.json";
