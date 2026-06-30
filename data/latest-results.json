@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "lastUpdatedAt": "2026-06-30T14:38:21.345+05:30",
+  "lastUpdatedAt": "2026-06-30T15:25:21.361+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-30",
@@ -112,13 +112,13 @@
       "gameId": "JWD",
       "date": "2026-06-30",
       "fr": "20",
-      "sr": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-06-30T14:38:21.345+05:30",
+      "sr": "07",
+      "status": "completed",
+      "lastCheckedAt": "2026-06-30T15:25:21.361+05:30",
       "verificationStatus": "verified",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       }
     },
     "SHD": {
