@@ -15,7 +15,7 @@
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.985+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.700+05:30"
     },
     "KH": {
       "id": "KH-2026-07-01",
@@ -30,7 +30,7 @@
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.986+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.702+05:30"
     },
     "JWD": {
       "id": "JWD-2026-07-01",
@@ -45,7 +45,7 @@
       "frDeclaredTime": "2:30 PM",
       "srDeclaredTime": "3:15 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.987+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.703+05:30"
     },
     "SHM": {
       "id": "SHM-2026-07-01",
@@ -60,7 +60,7 @@
       "frDeclaredTime": "10:30 AM",
       "srDeclaredTime": "11:30 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.988+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.704+05:30"
     },
     "KHM": {
       "id": "KHM-2026-07-01",
@@ -75,7 +75,7 @@
       "frDeclaredTime": "11:00 AM",
       "srDeclaredTime": "12:00 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.989+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.704+05:30"
     },
     "JWM": {
       "id": "JWM-2026-07-01",
@@ -90,7 +90,7 @@
       "frDeclaredTime": "10:30 AM",
       "srDeclaredTime": "11:30 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.989+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.706+05:30"
     },
     "SHN1": {
       "id": "SHN1-2026-07-01",
@@ -105,7 +105,7 @@
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.990+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.707+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-07-01",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-07-01T01:54:29.990+05:30"
+      "lastCheckedAt": "2026-07-01T03:27:44.707+05:30"
     }
   }
 }
