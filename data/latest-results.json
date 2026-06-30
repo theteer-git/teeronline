@@ -105,7 +105,7 @@
       "frDeclaredTime": "8:45 PM",
       "srDeclaredTime": "9:45 PM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-30T19:00:58.975+05:30"
+      "lastCheckedAt": "2026-06-30T19:25:09.243+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-06-30",
@@ -120,7 +120,7 @@
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
       "status": "pending",
-      "lastCheckedAt": "2026-06-30T19:00:58.976+05:30"
+      "lastCheckedAt": "2026-06-30T19:25:09.244+05:30"
     }
   }
 }
