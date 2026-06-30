@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "lastUpdatedAt": "2026-06-30T10:41:52.300+05:30",
+  "lastUpdatedAt": "2026-06-30T11:00:52.890+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-30",
@@ -48,16 +48,20 @@
       "city": "Khanapara",
       "gameId": "KHM",
       "date": "2026-06-30",
-      "fr": "",
+      "fr": "30",
       "frUpdatedAt": "",
       "sr": "",
       "srUpdatedAt": "",
       "frDeclaredTime": "11:00 AM",
       "srDeclaredTime": "12:00 PM",
-      "status": "pending",
+      "status": "partial",
       "source": "",
-      "lastCheckedAt": "2026-06-30T10:30:52.595+05:30",
-      "verificationStatus": "single_source"
+      "lastCheckedAt": "2026-06-30T11:00:52.890+05:30",
+      "verificationStatus": "verified",
+      "confidence": {
+        "fr": 100,
+        "sr": 0
+      }
     },
     "SHN1": {
       "id": "SHN1-2026-06-29",
