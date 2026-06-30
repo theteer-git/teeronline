@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "lastUpdatedAt": "2026-06-30T17:03:20.998+05:30",
+  "lastUpdatedAt": "2026-06-30T17:12:21.163+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-30",
@@ -134,19 +134,23 @@
       "date": "2026-06-30",
       "fr": "80",
       "frUpdatedAt": "2026-06-30T16:16:19.360+05:30",
-      "sr": "",
+      "sr": "06",
       "srUpdatedAt": "",
       "frDeclaredTime": "4:15 PM",
       "srDeclaredTime": "5:15 PM",
-      "status": "partial",
+      "status": "completed",
       "source": "teertooday",
-      "lastCheckedAt": "2026-06-30T16:16:19.360+05:30",
+      "lastCheckedAt": "2026-06-30T17:12:21.163+05:30",
       "verifiedBy": [
         "teertooday",
         "teerresults",
         "khanaparaTv"
       ],
-      "verificationStatus": "verified"
+      "verificationStatus": "verified",
+      "confidence": {
+        "fr": 100,
+        "sr": 100
+      }
     },
     "KH": {
       "id": "KH-2026-06-30",
@@ -157,19 +161,20 @@
       "fr": "18",
       "frUpdatedAt": "2026-06-30T16:16:19.360+05:30",
       "sr": "77",
-      "srUpdatedAt": "",
+      "srUpdatedAt": "2026-06-30T17:03:19.360+05:30",
       "frDeclaredTime": "4:25 PM",
       "srDeclaredTime": "5:00 PM",
       "status": "completed",
-      "source": "teerresults",
-      "lastCheckedAt": "2026-06-30T17:03:20.998+05:30",
+      "source": "khanaparaTv",
+      "lastCheckedAt": "2026-06-30T17:03:19.360+05:30",
       "verifiedBy": [
-        "teerresults"
+        "teerresults",
+        "khanaparaTv"
       ],
       "verificationStatus": "verified",
       "confidence": {
         "fr": 100,
-        "sr": 50
+        "sr": 0
       }
     }
   }
