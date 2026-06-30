@@ -30,6 +30,21 @@
     "lastCheckedAt": "2026-06-30T11:46:52.313+05:30"
   },
   {
+    "id": "KH-2026-06-30",
+    "game": "khanapara day",
+    "city": "Khanapara",
+    "gameId": "KH",
+    "date": "2026-06-30",
+    "fr": "18",
+    "frUpdatedAt": "2026-06-30T16:16:19.360+05:30",
+    "sr": "77",
+    "srUpdatedAt": "2026-06-30T17:03:19.360+05:30",
+    "frDeclaredTime": "4:25 PM",
+    "srDeclaredTime": "5:00 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-30T17:03:19.360+05:30"
+  },
+  {
     "id": "KHM-2026-06-30",
     "game": "khanapara morning",
     "city": "Khanapara",
@@ -43,6 +58,21 @@
     "srDeclaredTime": "12:00 PM",
     "status": "completed",
     "lastCheckedAt": "2026-06-30T12:00:52.378+05:30"
+  },
+  {
+    "id": "SHD-2026-06-30",
+    "game": "shillong day",
+    "city": "Shillong",
+    "gameId": "SHD",
+    "date": "2026-06-30",
+    "fr": "80",
+    "frUpdatedAt": "2026-06-30T16:16:19.360+05:30",
+    "sr": "06",
+    "srUpdatedAt": "2026-06-30T18:55:06.431+05:30",
+    "frDeclaredTime": "4:15 PM",
+    "srDeclaredTime": "5:15 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-06-30T17:12:21.163+05:30"
   },
   {
     "id": "SHM-2026-06-30",
@@ -1139,21 +1169,6 @@
     "lastCheckedAt": "2026-06-18T16:12:11+05:30"
   },
   {
-    "id": "KH-2026-06-18",
-    "game": "khanapara day",
-    "city": "Khanapara",
-    "gameId": "KH",
-    "date": "2026-06-18",
-    "fr": "08",
-    "frUpdatedAt": "2026-06-18T16:28:12+05:30",
-    "sr": "41",
-    "srUpdatedAt": "2026-06-18T17:13:12+05:30",
-    "frDeclaredTime": "4:25 PM",
-    "srDeclaredTime": "5:00 PM",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-18T17:13:12+05:30"
-  },
-  {
     "id": "SHD-2026-06-18",
     "game": "shillong day",
     "city": "Shillong",
@@ -1180,18 +1195,5 @@
     "srUpdatedAt": "2026-06-17T15:15:00+05:30",
     "status": "completed",
     "lastCheckedAt": "2026-06-17T15:15:00+05:30"
-  },
-  {
-    "id": "SHD-2026-06-17",
-    "game": "shillong day",
-    "city": "Shillong",
-    "gameId": "SHD",
-    "date": "2026-06-17",
-    "fr": "47",
-    "frUpdatedAt": "2026-06-17T11:53:04+05:30",
-    "sr": "86",
-    "srUpdatedAt": "2026-06-17T11:53:04+05:30",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-17T11:53:04+05:30"
   }
 ]
