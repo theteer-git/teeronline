@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "lastUpdatedAt": "2026-06-30T15:25:21.361+05:30",
+  "lastUpdatedAt": "2026-06-30T16:16:21.190+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-30",
@@ -114,26 +114,31 @@
       "fr": "20",
       "sr": "07",
       "status": "completed",
-      "lastCheckedAt": "2026-06-30T15:25:21.361+05:30",
-      "verificationStatus": "verified",
+      "lastCheckedAt": "2026-06-30T15:25:19.360+05:30",
+      "verificationStatus": "unverified",
       "confidence": {
         "fr": 100,
-        "sr": 100
-      }
+        "sr": 0
+      },
+      "srUpdatedAt": "2026-06-30T15:25:19.360+05:30",
+      "source": "khanaparaTv",
+      "verifiedBy": [
+        "khanaparaTv"
+      ]
     },
     "SHD": {
-      "id": "SHD-2026-06-29",
+      "id": "SHD-2026-06-30",
       "game": "Shillong Teer",
       "gameId": "SHD",
-      "date": "2026-06-29",
-      "fr": "21",
+      "date": "2026-06-30",
+      "fr": "80",
       "sr": "46",
       "status": "completed",
-      "lastCheckedAt": "2026-06-29T17:12:03.932+05:30",
+      "lastCheckedAt": "2026-06-30T16:16:21.190+05:30",
       "verificationStatus": "verified",
       "confidence": {
         "fr": 100,
-        "sr": 100
+        "sr": 0
       }
     },
     "KH": {
