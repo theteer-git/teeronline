@@ -1,6 +1,6 @@
 {
   "date": "2026-06-30",
-  "lastUpdatedAt": "2026-06-30T10:30:52.296+05:30",
+  "lastUpdatedAt": "2026-06-30T10:41:52.699+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-06-30",
@@ -28,16 +28,20 @@
       "city": "Juwai",
       "gameId": "JWM",
       "date": "2026-06-30",
-      "fr": "",
+      "fr": "40",
       "frUpdatedAt": "",
       "sr": "",
       "srUpdatedAt": "",
       "frDeclaredTime": "10:30 AM",
       "srDeclaredTime": "11:30 AM",
-      "status": "pending",
+      "status": "partial",
       "source": "",
-      "lastCheckedAt": "2026-06-30T10:30:52.575+05:30",
-      "verificationStatus": "single_source"
+      "lastCheckedAt": "2026-06-30T10:41:52.699+05:30",
+      "verificationStatus": "verified",
+      "confidence": {
+        "fr": 100,
+        "sr": 0
+      }
     },
     "KHM": {
       "id": "KHM-2026-06-30",
