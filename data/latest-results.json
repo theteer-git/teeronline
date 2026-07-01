@@ -1,6 +1,6 @@
 {
   "date": "2026-07-02",
-  "lastUpdatedAt": "2026-07-02T00:10:54.561+05:30",
+  "lastUpdatedAt": "2026-07-02T00:22:54.197+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-01",
@@ -126,13 +126,13 @@
       "date": "2026-07-01",
       "fr": "77",
       "frUpdatedAt": "2026-07-01T23:26:51.057+05:30",
-      "sr": "",
-      "srUpdatedAt": "",
+      "sr": "68",
+      "srUpdatedAt": "2026-07-02T00:22:51.056+05:30",
       "frDeclaredTime": "11:10 PM",
       "srDeclaredTime": "12:10 AM",
-      "status": "partial",
+      "status": "completed",
       "source": "shillongNight2",
-      "lastCheckedAt": "2026-07-02T00:10:54.561+05:30",
+      "lastCheckedAt": "2026-07-02T00:22:54.197+05:30",
       "verificationStatus": "single_source",
       "verifiedBy": [
         "shillongNight2"
@@ -140,7 +140,7 @@
       "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       },
       "conflicts": {
         "fr": false,
