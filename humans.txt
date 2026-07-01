@@ -1,0 +1,16 @@
+/* TEAM */
+Site: TeerOnline
+URL: https://teeronline.com
+Purpose: Teer result publishing, historical results, common numbers and teer information.
+
+Owner: TeerOnline
+Contact: https://teeronline.com/contact
+
+/* TECHNOLOGY */
+Static Site: GitHub Pages
+Automation: Cloudflare Workers
+Data: JSON
+Performance: Mobile-first, lightweight HTML/CSS/JS
+
+/* THANKS */
+Thanks to visitors who use TeerOnline responsibly.
