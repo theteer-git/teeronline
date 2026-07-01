@@ -2,98 +2,68 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>TeerOnline Admin Dashboard</title>
+  <title>TeerOnline Admin Panel</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
   <style>
-    body{font-family:Arial,sans-serif;margin:0;background:#f5f7fb;color:#111}
-    header{background:#111827;color:white;padding:16px}
-    main{padding:12px;display:grid;gap:12px}
-    .card{background:white;border-radius:10px;padding:14px;box-shadow:0 1px 4px #0002}
-    .grid{display:grid;gap:12px}
-    @media(min-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
-    button,input{padding:10px;border-radius:8px;border:1px solid #ccc}
-    button{background:#111827;color:white;cursor:pointer}
-    pre{white-space:pre-wrap;word-break:break-word;background:#f3f4f6;padding:10px;border-radius:8px;max-height:260px;overflow:auto}
-    .ok{color:green;font-weight:bold}.bad{color:red;font-weight:bold}
+    :root{--bg:#f4f6fb;--panel:#fff;--text:#111827;--muted:#6b7280;--line:#e5e7eb;--brand:#111827;--brand2:#1f2937;--ok:#047857;--bad:#b91c1c;--warn:#b45309;--info:#2563eb;--shadow:0 1px 4px rgba(0,0,0,.08);--radius:12px}
+    *{box-sizing:border-box}body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}
+    header{background:linear-gradient(135deg,var(--brand),var(--brand2));color:white;padding:14px 16px;position:sticky;top:0;z-index:10;box-shadow:0 2px 8px rgba(0,0,0,.15)}
+    .topbar{display:flex;gap:12px;align-items:center;justify-content:space-between;flex-wrap:wrap}h1{font-size:20px;margin:0}.tokenbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    input,select,button{padding:9px 10px;border:1px solid var(--line);border-radius:8px;font-size:14px}input{min-width:220px}button{background:var(--brand);color:white;cursor:pointer;border-color:var(--brand)}button.secondary{background:white;color:var(--brand);border-color:#cbd5e1}button.danger{background:var(--bad);border-color:var(--bad)}button:disabled{opacity:.55;cursor:not-allowed}
+    nav{display:flex;gap:6px;overflow:auto;padding-top:12px;scrollbar-width:thin}nav button{white-space:nowrap;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.18);color:white;padding:8px 10px}nav button.active{background:white;color:var(--brand)}
+    main{padding:14px;max-width:1400px;margin:auto}.grid{display:grid;gap:12px}.grid.two{grid-template-columns:repeat(2,minmax(0,1fr))}.grid.three{grid-template-columns:repeat(3,minmax(0,1fr))}.grid.four{grid-template-columns:repeat(4,minmax(0,1fr))}@media(max-width:900px){.grid.two,.grid.three,.grid.four{grid-template-columns:1fr}}
+    .card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px;box-shadow:var(--shadow)}.card h2,.card h3{margin:0 0 10px}.card h2{font-size:18px}.card h3{font-size:16px}.muted{color:var(--muted)}.ok{color:var(--ok);font-weight:bold}.bad{color:var(--bad);font-weight:bold}.warn{color:var(--warn);font-weight:bold}.info{color:var(--info);font-weight:bold}.metric{font-size:26px;font-weight:bold;margin:6px 0}.section{display:none}.section.active{display:block}
+    table{width:100%;border-collapse:collapse;background:white;border-radius:10px;overflow:hidden}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:13px;vertical-align:top}th{background:#f3f4f6;font-weight:bold}tr:last-child td{border-bottom:none}
+    pre{white-space:pre-wrap;word-break:break-word;background:#0b1020;color:#d1d5db;padding:12px;border-radius:10px;max-height:380px;overflow:auto;font-size:12px}.toolbar{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:12px}.notice{padding:10px;border-radius:10px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412}.success{padding:10px;border-radius:10px;background:#ecfdf5;border:1px solid #a7f3d0;color:#065f46}.error{padding:10px;border-radius:10px;background:#fef2f2;border:1px solid #fecaca;color:#991b1b}.list{margin:0;padding-left:18px}.small{font-size:12px}
   </style>
 </head>
 <body>
 <header>
-  <h1>TeerOnline Admin</h1>
+  <div class="topbar"><div><h1>TeerOnline Admin Panel</h1><div class="small" style="color:#d1d5db">Production Operations Console</div></div><div class="tokenbar"><input id="token" type="password" placeholder="Admin token"><button onclick="saveToken()">Save Token</button><button class="secondary" onclick="refreshCurrent()">Refresh</button><button class="secondary" onclick="clearToken()">Logout</button></div></div>
+  <nav id="tabs"></nav>
 </header>
-
 <main>
-  <div class="card">
-    <input id="token" type="password" placeholder="Admin token">
-    <button onclick="saveToken()">Save Token</button>
-    <button onclick="loadDashboard()">Refresh</button>
-  </div>
-
-  <div class="grid">
-    <div class="card"><h2>System</h2><div id="system">Loading...</div></div>
-    <div class="card"><h2>Storage</h2><div id="storage">Loading...</div></div>
-    <div class="card"><h2>Scheduler</h2><pre id="scheduler">Loading...</pre></div>
-    <div class="card"><h2>Learning</h2><div id="learning">Loading...</div></div>
-    <div class="card"><h2>Sources</h2><pre id="sources">Loading...</pre></div>
-    <div class="card"><h2>Recent Verification</h2><pre id="audit">Loading...</pre></div>
-  </div>
-
-  <div class="card">
-    <h2>Latest Records</h2>
-    <pre id="records">Loading...</pre>
-  </div>
+  <div id="globalMessage"></div>
+  <section id="dashboard" class="section active"></section><section id="results" class="section"></section><section id="scheduler" class="section"></section><section id="sources" class="section"></section><section id="learning" class="section"></section><section id="verification" class="section"></section><section id="monitoring" class="section"></section><section id="security" class="section"></section><section id="performance" class="section"></section><section id="recovery" class="section"></section><section id="qa" class="section"></section><section id="seo" class="section"></section><section id="operations" class="section"></section><section id="roadmap" class="section"></section><section id="raw" class="section"></section>
 </main>
-
 <script>
-const API = "https://admin.teeronline.com";
-
-function saveToken(){
-  localStorage.setItem("TEER_ADMIN_TOKEN", document.getElementById("token").value.trim());
-  loadDashboard();
-}
-
-function getToken(){
-  return localStorage.getItem("TEER_ADMIN_TOKEN") || "";
-}
-
-async function api(path){
-  const res = await fetch(API + path, {
-    headers: { Authorization: "Bearer " + getToken() }
-  });
-  return await res.json();
-}
-
-async function loadDashboard(){
-  const data = await api("/admin/summary");
-
-  if(!data.ok){
-    document.getElementById("system").innerHTML = `<span class="bad">${data.error || "Error"}</span>`;
-    return;
-  }
-
-  document.getElementById("system").innerHTML = `
-    <p>Status: <span class="ok">OK</span></p>
-    <p>Now: ${data.now.iso}</p>
-    <p>Latest Date: ${data.latest.date}</p>
-    <p>Records: ${data.latest.recordCount}</p>
-  `;
-
-  document.getElementById("storage").innerHTML = `
-    <p>Latest Valid: <span class="${data.latest.valid ? "ok":"bad"}">${data.latest.valid}</span></p>
-    <p>Last Sync Success: ${data.storage.syncStatus.lastSuccessAt || "-"}</p>
-    <p>Sync Success Count: ${data.storage.syncStatus.successCount}</p>
-    <p>Sync Failure Count: ${data.storage.syncStatus.failureCount}</p>
-  `;
-
-  document.getElementById("scheduler").textContent = JSON.stringify(data.scheduler, null, 2);
-  document.getElementById("learning").innerHTML = `<p>Profiles: ${data.learning.profileCount}</p>`;
-  document.getElementById("sources").textContent = JSON.stringify(data.sources, null, 2);
-  document.getElementById("audit").textContent = JSON.stringify(data.verification.recentAudits, null, 2);
-  document.getElementById("records").textContent = JSON.stringify(data.latest.records, null, 2);
-}
-
-document.getElementById("token").value = getToken();
-loadDashboard();
+const API="https://admin.teeronline.com";
+const TAB_CONFIG=[["dashboard","Dashboard"],["results","Results"],["scheduler","Scheduler"],["sources","Sources"],["learning","Learning"],["verification","Verification"],["monitoring","Monitoring"],["security","Security"],["performance","Performance"],["recovery","Recovery"],["qa","QA"],["seo","SEO"],["operations","Operations"],["roadmap","Roadmap"],["raw","Raw"]];
+let currentTab="dashboard";let cache={};
+function el(id){return document.getElementById(id)}function esc(v){return String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}function pretty(obj){return esc(JSON.stringify(obj,null,2))}function statusClass(v){return v?"ok":"bad"}function statusText(v){return v?"OK":"FAIL"}
+function saveToken(){localStorage.setItem("TEER_ADMIN_TOKEN",el("token").value.trim());showMessage("Token saved.","success");refreshCurrent()}function clearToken(){localStorage.removeItem("TEER_ADMIN_TOKEN");el("token").value="";showMessage("Token cleared.","notice")}function getToken(){return localStorage.getItem("TEER_ADMIN_TOKEN")||""}
+function showMessage(msg,type="notice"){el("globalMessage").innerHTML=`<div class="${type}">${esc(msg)}</div>`;setTimeout(()=>{el("globalMessage").innerHTML=""},4000)}
+async function api(path){const res=await fetch(API+path,{headers:{Authorization:"Bearer "+getToken()}});const text=await res.text();try{return JSON.parse(text)}catch{return{ok:false,error:text||("HTTP "+res.status),status:res.status}}}
+function buildTabs(){el("tabs").innerHTML=TAB_CONFIG.map(([id,label])=>`<button id="tab-${id}" onclick="switchTab('${id}')">${label}</button>`).join("");el("tab-dashboard").classList.add("active")}
+function switchTab(id){currentTab=id;document.querySelectorAll("nav button").forEach(b=>b.classList.remove("active"));document.querySelectorAll(".section").forEach(s=>s.classList.remove("active"));el("tab-"+id).classList.add("active");el(id).classList.add("active");loadTab(id)}function refreshCurrent(){loadTab(currentTab,true)}
+function card(title,body){return`<div class="card"><h2>${esc(title)}</h2>${body}</div>`}function metric(title,value,sub="",cls=""){return`<div class="card"><div class="muted">${esc(title)}</div><div class="metric ${cls}">${esc(value)}</div><div class="small muted">${esc(sub)}</div></div>`}function rows(obj){return Object.entries(obj||{}).map(([k,v])=>`<tr><th>${esc(k)}</th><td>${typeof v==="object"?`<pre>${pretty(v)}</pre>`:esc(v)}</td></tr>`).join("")}
+async function loadTab(tab,force=false){try{if(tab==="dashboard")return await loadDashboard(force);if(tab==="results")return await loadResults(force);if(tab==="scheduler")return await loadScheduler(force);if(tab==="sources")return await loadSources(force);if(tab==="learning")return await loadLearning(force);if(tab==="verification")return await loadVerification(force);if(tab==="monitoring")return await loadMonitoring(force);if(tab==="security")return await loadSecurity(force);if(tab==="performance")return await loadPerformance(force);if(tab==="recovery")return await loadRecovery(force);if(tab==="qa")return await loadQA(force);if(tab==="seo")return await loadSEO(force);if(tab==="operations")return await loadOperations(force);if(tab==="roadmap")return await loadRoadmap(force);if(tab==="raw")return await loadRaw(force)}catch(err){el(tab).innerHTML=`<div class="error">${esc(err.message||err)}</div>`}}
+async function getCached(key,path,force=false){if(!force&&cache[key])return cache[key];const data=await api(path);cache[key]=data;return data}
+async function loadDashboard(force=false){const data=await getCached("summary","/admin/summary",force);if(!data.ok){el("dashboard").innerHTML=`<div class="error">${esc(data.error||"Unauthorized")}</div>`;return}const latest=data.latest||{},sync=data.storage?.syncStatus||{},scheduler=data.scheduler||{},learning=data.learning||{};el("dashboard").innerHTML=`<div class="grid four">${metric("System","OK",data.now?.iso||"","ok")}${metric("Latest Date",latest.date||"-","Records: "+(latest.recordCount||0))}${metric("Scheduler Active",scheduler.activeCount||0,"Current active polling tasks")}${metric("Learning Profiles",learning.profileCount||0,"Stored adaptive profiles")}${metric("Storage Valid",statusText(latest.valid),latest.lastUpdatedAt||"",statusClass(latest.valid))}${metric("GitHub Sync",sync.failureCount?"WARN":"OK","Success: "+(sync.successCount||0)+" / Failure: "+(sync.failureCount||0),sync.failureCount?"warn":"ok")}${metric("Sources",Object.keys(data.sources||{}).length,"Health snapshot sources")}${metric("Audits",data.verification?.recentAudits?.length||0,"Recent verification records")}</div><div class="grid two" style="margin-top:12px">${card("Latest Records",renderResultsTable(latest.records||{}))}${card("Scheduler Plan",`<pre>${pretty(scheduler)}</pre>`)}${card("Sync Status",`<table>${rows(sync)}</table>`)}${card("Recent Verification",`<pre>${pretty(data.verification?.recentAudits||[])}</pre>`)}</div>`}
+function renderResultsTable(records){const entries=Object.values(records||{});if(!entries.length)return`<p class="muted">No records.</p>`;return`<table><thead><tr><th>Game</th><th>Date</th><th>FR</th><th>SR</th><th>Status</th><th>Verification</th><th>Updated</th></tr></thead><tbody>${entries.map(r=>`<tr><td><b>${esc(r.gameId)}</b><br><span class="muted">${esc(r.game||"")}</span></td><td>${esc(r.date)}</td><td>${esc(r.fr||"-")}</td><td>${esc(r.sr||"-")}</td><td>${esc(r.status)}</td><td>${esc(r.verificationStatus||"-")}</td><td class="small">${esc(r.lastCheckedAt||r.srUpdatedAt||r.frUpdatedAt||"-")}</td></tr>`).join("")}</tbody></table>`}
+async function loadResults(force=false){const data=await getCached("summary","/admin/summary",force);const records=data.latest?.records||{};el("results").innerHTML=`<div class="toolbar"><button onclick="refreshCurrent()">Refresh Results</button></div>${card("Live Latest Results",renderResultsTable(records))}${card("Raw Latest JSON",`<pre>${pretty(records)}</pre>`)}`}
+async function loadScheduler(force=false){const plan=await getCached("plan","/admin/plan",force);el("scheduler").innerHTML=`<div class="grid two">${card("Adaptive Polling Plan",`<pre>${pretty(plan)}</pre>`)}${card("Current Status",`<p>Active tasks: <b>${esc(plan.plan?.length||0)}</b></p><p>Now: ${esc(plan.now?.iso||"-")}</p>`)}</div>`}
+async function loadSources(force=false){const source=await getCached("sourceHealth","/admin/source-health",force);const summary=await getCached("summary","/admin/summary",force);el("sources").innerHTML=`<div class="grid two">${card("Source Health",`<pre>${pretty(source.health||source)}</pre>`)}${card("Summary Source Snapshot",`<pre>${pretty(summary.sources||{})}</pre>`)}</div>`}
+async function loadLearning(force=false){const data=await getCached("learning","/admin/learning",force);const profiles=data.profiles||[];el("learning").innerHTML=`${card("Learning Profiles",`<p>Total profiles: <b>${esc(data.count||profiles.length)}</b></p>${renderLearningTable(profiles)}`)}${card("Raw Learning Data",`<pre>${pretty(profiles)}</pre>`)}`}
+function renderLearningTable(profiles){if(!profiles.length)return`<p class="muted">No profiles yet.</p>`;return`<table><thead><tr><th>Game</th><th>Round</th><th>Source</th><th>Month</th><th>Obs.</th><th>Confidence</th><th>Window</th></tr></thead><tbody>${profiles.map(p=>`<tr><td>${esc(p.gameId)}</td><td>${esc(p.round)}</td><td>${esc(p.sourceId)}</td><td>${esc(p.month)}</td><td>${esc(p.observations)}</td><td>${esc(p.confidence)}</td><td>${esc(p.recommendedBeforeMinutes)} / ${esc(p.recommendedAfterMinutes)} min</td></tr>`).join("")}</tbody></table>`}
+async function loadVerification(force=false){const data=await getCached("audit","/admin/verification-audit?limit=25",force);el("verification").innerHTML=`${card("Recent Verification Audits",`<p>Count: <b>${esc(data.audits?.length||0)}</b></p>${renderAuditTable(data.audits||[])}`)}${card("Raw Audit Data",`<pre>${pretty(data.audits||[])}</pre>`)}`}
+function renderAuditTable(audits){if(!audits.length)return`<p class="muted">No audits.</p>`;return`<table><thead><tr><th>Time</th><th>Game</th><th>Decision</th><th>Publish</th><th>FR</th><th>SR</th><th>Reason</th></tr></thead><tbody>${audits.map(a=>`<tr><td class="small">${esc(a.checkedAt)}</td><td>${esc(a.gameId)}</td><td>${esc(a.verification?.decision)}</td><td class="${a.verification?.publish?"ok":"bad"}">${esc(a.verification?.publish)}</td><td>${esc(a.verification?.finalResult?.fr||"-")}</td><td>${esc(a.verification?.finalResult?.sr||"-")}</td><td>${esc(a.verification?.reason||"-")}</td></tr>`).join("")}</tbody></table>`}
+async function loadMonitoring(force=false){const data=await getCached("monitoring","/admin/monitoring",force);const m=data.monitoring||{};el("monitoring").innerHTML=`<div class="grid four">${metric("Monitoring",statusText(m.ok),m.checkedAt||"",statusClass(m.ok))}${metric("Latest Age",(m.latest?.ageMinutes??"-")+" min",m.latest?.lastUpdatedAt||"",m.latest?.stale?"bad":"ok")}${metric("Poll Count",m.metrics?.pollCount||0,"Total polls")}${metric("Parser Failures",m.metrics?.parserFailureCount||0,"Recorded parser failures",(m.metrics?.parserFailureCount||0)?"warn":"ok")}</div><div class="grid two" style="margin-top:12px">${card("Metrics",`<table>${rows(m.metrics||{})}</table>`)}${card("Recent Events",`<pre>${pretty(m.recentEvents||[])}</pre>`)}${card("Sync",`<table>${rows(m.sync||{})}</table>`)}${card("Latest",`<table>${rows(m.latest||{})}</table>`)}</div>`}
+async function loadSecurity(force=false){const data=await getCached("security","/admin/security-health",force);el("security").innerHTML=`${card("Security Health",`<p>Checked: ${esc(data.security?.checkedAt||"-")}</p>`)}${card("Recent Security Events",`<pre>${pretty(data.security?.recentEvents||[])}</pre>`)}`}
+async function loadPerformance(force=false){const data=await getCached("performance","/admin/performance-health",force);const p=data.performance||{};el("performance").innerHTML=`<div class="grid four">${metric("Performance",statusText(p.ok),p.checkedAt||"",statusClass(p.ok))}${metric("P95",(p.summary?.p95Ms||0)+" ms","Target: "+(p.targets?.apiP95Ms||3000)+" ms")}${metric("Average",(p.summary?.avgMs||0)+" ms","Samples: "+(p.summary?.sampleCount||0))}${metric("GitHub Failures",p.efficiency?.githubSyncFailureCount||0,"Sync failures")}</div><div class="grid two" style="margin-top:12px">${card("Summary",`<table>${rows(p.summary||{})}</table>`)}${card("Efficiency",`<table>${rows(p.efficiency||{})}</table>`)}${card("Targets",`<table>${rows(p.targets||{})}</table>`)}</div>`}
+async function loadRecovery(force=false){const data=await getCached("recovery","/admin/recovery-health",force);const r=data.recovery||{};el("recovery").innerHTML=`<div class="toolbar"><button onclick="createBackup()">Create Backup</button></div><div class="grid three">${metric("RTO",(r.rtoMinutes||0)+" min","Recovery time objective")}${metric("RPO",(r.rpoMinutes||0)+" min","Recovery point objective")}${metric("Backups",r.backupCount||0,"Available backup records")}</div><div class="grid two" style="margin-top:12px">${card("Latest Backup",`<pre>${pretty(r.latestBackup||{})}</pre>`)}${card("Recent Incidents",`<pre>${pretty(r.recentIncidents||[])}</pre>`)}</div>`}
+async function createBackup(){const reason=prompt("Backup reason:","manual-admin-panel");if(!reason)return;const data=await api("/admin/create-backup?reason="+encodeURIComponent(reason));showMessage(data.ok?"Backup created.":(data.error||"Backup failed"),data.ok?"success":"error");cache.recovery=null;loadRecovery(true)}
+async function loadQA(force=false){const data=await getCached("quality","/admin/quality-health",force);const q=data.quality||{};el("qa").innerHTML=`<div class="toolbar"><button onclick="runSmoke()">Run Smoke Tests</button></div><div class="grid three">${metric("Quality",statusText(q.ok),q.checkedAt||"",statusClass(q.ok))}${metric("Registered Tests",q.registeredTests||0,"Smoke checks")}${metric("Latest Failed",q.latestRun?.failed??"-","Last run")}</div><div style="margin-top:12px">${card("Latest QA Run",`<pre>${pretty(q.latestRun||{})}</pre>`)}</div>`}
+async function runSmoke(){const data=await api("/admin/run-smoke-tests");showMessage(data.smoke?.ok?"Smoke tests passed.":"Smoke tests failed.",data.smoke?.ok?"success":"error");cache.quality=null;loadQA(true)}
+async function loadSEO(force=false){const data=await getCached("seo","/admin/seo-health",force);const seo=data.seo||{};el("seo").innerHTML=`<div class="grid three">${metric("SEO",statusText(seo.ok),seo.checkedAt||"",statusClass(seo.ok))}${metric("Files Checked",seo.files?.length||0,"Required support files")}${metric("Missing",seo.missing?.length||0,"Missing files",seo.missing?.length?"bad":"ok")}</div><div class="grid two" style="margin-top:12px">${card("Required Files",renderSeoFiles(seo.files||[]))}${card("Rules",`<table>${rows(seo.rules||{})}</table>`)}</div>`}
+function renderSeoFiles(files){if(!files.length)return`<p class="muted">No data.</p>`;return`<table><thead><tr><th>URL</th><th>Status</th><th>Bytes</th></tr></thead><tbody>${files.map(f=>`<tr><td>${esc(f.url)}</td><td class="${f.ok?"ok":"bad"}">${esc(f.status)}</td><td>${esc(f.bytes)}</td></tr>`).join("")}</tbody></table>`}
+async function loadOperations(force=false){const data=await getCached("ops","/admin/ops-health",force);const ops=data.ops||{};el("operations").innerHTML=`<div class="toolbar"><button onclick="logOps()">Log Ops Entry</button></div><div class="grid four">${metric("Operations",statusText(ops.ok),ops.checkedAt||"",statusClass(ops.ok))}${metric("Monitoring",statusText(ops.status?.monitoringOk),"",statusClass(ops.status?.monitoringOk))}${metric("Quality",statusText(ops.status?.qualityOk),"",statusClass(ops.status?.qualityOk))}${metric("Performance",statusText(ops.status?.performanceOk),"",statusClass(ops.status?.performanceOk))}</div><div class="grid two" style="margin-top:12px">${card("Daily SOP",`<ul class="list">${(ops.sop?.daily||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}${card("Weekly SOP",`<ul class="list">${(ops.sop?.weekly||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}${card("Monthly SOP",`<ul class="list">${(ops.sop?.monthly||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}${card("Recent Ops",`<pre>${pretty(ops.recentOps||[])}</pre>`)}</div>`}
+async function logOps(){const title=prompt("Ops log title:","Manual admin panel check");if(!title)return;const type=prompt("Type:","manual")||"manual";const data=await api("/admin/log-ops?type="+encodeURIComponent(type)+"&title="+encodeURIComponent(title));showMessage(data.ok?"Ops entry logged.":"Log failed.",data.ok?"success":"error");cache.ops=null;loadOperations(true)}
+async function loadRoadmap(force=false){const data=await getCached("roadmap","/admin/roadmap",force);const r=data.roadmap||{},road=r.roadmap||{};el("roadmap").innerHTML=`<div class="grid three">${metric("Progress",(r.progress?.percent||0)+"%",(r.progress?.completedVolumes||0)+"/"+(r.progress?.totalVolumes||0)+" volumes")}${metric("Milestones",road.milestones?.length||0,"Planned/future roadmap")}${metric("Technical Debt",road.technicalDebt?.length||0,"Tracked items")}</div><div class="grid two" style="margin-top:12px">${card("Milestones",renderMilestones(road.milestones||[]))}${card("Technical Debt",`<ul class="list">${(road.technicalDebt||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}${card("Future Modules",`<ul class="list">${(road.futureModules||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ul>`)}${card("Raw Roadmap",`<pre>${pretty(road)}</pre>`)}</div>`}
+function renderMilestones(items){if(!items.length)return`<p class="muted">No milestones.</p>`;return`<table><thead><tr><th>ID</th><th>Title</th><th>Status</th></tr></thead><tbody>${items.map(m=>`<tr><td>${esc(m.id)}</td><td>${esc(m.title)}</td><td>${esc(m.status)}</td></tr>`).join("")}</tbody></table>`}
+async function loadRaw(force=false){const endpoints=[["/admin/summary","Summary"],["/admin/monitoring","Monitoring"],["/admin/storage-health","Storage"],["/admin/security-health","Security"],["/admin/performance-health","Performance"],["/admin/recovery-health","Recovery"],["/admin/quality-health","Quality"],["/admin/ops-health","Operations"],["/admin/roadmap","Roadmap"]];el("raw").innerHTML=`<div class="notice">Loading raw endpoint data...</div>`;const parts=[];for(const [path,label] of endpoints){const data=await api(path);parts.push(card(label,`<pre>${pretty(data)}</pre>`))}el("raw").innerHTML=`<div class="grid two">${parts.join("")}</div>`}
+buildTabs();el("token").value=getToken();loadDashboard();
 </script>
 </body>
 </html>
