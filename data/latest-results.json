@@ -1,6 +1,6 @@
 {
   "date": "2026-07-01",
-  "lastUpdatedAt": "2026-07-01T11:42:59.707+05:30",
+  "lastUpdatedAt": "2026-07-01T12:00:59.580+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-01",
@@ -68,17 +68,26 @@
       "date": "2026-07-01",
       "fr": "24",
       "frUpdatedAt": "2026-07-01T11:00:01.391+05:30",
-      "sr": "",
-      "srUpdatedAt": "",
+      "sr": "74",
+      "srUpdatedAt": "2026-07-01T12:00:57.055+05:30",
       "frDeclaredTime": "11:00 AM",
       "srDeclaredTime": "12:00 PM",
-      "status": "partial",
+      "status": "completed",
       "source": "khanaparaMorning",
-      "lastCheckedAt": "2026-07-01T11:00:01.391+05:30",
+      "lastCheckedAt": "2026-07-01T12:00:59.580+05:30",
       "verificationStatus": "single_source",
       "verifiedBy": [
         "khanaparaMorning"
-      ]
+      ],
+      "verificationDecision": "single_source",
+      "confidence": {
+        "fr": 100,
+        "sr": 100
+      },
+      "conflicts": {
+        "fr": false,
+        "sr": false
+      }
     },
     "SHN1": {
       "id": "SHN1-2026-06-30",
