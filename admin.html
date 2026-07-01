@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>TeerOnline Admin Dashboard</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <style>
+    body{font-family:Arial,sans-serif;margin:0;background:#f5f7fb;color:#111}
+    header{background:#111827;color:white;padding:16px}
+    main{padding:12px;display:grid;gap:12px}
+    .card{background:white;border-radius:10px;padding:14px;box-shadow:0 1px 4px #0002}
+    .grid{display:grid;gap:12px}
+    @media(min-width:800px){.grid{grid-template-columns:repeat(2,1fr)}}
+    button,input{padding:10px;border-radius:8px;border:1px solid #ccc}
+    button{background:#111827;color:white;cursor:pointer}
+    pre{white-space:pre-wrap;word-break:break-word;background:#f3f4f6;padding:10px;border-radius:8px;max-height:260px;overflow:auto}
+    .ok{color:green;font-weight:bold}.bad{color:red;font-weight:bold}
+  </style>
+</head>
+<body>
+<header>
+  <h1>TeerOnline Admin</h1>
+</header>
+
+<main>
+  <div class="card">
+    <input id="token" type="password" placeholder="Admin token">
+    <button onclick="saveToken()">Save Token</button>
+    <button onclick="loadDashboard()">Refresh</button>
+  </div>
+
+  <div class="grid">
+    <div class="card"><h2>System</h2><div id="system">Loading...</div></div>
+    <div class="card"><h2>Storage</h2><div id="storage">Loading...</div></div>
+    <div class="card"><h2>Scheduler</h2><pre id="scheduler">Loading...</pre></div>
+    <div class="card"><h2>Learning</h2><div id="learning">Loading...</div></div>
+    <div class="card"><h2>Sources</h2><pre id="sources">Loading...</pre></div>
+    <div class="card"><h2>Recent Verification</h2><pre id="audit">Loading...</pre></div>
+  </div>
+
+  <div class="card">
+    <h2>Latest Records</h2>
+    <pre id="records">Loading...</pre>
+  </div>
+</main>
+
+<script>
+const API = "https://admin.teeronline.com";
+
+function saveToken(){
+  localStorage.setItem("TEER_ADMIN_TOKEN", document.getElementById("token").value.trim());
+  loadDashboard();
+}
+
+function getToken(){
+  return localStorage.getItem("TEER_ADMIN_TOKEN") || "";
+}
+
+async function api(path){
+  const res = await fetch(API + path, {
+    headers: { Authorization: "Bearer " + getToken() }
+  });
+  return await res.json();
+}
+
+async function loadDashboard(){
+  const data = await api("/admin/summary");
+
+  if(!data.ok){
+    document.getElementById("system").innerHTML = `<span class="bad">${data.error || "Error"}</span>`;
+    return;
+  }
+
+  document.getElementById("system").innerHTML = `
+    <p>Status: <span class="ok">OK</span></p>
+    <p>Now: ${data.now.iso}</p>
+    <p>Latest Date: ${data.latest.date}</p>
+    <p>Records: ${data.latest.recordCount}</p>
+  `;
+
+  document.getElementById("storage").innerHTML = `
+    <p>Latest Valid: <span class="${data.latest.valid ? "ok":"bad"}">${data.latest.valid}</span></p>
+    <p>Last Sync Success: ${data.storage.syncStatus.lastSuccessAt || "-"}</p>
+    <p>Sync Success Count: ${data.storage.syncStatus.successCount}</p>
+    <p>Sync Failure Count: ${data.storage.syncStatus.failureCount}</p>
+  `;
+
+  document.getElementById("scheduler").textContent = JSON.stringify(data.scheduler, null, 2);
+  document.getElementById("learning").innerHTML = `<p>Profiles: ${data.learning.profileCount}</p>`;
+  document.getElementById("sources").textContent = JSON.stringify(data.sources, null, 2);
+  document.getElementById("audit").textContent = JSON.stringify(data.verification.recentAudits, null, 2);
+  document.getElementById("records").textContent = JSON.stringify(data.latest.records, null, 2);
+}
+
+document.getElementById("token").value = getToken();
+loadDashboard();
+</script>
+</body>
+</html>
