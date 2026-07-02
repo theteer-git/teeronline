@@ -1,6 +1,6 @@
 {
   "date": "2026-07-02",
-  "lastUpdatedAt": "2026-07-02T15:15:49.265+05:30",
+  "lastUpdatedAt": "2026-07-02T15:16:53.968+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-02",
@@ -152,13 +152,12 @@
       "srDeclaredTime": "3:15 PM",
       "status": "partial",
       "source": "teerresults",
-      "lastCheckedAt": "2026-07-02T15:15:49.265+05:30",
+      "lastCheckedAt": "2026-07-02T15:16:53.968+05:30",
       "verifiedBy": [
-        "teerresults",
         "khanaparaTv"
       ],
-      "verificationStatus": "verified",
-      "verificationDecision": "verified",
+      "verificationStatus": "single_source",
+      "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
         "sr": 0
