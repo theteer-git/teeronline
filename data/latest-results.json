@@ -1,6 +1,6 @@
 {
   "date": "2026-07-03",
-  "lastUpdatedAt": "2026-07-03T19:18:52+05:30",
+  "lastUpdatedAt": "2026-07-03T19:19:12+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-03",
@@ -188,25 +188,29 @@
       ]
     },
     "KH": {
-      "id": "KH-2026-07-02",
-      "game": "khanapara day",
-      "city": "Khanapara",
+      "id": "KH-2026-07-03",
+      "game": "Khanapara Teer",
       "gameId": "KH",
-      "date": "2026-07-02",
-      "fr": "55",
-      "frUpdatedAt": "2026-07-02T16:14:45.279+05:30",
-      "sr": "80",
-      "srUpdatedAt": "2026-07-02T17:06:45.281+05:30",
-      "frDeclaredTime": "4:25 PM",
-      "srDeclaredTime": "5:00 PM",
+      "date": "2026-07-03",
+      "fr": "29",
+      "sr": "01",
+      "frUpdatedAt": "2026-07-03T19:19:12+05:30",
+      "srUpdatedAt": "2026-07-03T19:19:12+05:30",
       "status": "completed",
-      "source": "khanaparaTv",
-      "lastCheckedAt": "2026-07-02T17:06:45.281+05:30",
+      "lastCheckedAt": "2026-07-03T19:19:12+05:30",
+      "verificationStatus": "single_source",
+      "verificationDecision": "single_source",
+      "confidence": {
+        "fr": 100,
+        "sr": 100
+      },
+      "conflicts": {
+        "fr": false,
+        "sr": false
+      },
       "verifiedBy": [
-        "teerresults",
         "khanaparaTv"
-      ],
-      "verificationStatus": "verified"
+      ]
     }
   }
 }
