@@ -1,6 +1,6 @@
 {
   "date": "2026-07-03",
-  "lastUpdatedAt": "2026-07-03T19:15:38+05:30",
+  "lastUpdatedAt": "2026-07-03T19:16:27+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-03",
@@ -57,24 +57,17 @@
       }
     },
     "KHM": {
-      "id": "KHM-2026-07-02",
-      "game": "khanapara morning",
-      "city": "Khanapara",
+      "id": "KHM-2026-07-03",
+      "game": "Khanapara Morning",
       "gameId": "KHM",
-      "date": "2026-07-02",
-      "fr": "38",
-      "frUpdatedAt": "2026-07-02T10:59:51.059+05:30",
-      "sr": "98",
-      "srUpdatedAt": "2026-07-02T12:00:45.281+05:30",
-      "frDeclaredTime": "11:00 AM",
-      "srDeclaredTime": "12:00 PM",
+      "date": "2026-07-03",
+      "fr": "84",
+      "sr": "14",
+      "frUpdatedAt": "2026-07-03T19:16:27+05:30",
+      "srUpdatedAt": "2026-07-03T19:16:27+05:30",
       "status": "completed",
-      "source": "khanaparaMorning",
-      "lastCheckedAt": "2026-07-02T12:00:47.336+05:30",
+      "lastCheckedAt": "2026-07-03T19:16:27+05:30",
       "verificationStatus": "single_source",
-      "verifiedBy": [
-        "khanaparaMorning"
-      ],
       "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
@@ -83,7 +76,10 @@
       "conflicts": {
         "fr": false,
         "sr": false
-      }
+      },
+      "verifiedBy": [
+        "khanaparaMorning"
+      ]
     },
     "SHN1": {
       "id": "SHN1-2026-07-02",
