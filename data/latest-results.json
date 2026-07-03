@@ -1,6 +1,6 @@
 {
   "date": "2026-07-03",
-  "lastUpdatedAt": "2026-07-03T19:18:28+05:30",
+  "lastUpdatedAt": "2026-07-03T19:18:52+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-03",
@@ -162,26 +162,30 @@
       ]
     },
     "SHD": {
-      "id": "SHD-2026-07-02",
-      "game": "shillong day",
-      "city": "Shillong",
+      "id": "SHD-2026-07-03",
+      "game": "Shillong Teer",
       "gameId": "SHD",
-      "date": "2026-07-02",
-      "fr": "86",
-      "frUpdatedAt": "2026-07-02T16:14:45.279+05:30",
-      "sr": "14",
-      "srUpdatedAt": "2026-07-02T17:11:45.281+05:30",
-      "frDeclaredTime": "4:15 PM",
-      "srDeclaredTime": "5:15 PM",
+      "date": "2026-07-03",
+      "fr": "67",
+      "sr": "30",
+      "frUpdatedAt": "2026-07-03T19:18:52+05:30",
+      "srUpdatedAt": "2026-07-03T19:18:52+05:30",
       "status": "completed",
-      "source": "teertooday",
-      "lastCheckedAt": "2026-07-02T17:11:45.281+05:30",
+      "lastCheckedAt": "2026-07-03T19:18:52+05:30",
+      "verificationStatus": "verified",
+      "verificationDecision": "verified",
+      "confidence": {
+        "fr": 100,
+        "sr": 100
+      },
+      "conflicts": {
+        "fr": false,
+        "sr": false
+      },
       "verifiedBy": [
-        "teertooday",
         "teerresults",
         "khanaparaTv"
-      ],
-      "verificationStatus": "verified"
+      ]
     },
     "KH": {
       "id": "KH-2026-07-02",
