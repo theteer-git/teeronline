@@ -1,6 +1,6 @@
 {
   "date": "2026-07-03",
-  "lastUpdatedAt": "2026-07-03T19:16:27+05:30",
+  "lastUpdatedAt": "2026-07-03T19:16:47+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-03",
@@ -28,33 +28,29 @@
       ]
     },
     "JWM": {
-      "id": "JWM-2026-07-02",
-      "game": "juwai morning",
-      "city": "Juwai",
+      "id": "JWM-2026-07-03",
+      "game": "Juwai Morning",
       "gameId": "JWM",
-      "date": "2026-07-02",
-      "fr": "03",
-      "frUpdatedAt": "2026-07-02T10:51:51.057+05:30",
-      "sr": "72",
-      "srUpdatedAt": "2026-07-02T11:43:45.317+05:30",
-      "frDeclaredTime": "10:30 AM",
-      "srDeclaredTime": "11:30 AM",
+      "date": "2026-07-03",
+      "fr": "45",
+      "sr": "79",
+      "frUpdatedAt": "2026-07-03T19:16:47+05:30",
+      "srUpdatedAt": "2026-07-03T19:16:47+05:30",
       "status": "completed",
-      "source": "khanaparaTv",
-      "lastCheckedAt": "2026-07-02T11:43:45.317+05:30",
+      "lastCheckedAt": "2026-07-03T19:16:47+05:30",
       "verificationStatus": "single_source",
-      "verifiedBy": [
-        "khanaparaTv"
-      ],
       "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       },
       "conflicts": {
         "fr": false,
         "sr": false
-      }
+      },
+      "verifiedBy": [
+        "khanaparaTv"
+      ]
     },
     "KHM": {
       "id": "KHM-2026-07-03",
