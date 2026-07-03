@@ -1,6 +1,6 @@
 {
   "date": "2026-07-03",
-  "lastUpdatedAt": "2026-07-03T19:16:47+05:30",
+  "lastUpdatedAt": "2026-07-03T19:18:28+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-03",
@@ -136,34 +136,30 @@
       }
     },
     "JWD": {
-      "id": "JWD-2026-07-02",
-      "game": "juwai day",
-      "city": "Juwai",
+      "id": "JWD-2026-07-03",
+      "game": "Juwai Teer",
       "gameId": "JWD",
-      "date": "2026-07-02",
-      "fr": "66",
-      "frUpdatedAt": "2026-07-02T14:43:45.279+05:30",
-      "sr": "90",
-      "srUpdatedAt": "2026-07-02T15:20:45.279+05:30",
-      "frDeclaredTime": "2:30 PM",
-      "srDeclaredTime": "3:15 PM",
+      "date": "2026-07-03",
+      "fr": "48",
+      "sr": "11",
+      "frUpdatedAt": "2026-07-03T19:18:28+05:30",
+      "srUpdatedAt": "2026-07-03T19:18:28+05:30",
       "status": "completed",
-      "source": "teerresults",
-      "lastCheckedAt": "2026-07-02T15:20:45.279+05:30",
-      "verifiedBy": [
-        "khanaparaTv",
-        "teerresults"
-      ],
+      "lastCheckedAt": "2026-07-03T19:18:28+05:30",
       "verificationStatus": "verified",
-      "verificationDecision": "single_source",
+      "verificationDecision": "verified",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       },
       "conflicts": {
         "fr": false,
         "sr": false
-      }
+      },
+      "verifiedBy": [
+        "teerresults",
+        "khanaparaTv"
+      ]
     },
     "SHD": {
       "id": "SHD-2026-07-02",
