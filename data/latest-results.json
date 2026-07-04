@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "lastUpdatedAt": "2026-07-04T16:29:29+05:30",
+  "lastUpdatedAt": "2026-07-04T17:03:30+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-04",
@@ -173,16 +173,16 @@
       "gameId": "KH",
       "date": "2026-07-04",
       "fr": "58",
-      "sr": "",
+      "sr": "94",
       "frUpdatedAt": "2026-07-04T16:29:29+05:30",
-      "srUpdatedAt": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-07-04T16:29:29+05:30",
+      "srUpdatedAt": "2026-07-04T17:03:30+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-04T17:03:30+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       },
       "conflicts": {
         "fr": false,
@@ -191,8 +191,8 @@
       "verifiedBy": [
         "khanaparaTv"
       ],
-      "frLastCheckedAt": "",
-      "srLastCheckedAt": ""
+      "frLastCheckedAt": "2026-07-04T17:03:30+05:30",
+      "srLastCheckedAt": "2026-07-04T17:03:30+05:30"
     }
   }
 }
