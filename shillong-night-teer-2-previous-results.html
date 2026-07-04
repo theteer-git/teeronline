@@ -522,43 +522,50 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
   }
   function extractData(raw){
     if(!Array.isArray(raw)) return [];
+    const targetGame = GAME_NAME.toLowerCase().trim();
+    
     return raw.filter(item => {
-		  const game = String(item.game || '').toLowerCase().trim();
-		  const gameId = String(item.gameId || item.game_id || '').toUpperCase().trim();
+      const game = String(item.game || '').toLowerCase().trim();
+      const gameId = String(item.gameId || item.game_id || '').toUpperCase().trim();
 
-		  if (GAME_NAME === 'shillong day') {
-			return gameId === 'SHD' || game === 'shillong teer' || game === 'shillong day';
-		  }
+      // Specific game matching with better logic
+      if (targetGame === 'shillong day') {
+        return gameId === 'SHD' || game === 'shillong teer' || game === 'shillong day';
+      }
 
-		  if (GAME_NAME === 'shillong night') {
-			return gameId === 'SHN1' || game === 'shillong night' || game === 'shillong hills night teer';
-		  }
+      if (targetGame === 'shillong night') {
+        return gameId === 'SHN1' || game === 'shillong night' || game === 'shillong hills night teer';
+      }
 
-		  if (GAME_NAME === 'shillong night 2') {
-			return gameId === 'SHN2' || game === 'shillong night 2' || game === 'shillong night teer 2';
-		  }
+      if (targetGame === 'shillong night 2') {
+        return gameId === 'SHN2' || game === 'shillong night 2' || game === 'shillong night teer 2';
+      }
 
-		  return game === GAME_NAME;
-		})
-      .map(item => {
-        const fr = cleanNumber(item.fr || item.first_round), sr = cleanNumber(item.sr || item.second_round);
-        const d = parseDate(item.date || '');
-        return d && fr !== null && sr !== null ? {date:item.date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(item.date), first_round:fr, second_round:sr} : null;
-      }).filter(Boolean);
+      return game === targetGame;
+    })
+    .map(item => {
+      const fr = cleanNumber(item.fr || item.first_round), sr = cleanNumber(item.sr || item.second_round);
+      const d = parseDate(item.date || '');
+      return d && fr !== null && sr !== null ? {date:item.date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(item.date), first_round:fr, second_round:sr} : null;
+    }).filter(Boolean);
   }
   function updateCount(){
     const f = currentData.length, t = originalData.length;
-    resultsCount.textContent = f === t ? `📊 Showing all ${t} results` : `📊 Found ${f} result${f === 1 ? '' : 's'} (filtered from ${t} total)`;
-    resultsCount.style.color = f === 0 ? '#ef4444' : 'var(--accent)';
+    if(resultsCount) {
+      resultsCount.textContent = f === t ? `📊 Showing all ${t} results` : `📊 Found ${f} result${f === 1 ? '' : 's'} (filtered from ${t} total)`;
+      resultsCount.style.color = f === 0 ? '#ef4444' : 'var(--accent)';
+    }
   }
   function renderTable(){
-    const size = parseInt(pageSize.value,10) || 25, totalPages = Math.max(1, Math.ceil(currentData.length / size));
+    if(!tbody) return;
+    const size = parseInt(pageSize?.value,10) || 25, totalPages = Math.max(1, Math.ceil(currentData.length / size));
     if(currentPage > totalPages) currentPage = totalPages;
     const rows = currentData.slice((currentPage - 1) * size, currentPage * size);
     tbody.innerHTML = rows.length ? rows.map(r => `<tr><td>${r.displayDate}</td><td>${r.day}</td><td>${r.first_round}</td><td>${r.second_round}</td></tr>`).join('') : '<tr><td colspan="4">No matching results found.</td></tr>';
     renderPagination(totalPages); updateCount();
   }
   function renderPagination(totalPages){
+    if(!pagination) return;
     if(totalPages <= 1){ pagination.innerHTML = ''; return; }
     const items = [`<button class="page-btn" ${currentPage===1?'disabled':''} data-page="${currentPage-1}">Previous</button>`];
     const start = Math.max(1, currentPage - 2), end = Math.min(totalPages, currentPage + 2);
@@ -571,6 +578,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
     pagination.innerHTML = items.join('');
   }
   function applyFilters(){
+    if(!numberSearch || !dateCalendar || !daySearch || !roundSearch) return;
     const numberValue = numberSearch.value.trim(); let numberFilter = null;
     if(numberValue){
       const n = parseInt(numberValue,10);
@@ -591,7 +599,15 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
     });
     currentPage = 1; renderTable();
   }
-  function resetFilters(){ numberSearch.value=''; dateCalendar.value=''; daySearch.value=''; roundSearch.value=''; currentData=originalData.slice(); currentPage=1; renderTable(); }
+  function resetFilters(){ 
+    if(numberSearch) numberSearch.value=''; 
+    if(dateCalendar) dateCalendar.value=''; 
+    if(daySearch) daySearch.value=''; 
+    if(roundSearch) roundSearch.value=''; 
+    currentData=originalData.slice(); 
+    currentPage=1; 
+    renderTable(); 
+  }
   async function loadData(){
     try{
       const res = await fetch('./data/all-results.json', {cache:'default'});
@@ -599,31 +615,91 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
       originalData = extractData(await res.json()).sort((a,b) => parseDate(b.date) - parseDate(a.date));
       if(!originalData.length) throw new Error(`No valid "${GAME_NAME}" records found. Please check your data file.`);
       currentData = originalData.slice();
-      const dates = originalData.map(r => r.dateValue).filter(Boolean).sort(); if(dates.length){ dateCalendar.min = dates[0]; dateCalendar.max = dates[dates.length-1]; }
-      loadingDiv.hidden = true; loadingDiv.style.display = 'none'; renderTable();
+      const dates = originalData.map(r => r.dateValue).filter(Boolean).sort(); 
+      if(dates.length && dateCalendar){ 
+        dateCalendar.min = dates[0]; 
+        dateCalendar.max = dates[dates.length-1]; 
+      }
+      if(loadingDiv) {
+        loadingDiv.hidden = true; 
+        loadingDiv.style.display = 'none'; 
+      }
+      renderTable();
     }catch(err){
-      loadingDiv.hidden = true; loadingDiv.style.display = 'none'; errorDiv.hidden = false; errorDiv.style.display = 'block';
-      errorDiv.innerHTML = `<strong>❌ Failed to load ./data/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
-      resultsCount.textContent = '📊 Error loading data'; tbody.innerHTML = '<tr><td colspan="4">Unable to load results.</td></tr>';
+      if(loadingDiv) {
+        loadingDiv.hidden = true; 
+        loadingDiv.style.display = 'none'; 
+      }
+      if(errorDiv) {
+        errorDiv.hidden = false; 
+        errorDiv.style.display = 'block';
+        errorDiv.innerHTML = `<strong>❌ Failed to load ./data/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+      }
+      if(resultsCount) resultsCount.textContent = '📊 Error loading data'; 
+      if(tbody) tbody.innerHTML = '<tr><td colspan="4">Unable to load results.</td></tr>';
     }
   }
   function initDarkMode(){
-    const toggle = $('darkModeToggle'); if(!toggle) return;
-    const stored = localStorage.getItem('darkMode') === 'true'; if(stored) document.body.classList.add('dark');
+    const toggle = $('darkModeToggle'); 
+    if(!toggle) return;
+    const stored = localStorage.getItem('darkMode') === 'true'; 
+    if(stored) document.body.classList.add('dark');
     toggle.textContent = stored ? '☀️ Light' : '🌓 Dark';
-    toggle.addEventListener('click', () => { document.body.classList.toggle('dark'); const isDark = document.body.classList.contains('dark'); localStorage.setItem('darkMode', isDark); toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark'; });
+    toggle.addEventListener('click', () => { 
+      document.body.classList.toggle('dark'); 
+      const isDark = document.body.classList.contains('dark'); 
+      localStorage.setItem('darkMode', isDark); 
+      toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark'; 
+    });
   }
-  $('applyFilters').addEventListener('click', applyFilters); $('resetFilters').addEventListener('click', resetFilters);
-  numberSearch.addEventListener('keydown', e => { if(e.key === 'Enter') applyFilters(); });
-  pageSize.addEventListener('change', () => { currentPage = 1; renderTable(); });
-  pagination.addEventListener('click', e => { const btn = e.target.closest('[data-page]'); if(!btn || btn.disabled) return; currentPage = parseInt(btn.dataset.page,10); renderTable(); });
-  const year = $('copyrightYear'); if(year) year.textContent = new Date().getFullYear();
+  
+  // Initialize event listeners with null checks
+  const applyBtn = $('applyFilters');
+  if(applyBtn) applyBtn.addEventListener('click', applyFilters);
+  
+  const resetBtn = $('resetFilters');
+  if(resetBtn) resetBtn.addEventListener('click', resetFilters);
+  
+  if(numberSearch) {
+    numberSearch.addEventListener('keydown', e => { 
+      if(e.key === 'Enter') applyFilters(); 
+    });
+  }
+  
+  if(pageSize) {
+    pageSize.addEventListener('change', () => { 
+      currentPage = 1; 
+      renderTable(); 
+    });
+  }
+  
+  if(pagination) {
+    pagination.addEventListener('click', e => { 
+      const btn = e.target.closest('[data-page]'); 
+      if(!btn || btn.disabled) return; 
+      currentPage = parseInt(btn.dataset.page,10); 
+      renderTable(); 
+    });
+  }
+  
+  const year = $('copyrightYear'); 
+  if(year) year.textContent = new Date().getFullYear();
+  
   initDarkMode();
+  
   const start = () => ('requestIdleCallback' in window ? requestIdleCallback(loadData, {timeout:1500}) : setTimeout(loadData, 1));
   window.addEventListener('load', start, {once:true});
+  
   setTimeout(() => {
-    const s = document.createElement('script'); s.src = 'https://www.googletagmanager.com/gtag/js?id=G-R7H1L7VWZS'; s.async = true;
-    s.onload = () => { window.dataLayer = window.dataLayer || []; window.gtag = function(){dataLayer.push(arguments)}; gtag('js', new Date()); gtag('config', 'G-R7H1L7VWZS'); };
+    const s = document.createElement('script'); 
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-R7H1L7VWZS'; 
+    s.async = true;
+    s.onload = () => { 
+      window.dataLayer = window.dataLayer || []; 
+      window.gtag = function(){dataLayer.push(arguments)}; 
+      gtag('js', new Date()); 
+      gtag('config', 'G-R7H1L7VWZS'); 
+    };
     document.head.appendChild(s);
   }, 3500);
 })();
