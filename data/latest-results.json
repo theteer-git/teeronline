@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "lastUpdatedAt": "2026-07-04T10:52:25+05:30",
+  "lastUpdatedAt": "2026-07-04T11:00:25+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-04",
@@ -57,17 +57,25 @@
       "game": "Khanapara Morning",
       "gameId": "KHM",
       "date": "2026-07-04",
-      "fr": "",
+      "fr": "62",
       "sr": "",
-      "frUpdatedAt": "",
+      "frUpdatedAt": "2026-07-04T11:00:25+05:30",
       "srUpdatedAt": "",
-      "status": "pending",
-      "lastCheckedAt": "",
-      "verificationStatus": "pending",
-      "verificationDecision": "",
-      "confidence": {},
-      "conflicts": {},
-      "verifiedBy": []
+      "status": "partial",
+      "lastCheckedAt": "2026-07-04T11:00:25+05:30",
+      "verificationStatus": "single_source",
+      "verificationDecision": "single_source",
+      "confidence": {
+        "fr": 100,
+        "sr": 0
+      },
+      "conflicts": {
+        "fr": false,
+        "sr": false
+      },
+      "verifiedBy": [
+        "khanaparaMorning"
+      ]
     },
     "SHN1": {
       "id": "SHN1-2026-07-04",
