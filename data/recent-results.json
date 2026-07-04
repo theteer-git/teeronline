@@ -30,6 +30,21 @@
     "lastCheckedAt": "2026-07-04T11:46:25+05:30"
   },
   {
+    "id": "KH-2026-07-04",
+    "game": "khanapara day",
+    "city": "Khanapara",
+    "gameId": "KH",
+    "date": "2026-07-04",
+    "fr": "58",
+    "frUpdatedAt": "2026-07-04T16:29:29+05:30",
+    "sr": "94",
+    "srUpdatedAt": "2026-07-04T17:03:30+05:30",
+    "frDeclaredTime": "4:25 PM",
+    "srDeclaredTime": "5:00 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-07-04T17:03:30+05:30"
+  },
+  {
     "id": "KHM-2026-07-04",
     "game": "khanapara morning",
     "city": "Khanapara",
@@ -43,6 +58,21 @@
     "srDeclaredTime": "12:00 PM",
     "status": "completed",
     "lastCheckedAt": "2026-07-04T12:00:25+05:30"
+  },
+  {
+    "id": "SHD-2026-07-04",
+    "game": "shillong day",
+    "city": "Shillong",
+    "gameId": "SHD",
+    "date": "2026-07-04",
+    "fr": "09",
+    "frUpdatedAt": "2026-07-04T16:19:30+05:30",
+    "sr": "09",
+    "srUpdatedAt": "2026-07-04T17:14:30+05:30",
+    "frDeclaredTime": "4:15 PM",
+    "srDeclaredTime": "5:15 PM",
+    "status": "completed",
+    "lastCheckedAt": "2026-07-04T17:14:30+05:30"
   },
   {
     "id": "SHM-2026-07-04",
@@ -1138,36 +1168,6 @@
     "srDeclaredTime": "3:15 PM",
     "status": "completed",
     "lastCheckedAt": "2026-06-23T15:27:54.388+05:30"
-  },
-  {
-    "id": "KH-2026-06-23",
-    "game": "khanapara day",
-    "city": "Khanapara",
-    "gameId": "KH",
-    "date": "2026-06-23",
-    "fr": "85",
-    "frUpdatedAt": "2026-06-23T16:28:54.391+05:30",
-    "sr": "83",
-    "srUpdatedAt": "2026-06-23T17:02:54.389+05:30",
-    "frDeclaredTime": "4:25 PM",
-    "srDeclaredTime": "5:00 PM",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-23T17:02:54.389+05:30"
-  },
-  {
-    "id": "SHD-2026-06-23",
-    "game": "shillong day",
-    "city": "Shillong",
-    "gameId": "SHD",
-    "date": "2026-06-23",
-    "fr": "15",
-    "frUpdatedAt": "2026-06-23T16:15:54.387+05:30",
-    "sr": "19",
-    "srUpdatedAt": "2026-06-23T17:15:54.387+05:30",
-    "frDeclaredTime": "4:15 PM",
-    "srDeclaredTime": "5:15 PM",
-    "status": "completed",
-    "lastCheckedAt": "2026-06-23T17:15:54.387+05:30"
   },
   {
     "id": "SHN2-2026-06-23",
