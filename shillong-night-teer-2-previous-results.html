@@ -685,8 +685,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
   const year = $('copyrightYear'); 
   if(year) year.textContent = new Date().getFullYear();
   
-  initDarkMode();
-  
+  initDarkMode();  
   const start = () => ('requestIdleCallback' in window ? requestIdleCallback(loadData, {timeout:1500}) : setTimeout(loadData, 1));
   window.addEventListener('load', start, {once:true});
   
