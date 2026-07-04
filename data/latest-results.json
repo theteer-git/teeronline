@@ -1,6 +1,6 @@
 {
   "date": "2026-07-05",
-  "lastUpdatedAt": "2026-07-05T00:04:35+05:30",
+  "lastUpdatedAt": "2026-07-05T00:05:35+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-05",
@@ -85,12 +85,12 @@
       "date": "2026-07-04",
       "fr": "80",
       "sr": "",
-      "frUpdatedAt": "2026-07-05T00:04:35+05:30",
+      "frUpdatedAt": "2026-07-05T00:05:35+05:30",
       "srUpdatedAt": "",
-      "frLastCheckedAt": "2026-07-05T00:04:35+05:30",
+      "frLastCheckedAt": "2026-07-05T00:05:35+05:30",
       "srLastCheckedAt": "",
       "status": "partial",
-      "lastCheckedAt": "2026-07-05T00:04:35+05:30",
+      "lastCheckedAt": "2026-07-05T00:05:35+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
