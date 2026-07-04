@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "lastUpdatedAt": "2026-07-04T16:19:30+05:30",
+  "lastUpdatedAt": "2026-07-04T16:29:29+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-04",
@@ -172,17 +172,27 @@
       "game": "Khanapara Teer",
       "gameId": "KH",
       "date": "2026-07-04",
-      "fr": "",
+      "fr": "58",
       "sr": "",
-      "frUpdatedAt": "",
+      "frUpdatedAt": "2026-07-04T16:29:29+05:30",
       "srUpdatedAt": "",
-      "status": "pending",
-      "lastCheckedAt": "",
-      "verificationStatus": "pending",
-      "verificationDecision": "",
-      "confidence": {},
-      "conflicts": {},
-      "verifiedBy": []
+      "status": "partial",
+      "lastCheckedAt": "2026-07-04T16:29:29+05:30",
+      "verificationStatus": "single_source",
+      "verificationDecision": "single_source",
+      "confidence": {
+        "fr": 100,
+        "sr": 0
+      },
+      "conflicts": {
+        "fr": false,
+        "sr": false
+      },
+      "verifiedBy": [
+        "khanaparaTv"
+      ],
+      "frLastCheckedAt": "",
+      "srLastCheckedAt": ""
     }
   }
 }
