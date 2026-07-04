@@ -671,8 +671,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
       currentPage = 1; 
       renderTable(); 
     });
-  }
-  
+  }  
   if(pagination) {
     pagination.addEventListener('click', e => { 
       const btn = e.target.closest('[data-page]'); 
@@ -680,8 +679,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
       currentPage = parseInt(btn.dataset.page,10); 
       renderTable(); 
     });
-  }
-  
+  }  
   const year = $('copyrightYear'); 
   if(year) year.textContent = new Date().getFullYear();
   
