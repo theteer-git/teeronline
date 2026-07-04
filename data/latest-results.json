@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "lastUpdatedAt": "2026-07-04T11:00:25+05:30",
+  "lastUpdatedAt": "2026-07-04T11:01:25+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-04",
@@ -32,12 +32,12 @@
       "game": "Juwai Morning",
       "gameId": "JWM",
       "date": "2026-07-04",
-      "fr": "68",
+      "fr": "65",
       "sr": "",
-      "frUpdatedAt": "2026-07-04T10:34:25+05:30",
+      "frUpdatedAt": "2026-07-04T11:00:26+05:30",
       "srUpdatedAt": "",
       "status": "partial",
-      "lastCheckedAt": "2026-07-04T10:34:25+05:30",
+      "lastCheckedAt": "2026-07-04T11:00:26+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
@@ -59,10 +59,10 @@
       "date": "2026-07-04",
       "fr": "62",
       "sr": "",
-      "frUpdatedAt": "2026-07-04T11:00:25+05:30",
+      "frUpdatedAt": "2026-07-04T11:01:25+05:30",
       "srUpdatedAt": "",
       "status": "partial",
-      "lastCheckedAt": "2026-07-04T11:00:25+05:30",
+      "lastCheckedAt": "2026-07-04T11:01:25+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
