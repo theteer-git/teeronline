@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "lastUpdatedAt": "2026-07-04T11:01:25+05:30",
+  "lastUpdatedAt": "2026-07-04T11:31:25+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-04",
@@ -8,16 +8,16 @@
       "gameId": "SHM",
       "date": "2026-07-04",
       "fr": "68",
-      "sr": "",
+      "sr": "86",
       "frUpdatedAt": "2026-07-04T10:52:25+05:30",
-      "srUpdatedAt": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-07-04T10:52:25+05:30",
+      "srUpdatedAt": "2026-07-04T11:31:25+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-04T11:31:25+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       },
       "conflicts": {
         "fr": false,
