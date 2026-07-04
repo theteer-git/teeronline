@@ -1,6 +1,6 @@
 {
   "date": "2026-07-04",
-  "lastUpdatedAt": "2026-07-04T20:51:12+05:30",
+  "lastUpdatedAt": "2026-07-04T21:15:36+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-04",
@@ -87,7 +87,7 @@
       "frUpdatedAt": "2026-07-04T20:51:12+05:30",
       "srUpdatedAt": "",
       "status": "partial",
-      "lastCheckedAt": "2026-07-04T20:51:12+05:30",
+      "lastCheckedAt": "2026-07-04T21:15:36+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
@@ -101,7 +101,7 @@
       "verifiedBy": [
         "shillongNight1"
       ],
-      "frLastCheckedAt": "2026-07-04T20:51:12+05:30",
+      "frLastCheckedAt": "2026-07-04T21:15:36+05:30",
       "srLastCheckedAt": ""
     },
     "SHN2": {
