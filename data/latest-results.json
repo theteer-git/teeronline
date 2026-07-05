@@ -1,6 +1,6 @@
 {
   "date": "2026-07-05",
-  "lastUpdatedAt": "2026-07-05T10:31:00+05:30",
+  "lastUpdatedAt": "2026-07-05T10:41:12+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-05",
@@ -34,19 +34,27 @@
       "game": "Juwai Morning",
       "gameId": "JWM",
       "date": "2026-07-05",
-      "fr": "",
+      "fr": "87",
       "sr": "",
-      "frUpdatedAt": "",
+      "frUpdatedAt": "2026-07-05T10:41:12+05:30",
       "srUpdatedAt": "",
-      "frLastCheckedAt": "",
+      "frLastCheckedAt": "2026-07-05T10:41:12+05:30",
       "srLastCheckedAt": "",
-      "status": "pending",
-      "lastCheckedAt": "",
-      "verificationStatus": "pending",
-      "verificationDecision": "",
-      "confidence": {},
-      "conflicts": {},
-      "verifiedBy": []
+      "status": "partial",
+      "lastCheckedAt": "2026-07-05T10:41:12+05:30",
+      "verificationStatus": "single_source",
+      "verificationDecision": "single_source",
+      "confidence": {
+        "fr": 100,
+        "sr": 0
+      },
+      "conflicts": {
+        "fr": false,
+        "sr": false
+      },
+      "verifiedBy": [
+        "khanaparaTv"
+      ]
     },
     "KHM": {
       "id": "KHM-2026-07-05",
