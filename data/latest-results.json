@@ -1,6 +1,6 @@
 {
   "date": "2026-07-06",
-  "lastUpdatedAt": "2026-07-06T14:45:33+05:30",
+  "lastUpdatedAt": "2026-07-06T15:23:32+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-06",
@@ -127,18 +127,18 @@
       "gameId": "JWD",
       "date": "2026-07-06",
       "fr": "03",
-      "sr": "",
+      "sr": "49",
       "frUpdatedAt": "2026-07-06T14:45:33+05:30",
-      "srUpdatedAt": "",
-      "frLastCheckedAt": "2026-07-06T14:45:33+05:30",
-      "srLastCheckedAt": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-07-06T14:45:33+05:30",
+      "srUpdatedAt": "2026-07-06T15:23:32+05:30",
+      "frLastCheckedAt": "2026-07-06T15:23:32+05:30",
+      "srLastCheckedAt": "2026-07-06T15:23:32+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-06T15:23:32+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
-        "sr": 0
+        "sr": 100
       },
       "conflicts": {
         "fr": false,
