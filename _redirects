@@ -1,0 +1,3 @@
+# _redirects file
+/results /latest 302
+/admin/* / 302
