@@ -33,7 +33,9 @@ jobs:
 
           const API_URL = "https://teer-api-v2.maya-digital-rkn.workers.dev/latest";
 
-          const ALL_JSON_PATH = "data/all-results.optimized.json";
+          // IMPORTANT: the public site reads ./data/all-results.json, ./data/latest-results.json and ./data/recent-results.json
+          // Do not write all-results.optimized.json here; that causes recent-results.json to be rebuilt from an incomplete file.
+          const ALL_JSON_PATH = "data/all-results.json";
           const LATEST_JSON_PATH = "data/latest-results.json";
           const RECENT_JSON_PATH = "data/recent-results.json";
           const RECENT_PER_GAME = 10;
@@ -64,18 +66,13 @@ jobs:
           function cleanNumber(value) {
             if (value === undefined || value === null) return "";
             const v = String(value).trim();
-            if (!v || ["xx", "na", "-", "--", "null", "undefined"].includes(v.toLowerCase())) return "";
+            if (!v || ["xx", "x", "na", "-", "--", "—", "null", "undefined"].includes(v.toLowerCase())) return "";
             if (!/^\d{1,2}$/.test(v)) return "";
-            return v.padStart(2, "0");
+            return String(Number(v)).padStart(2, "0");
           }
 
           function isValidNumber(value) {
             return /^\d{1,2}$/.test(String(value || "").trim());
-          }
-
-          function dateValue(date) {
-            const d = new Date(date);
-            return isNaN(d.getTime()) ? 0 : d.getTime();
           }
 
           function getApiRecords(apiData) {
@@ -86,34 +83,53 @@ jobs:
             return [];
           }
 
+          function normalizeGameId(raw) {
+            return String(raw?.g || raw?.gameId || raw?.game_id || "").toUpperCase().trim();
+          }
+
+          function normalizeDate(raw) {
+            return String(raw?.d || raw?.date || "").trim();
+          }
+
           function normalizeRecord(raw) {
-            const gameId = String(raw.gameId || "").toUpperCase().trim();
+            const gameId = normalizeGameId(raw);
             if (!GAME_MAP[gameId]) return null;
 
-            const date = raw.date || "";
+            const date = normalizeDate(raw);
             if (!date) return null;
-
-            const fr = cleanNumber(raw.fr);
-            const sr = cleanNumber(raw.sr);
-            const meta = GAME_MAP[gameId];
-            const now = istNow();
-            const status = fr && sr ? "completed" : (fr || sr ? "partial" : "pending");
 
             return {
               g: gameId,
               d: date,
-              f: fr,
-              s: sr
+              f: cleanNumber(raw?.f ?? raw?.fr ?? raw?.first_round),
+              s: cleanNumber(raw?.s ?? raw?.sr ?? raw?.second_round)
             };
           }
 
-          function pendingRecord(gameId, date) {
+          function toVerboseRecord(record) {
+            const meta = GAME_MAP[record.g] || {};
             return {
-              g: gameId,
-              d: date,
-              f: "",
-              s: ""
+              id: `${record.g}-${record.d}`,
+              game: meta.game || record.g,
+              city: meta.city || "",
+              gameId: record.g,
+              date: record.d,
+              fr: record.f || "",
+              frUpdatedAt: record.f ? "" : "",
+              sr: record.s || "",
+              srUpdatedAt: record.s ? "" : "",
+              frDeclaredTime: meta.frDeclaredTime || "",
+              srDeclaredTime: meta.srDeclaredTime || "",
+              status: record.f && record.s ? "completed" : (record.f || record.s ? "partial" : "pending"),
+              lastCheckedAt: ""
             };
+          }
+
+          function loadExistingAllResults() {
+            if (!fs.existsSync(ALL_JSON_PATH)) return [];
+            const raw = JSON.parse(fs.readFileSync(ALL_JSON_PATH, "utf8"));
+            const list = Array.isArray(raw) ? raw : (raw && Array.isArray(raw.records) ? raw.records : []);
+            return list.map(normalizeRecord).filter(Boolean);
           }
 
           function generateRecentResults(allData) {
@@ -128,15 +144,16 @@ jobs:
                   isValidNumber(item.f) &&
                   isValidNumber(item.s)
                 )
-                .sort((a, b) => b.d.localeCompare(a.d))
-                .slice(0, RECENT_PER_GAME);
+                .sort((a, b) => String(b.d).localeCompare(String(a.d)))
+                .slice(0, RECENT_PER_GAME)
+                .map(toVerboseRecord);
 
               recent.push(...records);
             }
 
             return recent.sort((a, b) => {
-              if (a.d !== b.d) return String(b.d).localeCompare(String(a.d));
-              return String(a.g).localeCompare(String(b.g));
+              if (a.date !== b.date) return String(b.date).localeCompare(String(a.date));
+              return String(a.gameId).localeCompare(String(b.gameId));
             });
           }
 
@@ -144,28 +161,23 @@ jobs:
             console.log("Fetching:", API_URL);
 
             if (!fs.existsSync("data")) fs.mkdirSync("data", { recursive: true });
-            if (!fs.existsSync(ALL_JSON_PATH)) fs.writeFileSync(ALL_JSON_PATH, "[]");
+            if (!fs.existsSync(ALL_JSON_PATH)) fs.writeFileSync(ALL_JSON_PATH, "[]\n");
 
-            const existingRaw = JSON.parse(fs.readFileSync(ALL_JSON_PATH, "utf8"));
-            const existing = Array.isArray(existingRaw) ? existingRaw : [];
+            const existing = loadExistingAllResults();
 
             const response = await fetch(API_URL, { cache: "no-store" });
             if (!response.ok) throw new Error(`API failed with HTTP ${response.status}`);
 
             const apiData = await response.json();
             const currentDate = apiData.date || istDateToday();
-
             const apiRecords = getApiRecords(apiData).map(normalizeRecord).filter(Boolean);
+
+            console.log("Existing all-results records:", existing.length);
             console.log("Valid API records:", apiRecords.length);
             console.log("Current active date:", currentDate);
 
             const map = new Map();
-            for (const item of existing) {
-              if (item && item.g && item.d) {
-                const key = `${item.g}-${item.d}`;
-                map.set(key, item);
-              }
-            }
+            for (const item of existing) map.set(`${item.g}-${item.d}`, item);
 
             let allChanged = false;
 
@@ -207,39 +219,24 @@ jobs:
             for (const record of apiRecords) apiByGameId[record.g] = record;
 
             const latestRecords = {};
-
             for (const gameId of GAME_IDS) {
               const apiRecord = apiByGameId[gameId] || null;
+              const key = `${gameId}-${currentDate}`;
+              const existingRecord = map.get(key) || apiRecord || { g: gameId, d: currentDate, f: "", s: "" };
+              const meta = GAME_MAP[gameId];
 
-              if (apiRecord && apiRecord.d === currentDate) {
-                const key = `${apiRecord.g}-${apiRecord.d}`;
-                const existingRecord = map.get(key) || apiRecord;
-                latestRecords[gameId] = {
-                  id: `${gameId}-${currentDate}`,
-                  game: GAME_MAP[gameId].game,
-                  gameId,
-                  date: currentDate,
-                  fr: existingRecord.f || "",
-                  sr: existingRecord.s || "",
-                  frUpdatedAt: existingRecord.f ? istNow() : "",
-                  srUpdatedAt: existingRecord.s ? istNow() : "",
-                  status: existingRecord.f && existingRecord.s ? "completed" : "pending",
-                  lastCheckedAt: istNow()
-                };
-              } else {
-                latestRecords[gameId] = {
-                  id: `${gameId}-${currentDate}`,
-                  game: GAME_MAP[gameId].game,
-                  gameId,
-                  date: currentDate,
-                  fr: "",
-                  sr: "",
-                  frUpdatedAt: "",
-                  srUpdatedAt: "",
-                  status: "pending",
-                  lastCheckedAt: istNow()
-                };
-              }
+              latestRecords[gameId] = {
+                id: `${gameId}-${currentDate}`,
+                game: meta.game,
+                gameId,
+                date: currentDate,
+                fr: existingRecord.f || "",
+                sr: existingRecord.s || "",
+                frUpdatedAt: existingRecord.f ? istNow() : "",
+                srUpdatedAt: existingRecord.s ? istNow() : "",
+                status: existingRecord.f && existingRecord.s ? "completed" : (existingRecord.f || existingRecord.s ? "partial" : "pending"),
+                lastCheckedAt: istNow()
+              };
             }
 
             const latestJson = {
@@ -248,15 +245,19 @@ jobs:
               records: latestRecords
             };
 
-            fs.writeFileSync(LATEST_JSON_PATH, JSON.stringify(latestJson, null, 2) + "\n");
-
             const recentData = generateRecentResults(finalAllData);
+
+            if (recentData.length < 40) {
+              throw new Error(`Safety stop: recent-results.json would contain only ${recentData.length} records. Expected historical records from ${ALL_JSON_PATH}.`);
+            }
+
+            fs.writeFileSync(LATEST_JSON_PATH, JSON.stringify(latestJson, null, 2) + "\n");
             fs.writeFileSync(RECENT_JSON_PATH, JSON.stringify(recentData, null, 2) + "\n");
 
-            console.log(`all-results.optimized.json records: ${finalAllData.length}`);
+            console.log(`all-results.json records: ${finalAllData.length}`);
             console.log(`latest-results.json records: ${Object.keys(latestRecords).length}`);
             console.log(`recent-results.json records: ${recentData.length}`);
-            console.log(allChanged ? "JSON updated successfully." : "No changes, latest/recent regenerated.");
+            console.log(allChanged ? "JSON updated successfully." : "No changes, latest/recent regenerated safely.");
           }
 
           main().catch(error => {
@@ -270,7 +271,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-          git add data/all-results.optimized.json data/latest-results.json data/recent-results.json
+          git add data/all-results.json data/latest-results.json data/recent-results.json
 
           if git diff --cached --quiet; then
             echo "No JSON changes to commit."
@@ -279,7 +280,6 @@ jobs:
             git push
           fi
 
-      # ✅ NEW: Invalidate Cloudflare cache
       - name: Invalidate Cloudflare cache
         if: github.ref == 'refs/heads/main'
         env:
@@ -289,4 +289,4 @@ jobs:
           curl -X POST "https://api.cloudflare.com/client/v4/zones/${{ secrets.CF_ZONE_ID }}/purge_cache" \
             -H "Authorization: Bearer ${{ secrets.CF_API_TOKEN }}" \
             -H "Content-Type: application/json" \
-            --data '{"files":["https://teeronline.com/data/latest-results.json","https://teeronline.com/data/all-results.json"]}'
+            --data '{"files":["https://teeronline.com/data/latest-results.json","https://teeronline.com/data/recent-results.json","https://teeronline.com/data/all-results.json"]}'
