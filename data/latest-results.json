@@ -2,86 +2,77 @@
   "date": "2026-07-06",
   "lastUpdatedAt": "2026-07-06T21:52:30+05:30",
   "records": {
+    "SHD": {
+      "id": "SHD-2026-07-06",
+      "game": "shillong day",
+      "gameId": "SHD",
+      "date": "2026-07-06",
+      "fr": "52",
+      "sr": "",
+      "frUpdatedAt": "2026-07-06T22:57:09.298+05:30",
+      "srUpdatedAt": "",
+      "status": "partial",
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
+    },
+    "KH": {
+      "id": "KH-2026-07-06",
+      "game": "khanapara day",
+      "gameId": "KH",
+      "date": "2026-07-06",
+      "fr": "",
+      "sr": "",
+      "frUpdatedAt": "",
+      "srUpdatedAt": "",
+      "status": "pending",
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
+    },
+    "JWD": {
+      "id": "JWD-2026-07-06",
+      "game": "juwai day",
+      "gameId": "JWD",
+      "date": "2026-07-06",
+      "fr": "03",
+      "sr": "49",
+      "frUpdatedAt": "2026-07-06T22:57:09.299+05:30",
+      "srUpdatedAt": "2026-07-06T22:57:09.299+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
+    },
     "SHM": {
       "id": "SHM-2026-07-06",
-      "game": "Shillong Morning",
+      "game": "shillong morning",
       "gameId": "SHM",
       "date": "2026-07-06",
       "fr": "63",
       "sr": "71",
-      "frUpdatedAt": "2026-07-06T10:32:04+05:30",
-      "srUpdatedAt": "2026-07-06T11:31:32+05:30",
-      "frLastCheckedAt": "2026-07-06T11:31:32+05:30",
-      "srLastCheckedAt": "2026-07-06T11:31:32+05:30",
+      "frUpdatedAt": "2026-07-06T22:57:09.299+05:30",
+      "srUpdatedAt": "2026-07-06T22:57:09.299+05:30",
       "status": "completed",
-      "lastCheckedAt": "2026-07-06T11:31:32+05:30",
-      "verificationStatus": "single_source",
-      "verificationDecision": "single_source",
-      "confidence": {
-        "fr": 100,
-        "sr": 100
-      },
-      "conflicts": {
-        "fr": false,
-        "sr": false
-      },
-      "verifiedBy": [
-        "khanaparaTv"
-      ]
-    },
-    "JWM": {
-      "id": "JWM-2026-07-06",
-      "game": "Juwai Morning",
-      "gameId": "JWM",
-      "date": "2026-07-06",
-      "fr": "14",
-      "sr": "29",
-      "frUpdatedAt": "2026-07-06T10:46:38+05:30",
-      "srUpdatedAt": "2026-07-06T11:43:32+05:30",
-      "frLastCheckedAt": "2026-07-06T11:43:32+05:30",
-      "srLastCheckedAt": "2026-07-06T11:43:32+05:30",
-      "status": "completed",
-      "lastCheckedAt": "2026-07-06T11:43:32+05:30",
-      "verificationStatus": "single_source",
-      "verificationDecision": "single_source",
-      "confidence": {
-        "fr": 100,
-        "sr": 100
-      },
-      "conflicts": {
-        "fr": false,
-        "sr": false
-      },
-      "verifiedBy": [
-        "khanaparaTv"
-      ]
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
     },
     "KHM": {
       "id": "KHM-2026-07-06",
-      "game": "Khanapara Morning",
+      "game": "khanapara morning",
       "gameId": "KHM",
       "date": "2026-07-06",
       "fr": "61",
       "sr": "80",
-      "frUpdatedAt": "2026-07-06T11:00:04+05:30",
-      "srUpdatedAt": "2026-07-06T12:00:32+05:30",
-      "frLastCheckedAt": "2026-07-06T12:00:32+05:30",
-      "srLastCheckedAt": "2026-07-06T12:00:32+05:30",
+      "frUpdatedAt": "2026-07-06T22:57:09.299+05:30",
+      "srUpdatedAt": "2026-07-06T22:57:09.299+05:30",
       "status": "completed",
-      "lastCheckedAt": "2026-07-06T12:00:32+05:30",
-      "verificationStatus": "single_source",
-      "verificationDecision": "single_source",
-      "confidence": {
-        "fr": 100,
-        "sr": 100
-      },
-      "conflicts": {
-        "fr": false,
-        "sr": false
-      },
-      "verifiedBy": [
-        "khanaparaMorning"
-      ]
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
+    },
+    "JWM": {
+      "id": "JWM-2026-07-06",
+      "game": "juwai morning",
+      "gameId": "JWM",
+      "date": "2026-07-06",
+      "fr": "14",
+      "sr": "29",
+      "frUpdatedAt": "2026-07-06T22:57:09.299+05:30",
+      "srUpdatedAt": "2026-07-06T22:57:09.299+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
     },
     "SHN1": {
       "id": "SHN1-2026-07-06",
@@ -90,25 +81,10 @@
       "date": "2026-07-06",
       "fr": "28",
       "sr": "10",
-      "frUpdatedAt": "2026-07-06T20:52:30+05:30",
-      "srUpdatedAt": "2026-07-06T21:52:30+05:30",
-      "frLastCheckedAt": "2026-07-06T21:52:30+05:30",
-      "srLastCheckedAt": "2026-07-06T21:52:30+05:30",
+      "frUpdatedAt": "2026-07-06T22:57:09.299+05:30",
+      "srUpdatedAt": "2026-07-06T22:57:09.299+05:30",
       "status": "completed",
-      "lastCheckedAt": "2026-07-06T21:52:30+05:30",
-      "verificationStatus": "single_source",
-      "verificationDecision": "single_source",
-      "confidence": {
-        "fr": 100,
-        "sr": 100
-      },
-      "conflicts": {
-        "fr": false,
-        "sr": false
-      },
-      "verifiedBy": [
-        "shillongNight1"
-      ]
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-07-06",
@@ -119,88 +95,8 @@
       "sr": "",
       "frUpdatedAt": "",
       "srUpdatedAt": "",
-      "frLastCheckedAt": "",
-      "srLastCheckedAt": "",
       "status": "pending",
-      "lastCheckedAt": "",
-      "verificationStatus": "pending",
-      "verificationDecision": "",
-      "confidence": {},
-      "conflicts": {},
-      "verifiedBy": []
-    },
-    "JWD": {
-      "id": "JWD-2026-07-06",
-      "game": "Juwai Teer",
-      "gameId": "JWD",
-      "date": "2026-07-06",
-      "fr": "03",
-      "sr": "49",
-      "frUpdatedAt": "2026-07-06T14:45:33+05:30",
-      "srUpdatedAt": "2026-07-06T15:23:32+05:30",
-      "frLastCheckedAt": "2026-07-06T15:23:32+05:30",
-      "srLastCheckedAt": "2026-07-06T15:23:32+05:30",
-      "status": "completed",
-      "lastCheckedAt": "2026-07-06T15:23:32+05:30",
-      "verificationStatus": "single_source",
-      "verificationDecision": "single_source",
-      "confidence": {
-        "fr": 100,
-        "sr": 100
-      },
-      "conflicts": {
-        "fr": false,
-        "sr": false
-      },
-      "verifiedBy": [
-        "khanaparaTv"
-      ]
-    },
-    "SHD": {
-      "id": "SHD-2026-07-06",
-      "game": "Shillong Teer",
-      "gameId": "SHD",
-      "date": "2026-07-06",
-      "fr": "52",
-      "sr": "",
-      "frUpdatedAt": "2026-07-06T16:15:32+05:30",
-      "srUpdatedAt": "",
-      "frLastCheckedAt": "2026-07-06T16:15:32+05:30",
-      "srLastCheckedAt": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-07-06T16:15:32+05:30",
-      "verificationStatus": "single_source",
-      "verificationDecision": "single_source",
-      "confidence": {
-        "fr": 100,
-        "sr": 0
-      },
-      "conflicts": {
-        "fr": false,
-        "sr": false
-      },
-      "verifiedBy": [
-        "khanaparaTv"
-      ]
-    },
-    "KH": {
-      "id": "KH-2026-07-06",
-      "game": "Khanapara Teer",
-      "gameId": "KH",
-      "date": "2026-07-06",
-      "fr": "",
-      "sr": "",
-      "frUpdatedAt": "",
-      "srUpdatedAt": "",
-      "frLastCheckedAt": "",
-      "srLastCheckedAt": "",
-      "status": "pending",
-      "lastCheckedAt": "",
-      "verificationStatus": "pending",
-      "verificationDecision": "",
-      "confidence": {},
-      "conflicts": {},
-      "verifiedBy": []
+      "lastCheckedAt": "2026-07-06T22:57:09.299+05:30"
     }
   }
 }
