@@ -1,6 +1,6 @@
 # SEO Automation Report
 
-Generated: 2026-07-06T15:53:07.251Z
+Generated: 2026-07-06T16:02:11.687Z
 Keyword source: cms/keywords.csv
 
 ## index.html
