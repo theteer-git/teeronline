@@ -352,6 +352,7 @@
   (function(){
     const LIVE_JSON_URL = "./data/latest-results.json";
     const HISTORY_JSON_URL = "./data/recent-results.json";
+    const ALL_RESULTS_JSON_URL = "./data/all-results.json";
     const games = [
       {title:"Shillong Morning Teer Results",gameId:"SHM",defaultFrTime:"10:30 AM",previousUrl:"./shillong-morning-teer-previous-results"},
       {title:"Juwai Morning Teer Results",gameId:"JWM",defaultFrTime:"10:30 AM",previousUrl:"./juwai-morning-teer-previous-results"},
@@ -376,12 +377,51 @@
       }
       return "";
     }
+    function normalizeGameId(value) {
+      const raw = String(value ?? "").trim();
+      const upper = raw.toUpperCase();
+      const nameMap = {
+        "SHILLONG MORNING": "SHM",
+        "SHILLONG MORNING TEER": "SHM",
+        "JUWAI MORNING": "JWM",
+        "JUWAI MORNING TEER": "JWM",
+        "KHANAPARA MORNING": "KHM",
+        "KHANAPARA MORNING TEER": "KHM",
+        "JUWAI": "JWD",
+        "JUWAI TEER": "JWD",
+        "SHILLONG": "SHD",
+        "SHILLONG TEER": "SHD",
+        "KHANAPARA": "KH",
+        "KHANAPARA TEER": "KH",
+        "SHILLONG NIGHT": "SHN1",
+        "SHILLONG NIGHT TEER": "SHN1",
+        "SHILLONG NIGHT 1": "SHN1",
+        "SHILLONG NIGHT TEER 1": "SHN1",
+        "SHILLONG NIGHT 2": "SHN2",
+        "SHILLONG NIGHT TEER 2": "SHN2"
+      };
+      return nameMap[upper] || upper;
+    }
+
+    function flattenResultData(data) {
+      if (Array.isArray(data)) return data.flatMap(flattenResultData);
+      if (!data || typeof data !== "object") return [];
+      if (Array.isArray(data.records)) return flattenResultData(data.records);
+      if (Array.isArray(data.results)) return flattenResultData(data.results);
+      if (Array.isArray(data.data)) return flattenResultData(data.data);
+      if (data.records && typeof data.records === "object") return flattenResultData(Object.values(data.records));
+      if (data.results && typeof data.results === "object") return flattenResultData(Object.values(data.results));
+      if (data.data && typeof data.data === "object") return flattenResultData(Object.values(data.data));
+      if (data.g || data.gameId || data.game_id || data.game || data.name) return [data];
+      return Object.values(data).flatMap(flattenResultData);
+    }
+
     function normalizeResultRecord(item) {
       if (!item || typeof item !== "object") return null;
-      const gameId = String(pickRecordValue(item, ["g", "gameId", "game_id"])).toUpperCase().trim();
-      const date = pickRecordValue(item, ["d", "date"]);
-      const fr = pickRecordValue(item, ["f", "fr", "first_round"]);
-      const sr = pickRecordValue(item, ["s", "sr", "second_round"]);
+      const gameId = normalizeGameId(pickRecordValue(item, ["g", "gameId", "game_id", "game", "name", "title"]));
+      const date = pickRecordValue(item, ["d", "date", "resultDate"]);
+      const fr = pickRecordValue(item, ["f", "fr", "first_round", "firstRound", "first"]);
+      const sr = pickRecordValue(item, ["s", "sr", "second_round", "secondRound", "second"]);
       if (!gameId || !date) return null;
       return {
         ...item,
@@ -393,11 +433,7 @@
       };
     }
     function normalizeResultList(data) {
-      if (Array.isArray(data)) return data.map(normalizeResultRecord).filter(Boolean);
-      if (data && Array.isArray(data.records)) return data.records.map(normalizeResultRecord).filter(Boolean);
-      if (data && data.records && typeof data.records === "object") return Object.values(data.records).map(normalizeResultRecord).filter(Boolean);
-      if (data && typeof data === "object") return Object.values(data).map(normalizeResultRecord).filter(Boolean);
-      return [];
+      return flattenResultData(data).map(normalizeResultRecord).filter(Boolean);
     }
     function parseDate(dateStr) {
       if (!dateStr) return null;
@@ -556,27 +592,33 @@
       }
     }
     async function fetchHistoryResults() {
-      // DIRECTLY load from local JSON file (primary source for history)
-      try {
-        const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
-        if (res.ok) {
+      historyRecords = [];
+      const urls = [HISTORY_JSON_URL, ALL_RESULTS_JSON_URL];
+
+      for (const url of urls) {
+        try {
+          const res = await fetch(`${url}?v=${Date.now()}`, { cache: "no-store", referrerPolicy: "no-referrer" });
+          if (!res.ok) continue;
+
           const data = await res.json();
-          const list = normalizeResultList(data);
-          if (list.length > 0) {
-            historyRecords = list.filter(item =>
+          const list = normalizeResultList(data)
+            .filter(item =>
               item &&
               item.gameId &&
               item.date &&
               isValidNumber(item.fr) &&
               isValidNumber(item.sr)
-            );
+            )
+            .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+
+          if (list.length > 0) {
+            historyRecords = list;
             return;
           }
+        } catch (e) {
+          console.warn("History load failed:", url, e);
         }
-      } catch (e) {
-			console.error(e);
-			historyRecords = [];
-		}      
+      }
     }
 
     function renderDashboard() {
