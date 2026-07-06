@@ -500,8 +500,7 @@
       // Fallback to history
       const historyItems = historyRecords
         .filter(item => item && item.gameId === gameId && item.date)
-        .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-      
+        .sort((a, b) => dateValue(b.date) - dateValue(a.date));      
       return historyItems[0] || {};
     }
 
