@@ -140,18 +140,53 @@
 
   function extractData(raw){
     if(!Array.isArray(raw)) return [];
-    return raw.filter(item => String(item.game || '').toLowerCase().trim() === 'juwai morning')
-      .map(item => ({date:item.date || '', first_round:item.fr || item.first_round || '', second_round:item.sr || item.second_round || ''}))
-      .filter(item => {
-        const fr = String(item.first_round).toLowerCase().trim(), sr = String(item.second_round).toLowerCase().trim();
-        if(!item.date || ['xx','off','—','-','na',''].includes(fr) || ['xx','off','—','-','na',''].includes(sr)) return false;
-        const frn = parseInt(fr,10), srn = parseInt(sr,10);
-        return !Number.isNaN(frn) && !Number.isNaN(srn) && frn >= 0 && frn <= 99 && srn >= 0 && srn <= 99;
-      })
-      .map(item => {
-        const d = parseDate(item.date);
-        return {date:item.date, dateValue:d ? ymd(d) : '', displayDate:d ? dmy(d) : item.date, day:dayName(item.date), first_round:String(parseInt(item.first_round,10)).padStart(2,'0'), second_round:String(parseInt(item.second_round,10)).padStart(2,'0')};
-      });
+
+    const idByName = {
+      'shillong day': 'SHD',
+      'shillong teer': 'SHD',
+      'khanapara day': 'KH',
+      'khanapara teer': 'KH',
+      'juwai day': 'JWD',
+      'juwai teer': 'JWD',
+      'juwai morning': 'JWM',
+      'khanapara morning': 'KHM',
+      'shillong morning': 'SHM',
+      'shillong night': 'SHN1',
+      'shillong hills night teer': 'SHN1',
+      'shillong night 2': 'SHN2',
+      'shillong night teer 2': 'SHN2'
+    };
+
+    const aliases = {
+      SHD: ['shillong day', 'shillong teer'],
+      KH: ['khanapara day', 'khanapara teer'],
+      JWD: ['juwai day', 'juwai teer'],
+      JWM: ['juwai morning'],
+      KHM: ['khanapara morning'],
+      SHM: ['shillong morning'],
+      SHN1: ['shillong night', 'shillong hills night teer'],
+      SHN2: ['shillong night 2', 'shillong night teer 2']
+    };
+
+    const targetGame = (typeof GAME_NAME !== 'undefined' ? GAME_NAME : 'juwai morning').toLowerCase().trim();
+    const targetId = idByName[targetGame] || '';
+
+    return raw.filter(item => {
+      const gameId = String(item.g || item.gameId || item.game_id || '').toUpperCase().trim();
+      const game = String(item.game || '').toLowerCase().trim();
+      if(targetId && gameId === targetId) return true;
+      if(targetId && aliases[targetId] && aliases[targetId].includes(game)) return true;
+      return game === targetGame;
+    })
+    .map(item => {
+      const fr = cleanNumber(item.f || item.fr || item.first_round);
+      const sr = cleanNumber(item.s || item.sr || item.second_round);
+      const date = item.d || item.date || '';
+      const d = parseDate(date);
+      return d && fr !== null && sr !== null
+        ? {date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(date), first_round:fr, second_round:sr}
+        : null;
+    }).filter(Boolean);
   }
 
   function updateCount(){

@@ -550,31 +550,52 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
   }
   function extractData(raw){
     if(!Array.isArray(raw)) return [];
-    const targetGame = GAME_NAME.toLowerCase().trim();
-    
+
+    const idByName = {
+      'shillong day': 'SHD',
+      'shillong teer': 'SHD',
+      'khanapara day': 'KH',
+      'khanapara teer': 'KH',
+      'juwai day': 'JWD',
+      'juwai teer': 'JWD',
+      'juwai morning': 'JWM',
+      'khanapara morning': 'KHM',
+      'shillong morning': 'SHM',
+      'shillong night': 'SHN1',
+      'shillong hills night teer': 'SHN1',
+      'shillong night 2': 'SHN2',
+      'shillong night teer 2': 'SHN2'
+    };
+
+    const aliases = {
+      SHD: ['shillong day', 'shillong teer'],
+      KH: ['khanapara day', 'khanapara teer'],
+      JWD: ['juwai day', 'juwai teer'],
+      JWM: ['juwai morning'],
+      KHM: ['khanapara morning'],
+      SHM: ['shillong morning'],
+      SHN1: ['shillong night', 'shillong hills night teer'],
+      SHN2: ['shillong night 2', 'shillong night teer 2']
+    };
+
+    const targetGame = (typeof GAME_NAME !== 'undefined' ? GAME_NAME : 'shillong night 2').toLowerCase().trim();
+    const targetId = idByName[targetGame] || '';
+
     return raw.filter(item => {
+      const gameId = String(item.g || item.gameId || item.game_id || '').toUpperCase().trim();
       const game = String(item.game || '').toLowerCase().trim();
-      const gameId = String(item.gameId || item.game_id || '').toUpperCase().trim();
-
-      // Specific game matching with better logic
-      if (targetGame === 'shillong day') {
-        return gameId === 'SHD' || game === 'shillong teer' || game === 'shillong day';
-      }
-
-      if (targetGame === 'shillong night') {
-        return gameId === 'SHN1' || game === 'shillong night' || game === 'shillong hills night teer';
-      }
-
-      if (targetGame === 'shillong night 2') {
-        return gameId === 'SHN2' || game === 'shillong night 2' || game === 'shillong night teer 2';
-      }
-
+      if(targetId && gameId === targetId) return true;
+      if(targetId && aliases[targetId] && aliases[targetId].includes(game)) return true;
       return game === targetGame;
     })
     .map(item => {
-      const fr = cleanNumber(item.fr || item.first_round), sr = cleanNumber(item.sr || item.second_round);
-      const d = parseDate(item.date || '');
-      return d && fr !== null && sr !== null ? {date:item.date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(item.date), first_round:fr, second_round:sr} : null;
+      const fr = cleanNumber(item.f || item.fr || item.first_round);
+      const sr = cleanNumber(item.s || item.sr || item.second_round);
+      const date = item.d || item.date || '';
+      const d = parseDate(date);
+      return d && fr !== null && sr !== null
+        ? {date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(date), first_round:fr, second_round:sr}
+        : null;
     }).filter(Boolean);
   }
   function updateCount(){

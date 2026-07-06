@@ -1,0 +1,1482 @@
+{
+  "site": {
+    "baseUrl": "https://teeronline.com",
+    "name": "TeerOnline.com",
+    "language": "en-IN",
+    "defaultImage": "/assets/img/logo.webp"
+  },
+  "keywordSource": {
+    "file": "cms/keywords.csv",
+    "columns": [
+      "Keyword",
+      "Avg. monthly searches",
+      "Competition"
+    ],
+    "note": "Generated from uploaded keywords.csv on 2026-07-06. Keep this CSV as the source of truth for keyword routing."
+  },
+  "indexingRules": {
+    "public": "index, follow, max-image-preview:large",
+    "internal": "noindex,nofollow,noarchive,nosnippet",
+    "lowValue": "noindex,follow",
+    "blockedPaths": [
+      "/admin",
+      "/admin.html",
+      "/data/",
+      "/assets/",
+      "/.github/",
+      "/cms/"
+    ]
+  },
+  "pages": [
+    {
+      "path": "/",
+      "file": "index.html",
+      "title": "Teer Result Today | Shillong, Khanapara, Juwai, Morning & Night Teer",
+      "description": "Check Teer result today for Shillong, Khanapara, Juwai, Morning Teer and Night Teer with fast FR and SR updates, previous results and common numbers.",
+      "priority": "1.0",
+      "changefreq": "always",
+      "index": true,
+      "primaryKeyword": "teer",
+      "keywords": [
+        "teer",
+        "guwahati khanapara teer result",
+        "juwai teer result",
+        "khanapara teer results",
+        "shillong teer",
+        "shillong teer common no",
+        "shillong teer common number",
+        "shillong teer common number meghalaya",
+        "shillong teer india",
+        "shillong teer result",
+        "shillong teer result list",
+        "shillong teer result meghalaya",
+        "shillong teer result shillong teer result",
+        "shillong teer shillong teer",
+        "shilong teer result com",
+        "sillong teer result com",
+        "teer results",
+        "teer results shillong",
+        "teer shillong teer",
+        "teer shillong teer result",
+        "juwai morning teer result",
+        "juwai teer",
+        "juwai teer result today",
+        "khanapara shillong teer result"
+      ],
+      "keywordData": [
+        {
+          "keyword": "teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "guwahati khanapara teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer results",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common no",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number meghalaya",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer india",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result list",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result meghalaya",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result shillong teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer shillong teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shilong teer result com",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "sillong teer result com",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer results",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer results shillong",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai morning teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer result today",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara shillong teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/shillong-teer-previous-results",
+      "file": "shillong-teer-previous-results.html",
+      "title": "Shillong Teer Previous Results | Date Wise FR SR List",
+      "description": "View Shillong Teer previous results with date-wise first round and second round records, result list, common number references and archive links.",
+      "priority": "0.90",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "shillong teer result",
+      "keywords": [
+        "shillong teer result",
+        "shillong result teer",
+        "shillong teer",
+        "shillong teer india",
+        "shillong teer result list",
+        "shillong teer result meghalaya",
+        "shillong teer result shillong teer result",
+        "shillong teer shillong teer",
+        "teer results shillong",
+        "teer shillong teer",
+        "teer shillong teer result",
+        "khanapara shillong teer result",
+        "khanapara teer result shillong",
+        "previous teer result shillong",
+        "shillong teer counter",
+        "shillong teer counter shillong teer counter",
+        "shillong teer list",
+        "shillong teer live",
+        "shillong teer no",
+        "shillong teer number",
+        "shillong teer number shillong teer number",
+        "shillong teer previous result"
+      ],
+      "keywordData": [
+        {
+          "keyword": "shillong teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong result teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer india",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result list",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result meghalaya",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result shillong teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer shillong teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer results shillong",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong teer",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara shillong teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer result shillong",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "previous teer result shillong",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer counter",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer counter shillong teer counter",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer list",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer live",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer no",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer number shillong teer number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer previous result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/khanapara-teer-previous-results",
+      "file": "khanapara-teer-previous-results.html",
+      "title": "Khanapara Teer Previous Results | Date Wise FR SR List",
+      "description": "View Khanapara Teer previous results with daily FR and SR records, today result references, previous list and archive information.",
+      "priority": "0.90",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "khanapara teer results",
+      "keywords": [
+        "khanapara teer results",
+        "guwahati khanapara teer result",
+        "teer khanapara result",
+        "khanapara shillong teer result",
+        "khanapara teer",
+        "khanapara teer list",
+        "khanapara teer previous result",
+        "khanapara teer result list",
+        "khanapara teer result shillong",
+        "khanapara teer result today",
+        "today teer result khanapara",
+        "khanapara facebook teer result",
+        "khanapara hitting number",
+        "khanapara previous result",
+        "khanapara previous teer result",
+        "khanapara result",
+        "khanapara teer counter",
+        "khanapara teer facebook",
+        "khanapara teer ka result",
+        "khanapara teer khela",
+        "khanapara teer khela result",
+        "khanapara teer live"
+      ],
+      "keywordData": [
+        {
+          "keyword": "khanapara teer results",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "guwahati khanapara teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer khanapara result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara shillong teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer list",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer previous result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer result list",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer result shillong",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer result today",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "today teer result khanapara",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara facebook teer result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara hitting number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara previous result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara previous teer result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer counter",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer facebook",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer ka result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer khela",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer khela result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer live",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/juwai-teer-previous-results",
+      "file": "juwai-teer-previous-results.html",
+      "title": "Juwai Teer Previous Results | Date Wise FR SR List",
+      "description": "View Juwai Teer previous results with date-wise first round and second round records, result list and archive references.",
+      "priority": "0.85",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "juwai teer result",
+      "keywords": [
+        "juwai teer result",
+        "juwai teer",
+        "juwai teer result today",
+        "jowai ladrymbai teer",
+        "jowai ladrymbai teer result",
+        "jowai ladrymbai teer result today",
+        "jowai teer today result",
+        "juwai result",
+        "juwai teer counter",
+        "juwai teer list",
+        "juwai teer number",
+        "juwai teer previous result",
+        "juwai teer result list",
+        "shillong teer juwai result",
+        "teer juwai"
+      ],
+      "keywordData": [
+        {
+          "keyword": "juwai teer result",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer result today",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "jowai ladrymbai teer",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "jowai ladrymbai teer result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "jowai ladrymbai teer result today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "jowai teer today result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer counter",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer previous result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer result list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer juwai result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer juwai",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/shillong-morning-teer-previous-results",
+      "file": "shillong-morning-teer-previous-results.html",
+      "title": "Shillong Morning Teer Previous Results | FR SR Archive",
+      "description": "View Shillong Morning Teer previous results with date-wise FR and SR records, morning result list and archive information.",
+      "priority": "0.80",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "shillong morning teer result",
+      "keywords": [
+        "shillong morning teer result",
+        "morning teer",
+        "morning teer results",
+        "shillong morning result",
+        "morning teer result shillong",
+        "morning teer shillong",
+        "shillong morning",
+        "shillong morning common number",
+        "shillong morning teer",
+        "shillong morning teer result list",
+        "shillong morning teer result today",
+        "sunday morning teer",
+        "teer shillong morning"
+      ],
+      "keywordData": [
+        {
+          "keyword": "shillong morning teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer results",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer result shillong",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer shillong",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning teer",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning teer result list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning teer result today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "sunday morning teer",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong morning",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/khanapara-morning-teer-previous-results",
+      "file": "khanapara-morning-teer-previous-results.html",
+      "title": "Khanapara Morning Teer Previous Results | FR SR Archive",
+      "description": "View Khanapara Morning Teer previous results with date-wise FR and SR records, morning result list and archive references.",
+      "priority": "0.80",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "khanapara morning teer result",
+      "keywords": [
+        "khanapara morning teer result",
+        "morning teer",
+        "morning teer results",
+        "sunday morning teer"
+      ],
+      "keywordData": [
+        {
+          "keyword": "khanapara morning teer result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer results",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "sunday morning teer",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/juwai-morning-teer-previous-results",
+      "file": "juwai-morning-teer-previous-results.html",
+      "title": "Juwai Morning Teer Previous Results | FR SR Archive",
+      "description": "View Juwai Morning Teer previous results with date-wise FR and SR records, morning result list and archive references.",
+      "priority": "0.80",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "juwai morning teer result",
+      "keywords": [
+        "juwai morning teer result",
+        "morning teer",
+        "morning teer results",
+        "juwai morning teer",
+        "sunday morning teer"
+      ],
+      "keywordData": [
+        {
+          "keyword": "juwai morning teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "morning teer results",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai morning teer",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "sunday morning teer",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/shillong-night-teer-previous-results",
+      "file": "shillong-night-teer-previous-results.html",
+      "title": "Shillong Night Teer Previous Results | Night FR SR Archive",
+      "description": "View Shillong Night Teer previous results with date-wise night FR and SR records, result list and archive information.",
+      "priority": "0.80",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "shillong night teer result",
+      "keywords": [
+        "shillong night teer result",
+        "night shillong teer",
+        "night teer",
+        "night teer result",
+        "night teer shillong",
+        "shillong night result",
+        "shillong teer night result",
+        "teer night result",
+        "teer night shillong",
+        "teer shillong night",
+        "teer shillong night result",
+        "teernight",
+        "night shillong teer result",
+        "night teer 2",
+        "night teer counter",
+        "night teer list",
+        "night teer previous result",
+        "night teer result list",
+        "shillong night",
+        "shillong night common number",
+        "shillong night teer 2",
+        "shillong night teer common number"
+      ],
+      "keywordData": [
+        {
+          "keyword": "shillong night teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night shillong teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer shillong",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer night shillong",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong night",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teernight",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night shillong teer result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer 2",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer counter",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer previous result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer result list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night teer 2",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night teer common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/shillong-night-teer-2-previous-results",
+      "file": "shillong-night-teer-2-previous-results.html",
+      "title": "Shillong Night Teer 2 Previous Results | Second Night Archive",
+      "description": "View Shillong Night Teer 2 previous results with date-wise FR and SR records for the second night result round.",
+      "priority": "0.75",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "night teer result",
+      "keywords": [
+        "night teer result",
+        "night shillong teer",
+        "night teer",
+        "night teer shillong",
+        "shillong night result",
+        "shillong night teer result",
+        "shillong teer night result",
+        "teer night result",
+        "teer night shillong",
+        "teer shillong night",
+        "teer shillong night result",
+        "teernight",
+        "night shillong teer result",
+        "night teer 2",
+        "night teer counter",
+        "night teer list",
+        "night teer previous result",
+        "night teer result list"
+      ],
+      "keywordData": [
+        {
+          "keyword": "night teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night shillong teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer shillong",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night teer result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer night shillong",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong night",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong night result",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teernight",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night shillong teer result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer 2",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer counter",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer previous result",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "night teer result list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "commercial"
+    },
+    {
+      "path": "/common-numbers",
+      "file": "common-numbers.html",
+      "title": "Teer Common Numbers Today | Shillong, Khanapara & Juwai",
+      "description": "Check Teer common numbers today for Shillong, Khanapara, Juwai, Morning and Night Teer with direct numbers, house, ending and statistics.",
+      "priority": "0.92",
+      "changefreq": "daily",
+      "index": true,
+      "primaryKeyword": "shillong teer common number",
+      "keywords": [
+        "shillong teer common number",
+        "shillong teer common no",
+        "shillong teer common number meghalaya",
+        "teer common number shillong meghalaya",
+        "teer shillong common no",
+        "khanapara teer common number",
+        "shillong common no",
+        "shillong common number",
+        "teer common no",
+        "100 confirm khanapara teer common number",
+        "khanapara common number",
+        "khanapara hitting number",
+        "khanapara teer common number today",
+        "khanapara teer result common number 99",
+        "shillong 100 common number",
+        "shillong common number today",
+        "shillong morning common number",
+        "shillong night common number",
+        "shillong night teer common number",
+        "shillong teer common",
+        "shillong teer common number facebook",
+        "shillong teer common number for today",
+        "shillong teer common number list",
+        "shillong teer morning common number",
+        "shillong teer night common number",
+        "shillong teer result common number",
+        "teer common",
+        "teer common no today"
+      ],
+      "keywordData": [
+        {
+          "keyword": "shillong teer common number",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common no",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number meghalaya",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer common number shillong meghalaya",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer shillong common no",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer common number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong common no",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong common number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer common no",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "100 confirm khanapara teer common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara hitting number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer common number today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer result common number 99",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong 100 common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong common number today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong night teer common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number facebook",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number for today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number list",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer morning common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer night common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer result common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer common",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer common no today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "informational"
+    },
+    {
+      "path": "/dream-numbers",
+      "file": "dream-numbers.html",
+      "title": "Teer Dream Numbers | Dream Meaning Number List",
+      "description": "Find Teer dream numbers and dream meaning number references for informational use with easy category-based browsing.",
+      "priority": "0.70",
+      "changefreq": "weekly",
+      "index": true,
+      "primaryKeyword": "teer dream numbers",
+      "keywords": [
+        "teer dream numbers"
+      ],
+      "keywordData": [
+        {
+          "keyword": "teer dream numbers",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "informational"
+    },
+    {
+      "path": "/teer-formula",
+      "file": "teer-formula.html",
+      "title": "Teer Formula | Number Pattern & Calculation Guide",
+      "description": "Learn Teer formula concepts, result patterns and informational calculation methods for Shillong, Khanapara and Juwai Teer.",
+      "priority": "0.70",
+      "changefreq": "weekly",
+      "index": true,
+      "primaryKeyword": "teer formula",
+      "keywords": [
+        "teer formula",
+        "shillong teer common number",
+        "shillong teer common number meghalaya",
+        "teer common number shillong meghalaya",
+        "khanapara teer common number",
+        "shillong common number",
+        "shillong teer number",
+        "shillong teer number shillong teer number",
+        "100 confirm khanapara teer common number",
+        "juwai teer number",
+        "khanapara common number",
+        "khanapara hitting number",
+        "khanapara teer common number today",
+        "khanapara teer number",
+        "khanapara teer result common number 99",
+        "shillong 100 common number",
+        "shillong common number today",
+        "shillong morning common number"
+      ],
+      "keywordData": [
+        {
+          "keyword": "teer formula",
+          "searchVolume": 5000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer common number meghalaya",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "teer common number shillong meghalaya",
+          "searchVolume": 5000000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer common number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong common number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong teer number shillong teer number",
+          "searchVolume": 500000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "100 confirm khanapara teer common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "juwai teer number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara hitting number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer common number today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "khanapara teer result common number 99",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong 100 common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong common number today",
+          "searchVolume": 50000,
+          "competition": "Low"
+        },
+        {
+          "keyword": "shillong morning common number",
+          "searchVolume": 50000,
+          "competition": "Low"
+        }
+      ],
+      "intent": "informational"
+    },
+    {
+      "path": "/about",
+      "file": "about.html",
+      "title": "About TeerOnline.com",
+      "description": "Learn about TeerOnline.com and how we organize Teer result information, previous records, common numbers and archive pages for users.",
+      "priority": "0.40",
+      "changefreq": "monthly",
+      "index": true,
+      "primaryKeyword": "teeronline",
+      "keywords": [
+        "teeronline"
+      ],
+      "keywordData": [
+        {
+          "keyword": "teeronline",
+          "searchVolume": 0,
+          "competition": "Low"
+        }
+      ],
+      "intent": "support"
+    },
+    {
+      "path": "/contact",
+      "file": "contact.html",
+      "title": "Contact TeerOnline.com",
+      "description": "Contact TeerOnline.com for website questions, corrections, result feedback or content-related enquiries.",
+      "priority": "0.30",
+      "changefreq": "monthly",
+      "index": true,
+      "primaryKeyword": "contact teeronline",
+      "keywords": [
+        "contact teeronline"
+      ],
+      "keywordData": [
+        {
+          "keyword": "contact teeronline",
+          "searchVolume": 0,
+          "competition": "Low"
+        }
+      ],
+      "intent": "support"
+    },
+    {
+      "path": "/privacy-policy",
+      "file": "privacy-policy.html",
+      "title": "Privacy Policy | TeerOnline.com",
+      "description": "Read the privacy policy for TeerOnline.com, including how basic website information and user interactions may be handled.",
+      "priority": "0.20",
+      "changefreq": "yearly",
+      "index": true,
+      "primaryKeyword": "privacy policy",
+      "keywords": [
+        "privacy policy"
+      ],
+      "keywordData": [
+        {
+          "keyword": "privacy policy",
+          "searchVolume": 0,
+          "competition": "Low"
+        }
+      ],
+      "intent": "support"
+    },
+    {
+      "path": "/terms-and-conditions",
+      "file": "terms-and-conditions.html",
+      "title": "Terms and Conditions | TeerOnline.com",
+      "description": "Read the terms and conditions for using TeerOnline.com result, archive, common number and informational pages.",
+      "priority": "0.20",
+      "changefreq": "yearly",
+      "index": true,
+      "primaryKeyword": "terms and conditions",
+      "keywords": [
+        "terms and conditions"
+      ],
+      "keywordData": [
+        {
+          "keyword": "terms and conditions",
+          "searchVolume": 0,
+          "competition": "Low"
+        }
+      ],
+      "intent": "support"
+    },
+    {
+      "path": "/disclaimer",
+      "file": "disclaimer.html",
+      "title": "Disclaimer | TeerOnline.com",
+      "description": "Read the disclaimer for TeerOnline.com information, Teer result references, common numbers and educational content.",
+      "priority": "0.20",
+      "changefreq": "yearly",
+      "index": true,
+      "primaryKeyword": "disclaimer",
+      "keywords": [
+        "disclaimer"
+      ],
+      "keywordData": [
+        {
+          "keyword": "disclaimer",
+          "searchVolume": 0,
+          "competition": "Low"
+        }
+      ],
+      "intent": "support"
+    },
+    {
+      "path": "/admin",
+      "file": "admin.html",
+      "title": "Admin | TeerOnline.com",
+      "description": "Internal admin area for site operators only.",
+      "priority": "0.0",
+      "changefreq": "never",
+      "index": false,
+      "primaryKeyword": "",
+      "keywords": [],
+      "keywordData": [],
+      "intent": "internal"
+    }
+  ]
+}
