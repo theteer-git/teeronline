@@ -1,97 +1,166 @@
-# TeerOnline On-Page SEO Optimization Report
+# SEO Automation Report
 
-## Scope Completed
-- Optimized uploaded HTML pages for page-specific keywords.
-- Added/updated title, meta description, keywords, canonical, OG/Twitter tags.
-- Added/updated H1 and hero intent copy.
-- Added structured H2/H3 content blocks and FAQ sections.
-- Added JSON-LD WebPage, Breadcrumb and FAQ schema where applicable.
-- Added internal links between money pages and support pages.
-- Preserved existing JavaScript functionality and avoided adding external libraries.
+Generated: 2026-07-06T15:45:17.778Z
+Keyword source: cms/keywords.csv
 
-## Keyword Mapping
-### index.html
-- Primary keyword: **Teer Result Today**
-- Secondary keywords: Shillong Teer Result Today, Khanapara Teer Result Today, Juwai Teer Result Today, FR SR Teer Result, Teer Previous Results
-- Title: `Teer Result Today Live | Shillong, Khanapara, Juwai FR SR`
-- Meta description: Check Teer Result Today live for Shillong, Khanapara, Juwai, Morning and Night Teer with fast FR SR updates, previous results and common numbers.
+## index.html
+- URL: https://teeronline.com/
+- Primary keyword: teer
+- Top mapped keywords: teer (5000000), guwahati khanapara teer result (5000000), juwai teer result (5000000), khanapara teer results (5000000), shillong teer (5000000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 57
+- Description length: 145
+- Issues: OK
 
-### juwai-morning-teer-previous-results.html
-- Primary keyword: **Juwai Morning Teer Previous Result**
-- Secondary keywords: Juwai Morning Teer Result, Juwai Morning Teer, Morning Teer Results, Juwai Teer Result Today
-- Title: `Juwai Morning Teer Previous Result | FR SR Morning Archive`
-- Meta description: Search Juwai Morning Teer previous result archive with FR SR numbers, dates, days and morning result history.
+## shillong-teer-previous-results.html
+- URL: https://teeronline.com/shillong-teer-previous-results
+- Primary keyword: shillong teer result
+- Top mapped keywords: shillong teer result (5000000), shillong result teer (5000000), shillong teer (5000000), shillong teer india (5000000), shillong teer result list (5000000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 67
+- Description length: 127
+- Issues: title-length-67
 
-### juwai-teer-previous-results.html
-- Primary keyword: **Juwai Teer Previous Result**
-- Secondary keywords: Juwai Teer Result, Juwai Teer Result Today, Juwai Teer Result List, Juwai Result, Teer Juwai
-- Title: `Juwai Teer Previous Result | Old Result List & FR SR Archive`
-- Meta description: Search Juwai Teer previous result archive with FR SR numbers, dates, days, old records and Juwai Teer result history.
+## khanapara-teer-previous-results.html
+- URL: https://teeronline.com/khanapara-teer-previous-results
+- Primary keyword: khanapara teer results
+- Top mapped keywords: khanapara teer results (5000000), guwahati khanapara teer result (5000000), teer khanapara result (5000000), khanapara shillong teer result (500000), khanapara teer (500000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 68
+- Description length: 119
+- Issues: title-length-68
 
-### khanapara-morning-teer-previous-results.html
-- Primary keyword: **Khanapara Morning Teer Previous Result**
-- Secondary keywords: Khanapara Morning Teer Result, Khanapara Teer Result Morning, Morning Teer Result, Khanapara Teer Result List
-- Title: `Khanapara Morning Teer Previous Result | FR SR Morning Archive`
-- Meta description: Search Khanapara Morning Teer previous result archive with FR SR numbers, dates, days and old morning results.
+## juwai-teer-previous-results.html
+- URL: https://teeronline.com/juwai-teer-previous-results
+- Primary keyword: juwai teer result
+- Top mapped keywords: juwai teer result (5000000), juwai teer (500000), juwai teer result today (500000), jowai ladrymbai teer (50000), jowai ladrymbai teer result (50000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 64
+- Description length: 117
+- Issues: OK
 
-### khanapara-teer-previous-results.html
-- Primary keyword: **Khanapara Teer Previous Result**
-- Secondary keywords: Khanapara Teer Result, Khanapara Teer Result List, Khanapara Previous Result, Today Khanapara Teer Result, Teer Khanapara Result
-- Title: `Khanapara Teer Previous Result | Old Result List & FR SR Archive`
-- Meta description: Search Khanapara Teer previous result archive with FR SR numbers, result list, old records, dates and day-wise history.
+## shillong-morning-teer-previous-results.html
+- URL: https://teeronline.com/shillong-morning-teer-previous-results
+- Primary keyword: shillong morning teer result
+- Top mapped keywords: shillong morning teer result (500000), morning teer (500000), morning teer results (500000), shillong morning result (500000), morning teer result shillong (50000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 61
+- Description length: 112
+- Issues: OK
 
-### shillong-morning-teer-previous-results.html
-- Primary keyword: **Shillong Morning Teer Previous Result**
-- Secondary keywords: Shillong Morning Teer Result, Shillong Teer Morning Result, Morning Teer Result Shillong, Shillong Teer Result Morning Today
-- Title: `Shillong Morning Teer Previous Result | FR SR Morning Archive`
-- Meta description: Search Shillong Morning Teer previous result archive with FR SR numbers, dates, days and morning result history.
+## khanapara-morning-teer-previous-results.html
+- URL: https://teeronline.com/khanapara-morning-teer-previous-results
+- Primary keyword: khanapara morning teer result
+- Top mapped keywords: khanapara morning teer result (50000), morning teer (500000), morning teer results (500000), sunday morning teer (50000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 62
+- Description length: 110
+- Issues: OK
 
-### shillong-night-teer-2-previous-results.html
-- Primary keyword: **Shillong Night Teer 2 Previous Result**
-- Secondary keywords: Shillong Night Teer 2, Night Teer 2, Shillong Teer Night 2, Night Teer Result List, Shillong Night Teer Result List
-- Title: `Shillong Night Teer 2 Previous Result | FR SR Night 2 Archive`
-- Meta description: Search Shillong Night Teer 2 previous result archive with FR SR numbers, date-wise old records and midnight result history.
+## juwai-morning-teer-previous-results.html
+- URL: https://teeronline.com/juwai-morning-teer-previous-results
+- Primary keyword: juwai morning teer result
+- Top mapped keywords: juwai morning teer result (500000), morning teer (500000), morning teer results (500000), juwai morning teer (50000), sunday morning teer (50000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 58
+- Description length: 109
+- Issues: OK
 
-### shillong-night-teer-previous-results.html
-- Primary keyword: **Shillong Night Teer Previous Result**
-- Secondary keywords: Shillong Night Teer Result, Night Teer Result, Shillong Teer Night Result, Night Teer Previous Result, Shillong Night Teer Result Today
-- Title: `Shillong Night Teer Previous Result | Night FR SR Archive`
-- Meta description: Search Shillong Night Teer previous result archive with night FR SR numbers, old records, dates and result history.
+## shillong-night-teer-previous-results.html
+- URL: https://teeronline.com/shillong-night-teer-previous-results
+- Primary keyword: shillong night teer result
+- Top mapped keywords: shillong night teer result (500000), night shillong teer (500000), night teer (500000), night teer result (500000), night teer shillong (500000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 57
+- Description length: 115
+- Issues: OK
 
-### shillong-teer-previous-results.html
-- Primary keyword: **Shillong Teer Previous Result**
-- Secondary keywords: Shillong Teer Result, Shillong Teer Result List, Shillong Teer Old Result, Previous Teer Result Shillong, Shillong Teer Result Today
-- Title: `Shillong Teer Previous Result | Old Result List & FR SR Archive`
-- Meta description: Search Shillong Teer previous result archive with FR SR numbers, dates, days, old result history and Shillong Teer result list.
+## shillong-night-teer-2-previous-results.html
+- URL: https://teeronline.com/shillong-night-teer-2-previous-results
+- Primary keyword: night teer result
+- Top mapped keywords: night teer result (500000), night shillong teer (500000), night teer (500000), night teer shillong (500000), shillong night result (500000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 61
+- Description length: 123
+- Issues: OK
 
-### teer-formula.html
-- Primary keyword: **Teer Formula**
-- Secondary keywords: Shillong Teer Formula, Teer Calculation Formula, Teer Groups, Teer Points, Teer Target Number
-- Title: `Teer Formula Guide | Groups, Points & Calculation Methods`
-- Meta description: Learn Teer formula basics including groups, points, digit values, examples and responsible statistical calculation methods.
+## common-numbers.html
+- URL: https://teeronline.com/common-numbers
+- Primary keyword: shillong teer common number
+- Top mapped keywords: shillong teer common number (5000000), shillong teer common no (5000000), shillong teer common number meghalaya (5000000), teer common number shillong meghalaya (5000000), teer shillong common no (5000000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 65
+- Description length: 137
+- Issues: OK
 
-### about.html
-- Primary keyword: **About TeerOnline**
-- Secondary keywords: TeerOnline, Shillong Teer Results, Khanapara Teer Results, Juwai Teer Results
-- Title: `About TeerOnline | Teer Result Platform for Shillong, Khanapara & Juwai`
-- Meta description: Learn about TeerOnline, an informational Teer result platform for Shillong, Khanapara, Juwai, Morning and Night Teer results.
+## dream-numbers.html
+- URL: https://teeronline.com/dream-numbers
+- Primary keyword: teer dream numbers
+- Top mapped keywords: teer dream numbers (50000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 70
+- Description length: 145
+- Issues: title-length-70
 
-### common-numbers.html
-- Primary keyword: **Teer Common Numbers Today**
-- Secondary keywords: Shillong Teer Common Number, Khanapara Teer Common Number, Teer Common Number Shillong Meghalaya, Teer House Number, Teer Ending Number
-- Title: `Teer Common Numbers Today | Shillong, Khanapara, Juwai Statistics`
-- Meta description: Check Teer common numbers today for Shillong, Khanapara, Juwai, Morning and Night Teer with house, ending, direct numbers and statistics.
+## teer-formula.html
+- URL: https://teeronline.com/teer-formula
+- Primary keyword: teer formula
+- Top mapped keywords: teer formula (5000), shillong teer common number (5000000), shillong teer common number meghalaya (5000000), teer common number shillong meghalaya (5000000), khanapara teer common number (500000)
+- Robots: index, follow, max-image-preview:large
+- Title length: 61
+- Description length: 123
+- Issues: OK
 
-### dream-numbers.html
-- Primary keyword: **Teer Dream Numbers**
-- Secondary keywords: Dream Number, Teer Dream Number List, Shillong Teer Dream Numbers, Khanapara Dream Number
-- Title: `Teer Dream Numbers Guide | Meaning, List & Informational Reference`
-- Meta description: Read Teer dream numbers guide with dream meanings, number references and responsible informational notes for Shillong, Khanapara and Juwai users.
+## about.html
+- URL: https://teeronline.com/about
+- Primary keyword: teeronline
+- Top mapped keywords: teeronline (0)
+- Robots: index, follow, max-image-preview:large
+- Title length: 75
+- Description length: 125
+- Issues: title-length-75
 
+## contact.html
+- URL: https://teeronline.com/contact
+- Primary keyword: contact teeronline
+- Top mapped keywords: contact teeronline (0)
+- Robots: index, follow, max-image-preview:large
+- Title length: 52
+- Description length: 166
+- Issues: OK
 
-## Next Manual QA
-- Upload optimized files to GitHub.
-- Check each page in browser for layout and JS filters.
-- Run PageSpeed after deployment.
-- Validate schema using Rich Results Test.
-- Check Search Console indexing after sitemap update.
+## privacy-policy.html
+- URL: https://teeronline.com/privacy-policy
+- Primary keyword: privacy policy
+- Top mapped keywords: privacy policy (0)
+- Robots: index, follow, max-image-preview:large
+- Title length: 27
+- Description length: 95
+- Issues: OK
+
+## terms-and-conditions.html
+- URL: https://teeronline.com/terms-and-conditions
+- Primary keyword: terms and conditions
+- Top mapped keywords: terms and conditions (0)
+- Robots: index, follow, max-image-preview:large
+- Title length: 33
+- Description length: 110
+- Issues: OK
+
+## disclaimer.html
+- URL: https://teeronline.com/disclaimer
+- Primary keyword: disclaimer
+- Top mapped keywords: disclaimer (0)
+- Robots: index, follow, max-image-preview:large
+- Title length: 23
+- Description length: 151
+- Issues: title-length-23
+
+## admin.html
+- URL: https://teeronline.com/admin
+- Primary keyword: 
+- Top mapped keywords: 
+- Robots: noindex,nofollow,noarchive,nosnippet
+- Title length: 13
+- Description length: 0
+- Issues: title-length-13, missing-description, missing-canonical
