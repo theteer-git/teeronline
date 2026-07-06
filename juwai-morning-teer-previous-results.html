@@ -138,6 +138,19 @@
   function dmy(d){return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;}
   function dayName(dateStr){const d=parseDate(dateStr);return d?['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]:'';}
 
+  function pickValue(item, keys){
+    for(const key of keys){
+      if(Object.prototype.hasOwnProperty.call(item, key) && item[key] !== null && item[key] !== undefined) return item[key];
+    }
+    return '';
+  }
+  function cleanNumber(value){
+    const v = String(value ?? '').trim().toLowerCase();
+    if(['', 'xx', 'x', '-', '—', 'na', 'n/a', 'off', 'null', 'undefined'].includes(v)) return null;
+    if(!/^\d{1,2}$/.test(v)) return null;
+    return String(Number(v)).padStart(2,'0');
+  }
+
   function extractData(raw){
     if(!Array.isArray(raw)) return [];
 
@@ -179,9 +192,9 @@
       return game === targetGame;
     })
     .map(item => {
-      const fr = cleanNumber(item.f || item.fr || item.first_round);
-      const sr = cleanNumber(item.s || item.sr || item.second_round);
-      const date = item.d || item.date || '';
+      const fr = cleanNumber(pickValue(item, ['f','fr','first_round']));
+      const sr = cleanNumber(pickValue(item, ['s','sr','second_round']));
+      const date = pickValue(item, ['d','date']);
       const d = parseDate(date);
       return d && fr !== null && sr !== null
         ? {date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(date), first_round:fr, second_round:sr}

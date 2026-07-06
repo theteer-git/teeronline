@@ -365,11 +365,40 @@
     let liveRecords = {};
     let historyRecords = [];
     function isValidNumber(value) {
-      return /^\d{1,2}$/.test(String(value || "").trim());
+      return /^\d{1,2}$/.test(String(value ?? "").trim());
     }    
     function formatNumber(value) {
       return isValidNumber(value) ? String(Number(value)).padStart(2, "0") : "XX";
     }    
+    function pickRecordValue(item, keys) {
+      for (const key of keys) {
+        if (item && Object.prototype.hasOwnProperty.call(item, key) && item[key] !== null && item[key] !== undefined) return item[key];
+      }
+      return "";
+    }
+    function normalizeResultRecord(item) {
+      if (!item || typeof item !== "object") return null;
+      const gameId = String(pickRecordValue(item, ["g", "gameId", "game_id"])).toUpperCase().trim();
+      const date = pickRecordValue(item, ["d", "date"]);
+      const fr = pickRecordValue(item, ["f", "fr", "first_round"]);
+      const sr = pickRecordValue(item, ["s", "sr", "second_round"]);
+      if (!gameId || !date) return null;
+      return {
+        ...item,
+        gameId,
+        date,
+        fr: isValidNumber(fr) ? String(Number(fr)).padStart(2, "0") : "",
+        sr: isValidNumber(sr) ? String(Number(sr)).padStart(2, "0") : "",
+        status: item.status || (isValidNumber(fr) && isValidNumber(sr) ? "completed" : isValidNumber(fr) || isValidNumber(sr) ? "partial" : "pending")
+      };
+    }
+    function normalizeResultList(data) {
+      if (Array.isArray(data)) return data.map(normalizeResultRecord).filter(Boolean);
+      if (data && Array.isArray(data.records)) return data.records.map(normalizeResultRecord).filter(Boolean);
+      if (data && data.records && typeof data.records === "object") return Object.values(data.records).map(normalizeResultRecord).filter(Boolean);
+      if (data && typeof data === "object") return Object.values(data).map(normalizeResultRecord).filter(Boolean);
+      return [];
+    }
     function parseDate(dateStr) {
       if (!dateStr) return null;
       let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
@@ -509,21 +538,25 @@
     }
 
     async function fetchLiveResults() {
-	  liveRecords = {};
-	  try {
-		const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
-		  cache: "no-store",
-		  referrerPolicy: "no-referrer"
-		});
-		if (!res.ok) return;
-		const data = await res.json();
-		if (data?.records && typeof data.records === "object") {
-		  liveRecords = data.records;
-		}
-	  } catch (e) {
-		liveRecords = {};
-	  }
-	}
+      liveRecords = {};
+      try {
+        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
+          cache: "no-store",
+          referrerPolicy: "no-referrer"
+        });
+        if (!res.ok) return;
+        const data = await res.json();
+        const list = normalizeResultList(data);
+        liveRecords = {};
+        list.forEach(item => {
+          if (!liveRecords[item.gameId] || dateValue(item.date) >= dateValue(liveRecords[item.gameId].date)) {
+            liveRecords[item.gameId] = item;
+          }
+        });
+      } catch (e) {
+        liveRecords = {};
+      }
+    }
 
     async function fetchHistoryResults() {
       // DIRECTLY load from local JSON file (primary source for history)
@@ -531,13 +564,13 @@
         const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store" });
         if (res.ok) {
           const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            // Filter to get only completed results with both FR and SR
-            historyRecords = data.filter(item => 
-              item && 
-              item.gameId && 
-              item.date && 
-              isValidNumber(item.fr) && 
+          const list = normalizeResultList(data);
+          if (list.length > 0) {
+            historyRecords = list.filter(item =>
+              item &&
+              item.gameId &&
+              item.date &&
+              isValidNumber(item.fr) &&
               isValidNumber(item.sr)
             );
             return;
