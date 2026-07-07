@@ -33,11 +33,13 @@ jobs:
 
           const API_URL = "https://teer-api-v2.maya-digital-rkn.workers.dev/latest";
 
+          // File paths
           const ALL_JSON_PATH = "data/all-results.json";
           const LATEST_JSON_PATH = "data/latest-results.json";
           const RECENT_JSON_PATH = "data/recent-results.json";
           const RECENT_PER_GAME = 10;
 
+          // Game metadata
           const GAME_MAP = {
             SHD:  { game: "shillong day", city: "Shillong", frDeclaredTime: "4:15 PM",  srDeclaredTime: "5:15 PM" },
             KH:   { game: "khanapara day", city: "Khanapara", frDeclaredTime: "4:25 PM", srDeclaredTime: "5:00 PM" },
@@ -50,8 +52,17 @@ jobs:
           };
 
           const GAME_IDS = Object.keys(GAME_MAP);
-          const SHD_2026_07_06 = { g: "SHD", d: "2026-07-06", f: "52", s: "59" };
 
+          // ============================================================
+          // CRITICAL: Historical data that MUST be preserved
+          // ============================================================
+          const PRESERVED_RECORDS = [
+            { g: "SHD", d: "2026-07-06", f: "52", s: "59" }
+          ];
+
+          // ============================================================
+          // Helper functions
+          // ============================================================
           function istNow() {
             const now = new Date();
             const ist = new Date(now.getTime() + 5.5 * 60 * 60 * 1000);
@@ -105,7 +116,23 @@ jobs:
             };
           }
 
-          function toVerboseRecord(record) {
+          // ============================================================
+          // FORMAT: all-results.json - abbreviated format
+          // { "g": "SHD", "d": "2026-07-06", "f": "52", "s": "59" }
+          // ============================================================
+          function toAllResultsFormat(record) {
+            return {
+              g: record.g,
+              d: record.d,
+              f: record.f || "",
+              s: record.s || ""
+            };
+          }
+
+          // ============================================================
+          // FORMAT: recent-results.json - verbose format with city
+          // ============================================================
+          function toRecentFormat(record) {
             const meta = GAME_MAP[record.g] || {};
             return {
               id: `${record.g}-${record.d}`,
@@ -114,9 +141,9 @@ jobs:
               gameId: record.g,
               date: record.d,
               fr: record.f || "",
-              frUpdatedAt: record.f ? "" : "",
+              frUpdatedAt: "",
               sr: record.s || "",
-              srUpdatedAt: record.s ? "" : "",
+              srUpdatedAt: "",
               frDeclaredTime: meta.frDeclaredTime || "",
               srDeclaredTime: meta.srDeclaredTime || "",
               status: record.f && record.s ? "completed" : (record.f || record.s ? "partial" : "pending"),
@@ -124,6 +151,28 @@ jobs:
             };
           }
 
+          // ============================================================
+          // FORMAT: latest-results.json - verbose format
+          // ============================================================
+          function toLatestFormat(record, date, meta) {
+            const now = istNow();
+            return {
+              id: `${record.g}-${date}`,
+              game: meta.game || record.g,
+              gameId: record.g,
+              date: date,
+              fr: record.f || "",
+              sr: record.s || "",
+              frUpdatedAt: record.f ? now : "",
+              srUpdatedAt: record.s ? now : "",
+              status: record.f && record.s ? "completed" : (record.f || record.s ? "partial" : "pending"),
+              lastCheckedAt: now
+            };
+          }
+
+          // ============================================================
+          // Load existing data
+          // ============================================================
           function loadExistingAllResults() {
             if (!fs.existsSync(ALL_JSON_PATH)) return [];
             try {
@@ -136,6 +185,20 @@ jobs:
             }
           }
 
+          function loadExistingRecentResults() {
+            if (!fs.existsSync(RECENT_JSON_PATH)) return [];
+            try {
+              const raw = JSON.parse(fs.readFileSync(RECENT_JSON_PATH, "utf8"));
+              return Array.isArray(raw) ? raw : [];
+            } catch (e) {
+              console.warn("Failed to read existing recent-results.json");
+              return [];
+            }
+          }
+
+          // ============================================================
+          // Generate recent-results.json
+          // ============================================================
           function generateRecentResults(allData) {
             const recent = [];
 
@@ -150,7 +213,7 @@ jobs:
                 )
                 .sort((a, b) => String(b.d).localeCompare(String(a.d)))
                 .slice(0, RECENT_PER_GAME)
-                .map(toVerboseRecord);
+                .map(toRecentFormat);
 
               recent.push(...records);
             }
@@ -161,42 +224,51 @@ jobs:
             });
           }
 
+          // ============================================================
+          // Ensure historical data is preserved
+          // ============================================================
           function ensureHistoricalData(map) {
-            // CRITICAL: Ensure SHD 2026-07-06 is ALWAYS preserved
-            const shdKey = "SHD-2026-07-06";
-            if (!map.has(shdKey)) {
-              map.set(shdKey, SHD_2026_07_06);
-              console.log("⚠️ Added missing SHD 2026-07-06 to all-results.json");
-            }
+            let added = 0;
             
-            // Ensure other historical data from recent-results.json is preserved
-            // This ensures that if the API stops returning historical data, we still keep it
-            // The recent-results.json file is our source of truth for recent history
-            if (fs.existsSync(RECENT_JSON_PATH)) {
-              try {
-                const recentData = JSON.parse(fs.readFileSync(RECENT_JSON_PATH, "utf8"));
-                for (const item of recentData) {
-                  const key = `${item.gameId}-${item.date}`;
-                  if (!map.has(key) && item.fr && item.sr) {
-                    map.set(key, { g: item.gameId, d: item.date, f: item.fr, s: item.sr });
-                    console.log(`✅ Preserved historical ${key} from recent-results.json`);
-                  }
-                }
-              } catch (e) {
-                console.warn("Could not read recent-results.json for preservation:", e.message);
+            // Add preserved records
+            for (const record of PRESERVED_RECORDS) {
+              const key = `${record.g}-${record.d}`;
+              if (!map.has(key)) {
+                map.set(key, { ...record });
+                added++;
+                console.log(`✅ Preserved historical: ${key}`);
               }
             }
+
+            // Preserve data from existing recent-results.json
+            const existingRecent = loadExistingRecentResults();
+            for (const item of existingRecent) {
+              const key = `${item.gameId}-${item.date}`;
+              if (!map.has(key) && item.fr && item.sr) {
+                map.set(key, { g: item.gameId, d: item.date, f: item.fr, s: item.sr });
+                added++;
+                console.log(`✅ Preserved from recent: ${key}`);
+              }
+            }
+
+            return added;
           }
 
+          // ============================================================
+          // Main function
+          // ============================================================
           async function main() {
-            console.log("Fetching from API:", API_URL);
+            console.log("🔍 Fetching from API:", API_URL);
 
+            // Ensure data directory exists
             if (!fs.existsSync("data")) fs.mkdirSync("data", { recursive: true });
             if (!fs.existsSync(ALL_JSON_PATH)) fs.writeFileSync(ALL_JSON_PATH, "[]\n");
 
+            // Load existing data
             const existing = loadExistingAllResults();
+            console.log(`📁 Existing all-results.json: ${existing.length} records`);
 
-            // Build map of ALL historical data
+            // Build map from existing data
             const map = new Map();
             for (const item of existing) {
               map.set(`${item.g}-${item.d}`, item);
@@ -230,7 +302,7 @@ jobs:
                 if (!old) {
                   map.set(key, record);
                   allChanged = true;
-                  console.log("➕ Added from API:", key);
+                  console.log(`➕ Added from API: ${key}`);
                 } else {
                   // Merge: API values override, but keep existing if API has empty
                   const merged = {
@@ -242,29 +314,42 @@ jobs:
                   if (JSON.stringify(old) !== JSON.stringify(merged)) {
                     map.set(key, merged);
                     allChanged = true;
-                    console.log("🔄 Updated from API:", key);
+                    console.log(`🔄 Updated from API: ${key}`);
                   }
                 }
               }
             }
 
             // CRITICAL: Ensure historical data is preserved
-            ensureHistoricalData(map);
+            const preservedCount = ensureHistoricalData(map);
+            if (preservedCount > 0) {
+              allChanged = true;
+              console.log(`📌 Preserved ${preservedCount} historical records`);
+            }
 
-            // Sort all data
-            const finalAllData = Array.from(map.values()).sort((a, b) => {
-              if (a.d !== b.d) return String(b.d).localeCompare(String(a.d));
-              return String(a.g).localeCompare(String(b.g));
-            });
+            // ============================================================
+            // WRITE all-results.json - abbreviated format
+            // { "g": "SHD", "d": "2026-07-06", "f": "52", "s": "59" }
+            // ============================================================
+            const finalAllData = Array.from(map.values())
+              .map(toAllResultsFormat)
+              .sort((a, b) => {
+                if (a.d !== b.d) return String(b.d).localeCompare(String(a.d));
+                return String(a.g).localeCompare(String(b.g));
+              });
 
             fs.writeFileSync(ALL_JSON_PATH, JSON.stringify(finalAllData, null, 2) + "\n");
-            console.log(`📁 all-results.json: ${finalAllData.length} records`);
+            console.log(`📁 all-results.json: ${finalAllData.length} records (abbreviated format)`);
 
-            // Build latest-results.json
+            // ============================================================
+            // WRITE latest-results.json - verbose format
+            // ============================================================
             const apiByGameId = {};
             for (const record of apiRecords) apiByGameId[record.g] = record;
 
             const latestRecords = {};
+            const now = istNow();
+            
             for (const gameId of GAME_IDS) {
               const apiRecord = apiByGameId[gameId] || null;
               const key = `${gameId}-${currentDate}`;
@@ -274,40 +359,58 @@ jobs:
               latestRecords[gameId] = {
                 id: `${gameId}-${currentDate}`,
                 game: meta.game,
-                gameId,
+                gameId: gameId,
                 date: currentDate,
                 fr: existingRecord.f || "",
                 sr: existingRecord.s || "",
-                frUpdatedAt: existingRecord.f ? istNow() : "",
-                srUpdatedAt: existingRecord.s ? istNow() : "",
+                frUpdatedAt: existingRecord.f ? now : "",
+                srUpdatedAt: existingRecord.s ? now : "",
                 status: existingRecord.f && existingRecord.s ? "completed" : (existingRecord.f || existingRecord.s ? "partial" : "pending"),
-                lastCheckedAt: istNow()
+                lastCheckedAt: now
               };
             }
 
             const latestJson = {
               date: currentDate,
-              lastUpdatedAt: apiData?.lastUpdatedAt || istNow(),
+              lastUpdatedAt: apiData?.lastUpdatedAt || now,
               records: latestRecords
             };
 
             fs.writeFileSync(LATEST_JSON_PATH, JSON.stringify(latestJson, null, 2) + "\n");
+            console.log(`📁 latest-results.json: ${Object.keys(latestRecords).length} records (verbose format)`);
 
-            // Generate recent-results.json
+            // ============================================================
+            // WRITE recent-results.json - verbose format with city
+            // ============================================================
             const recentData = generateRecentResults(finalAllData);
-            
-            // Safety check - if we have too few records, something is wrong
+
+            // Safety check
             if (recentData.length < 30) {
               console.warn(`⚠️ Recent data has only ${recentData.length} records, but continuing...`);
             }
 
             fs.writeFileSync(RECENT_JSON_PATH, JSON.stringify(recentData, null, 2) + "\n");
+            console.log(`📁 recent-results.json: ${recentData.length} records (verbose format with city)`);
 
-            console.log(`📊 Summary:`);
-            console.log(`  all-results.json: ${finalAllData.length} records`);
-            console.log(`  latest-results.json: ${Object.keys(latestRecords).length} records`);
-            console.log(`  recent-results.json: ${recentData.length} records`);
+            // ============================================================
+            // Summary
+            // ============================================================
+            console.log("\n📊 Summary:");
+            console.log(`  all-results.json: ${finalAllData.length} records (abbreviated: {g, d, f, s})`);
+            console.log(`  latest-results.json: ${Object.keys(latestRecords).length} records (verbose)`);
+            console.log(`  recent-results.json: ${recentData.length} records (verbose with city)`);
             console.log(allChanged ? "✅ JSON files updated successfully." : "⏭️ No changes detected.");
+
+            // ============================================================
+            // Verify SHD 2026-07-06 exists
+            // ============================================================
+            const shdExists = finalAllData.some(item => item.g === "SHD" && item.d === "2026-07-06");
+            if (!shdExists) {
+              console.warn("⚠️ WARNING: SHD 2026-07-06 is missing from all-results.json!");
+            } else {
+              const shdRecord = finalAllData.find(item => item.g === "SHD" && item.d === "2026-07-06");
+              console.log(`✅ SHD 2026-07-06 present: FR=${shdRecord.f}, SR=${shdRecord.s}`);
+            }
           }
 
           main().catch(error => {
