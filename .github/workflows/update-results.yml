@@ -55,9 +55,14 @@ jobs:
 
           // ============================================================
           // CRITICAL: Historical data that MUST be preserved
+          // Add ALL historical records that should never be lost
           // ============================================================
           const PRESERVED_RECORDS = [
-            { g: "SHD", d: "2026-07-06", f: "52", s: "59" }
+            { g: "SHD", d: "2026-07-06", f: "52", s: "59" },
+            { g: "SHN2", d: "2026-07-06", f: "12", s: "74" },
+            { g: "SHN1", d: "2026-07-06", f: "28", s: "10" },
+            { g: "SHM", d: "2026-07-06", f: "52", s: "59" },
+            // Add any other historical records that need to be preserved
           ];
 
           // ============================================================
@@ -118,7 +123,6 @@ jobs:
 
           // ============================================================
           // FORMAT: all-results.json - abbreviated format
-          // { "g": "SHD", "d": "2026-07-06", "f": "52", "s": "59" }
           // ============================================================
           function toAllResultsFormat(record) {
             return {
@@ -197,19 +201,19 @@ jobs:
           }
 
           // ============================================================
-          // Generate recent-results.json
+          // Generate recent-results.json - includes ALL records with values
           // ============================================================
           function generateRecentResults(allData) {
             const recent = [];
 
             for (const gameId of GAME_IDS) {
+              // Get records for this game that have at least one value (FR or SR)
               const records = allData
                 .filter(item =>
                   item &&
                   item.g === gameId &&
                   item.d &&
-                  isValidNumber(item.f) &&
-                  isValidNumber(item.s)
+                  (item.f || item.s) // Include if EITHER FR or SR has a value
                 )
                 .sort((a, b) => String(b.d).localeCompare(String(a.d)))
                 .slice(0, RECENT_PER_GAME)
@@ -244,10 +248,21 @@ jobs:
             const existingRecent = loadExistingRecentResults();
             for (const item of existingRecent) {
               const key = `${item.gameId}-${item.date}`;
-              if (!map.has(key) && item.fr && item.sr) {
-                map.set(key, { g: item.gameId, d: item.date, f: item.fr, s: item.sr });
+              if (!map.has(key) && (item.fr || item.sr)) {
+                map.set(key, { g: item.gameId, d: item.date, f: item.fr || "", s: item.sr || "" });
                 added++;
                 console.log(`✅ Preserved from recent: ${key}`);
+              }
+            }
+
+            // Preserve data from existing all-results.json
+            const existingAll = loadExistingAllResults();
+            for (const item of existingAll) {
+              const key = `${item.g}-${item.d}`;
+              if (!map.has(key) && (item.f || item.s)) {
+                map.set(key, { g: item.g, d: item.d, f: item.f || "", s: item.s || "" });
+                added++;
+                console.log(`✅ Preserved from all: ${key}`);
               }
             }
 
@@ -329,7 +344,6 @@ jobs:
 
             // ============================================================
             // WRITE all-results.json - abbreviated format
-            // { "g": "SHD", "d": "2026-07-06", "f": "52", "s": "59" }
             // ============================================================
             const finalAllData = Array.from(map.values())
               .map(toAllResultsFormat)
@@ -384,32 +398,32 @@ jobs:
             // ============================================================
             const recentData = generateRecentResults(finalAllData);
 
-            // Safety check
-            if (recentData.length < 30) {
-              console.warn(`⚠️ Recent data has only ${recentData.length} records, but continuing...`);
-            }
-
             fs.writeFileSync(RECENT_JSON_PATH, JSON.stringify(recentData, null, 2) + "\n");
             console.log(`📁 recent-results.json: ${recentData.length} records (verbose format with city)`);
 
             // ============================================================
-            // Summary
+            // Verification Summary
             // ============================================================
             console.log("\n📊 Summary:");
-            console.log(`  all-results.json: ${finalAllData.length} records (abbreviated: {g, d, f, s})`);
-            console.log(`  latest-results.json: ${Object.keys(latestRecords).length} records (verbose)`);
-            console.log(`  recent-results.json: ${recentData.length} records (verbose with city)`);
+            console.log(`  all-results.json: ${finalAllData.length} records`);
+            console.log(`  latest-results.json: ${Object.keys(latestRecords).length} records`);
+            console.log(`  recent-results.json: ${recentData.length} records`);
             console.log(allChanged ? "✅ JSON files updated successfully." : "⏭️ No changes detected.");
 
-            // ============================================================
-            // Verify SHD 2026-07-06 exists
-            // ============================================================
-            const shdExists = finalAllData.some(item => item.g === "SHD" && item.d === "2026-07-06");
-            if (!shdExists) {
-              console.warn("⚠️ WARNING: SHD 2026-07-06 is missing from all-results.json!");
-            } else {
-              const shdRecord = finalAllData.find(item => item.g === "SHD" && item.d === "2026-07-06");
-              console.log(`✅ SHD 2026-07-06 present: FR=${shdRecord.f}, SR=${shdRecord.s}`);
+            // Verify critical records
+            const criticalRecords = [
+              { g: "SHD", d: "2026-07-06", f: "52", s: "59" },
+              { g: "SHN2", d: "2026-07-06", f: "12", s: "74" }
+            ];
+
+            for (const rec of criticalRecords) {
+              const exists = finalAllData.some(item => item.g === rec.g && item.d === rec.d);
+              if (exists) {
+                const found = finalAllData.find(item => item.g === rec.g && item.d === rec.d);
+                console.log(`✅ ${rec.g} ${rec.d} present: FR=${found.f}, SR=${found.s}`);
+              } else {
+                console.warn(`⚠️ WARNING: ${rec.g} ${rec.d} is MISSING!`);
+              }
             }
           }
 
