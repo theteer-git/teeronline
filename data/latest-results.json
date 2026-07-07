@@ -1,30 +1,30 @@
 {
   "date": "2026-07-07",
-  "lastUpdatedAt": "2026-07-07T14:46:30+05:30",
+  "lastUpdatedAt": "2026-07-07T17:12:30+05:30",
   "records": {
     "SHD": {
       "id": "SHD-2026-07-07",
       "game": "shillong day",
       "gameId": "SHD",
       "date": "2026-07-07",
-      "fr": "52",
-      "sr": "",
-      "frUpdatedAt": "2026-07-07T14:49:49.146+05:30",
-      "srUpdatedAt": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-07-07T14:49:49.146+05:30"
+      "fr": "54",
+      "sr": "01",
+      "frUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "srUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     },
     "KH": {
       "id": "KH-2026-07-07",
       "game": "khanapara day",
       "gameId": "KH",
       "date": "2026-07-07",
-      "fr": "",
-      "sr": "",
-      "frUpdatedAt": "",
-      "srUpdatedAt": "",
-      "status": "pending",
-      "lastCheckedAt": "2026-07-07T14:49:49.146+05:30"
+      "fr": "91",
+      "sr": "52",
+      "frUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "srUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     },
     "JWD": {
       "id": "JWD-2026-07-07",
@@ -32,23 +32,23 @@
       "gameId": "JWD",
       "date": "2026-07-07",
       "fr": "48",
-      "sr": "",
-      "frUpdatedAt": "2026-07-07T14:49:49.146+05:30",
-      "srUpdatedAt": "",
-      "status": "partial",
-      "lastCheckedAt": "2026-07-07T14:49:49.146+05:30"
+      "sr": "92",
+      "frUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "srUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "status": "completed",
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     },
     "SHM": {
       "id": "SHM-2026-07-07",
       "game": "shillong morning",
       "gameId": "SHM",
       "date": "2026-07-07",
-      "fr": "52",
-      "sr": "59",
-      "frUpdatedAt": "2026-07-07T14:49:49.146+05:30",
-      "srUpdatedAt": "2026-07-07T14:49:49.146+05:30",
-      "status": "completed",
-      "lastCheckedAt": "2026-07-07T14:49:49.147+05:30"
+      "fr": "",
+      "sr": "",
+      "frUpdatedAt": "",
+      "srUpdatedAt": "",
+      "status": "pending",
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     },
     "KHM": {
       "id": "KHM-2026-07-07",
@@ -57,10 +57,10 @@
       "date": "2026-07-07",
       "fr": "49",
       "sr": "75",
-      "frUpdatedAt": "2026-07-07T14:49:49.147+05:30",
-      "srUpdatedAt": "2026-07-07T14:49:49.147+05:30",
+      "frUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "srUpdatedAt": "2026-07-07T17:43:55.559+05:30",
       "status": "completed",
-      "lastCheckedAt": "2026-07-07T14:49:49.147+05:30"
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     },
     "JWM": {
       "id": "JWM-2026-07-07",
@@ -69,34 +69,34 @@
       "date": "2026-07-07",
       "fr": "61",
       "sr": "26",
-      "frUpdatedAt": "2026-07-07T14:49:49.147+05:30",
-      "srUpdatedAt": "2026-07-07T14:49:49.147+05:30",
+      "frUpdatedAt": "2026-07-07T17:43:55.559+05:30",
+      "srUpdatedAt": "2026-07-07T17:43:55.559+05:30",
       "status": "completed",
-      "lastCheckedAt": "2026-07-07T14:49:49.147+05:30"
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     },
     "SHN1": {
       "id": "SHN1-2026-07-07",
       "game": "Shillong Night",
       "gameId": "SHN1",
       "date": "2026-07-07",
-      "fr": "28",
-      "sr": "10",
-      "frUpdatedAt": "2026-07-07T14:49:49.147+05:30",
-      "srUpdatedAt": "2026-07-07T14:49:49.147+05:30",
-      "status": "completed",
-      "lastCheckedAt": "2026-07-07T14:49:49.147+05:30"
+      "fr": "",
+      "sr": "",
+      "frUpdatedAt": "",
+      "srUpdatedAt": "",
+      "status": "pending",
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     },
     "SHN2": {
       "id": "SHN2-2026-07-07",
       "game": "Shillong Night 2",
       "gameId": "SHN2",
       "date": "2026-07-07",
-      "fr": "12",
-      "sr": "74",
-      "frUpdatedAt": "2026-07-07T14:49:49.147+05:30",
-      "srUpdatedAt": "2026-07-07T14:49:49.147+05:30",
-      "status": "completed",
-      "lastCheckedAt": "2026-07-07T14:49:49.147+05:30"
+      "fr": "",
+      "sr": "",
+      "frUpdatedAt": "",
+      "srUpdatedAt": "",
+      "status": "pending",
+      "lastCheckedAt": "2026-07-07T17:43:55.559+05:30"
     }
   }
 }
