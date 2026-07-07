@@ -75,6 +75,21 @@
     "lastCheckedAt": ""
   },
   {
+    "id": "SHD-2026-07-06",
+    "game": "shillong day",
+    "city": "Shillong",
+    "gameId": "SHD",
+    "date": "2026-07-06",
+    "fr": "52",
+    "frUpdatedAt": "",
+    "sr": "59",
+    "srUpdatedAt": "",
+    "frDeclaredTime": "4:15 PM",
+    "srDeclaredTime": "5:15 PM",
+    "status": "completed",
+    "lastCheckedAt": ""
+  },
+  {
     "id": "SHM-2026-07-06",
     "game": "shillong morning",
     "city": "Shillong",
@@ -1121,21 +1136,6 @@
     "srUpdatedAt": "",
     "frDeclaredTime": "4:25 PM",
     "srDeclaredTime": "5:00 PM",
-    "status": "completed",
-    "lastCheckedAt": ""
-  },
-  {
-    "id": "SHD-2026-06-25",
-    "game": "shillong day",
-    "city": "Shillong",
-    "gameId": "SHD",
-    "date": "2026-06-25",
-    "fr": "95",
-    "frUpdatedAt": "",
-    "sr": "17",
-    "srUpdatedAt": "",
-    "frDeclaredTime": "4:15 PM",
-    "srDeclaredTime": "5:15 PM",
     "status": "completed",
     "lastCheckedAt": ""
   },
