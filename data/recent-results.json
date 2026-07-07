@@ -75,6 +75,21 @@
     "lastCheckedAt": ""
   },
   {
+    "id": "SHN1-2026-07-07",
+    "game": "Shillong Night",
+    "city": "Shillong",
+    "gameId": "SHN1",
+    "date": "2026-07-07",
+    "fr": "79",
+    "frUpdatedAt": "",
+    "sr": "",
+    "srUpdatedAt": "",
+    "frDeclaredTime": "8:45 PM",
+    "srDeclaredTime": "9:45 PM",
+    "status": "partial",
+    "lastCheckedAt": ""
+  },
+  {
     "id": "JWM-2026-07-06",
     "game": "juwai morning",
     "city": "Juwai",
@@ -1076,21 +1091,6 @@
     "srUpdatedAt": "",
     "frDeclaredTime": "10:30 AM",
     "srDeclaredTime": "11:30 AM",
-    "status": "completed",
-    "lastCheckedAt": ""
-  },
-  {
-    "id": "SHN1-2026-06-27",
-    "game": "Shillong Night",
-    "city": "Shillong",
-    "gameId": "SHN1",
-    "date": "2026-06-27",
-    "fr": "26",
-    "frUpdatedAt": "",
-    "sr": "94",
-    "srUpdatedAt": "",
-    "frDeclaredTime": "8:45 PM",
-    "srDeclaredTime": "9:45 PM",
     "status": "completed",
     "lastCheckedAt": ""
   },
