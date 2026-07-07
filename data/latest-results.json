@@ -1,6 +1,6 @@
 {
   "date": "2026-07-07",
-  "lastUpdatedAt": "2026-07-07T10:31:07+05:30",
+  "lastUpdatedAt": "2026-07-07T10:43:30+05:30",
   "records": {
     "SHM": {
       "id": "SHM-2026-07-07",
@@ -30,23 +30,23 @@
       ]
     },
     "JWM": {
-      "id": "JWM-2026-07-06",
+      "id": "JWM-2026-07-07",
       "game": "Juwai Morning",
       "gameId": "JWM",
-      "date": "2026-07-06",
-      "fr": "14",
-      "sr": "29",
-      "frUpdatedAt": "2026-07-06T10:46:38+05:30",
-      "srUpdatedAt": "2026-07-06T11:43:32+05:30",
-      "frLastCheckedAt": "2026-07-06T11:43:32+05:30",
-      "srLastCheckedAt": "2026-07-06T11:43:32+05:30",
-      "status": "completed",
-      "lastCheckedAt": "2026-07-06T11:43:32+05:30",
+      "date": "2026-07-07",
+      "fr": "61",
+      "sr": "",
+      "frUpdatedAt": "2026-07-07T10:43:30+05:30",
+      "srUpdatedAt": "",
+      "frLastCheckedAt": "2026-07-07T10:43:30+05:30",
+      "srLastCheckedAt": "",
+      "status": "partial",
+      "lastCheckedAt": "2026-07-07T10:43:30+05:30",
       "verificationStatus": "single_source",
       "verificationDecision": "single_source",
       "confidence": {
         "fr": 100,
-        "sr": 100
+        "sr": 0
       },
       "conflicts": {
         "fr": false,
