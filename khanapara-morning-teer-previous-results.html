@@ -454,7 +454,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 <button class="reset-btn" id="resetFilters">⟳ Reset</button>
 </div>
 </div>
-<div class="loading-spinner" id="loadingIndicator" style="display: none;">📡 Loading Khanapara Morning results from ./data/all-results.json ...</div>
+<div class="loading-spinner" id="loadingIndicator" style="display: none;">📡 Loading Khanapara Morning results from data ...</div>
 <div class="error-message" id="errorMessage" style="display: none;"></div>
 <div class="filter-status">
 <div class="results-count" id="resultsCount">📊 Loading...</div>
@@ -481,7 +481,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 <h2>Khanapara Morning Teer Advanced Search - Working Filters</h2>
 <p><strong>How to use:</strong> Enter any number between 00-99, select a date from the calendar, choose a day of week, and/or filter by specific round. Click "Apply Filters" to see matching results. All filters work together!</p>
 <p><strong>Example searches:</strong> Find all dates where number 45 appeared in First Round, or see all Tuesday results where number 12 appeared in Second Round.</p>
-<p><strong>Data source:</strong> Data loaded from <code>./data/all-results.json</code> where <strong>game = "khanapara morning"</strong>.</p>
+<p><strong>Data source:</strong> Data loaded from <code>data</code> where <strong>game = "khanapara morning"</strong>.</p>
 </div>
 <section aria-labelledby="onpage-seo-heading" class="seo-content onpage-seo-block">
 <h2 id="onpage-seo-heading">Khanapara Morning Teer Previous Result - Complete Guide</h2>
@@ -646,8 +646,8 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
   function resetFilters(){ numberSearch.value=''; dateCalendar.value=''; daySearch.value=''; roundSearch.value=''; currentData=originalData.slice(); currentPage=1; renderTable(); }
   async function loadData(){
     try{
-      const res = await fetch('./data/all-results.json', {cache:'default'});
-      if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at ./data/all-results.json`);
+      const res = await fetch('https://live.teeronline.com/data/all-results.json', {cache:'default'});
+      if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at https://live.teeronline.com/data/all-results.json`);
       originalData = extractData(await res.json()).sort((a,b) => parseDate(b.date) - parseDate(a.date));
       if(!originalData.length) throw new Error(`No valid "${GAME_NAME}" records found. Please check your data file.`);
       currentData = originalData.slice();
@@ -655,7 +655,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
       loadingDiv.hidden = true; loadingDiv.style.display = 'none'; renderTable();
     }catch(err){
       loadingDiv.hidden = true; loadingDiv.style.display = 'none'; errorDiv.hidden = false; errorDiv.style.display = 'block';
-      errorDiv.innerHTML = `<strong>❌ Failed to load ./data/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+      errorDiv.innerHTML = `<strong>❌ Failed to load https://live.teeronline.com/data/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
       resultsCount.textContent = '📊 Error loading data'; tbody.innerHTML = '<tr><td colspan="4">Unable to load results.</td></tr>';
     }
   }

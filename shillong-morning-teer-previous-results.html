@@ -453,7 +453,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 <button class="reset-btn" id="resetFilters">⟳ Reset</button>
 </div>
 </div>
-<div class="loading-spinner" id="loadingIndicator" style="display: none;">📡 Loading Shillong Morning results from ./data/all-results.json ...</div>
+<div class="loading-spinner" id="loadingIndicator" style="display: none;">📡 Loading Shillong Morning results from data ...</div>
 <div class="error-message" id="errorMessage" style="display: none;"></div>
 <div class="filter-status">
 <div class="results-count" id="resultsCount">📊 Loading...</div>
@@ -482,7 +482,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 <p>The <strong>Shillong Morning Teer Previous Result</strong> archive includes thousands of records. With our DataTables-powered interface, you can sort columns ascending or descending, and paginate through results seamlessly. The search by number feature is particularly useful for enthusiasts who want to see how often a specific number appeared in Morning First Round or Morning Second Round.</p>
 <p><strong>How to use:</strong> Enter a number (e.g., 45) in the number search box to see all dates where that number appeared in either FR or SR. Use the calendar picker to select a specific date - the calendar will only show dates that exist in our database. The day filter lets you analyze results for particular weekdays. All filters work together – you can search for number 23 on Mondays!</p>
 <p><strong>Equal width columns:</strong> All four columns (Date, Day, Morning First Round, Morning Second Round) have equal width for balanced presentation and easy scanning.</p>
-<p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data/all-results.json</code> and filtered to display only <strong>"game": "shillong morning"</strong> records. This ensures accurate and reliable search results for Shillong Morning Teer enthusiasts.</p>
+<p>All data is fetched from <code style="background: var(--bg); padding: 0.2rem 0.4rem; border-radius: 0.3rem;">data</code> and filtered to display only <strong>"game": "shillong morning"</strong> records. This ensures accurate and reliable search results for Shillong Morning Teer enthusiasts.</p>
 </div>
 <section aria-labelledby="onpage-seo-heading" class="seo-content onpage-seo-block">
 <h2 id="onpage-seo-heading">Shillong Morning Teer Previous Result - Complete Guide</h2>
@@ -647,8 +647,8 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
   function resetFilters(){ numberSearch.value=''; dateCalendar.value=''; daySearch.value=''; roundSearch.value=''; currentData=originalData.slice(); currentPage=1; renderTable(); }
   async function loadData(){
     try{
-      const res = await fetch('./data/all-results.json', {cache:'default'});
-      if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at ./data/all-results.json`);
+      const res = await fetch('https://live.teeronline.com/data/all-results.json', {cache:'default'});
+      if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at https://live.teeronline.com/data/all-results.json`);
       originalData = extractData(await res.json()).sort((a,b) => parseDate(b.date) - parseDate(a.date));
       if(!originalData.length) throw new Error(`No valid "${GAME_NAME}" records found. Please check your data file.`);
       currentData = originalData.slice();
@@ -656,7 +656,7 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
       loadingDiv.hidden = true; loadingDiv.style.display = 'none'; renderTable();
     }catch(err){
       loadingDiv.hidden = true; loadingDiv.style.display = 'none'; errorDiv.hidden = false; errorDiv.style.display = 'block';
-      errorDiv.innerHTML = `<strong>❌ Failed to load ./data/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+      errorDiv.innerHTML = `<strong>❌ Failed to load https://live.teeronline.com/data/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
       resultsCount.textContent = '📊 Error loading data'; tbody.innerHTML = '<tr><td colspan="4">Unable to load results.</td></tr>';
     }
   }
