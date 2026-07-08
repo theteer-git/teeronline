@@ -301,21 +301,30 @@
         
         // After 6:45 PM, show today's live record (even if partial)
         if (live.date === today) {
-          return live;
-        }
-      }
-      
-      // For all other games, use live record first
-      if (live.date === today && (isValidNumber(live.fr) || isValidNumber(live.sr))) {
-        return live;
-      }
-      
-      // Fallback to history
-      const historyItems = historyRecords
-        .filter(item => item && item.gameId === gameId && item.date)
-        .sort((a, b) => dateValue(b.date) - dateValue(a.date));      
-      return historyItems[0] || {};
-    }
+				  return live;
+				}
+			  }
+			  if (gameId === "SHN2") {
+		  const today = todayISTDate();
+		  const currentMinutes = getISTTimeInMinutes();
+
+		  if (
+			live.date === today &&
+			isValidNumber(live.fr) &&
+			isValidNumber(live.sr) &&
+			currentMinutes <= 5 * 60 + 30
+		  ) {
+			return {
+			  ...live,
+			  date: new Date(new Date(today + "T00:00:00").getTime() - 86400000)
+				.toLocaleDateString("en-CA")
+			};
+		  }
+
+		  if (live.date === today && (isValidNumber(live.fr) || isValidNumber(live.sr))) {
+			return live;
+		  }
+		}
 
     function findHistoryRecords(gameId) {
       const today = todayISTDate();
@@ -369,51 +378,27 @@
       }
     }
     async function fetchHistoryResults() {
-      historyRecords = [];
-      // Try primary history file first (most reliable)
-      try {
-        const res = await fetch(`${HISTORY_JSON_URL}?v=${Date.now()}`, { cache: "no-store", referrerPolicy: "no-referrer" });
-        if (res.ok) {
-          const data = await res.json();
-          const list = normalizeResultList(data)
-            .filter(item =>
-              item &&
-              item.gameId &&
-              item.date &&
-              isValidNumber(item.fr) &&
-              isValidNumber(item.sr)
-            )
-            .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-          if (list.length > 0) {
-            historyRecords = list;
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn("Primary history load failed:", e);
-      }
-
-      // Fallback to all-results.json if primary fails or returns empty
-      try {
-        const res = await fetch(`${ALL_RESULTS_JSON_URL}?v=${Date.now()}`, { cache: "no-store", referrerPolicy: "no-referrer" });
-        if (!res.ok) return;
-        const data = await res.json();
-        const list = normalizeResultList(data)
-          .filter(item =>
-            item &&
-            item.gameId &&
-            item.date &&
-            isValidNumber(item.fr) &&
-            isValidNumber(item.sr)
-          )
-          .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-        if (list.length > 0) {
-          historyRecords = list;
-        }
-      } catch (e) {
-        console.warn("Fallback history load failed:", e);
-      }
-    }
+	  historyRecords = [];
+	  try {
+		const res = await fetch(`${ALL_RESULTS_JSON_URL}?v=${Date.now()}`, {
+		  cache: "no-store",
+		  referrerPolicy: "no-referrer"
+		});
+		if (!res.ok) return;
+		const data = await res.json();
+		historyRecords = normalizeResultList(data)
+		  .filter(item =>
+			item &&
+			item.gameId &&
+			item.date &&
+			isValidNumber(item.fr) &&
+			isValidNumber(item.sr)
+		  )
+		  .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+	  } catch (e) {
+		console.warn("History load failed:", e);
+	  }
+	}
 
     function renderDashboard() {
       const dashboard = document.getElementById("gameDashboard");
