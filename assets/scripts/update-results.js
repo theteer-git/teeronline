@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const cheerio = require("cheerio");
-
+const { updateResultsSitemap } = require("./sitemapUpdater.js");
 const DATA_FILE = path.join(__dirname, "../../data/all-results.json");
 const RECENT_FILE = path.join(__dirname, "../../data/recent-results.json");
 const LATEST_FILE = path.join(__dirname, "../../data/latest-results.json");
@@ -224,6 +224,7 @@ function parseElementorGame(titleText) {
 async function main() {
   const data = loadData();
   let changed = false;
+  const updatedGames = [];
   for (const game of GAMES) {
     const todayRecord = findTodayRecord(data, game);
     if (isComplete(todayRecord)) {
@@ -236,20 +237,27 @@ async function main() {
       const result = game.parser(html);
       console.log(`${game.game}: FR=${result.fr || "-"} SR=${result.sr || "-"}`);
       if (!result.fr && !result.sr) continue;
-      if (updateRecord(data, game, result)) changed = true;
+      if (updateRecord(data, game, result)) {
+		  changed = true;
+		  updatedGames.push(game.gameId);
+		}
     } catch (error) {
       console.log(`Failed ${game.game}: ${error.message}`);
     }
   }
   if (changed) {
-    saveData(data);
-    console.log("all-results.json updated in compact public schema.");
-  } else {
-    console.log("No new result changes.");
-  }
-  saveRecentResults(data);
-  saveLatestResults(data);
-  console.log("recent-results.json and latest-results.json rebuilt.");
+		saveData(data);
+		updateResultsSitemap(updatedGames);
+		console.log(
+		"Updated:",
+		updatedGames.join(", ")
+	  );
+	} else {
+		console.log("No new result changes.");
+	  }
+	saveRecentResults(data);
+	saveLatestResults(data);
+	console.log("recent-results.json and latest-results.json rebuilt.");
 }
 
 main().catch(error => {
