@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const axios = require("axios");
 const cheerio = require("cheerio");
-const { updateResultsSitemap } = require("./sitemapUpdater.js");
+const { updateSitemaps } = require("./sitemapUpdater.js");
 const DATA_FILE = path.join(__dirname, "../../data/all-results.json");
 const RECENT_FILE = path.join(__dirname, "../../data/recent-results.json");
 const LATEST_FILE = path.join(__dirname, "../../data/latest-results.json");
@@ -247,7 +247,10 @@ async function main() {
   }
   if (changed) {
 		saveData(data);
-		updateResultsSitemap(updatedGames);
+		updateSitemaps({
+		  updatedGames,
+		  commonChanged: false
+		});
 		console.log(
 		"Updated:",
 		updatedGames.join(", ")
