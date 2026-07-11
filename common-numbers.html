@@ -81,7 +81,25 @@ function dayOf(s){const d=parseDate(s);return d?DAYS[d.getDay()]:''}
 function valid(n){const c=String(n??'').trim().toLowerCase(),x=parseInt(c,10);return !isNaN(x)&&x>=0&&x<=99&&!['xx','x','off','—','-','na','n/a','null','undefined',''].includes(c)}
 function pad2(n){return valid(n)?String(parseInt(n,10)).padStart(2,'0'):'XX'}
 function esc(s){return String(s??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]))}
-async function fetchData(){const bucket=Math.floor(Date.now()/60000);const paths=['https://live.teeronline.com/data/all-results.json'];for(const path of paths){try{const r=await fetch(path+'?v='+bucket,{cache:'default'});if(r.ok)return await r.json()}catch(e){}}throw Error('Unable to load data')}
+async function fetchData(){
+  const paths=[
+    'https://results.teeronline.com/all-results.json'
+  ];
+
+  for(const path of paths){
+    try{
+      const r=await fetch(path,{
+        cache:'default'
+      });
+
+      if(r.ok){
+        return await r.json();
+      }
+    }catch(e){}
+  }
+
+  throw Error('Unable to load data');
+}}
 function pickRecordValue(it,keys){for(const k of keys){if(Object.prototype.hasOwnProperty.call(it,k)&&it[k]!==null&&it[k]!==undefined)return it[k]}return ''}
 function resultsFor(data,g){const names=g.names.map(x=>x.toLowerCase());return data.filter(it=>String(pickRecordValue(it,['g','gameId','game_id'])).trim().toUpperCase()===g.gameId||names.includes(String(pickRecordValue(it,['game'])).trim().toLowerCase())).map(it=>{const date=pickRecordValue(it,['d','date']);return{date,fr:pickRecordValue(it,['f','fr','first_round']),sr:pickRecordValue(it,['s','sr','second_round']),day:dayOf(date)}}).filter(x=>x.date&&valid(x.fr)&&valid(x.sr)).sort(sortDate)}
 function comp(d){return d<=4?d+5:d-5}

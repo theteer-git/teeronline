@@ -643,8 +643,8 @@ body.dark .nav-links a,body.dark .related-links a,body.dark .quick-links a,body.
   function resetFilters(){ numberSearch.value=''; dateCalendar.value=''; daySearch.value=''; roundSearch.value=''; currentData=originalData.slice(); currentPage=1; renderTable(); }
   async function loadData(){
     try{
-      const res = await fetch('https://live.teeronline.com/data/all-results.json', {cache:'default'});
-      if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at https://live.teeronline.com/data/all-results.json`);
+      const res = await fetch('https://results.teeronline.com/all-results.json', {cache:'default'});
+      if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at https://results.teeronline.com/all-results.json`);
       originalData = extractData(await res.json()).sort((a,b) => parseDate(b.date) - parseDate(a.date));
       if(!originalData.length) throw new Error(`No valid "${GAME_NAME}" records found. Please check your data file.`);
       currentData = originalData.slice();
@@ -652,7 +652,7 @@ body.dark .nav-links a,body.dark .related-links a,body.dark .quick-links a,body.
       loadingDiv.hidden = true; loadingDiv.style.display = 'none'; renderTable();
     }catch(err){
       loadingDiv.hidden = true; loadingDiv.style.display = 'none'; errorDiv.hidden = false; errorDiv.style.display = 'block';
-      errorDiv.innerHTML = `<strong>❌ Failed to load https://live.teeronline.com/data/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+      errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
       resultsCount.textContent = '📊 Error loading data'; tbody.innerHTML = '<tr><td colspan="4">Unable to load results.</td></tr>';
     }
   }

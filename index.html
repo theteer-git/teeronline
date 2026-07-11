@@ -127,9 +127,9 @@
 </footer>
 <script>
   (function(){
-    const LIVE_JSON_URL = "https://live.teeronline.com/data/latest-results.json";
-    const HISTORY_JSON_URL = "https://live.teeronline.com/data/recent-results.json";
-    const ALL_RESULTS_JSON_URL = "https://live.teeronline.com/data/all-results.json";
+    const LIVE_JSON_URL = "https://results.teeronline.com/latest-results.json";
+    const HISTORY_JSON_URL = "https://results.teeronline.com/recent-results.json";
+    const ALL_RESULTS_JSON_URL = "https://results.teeronline.com/all-results.json";
     const games = [
       {title:"Shillong Morning Teer Results",gameId:"SHM",defaultFrTime:"10:30 AM",previousUrl:"./shillong-morning-teer-previous-results"},
       {title:"Juwai Morning Teer Results",gameId:"JWM",defaultFrTime:"10:30 AM",previousUrl:"./juwai-morning-teer-previous-results"},
@@ -349,45 +349,89 @@
       return rows.join("");
     }
     async function fetchLiveResults() {
-      liveRecords = {};
-      try {
-        const res = await fetch(`${LIVE_JSON_URL}?v=${Date.now()}`, {
-          cache: "no-store",
-          referrerPolicy: "no-referrer"
-        });
-        if (!res.ok) return;
-        const data = await res.json();
-        const list = normalizeResultList(data);
-        liveRecords = {};
-        list.forEach(item => {
-          if (!liveRecords[item.gameId] || dateValue(item.date) >= dateValue(liveRecords[item.gameId].date)) {
-            liveRecords[item.gameId] = item;
-          }
-        });
-      } catch (e) {
-        liveRecords = {};
-      }
-    }
-    async function fetchHistoryResults() {
-	  historyRecords = [];
+	  liveRecords = {};
+
 	  try {
-		const res = await fetch(`${ALL_RESULTS_JSON_URL}?v=${Date.now()}`, {
-		  cache: "no-store",
+		const res = await fetch(LIVE_JSON_URL, {
+		  cache: "default",
 		  referrerPolicy: "no-referrer"
 		});
-		if (!res.ok) return;
+
+		if (!res.ok) {
+		  return;
+		}
+
 		const data = await res.json();
-		historyRecords = normalizeResultList(data)
-		  .filter(item =>
-			item &&
-			item.gameId &&
-			item.date &&
-			isValidNumber(item.fr) &&
-			isValidNumber(item.sr)
-		  )
-		  .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-	  } catch (e) {
-		console.warn("History load failed:", e);
+		const list = normalizeResultList(data);
+
+		liveRecords = {};
+
+		list.forEach(function(item) {
+		  const existing =
+			liveRecords[item.gameId];
+
+		  if (
+			!existing ||
+			dateValue(item.date) >=
+			  dateValue(existing.date)
+		  ) {
+			liveRecords[item.gameId] =
+			  item;
+		  }
+		});
+	  } catch (error) {
+		console.warn(
+		  "Live result load failed:",
+		  error
+		);
+
+		liveRecords = {};
+	  }
+	}
+
+	async function fetchHistoryResults() {
+	  historyRecords = [];
+
+	  try {
+		const res =
+		  await fetch(
+			HISTORY_JSON_URL,
+			{
+			  cache: "default",
+			  referrerPolicy: "no-referrer"
+			}
+		  );
+
+		if (!res.ok) {
+		  return;
+		}
+
+		const data = await res.json();
+
+		historyRecords =
+		  normalizeResultList(data)
+			.filter(function(item) {
+			  return (
+				item &&
+				item.gameId &&
+				item.date &&
+				isValidNumber(item.fr) &&
+				isValidNumber(item.sr)
+			  );
+			})
+			.sort(function(a, b) {
+			  return (
+				dateValue(b.date) -
+				dateValue(a.date)
+			  );
+			});
+	  } catch (error) {
+		console.warn(
+		  "History load failed:",
+		  error
+		);
+
+		historyRecords = [];
 	  }
 	}
 
