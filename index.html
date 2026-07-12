@@ -129,6 +129,7 @@
   (function(){
     const LIVE_JSON_URL = "https://results.teeronline.com/latest-results.json";
     const HISTORY_JSON_URL = "https://results.teeronline.com/recent-results.json";
+    const POLLING_PLAN_URL = "https://results.teeronline.com/polling-plan.json";
     const games = [
       {title:"Shillong Morning Teer Results",gameId:"SHM",defaultFrTime:"10:30 AM",previousUrl:"./shillong-morning-teer-previous-results"},
       {title:"Juwai Morning Teer Results",gameId:"JWM",defaultFrTime:"10:30 AM",previousUrl:"./juwai-morning-teer-previous-results"},
@@ -145,7 +146,13 @@
     // One in-flight Promise per resource prevents duplicate concurrent requests.
     let loadingLatest = null;
     let loadingHistory = null;
+    let loadingPlan = null;
     let loadingAll = null;
+
+    const PLAN_REFRESH_MS = 60000;
+    let resultPollTimer = null;
+    let planRefreshTimer = null;
+    let currentPollingPlan = null;
 
     // Stores the last HTML-driving signature for each game.
     // A game row is replaced only when its visible data changes.
@@ -830,6 +837,88 @@
       }
     }
 
+    async function fetchPollingPlan() {
+      if (loadingPlan) return loadingPlan;
+
+      loadingPlan = (async () => {
+        try {
+          const response = await fetch(POLLING_PLAN_URL, {
+            cache: "default",
+            referrerPolicy: "no-referrer"
+          });
+
+          if (!response.ok) {
+            throw new Error(`Polling plan request failed with ${response.status}`);
+          }
+
+          const plan = await response.json();
+          currentPollingPlan = plan && typeof plan === "object" ? plan : null;
+          return currentPollingPlan;
+        } catch (error) {
+          console.warn("Polling plan load failed:", error);
+          return currentPollingPlan;
+        }
+      })();
+
+      try {
+        return await loadingPlan;
+      } finally {
+        loadingPlan = null;
+      }
+    }
+
+    function stopResultPolling() {
+      if (resultPollTimer !== null) {
+        clearInterval(resultPollTimer);
+        resultPollTimer = null;
+      }
+    }
+
+    function applyPollingPlan(plan) {
+      stopResultPolling();
+
+      if (
+        document.visibilityState !== "visible" ||
+        !plan ||
+        plan.mode !== "result-window" ||
+        Number(plan.intervalMs) !== 5000
+      ) {
+        return;
+      }
+
+      resultPollTimer = window.setInterval(() => {
+        if (document.visibilityState !== "visible") {
+          stopResultPolling();
+          return;
+        }
+
+        void loadAll(false);
+      }, 5000);
+    }
+
+    async function refreshPollingPlan() {
+      const plan = await fetchPollingPlan();
+      applyPollingPlan(plan);
+      return plan;
+    }
+
+    function startPlanRefreshLoop() {
+      if (planRefreshTimer !== null) return;
+
+      planRefreshTimer = window.setInterval(() => {
+        if (document.visibilityState === "visible") {
+          void refreshPollingPlan();
+        }
+      }, PLAN_REFRESH_MS);
+    }
+
+    function stopPlanRefreshLoop() {
+      if (planRefreshTimer !== null) {
+        clearInterval(planRefreshTimer);
+        planRefreshTimer = null;
+      }
+    }
+
     async function loadAll(showLoading = false) {
       if (loadingAll) return loadingAll;
 
@@ -900,16 +989,35 @@
     initDarkMode();
 
     function startDataLoad() {
-	  const start = async () => {
-		await loadAll(false);
-	  };
+      const start = async () => {
+        await loadAll(false);
+        await refreshPollingPlan();
+        startPlanRefreshLoop();
+      };
 
-	  if ("requestIdleCallback" in window) {
-		requestIdleCallback(start, { timeout: 500 });
-	  } else {
-		setTimeout(start, 300);
-	  }
-	}
+      if ("requestIdleCallback" in window) {
+        requestIdleCallback(start, { timeout: 500 });
+      } else {
+        setTimeout(start, 300);
+      }
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        stopResultPolling();
+        stopPlanRefreshLoop();
+        return;
+      }
+
+      void loadAll(false);
+      void refreshPollingPlan();
+      startPlanRefreshLoop();
+    });
+
+    window.addEventListener("pagehide", () => {
+      stopResultPolling();
+      stopPlanRefreshLoop();
+    }, { once: true });
 
     if (document.readyState === "complete") {
       startDataLoad();
