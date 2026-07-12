@@ -1,35 +1,60 @@
 /**
  * Phase XIX: build only the high-refresh pages for Cloudflare Pages.
  */
-const fs = require('node:fs');
-const path = require('node:path');
+const fs = require("node:fs");
+const path = require("node:path");
 
 const root = process.cwd();
-const output = path.join(root, 'dist-pages');
-const required = ['index.html', 'common-numbers.html', '404.html', 'sw.js'];
+const output = path.join(root, "dist-pages");
+
+const filesToCopy = [
+  "index.html",
+  "common-numbers.html",
+  "404.html",
+  "sw.js",
+  "logo.webp",
+  "site.webmanifest",
+  "favicon.ico",
+  "favicon-16x16.png",
+  "favicon-32x32.png",
+  "apple-touch-icon.png"
+];
 
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
 
-for (const filename of required) {
+for (const filename of filesToCopy) {
   const source = path.join(root, filename);
+  const destination = path.join(output, filename);
+
   if (!fs.existsSync(source)) {
-    throw new Error(`Missing required source file: ${filename}`);
+    console.warn(`Skipping missing file: ${filename}`);
+    continue;
   }
-  fs.copyFileSync(source, path.join(output, filename));
+
+  fs.copyFileSync(source, destination);
 }
 
 fs.writeFileSync(
-  path.join(output, '_headers'),
-  `/*\n  Cache-Control: public, max-age=0, must-revalidate\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n\n/sw.js\n  Cache-Control: no-cache, no-store, must-revalidate\n`,
-  'utf8'
+  path.join(output, "_headers"),
+`/*
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/sw.js
+  Cache-Control: no-cache, no-store, must-revalidate
+`,
+  "utf8"
 );
 
 fs.writeFileSync(
-  path.join(output, '_redirects'),
-  `/index.html / 301\n/common-numbers.html /common-numbers 301\n`,
-  'utf8'
+  path.join(output, "_redirects"),
+`/index.html / 301
+/common-numbers.html /common-numbers 301
+`,
+  "utf8"
 );
 
-console.log('Cloudflare Pages split output created in dist-pages/');
-console.log('Included: index.html, common-numbers.html, 404.html, sw.js, _headers, _redirects');
+console.log("Cloudflare Pages split output created in dist-pages/");
+console.log("Included available files plus _headers and _redirects.");
