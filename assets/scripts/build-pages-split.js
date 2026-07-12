@@ -1,13 +1,12 @@
 /**
- * Phase XIX: build only the two high-refresh pages for Cloudflare Pages.
- * The source of truth remains the existing GitHub repository.
+ * Phase XIX: build only the high-refresh pages for Cloudflare Pages.
  */
 const fs = require('node:fs');
 const path = require('node:path');
 
 const root = process.cwd();
 const output = path.join(root, 'dist-pages');
-const required = ['index.html', 'common-numbers.html', '404.html'];
+const required = ['index.html', 'common-numbers.html', '404.html', 'sw.js'];
 
 fs.rmSync(output, { recursive: true, force: true });
 fs.mkdirSync(output, { recursive: true });
@@ -22,7 +21,7 @@ for (const filename of required) {
 
 fs.writeFileSync(
   path.join(output, '_headers'),
-  `/*\n  Cache-Control: public, max-age=0, must-revalidate\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n`,
+  `/*\n  Cache-Control: public, max-age=0, must-revalidate\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n\n/sw.js\n  Cache-Control: no-cache, no-store, must-revalidate\n`,
   'utf8'
 );
 
@@ -33,4 +32,4 @@ fs.writeFileSync(
 );
 
 console.log('Cloudflare Pages split output created in dist-pages/');
-console.log('Included: index.html, common-numbers.html, 404.html, _headers, _redirects');
+console.log('Included: index.html, common-numbers.html, 404.html, sw.js, _headers, _redirects');
