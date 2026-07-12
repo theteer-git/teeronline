@@ -1,5 +1,5 @@
 // sw.js - Safe caching for static assets and live result JSON
-const CACHE_NAME = 'teer-v2';
+const CACHE_NAME = 'teer-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -27,8 +27,10 @@ function isLiveResultJson(requestUrl) {
 }
 
 async function networkFirst(request) {
+  // Always make a network request. The browser must not use Cache Storage,
+  // while Cloudflare's edge cache remains eligible to return a HIT.
   try {
-    return await fetch(request, { cache: 'no-store' });
+    return await fetch(request, { cache: 'default' });
   } catch (error) {
     // Live result JSON must never fall back to a stale cached copy.
     return new Response(
