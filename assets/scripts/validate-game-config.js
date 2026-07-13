@@ -7,7 +7,7 @@ const EXPECTED_IDS = ["SHD", "KH", "JWD", "SHM", "KHM", "JWM", "SHN1", "SHN2"];
 const EXPECTED_PATHS = {
   SHD: "/",
   KH: "/khanapara-teer-previous-results",
-  JWD: "/juwai-teer-previous-results",
+  JWD: "/juwai-teer-results",
   SHM: "/shillong-morning-teer-previous-results",
   KHM: "/khanapara-morning-teer-previous-results",
   JWM: "/juwai-morning-teer-previous-results",
@@ -62,6 +62,8 @@ assert.deepEqual(config.games.JWD.weeklyOffDays, [0]);
 assert.equal(config.games.SHN2.crossesMidnight, true);
 assert.equal(config.games.SHN2.rounds.sr, "00:10");
 assert.equal(config.games.SHD.legacyArchivePath, "/shillong-teer-previous-results");
+assert.equal(config.games.JWD.legacyArchivePath, "/juwai-teer-previous-results");
+assert.equal(config.games.JWD.previousResultsPath, "/juwai-teer-previous-results");
 
 assert.equal(config.navigation.length, 11);
 assert.equal(config.navigation[0].label, "Home");
@@ -85,8 +87,8 @@ assert.equal(Object.prototype.hasOwnProperty.call(config.endpoints, "allResults"
 
 assert.equal(config.absoluteUrl("/"), "https://teeronline.com/");
 assert.equal(
-  config.absoluteUrl("/juwai-teer-previous-results"),
-  "https://teeronline.com/juwai-teer-previous-results"
+  config.absoluteUrl("/juwai-teer-results"),
+  "https://teeronline.com/juwai-teer-results"
 );
 
 console.log("Game configuration validation: PASS");

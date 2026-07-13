@@ -72,7 +72,7 @@
       resultTitle: "Juwai Teer Result",
       navLabel: "Juwai Teer",
       primaryTopic: "Juwai Teer",
-      canonicalPath: "/juwai-teer-previous-results",
+      canonicalPath: "/juwai-teer-results",
       legacyArchivePath: "/juwai-teer-previous-results",
       previousResultsPath: "/juwai-teer-previous-results",
       commonNumbersPath: "/common-numbers",
