@@ -80,12 +80,56 @@ for (const gameId of config.gameOrder) {
   $('meta[name="twitter:description"]').attr("content", `Live ${game.name} FR SR result, previous 7 results, common numbers and complete statistics.`);
   $('link[href="./assets/css/jwd-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css");
 
+  const faqItems = [
+    {
+      question: `Where can I view older ${game.name} results?`,
+      answer: `Older ${game.name} results remain available on the dedicated previous-results archive at ${game.previousResultsPath}.`
+    },
+    {
+      question: `How frequently is the ${game.name} live result checked?`,
+      answer: `The page follows the current ${game.name} polling plan and increases checks around the active FR and SR publication windows.`
+    }
+  ];
+
   const structured = {
     "@context": "https://schema.org",
-    "@type": "WebPage",
-    name: `${game.name} Result Today`,
-    url: canonical,
-    description: `Live ${game.name} FR SR result with previous results, common numbers and statistics.`
+    "@graph": [
+      {
+        "@type": "WebPage",
+        "@id": `${canonical}#webpage`,
+        name: `${game.name} Result Today`,
+        url: canonical,
+        description: `Live ${game.name} FR SR result with previous results, common numbers and statistics.`
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          {
+            "@type": "ListItem",
+            position: 1,
+            name: "Home",
+            item: "https://teeronline.com/"
+          },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: `${game.name} Result Today`,
+            item: canonical
+          }
+        ]
+      },
+      {
+        "@type": "FAQPage",
+        mainEntity: faqItems.map(item => ({
+          "@type": "Question",
+          name: item.question,
+          acceptedAnswer: {
+            "@type": "Answer",
+            text: item.answer
+          }
+        }))
+      }
+    ]
   };
   $('script[type="application/ld+json"]').first().text(JSON.stringify(structured));
 
@@ -131,13 +175,28 @@ for (const gameId of config.gameOrder) {
   if (!commonCard.length) throw new Error(`Missing common-number card for ${gameId}.`);
   $(`#${prefix}-common-card`).html(common$.html(commonCard));
 
-  const support = $("section.supporting-content");
-  if (support.length) {
-    support.find("h2").first().text(`About ${game.name} Results and Statistics`);
-    support.find("p").first().text(`This page combines the current ${game.name} result, the previous seven completed results and the complete common-number and statistics panel. Statistical references are historical information and are not guarantees.`);
-    support.find("p").eq(1).html(`<strong>Where can I view older ${game.name} results?</strong><br><a href="${game.previousResultsPath}">Open the unchanged ${game.name} previous-results archive.</a>`);
-    support.find("p").eq(2).html(`<strong>How frequently is the live result checked?</strong><br>The page follows the current ${game.name} polling plan and increases checks around the active result window.`);
+  // The original pilot page used Juwai-specific SEO copy. Replace the
+  // entire visible supporting section for every generated game so no
+  // template text can leak into another page.
+  let support = $("section.supporting-content, section.seo-content.unified-seo").first();
+  if (!support.length) {
+    support = $('<section class="seo-content unified-seo"></section>');
+    $("main").append(support);
   }
+  support
+    .attr("data-semantic-section", "supporting_content")
+    .html(`
+      <h2>${game.name} Result, Common Numbers and Statistics</h2>
+      <p>This unified ${game.name} page keeps today’s live FR and SR result, the previous seven completed results and the complete ${game.name} common-number and statistics panel together. Statistical references are based on historical results and are not guarantees.</p>
+      <h3>Frequently Asked Questions</h3>
+      <p><strong>${faqItems[0].question}</strong><br><a href="${game.previousResultsPath}">Open the ${game.name} previous-results archive.</a></p>
+      <p><strong>${faqItems[1].question}</strong><br>${faqItems[1].answer}</p>
+    `);
+
+  // The standalone Common Numbers destination is being retired. Each game
+  // page already contains its own full common-number and statistics panel.
+  $(".common-source-link").remove();
+  $('a[href="/common-numbers"], a[href="/common-numbers.html"], a[href="./common-numbers"], a[href="./common-numbers.html"]').remove();
 
   $("script[src*='jwd-unified-page'], script[src*='game-unified-page'], script[src*='game-config.js']").remove();
   $("body").append('<script src="/assets/scripts/game-config.js" defer></script><script src="/assets/scripts/game-unified-page.js" defer></script>');

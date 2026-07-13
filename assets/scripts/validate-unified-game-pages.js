@@ -43,6 +43,16 @@ for (const gameId of config.gameOrder) {
   check(`${gameId} own common card`, html.includes(`data-game="${gameId}"`));
   check(`${gameId} no all-results`, !html.includes("all-results.json"));
   check(`${gameId} semantic sections`, ["live_result", "previous_7_days", "common_numbers"].every(id => html.includes(`id="${id}"`)));
+  check(`${gameId} game-specific supporting heading`, html.includes(`<h2>${game.name} Result, Common Numbers and Statistics</h2>`));
+  check(`${gameId} game-specific FAQ`, html.includes(`Where can I view older ${game.name} results?`));
+  check(`${gameId} FAQ schema`, html.includes('"@type":"FAQPage"'));
+  check(`${gameId} no retired Common Numbers link`, !/href=["'](?:\.\/|\/)?common-numbers(?:\.html)?["']/.test(html));
+
+  if (gameId === "SHD") {
+    check("Homepage has no Juwai-specific supporting copy", !html.includes("Juwai Teer Result, Common Numbers and Statistics"));
+    check("Homepage has Shillong archive link", html.includes('href="/shillong-teer-previous-results"'));
+    check("Homepage title is Shillong-specific", html.includes("Shillong Teer Result Today Live"));
+  }
 }
 
 
