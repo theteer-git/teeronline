@@ -1,9 +1,8 @@
 // sw.js - Safe caching for static assets and live result JSON
-const CACHE_NAME = 'teer-v2';
+const CACHE_NAME = 'teer-v3';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/common-numbers.html',
   '/assets/css/styles.css',
   '/assets/img/logo.webp'
 ];

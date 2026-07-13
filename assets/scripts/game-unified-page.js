@@ -138,22 +138,6 @@
     target.innerHTML = rows.join("");
   }
 
-  async function refreshCommonCard() {
-    try {
-      const response = await fetch("/common-numbers.html", {
-        cache: "no-store",
-        referrerPolicy: "no-referrer"
-      });
-      if (!response.ok) return;
-      const doc = new DOMParser().parseFromString(await response.text(), "text/html");
-      const card = doc.querySelector(`article.game-card[data-game="${GAME_ID}"]`);
-      const target = byId("common-card");
-      if (card && target) target.replaceChildren(card);
-    } catch (error) {
-      console.warn(`${GAME_ID} common card refresh failed:`, error);
-    }
-  }
-
   function bindPopup() {
     document.addEventListener("click", event => {
       const button = event.target.closest(".mini-chip");
@@ -230,13 +214,12 @@
     if (recentResult.status === "rejected") console.warn(`${GAME_ID} recent result refresh failed:`, recentResult.reason);
     renderResult(latest && Object.keys(latest).length ? latest : recent[0] || {});
     renderHistory(recent);
-    if (manual) await refreshCommonCard();
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
     bindPopup();
     byId("refresh")?.addEventListener("click", () => refresh(true));
-    await Promise.all([loadPlan(), refresh(false), refreshCommonCard()]);
+    await Promise.all([loadPlan(), refresh(false)]);
     schedule();
   });
 
