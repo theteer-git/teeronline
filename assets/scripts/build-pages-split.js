@@ -7,7 +7,6 @@ const path = require("node:path");
 const root = process.cwd();
 const output = path.join(root, "dist-pages");
 const gamePages = [
-  "shillong-teer-results.html",
   "khanapara-teer-results.html",
   "juwai-teer-results.html",
   "shillong-morning-teer-results.html",
@@ -66,4 +65,4 @@ const redirects = [
 fs.writeFileSync(path.join(output, "_redirects"), `${redirects.join("\n")}\n`, "utf8");
 
 console.log("Cloudflare Pages split output created in dist-pages/");
-console.log(`Included ${gamePages.length} unified game pages and shared assets.`);
+console.log(`Included homepage (SHD), ${gamePages.length} non-home unified game pages and shared assets.`);

@@ -40,7 +40,7 @@
       resultTitle: "Shillong Teer Result",
       navLabel: "Shillong Teer",
       primaryTopic: "Shillong Teer",
-      canonicalPath: "/shillong-teer-results",
+      canonicalPath: "/",
       legacyArchivePath: "/shillong-teer-previous-results",
       previousResultsPath: "/shillong-teer-previous-results",
       commonNumbersPath: "/common-numbers",

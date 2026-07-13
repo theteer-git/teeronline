@@ -7,7 +7,7 @@ const config = require("./game-config.js");
 
 const root = process.cwd();
 const files = {
-  SHD: "shillong-teer-results.html",
+  SHD: "index.html",
   KH: "khanapara-teer-results.html",
   JWD: "juwai-teer-results.html",
   SHM: "shillong-morning-teer-results.html",
@@ -31,7 +31,9 @@ for (const gameId of config.gameOrder) {
   check(`${gameId} page exists`, exists);
   if (!exists) continue;
   const html = fs.readFileSync(full, "utf8");
-  const canonical = `https://teeronline.com/${file.replace(/\.html$/, "")}`;
+  const canonical = gameId === "SHD"
+    ? "https://teeronline.com/"
+    : `https://teeronline.com/${file.replace(/\.html$/, "")}`;
   check(`${gameId} canonical`, html.includes(`href="${canonical}"`));
   check(`${gameId} body game id`, html.includes(`data-game-id="${gameId}"`));
   check(`${gameId} archive retained`, html.includes(`href="${game.previousResultsPath}"`));
@@ -42,6 +44,16 @@ for (const gameId of config.gameOrder) {
   check(`${gameId} no all-results`, !html.includes("all-results.json"));
   check(`${gameId} semantic sections`, ["live_result", "previous_7_days", "common_numbers"].every(id => html.includes(`id="${id}"`)));
 }
+
+
+check(
+  "No separate Shillong Teer result page",
+  !fs.existsSync(path.join(root, "shillong-teer-results.html"))
+);
+check(
+  "SHD configuration canonical is homepage",
+  config.games.SHD.canonicalPath === "/"
+);
 
 const runtimePath = path.join(root, "assets/scripts/game-unified-page.js");
 const runtime = fs.readFileSync(runtimePath, "utf8");

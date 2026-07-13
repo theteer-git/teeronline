@@ -17,7 +17,7 @@ const commonHtml = fs.readFileSync(commonPage, "utf8");
 const common$ = cheerio.load(commonHtml, { decodeEntities: false });
 
 const outputFiles = {
-  SHD: "shillong-teer-results.html",
+  SHD: "index.html",
   KH: "khanapara-teer-results.html",
   JWD: "juwai-teer-results.html",
   SHM: "shillong-morning-teer-results.html",
@@ -35,6 +35,7 @@ function clock(value) {
 }
 
 function canonicalPath(gameId) {
+  if (gameId === "SHD") return "/";
   return `/${outputFiles[gameId].replace(/\.html$/, "")}`;
 }
 
@@ -51,19 +52,14 @@ function buildNavigation($, currentId) {
     { label: "Dream Numbers", path: "/dream-numbers" },
     { label: "Teer Formula", path: "/teer-formula" }
   ];
-  const toggleHtml = nav
-	  .find("button.dark-toggle")
-	  .first()
-	  .toString();
-	nav.find("button.dark-toggle").remove();
+  const toggleHtml = nav.find("button.dark-toggle").first().toString();
+  nav.find("button.dark-toggle").remove();
   for (const link of links) {
     const anchor = $("<a></a>").attr("href", link.path).text(link.label);
     if (link.gameId === currentId) anchor.attr("aria-current", "page");
     nav.append(anchor);
   }
-  if (toggleHtml) {
-	  nav.append(toggleHtml);
-	}
+  if (toggleHtml) nav.append(toggleHtml);
 }
 
 for (const gameId of config.gameOrder) {
@@ -149,4 +145,7 @@ for (const gameId of config.gameOrder) {
   fs.writeFileSync(path.join(root, outputFiles[gameId]), $.html(), "utf8");
 }
 
+fs.rmSync(path.join(root, "shillong-teer-results.html"), { force: true });
+
 console.log(`Generated ${config.gameOrder.length} unified game pages.`);
+console.log("SHD generated as index.html; obsolete shillong-teer-results.html removed.");
