@@ -14,7 +14,8 @@
     "validate:pilot-jwd": "node assets/scripts/validate-jwd-pilot.js",
     "validate:jwd-unified-ui": "node assets/scripts/validate-jwd-unified-ui.js",
     "build:unified-games": "node assets/scripts/build-unified-game-pages.js",
-    "validate:unified-games": "node assets/scripts/validate-unified-game-pages.js"
+    "validate:unified-games": "node assets/scripts/validate-unified-game-pages.js",
+    "validate:stage8-seo": "node assets/scripts/validate-stage8-seo.js"
   },
   "dependencies": {
     "axios": "^1.17.0",

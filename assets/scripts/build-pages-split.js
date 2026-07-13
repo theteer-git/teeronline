@@ -38,11 +38,14 @@ function copyDirectory(relativePath) {
 }
 
 copyFile("index.html");
-copyFile("common-numbers.html");
 for (const page of gamePages) copyFile(page);
 copyFile("404.html");
 copyFile("sw.js");
 copyFile("site.webmanifest", false);
+copyFile("robots.txt", false);
+copyFile("sitemap.xml", false);
+copyFile("sitemap-pages.xml", false);
+copyFile("sitemap-results.xml", false);
 copyDirectory("assets/img");
 copyFile("assets/css/game-unified-page.css");
 copyFile("assets/scripts/game-config.js");
@@ -59,10 +62,13 @@ fs.writeFileSync(path.join(output, "_headers"), `/*
 
 const redirects = [
   "/index.html / 301",
-  "/common-numbers.html /common-numbers 301",
+  "/shillong-teer-results / 301",
+  "/shillong-teer-results.html / 301",
+  "/common-numbers / 301",
+  "/common-numbers.html / 301",
   ...gamePages.map(page => `/${page} /${page.replace(/\.html$/, "")} 301`)
 ];
 fs.writeFileSync(path.join(output, "_redirects"), `${redirects.join("\n")}\n`, "utf8");
 
 console.log("Cloudflare Pages split output created in dist-pages/");
-console.log(`Included homepage (SHD), ${gamePages.length} non-home unified game pages and shared assets.`);
+console.log(`Included homepage (SHD), ${gamePages.length} non-home unified game pages, SEO fallbacks and shared assets.`);
