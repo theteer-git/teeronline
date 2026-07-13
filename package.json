@@ -6,7 +6,12 @@
   "scripts": {
     "update:results": "node assets/scripts/update-results.js",
     "clean:results": "node assets/scripts/clean-all-results.js",
-    "build:pages": "node assets/scripts/build-pages-split.js"
+    "build:pages": "node assets/scripts/build-pages-split.js",
+    "validate:game-config": "node assets/scripts/validate-game-config.js",
+    "build:game-preview": "node assets/scripts/build-game-pages.js",
+    "validate:game-pages": "node assets/scripts/validate-game-page-system.js",
+    "build:pilot-jwd": "node assets/scripts/build-game-pages.js --pilot JWD",
+    "validate:pilot-jwd": "node assets/scripts/validate-jwd-pilot.js"
   },
   "dependencies": {
     "axios": "^1.17.0",

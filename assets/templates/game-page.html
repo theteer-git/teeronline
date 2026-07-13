@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="en-IN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <title>{{TITLE}}</title>
+  <meta name="description" content="{{DESCRIPTION}}">
+  <meta name="robots" content="{{ROBOTS}}">
+  <link rel="canonical" href="{{CANONICAL_URL}}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TeerOnline.com">
+  <meta property="og:title" content="{{TITLE}}">
+  <meta property="og:description" content="{{DESCRIPTION}}">
+  <meta property="og:url" content="{{CANONICAL_URL}}">
+  <meta property="og:image" content="https://teeronline.com/assets/img/logo.webp">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{{TITLE}}">
+  <meta name="twitter:description" content="{{DESCRIPTION}}">
+  <meta name="twitter:image" content="https://teeronline.com/assets/img/logo.webp">
+  <link rel="icon" href="/assets/img/favicon.ico" sizes="any">
+  <link rel="stylesheet" href="/assets/css/game-page.css">
+  <script type="application/ld+json">{{{SCHEMA_JSON}}}</script>
+</head>
+<body data-game-id="{{GAME_ID}}">
+  <a class="skip-link" href="#main-content">Skip to content</a>
+  <header class="site-header" id="site-header">
+    <div class="shell header-row">
+      <a class="brand" href="/" aria-label="TeerOnline home">
+        <img src="/assets/img/logo.webp" width="64" height="64" alt="TeerOnline" decoding="async">
+        <span><strong>TeerOnline.com</strong><small>Fast • Accurate • Reliable</small></span>
+      </a>
+      <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="primary-nav">Menu</button>
+      <nav id="primary-nav" class="primary-nav" aria-label="Main navigation"></nav>
+    </div>
+  </header>
+
+  <main id="main-content" class="shell">
+    <section class="hero" aria-labelledby="page-title">
+      <p class="eyebrow">Today’s verified FR and SR update</p>
+      <h1 id="page-title">{{H1}}</h1>
+      <p>{{INTRO}}</p>
+    </section>
+
+    <section id="live_result" class="panel" data-semantic-section="live_result" aria-labelledby="live-heading">
+      <div class="section-heading"><div><p class="eyebrow">Live result</p><h2 id="live-heading">{{GAME_NAME}} Result Today</h2></div><button id="manual-refresh" class="refresh-button" type="button">Refresh</button></div>
+      <div class="live-grid" aria-live="polite" aria-atomic="true">
+        <article class="round-card"><span>First Round (FR)</span><strong id="fr-value">XX</strong><small id="fr-time">Awaiting publication</small></article>
+        <article class="round-card"><span>Second Round (SR)</span><strong id="sr-value">XX</strong><small id="sr-time">Awaiting publication</small></article>
+      </div>
+      <p id="result-date" class="result-date"></p>
+    </section>
+
+    <section class="panel status-panel" aria-labelledby="status-heading">
+      <div><p class="eyebrow">Publication status</p><h2 id="status-heading">Current status</h2></div>
+      <div><strong id="publication-status" class="status-badge">Loading</strong><p id="status-detail">Checking the latest publication record.</p></div>
+    </section>
+
+    <section id="previous_7_days" class="panel" data-semantic-section="previous_7_days" aria-labelledby="previous-heading">
+      <p class="eyebrow">Recent history</p><h2 id="previous-heading">Previous 7 Days’ {{GAME_NAME}} Results</h2>
+      <div class="table-wrap"><table><thead><tr><th>Date</th><th>FR</th><th>SR</th></tr></thead><tbody id="previous-results"><tr><td colspan="3">Loading recent results…</td></tr></tbody></table></div>
+    </section>
+
+    <section id="common_numbers" class="panel" data-semantic-section="common_numbers" aria-labelledby="common-heading">
+      <p class="eyebrow">History-based reference</p><h2 id="common-heading">{{GAME_NAME}} Common Numbers</h2>
+      <p class="section-note">Calculated in the browser from this game’s recent published results. These numbers are references, not guarantees.</p>
+      <div id="common-number-list" class="number-list" aria-live="polite"><span class="number-chip muted">Loading</span></div>
+    </section>
+
+    <section id="statistics" class="panel" data-semantic-section="statistics" aria-labelledby="statistics-heading">
+      <p class="eyebrow">Recent-result statistics</p><h2 id="statistics-heading">{{GAME_NAME}} Statistics</h2>
+      <div class="stats-grid">
+        <article><span>Completed records</span><strong id="stat-completed">0</strong></article>
+        <article><span>Most frequent ending</span><strong id="stat-ending">—</strong></article>
+        <article><span>Most frequent house</span><strong id="stat-house">—</strong></article>
+        <article><span>Repeated numbers</span><strong id="stat-repeated">—</strong></article>
+      </div>
+    </section>
+
+    <section class="panel prose" aria-labelledby="guide-heading"><h2 id="guide-heading">About {{GAME_NAME}} Results</h2><p>{{SEO_TEXT}}</p></section>
+    <section class="panel prose" aria-labelledby="faq-heading"><h2 id="faq-heading">Frequently Asked Questions</h2><h3>When is the {{GAME_NAME}} result updated?</h3><p>The page checks the current polling policy and refreshes more frequently only around the configured FR or SR publication window.</p><h3>What does XX mean?</h3><p>XX means that a valid two-digit result has not yet been published for that round.</p><h3>Are common numbers guaranteed?</h3><p>No. They are statistical references calculated from recent records and do not guarantee any result.</p></section>
+
+    <section id="related_games" class="panel" data-semantic-section="related_games" aria-labelledby="related-heading"><h2 id="related-heading">Related Teer Games</h2><nav id="related-game-links" class="related-links" aria-label="Related game pages"></nav></section>
+  </main>
+
+  <footer class="site-footer"><div class="shell"><nav id="footer-links" class="footer-links" aria-label="Footer navigation"></nav><p>Results are provided for informational purposes. Verify important information with official sources.</p><p>© <span id="copyright-year"></span> TeerOnline.com</p></div></footer>
+  <script src="/assets/scripts/game-config.js" defer></script>
+  <script src="/assets/scripts/game-page.js" defer></script>
+</body>
+</html>
