@@ -1,9 +1,10 @@
 "use strict";
 (() => {
   const GAME_ID = "JWD";
-  const LATEST_URL = "/latest-results.json";
-  const RECENT_URL = "/recent-results.json";
-  const PLAN_URL = "/polling-plan.json";
+  const RESULTS_ORIGIN = "https://results.teeronline.com";
+  const LATEST_URL = `${RESULTS_ORIGIN}/latest-results.json`;
+  const RECENT_URL = `${RESULTS_ORIGIN}/recent-results.json`;
+  const PLAN_URL = `${RESULTS_ORIGIN}/polling-plan.json`;
   let loadingLatest = null;
   let loadingRecent = null;
   let timer = null;

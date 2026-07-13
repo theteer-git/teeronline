@@ -1,9 +1,15 @@
 "use strict";
 (() => {
   const GAME_ID = "JWD";
-  const LATEST_URL = "/latest-results.json";
-  const RECENT_URL = "/recent-results.json";
-  const PLAN_URL = "/polling-plan.json";
+  const RESULTS_ORIGIN = "https://results.teeronline.com";
+	const LATEST_URL =
+	  "https://results.teeronline.com/latest-results.json";
+
+	const RECENT_URL =
+	  "https://results.teeronline.com/recent-results.json";
+
+	const POLLING_PLAN_URL =
+	  "https://results.teeronline.com/polling-plan.json";
   let loadingLatest = null;
   let loadingRecent = null;
   let timer = null;
