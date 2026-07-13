@@ -44,12 +44,15 @@ function copyDirectory(relativePath) {
 
 copyFile("index.html");
 copyFile("common-numbers.html");
+copyFile("juwai-teer-results.html");
 copyFile("404.html");
 copyFile("sw.js");
 copyFile("site.webmanifest", false);
 
 // Preserve the same paths referenced by the HTML.
 copyDirectory("assets/img");
+copyFile("assets/css/jwd-unified-page.css");
+copyFile("assets/scripts/jwd-unified-page.js");
 
 fs.writeFileSync(
   path.join(output, "_headers"),
@@ -68,11 +71,12 @@ fs.writeFileSync(
   path.join(output, "_redirects"),
   `/index.html / 301
 /common-numbers.html /common-numbers 301
+/juwai-teer-results.html /juwai-teer-results 301
 `,
   "utf8"
 );
 
 console.log("Cloudflare Pages split output created in dist-pages/");
 console.log(
-  "Included index, common-numbers, 404, service worker, manifest and assets/img."
+  "Included index, common-numbers, Juwai unified result page, 404, service worker, manifest and required assets."
 );

@@ -11,7 +11,8 @@
     "build:game-preview": "node assets/scripts/build-game-pages.js",
     "validate:game-pages": "node assets/scripts/validate-game-page-system.js",
     "build:pilot-jwd": "node assets/scripts/build-game-pages.js --pilot JWD",
-    "validate:pilot-jwd": "node assets/scripts/validate-jwd-pilot.js"
+    "validate:pilot-jwd": "node assets/scripts/validate-jwd-pilot.js",
+    "validate:jwd-unified-ui": "node assets/scripts/validate-jwd-unified-ui.js"
   },
   "dependencies": {
     "axios": "^1.17.0",
