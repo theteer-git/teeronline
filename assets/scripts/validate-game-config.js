@@ -5,14 +5,14 @@ const config = require("./game-config.js");
 
 const EXPECTED_IDS = ["SHD", "KH", "JWD", "SHM", "KHM", "JWM", "SHN1", "SHN2"];
 const EXPECTED_PATHS = {
-  SHD: "/",
-  KH: "/khanapara-teer-previous-results",
+  SHD: "/shillong-teer-results",
+  KH: "/khanapara-teer-results",
   JWD: "/juwai-teer-results",
-  SHM: "/shillong-morning-teer-previous-results",
-  KHM: "/khanapara-morning-teer-previous-results",
-  JWM: "/juwai-morning-teer-previous-results",
-  SHN1: "/shillong-night-teer-previous-results",
-  SHN2: "/shillong-night-teer-2-previous-results"
+  SHM: "/shillong-morning-teer-results",
+  KHM: "/khanapara-morning-teer-results",
+  JWM: "/juwai-morning-teer-results",
+  SHN1: "/shillong-night-teer-results",
+  SHN2: "/shillong-night-teer-2-results"
 };
 const EXPECTED_ROUNDS = {
   SHD: { fr: "16:15", sr: "17:15" },
