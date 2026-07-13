@@ -52,7 +52,7 @@ copyFile("site.webmanifest", false);
 // Preserve the same paths referenced by the HTML.
 copyDirectory("assets/img");
 copyFile("assets/css/jwd-unified-page.css");
-copyFile("assets/scripts/jwd-unified-page.js");
+copyFile("assets/scripts/jwd-unified-page-v2.js");
 
 fs.writeFileSync(
   path.join(output, "_headers"),

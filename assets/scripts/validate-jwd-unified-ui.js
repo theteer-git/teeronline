@@ -6,7 +6,7 @@ const vm = require("vm");
 
 const root = path.resolve(__dirname, "../..");
 const pagePath = path.join(root, "juwai-teer-results.html");
-const scriptPath = path.join(root, "assets/scripts/jwd-unified-page.js");
+const scriptPath = path.join(root, "assets/scripts/jwd-unified-page-v2.js");
 const cssPath = path.join(root, "assets/css/jwd-unified-page.css");
 const archivePath = path.join(root, "juwai-teer-previous-results.html");
 
@@ -100,7 +100,7 @@ for (const label of requiredNavLabels) {
 }
 
 try {
-  new vm.Script(script, { filename: "jwd-unified-page.js" });
+  new vm.Script(script, { filename: "jwd-unified-page-v2.js" });
 } catch (error) {
   console.error(error);
   process.exit(1);
