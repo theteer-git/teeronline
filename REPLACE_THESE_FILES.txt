@@ -1,0 +1,29 @@
+CREATE:
+assets/css/task4b-seo.css
+
+REPLACE:
+dream-numbers.html
+index.html
+juwai-morning-teer-previous-results.html
+juwai-morning-teer-results.html
+juwai-teer-previous-results.html
+juwai-teer-results.html
+khanapara-morning-teer-previous-results.html
+khanapara-morning-teer-results.html
+khanapara-teer-previous-results.html
+khanapara-teer-results.html
+shillong-morning-teer-previous-results.html
+shillong-morning-teer-results.html
+shillong-night-teer-2-previous-results.html
+shillong-night-teer-2-results.html
+shillong-night-teer-previous-results.html
+shillong-night-teer-results.html
+shillong-teer-previous-results.html
+teer-formula.html
+
+Changes:
+- Removed generic Related Teer Result Resources blocks.
+- Removed large internal-link chip/list sections.
+- Kept only 2–4 natural contextual links per page.
+- Navigation and footer links remain unchanged.
+- Existing page functions and scripts remain unchanged.

@@ -13,3 +13,6 @@
 .task4b-editorial{display:flex;flex-wrap:wrap;gap:.45rem 1rem;margin-top:1rem;padding-top:.8rem;border-top:1px solid var(--border,#dbe3ea);font-size:.82rem;color:var(--text-light,#64748b)}
 .task4b-editorial a{font-weight:600}
 @media(max-width:760px){.task4b-key-points{grid-template-columns:1fr}.task4b-seo{padding:1rem}}
+
+.task4b-context-links{margin:1rem 0!important;padding:.85rem 1rem;border-left:3px solid var(--accent,#22c55e);background:rgba(34,197,94,.06);border-radius:.5rem}
+.task4b-context-links a{font-weight:700}
