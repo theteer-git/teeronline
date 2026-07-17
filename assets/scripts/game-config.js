@@ -38,6 +38,10 @@
       id: "SHD",
       name: "Shillong Teer",
       resultTitle: "Shillong Teer Result",
+      seo: Object.freeze({
+        title: "Shillong Teer Today – {date} | FR/SR Updated",
+        description: "Verified Shillong Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Shillong Teer",
       primaryTopic: "Shillong Teer",
       canonicalPath: "/",
@@ -54,6 +58,10 @@
       id: "KH",
       name: "Khanapara Teer",
       resultTitle: "Khanapara Teer Result",
+      seo: Object.freeze({
+        title: "Khanapara Teer Today – {date} | FR/SR Updated",
+        description: "Verified Khanapara Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Khanapara Teer",
       primaryTopic: "Khanapara Teer",
       canonicalPath: "/khanapara-teer-results",
@@ -70,6 +78,10 @@
       id: "JWD",
       name: "Juwai Teer",
       resultTitle: "Juwai Teer Result",
+      seo: Object.freeze({
+        title: "Juwai Teer Result Today – {date} | FR/SR Updated",
+        description: "Verified Juwai Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Juwai Teer",
       primaryTopic: "Juwai Teer",
       canonicalPath: "/juwai-teer-results",
@@ -86,6 +98,10 @@
       id: "SHM",
       name: "Shillong Morning Teer",
       resultTitle: "Shillong Morning Teer Result",
+      seo: Object.freeze({
+        title: "Shillong Morning Result – {date} | Updated",
+        description: "Verified Shillong Morning Teer result for {date}. Check today’s common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Shillong Morning",
       primaryTopic: "Shillong Morning Teer",
       canonicalPath: "/shillong-morning-teer-results",
@@ -102,6 +118,10 @@
       id: "KHM",
       name: "Khanapara Morning Teer",
       resultTitle: "Khanapara Morning Teer Result",
+      seo: Object.freeze({
+        title: "Khanapara Morning Result – {date} | Updated",
+        description: "Khanapara Morning Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Khanapara Morning",
       primaryTopic: "Khanapara Morning Teer",
       canonicalPath: "/khanapara-morning-teer-results",
@@ -118,6 +138,10 @@
       id: "JWM",
       name: "Juwai Morning Teer",
       resultTitle: "Juwai Morning Teer Result",
+      seo: Object.freeze({
+        title: "Juwai Morning Result – {date} | FR/SR Updated",
+        description: "Juwai Morning Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Juwai Morning",
       primaryTopic: "Juwai Morning Teer",
       canonicalPath: "/juwai-morning-teer-results",
@@ -134,6 +158,10 @@
       id: "SHN1",
       name: "Shillong Night Teer",
       resultTitle: "Shillong Night Teer Result",
+      seo: Object.freeze({
+        title: "Shillong Night Result – {date} | FR/SR Updated",
+        description: "Verified Shillong Night Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Shillong Night",
       primaryTopic: "Shillong Night Teer",
       canonicalPath: "/shillong-night-teer-results",
@@ -150,6 +178,10 @@
       id: "SHN2",
       name: "Shillong Night Teer 2",
       resultTitle: "Shillong Night Teer 2 Result",
+      seo: Object.freeze({
+        title: "Shillong Night 2 Result – {date} | FR/SR Updated",
+        description: "Verified Shillong Night Teer 2 result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+      }),
       navLabel: "Shillong Night 2",
       primaryTopic: "Shillong Night Teer 2",
       canonicalPath: "/shillong-night-teer-2-results",

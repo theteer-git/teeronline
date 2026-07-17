@@ -67,7 +67,7 @@ function longDate(isoDate) {
 
 function displayDate(isoDate) {
   const [year, month, day] = String(isoDate).split("-");
-  return `${day}-${month}-${year}`;
+  return `${day}/${month}/${year}`;
 }
 
 function minutes(value) {
@@ -358,10 +358,10 @@ function preparePage(gameId, targetDate, allRecords) {
   }
 
   const analytics = gameAnalytics(allRecords, gameId, targetDate);
-  const dateText = longDate(targetDate);
+  const dateText = displayDate(targetDate);
   const canonical = config.absoluteUrl(game.canonicalPath);
-  const title = `${game.name} Result Today (${dateText}) | Live FR & SR`;
-  const description = `Check ${game.name} Result Today (${dateText}) with live FR and SR status, declared timings, previous results, fresh common numbers and historical statistics.`;
+  const title = String(game.seo?.title || `${game.name} Result Today – {date}`).replaceAll("{date}", dateText);
+  const description = String(game.seo?.description || `Check ${game.name} result for {date} on TeerOnline.`).replaceAll("{date}", dateText);
 
   $("title").text(title);
   $('meta[name="description"]').attr("content", description);
