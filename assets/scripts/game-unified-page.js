@@ -209,12 +209,22 @@
     const stats = data.statistics || {};
     const previous = data.previousResult || {};
     const sample = data.historicalSample || {};
-    const performanceRows = (data.performance || []).map(item =>
-      `<tr><td>${escapeHtml(fmtDate(item.date))}</td><td>${escapeHtml(item.fr || "XX")}</td><td>${escapeHtml(item.sr || "XX")}</td><td class="${item.status === "miss" ? "miss" : "hit"}">${escapeHtml(item.label || "Miss")}</td></tr>`
-    ).join("");
-    const flow = (data.flow || []).map(item =>
-      `<div class="barcol"><i style="height:${Math.max(8, Number(item.fr) || 0)}%"></i><small>${escapeHtml(item.fr || "XX")}</small></div>`
-    ).join("");
+    const performanceRows = (data.performance || []).map(item => {
+      const status = String(item.status || "miss").toLowerCase();
+      const statusClass = status === "miss" ? "performance-miss" : status === "hit_both" ? "performance-both" : status === "hit_fr" ? "performance-fr" : "performance-sr";
+      return `<tr><td><span class="performance-date">${escapeHtml(fmtDate(item.date))}</span></td><td><span class="round-number round-fr">${escapeHtml(item.fr || "XX")}</span></td><td><span class="round-number round-sr">${escapeHtml(item.sr || "XX")}</span></td><td><span class="performance-badge ${statusClass}">${escapeHtml(item.label || "Miss")}</span></td></tr>`;
+    }).join("");
+    const flowItems = data.flow || [];
+    const flowValues = flowItems.map(item => Number(item.fr)).filter(Number.isFinite);
+    const flowMin = flowValues.length ? Math.min(...flowValues) : 0;
+    const flowMax = flowValues.length ? Math.max(...flowValues) : 99;
+    const flowRange = Math.max(1, flowMax - flowMin);
+    const flow = flowItems.map((item, index) => {
+      const value = Number(item.fr);
+      const normalizedHeight = Number.isFinite(value) ? 28 + ((value - flowMin) / flowRange) * 62 : 28;
+      const shortDate = item.date ? fmtDate(item.date).slice(0, 5) : `#${index + 1}`;
+      return `<div class="flow-item"><span class="flow-value">${escapeHtml(item.fr || "XX")}</span><div class="flow-track"><i style="height:${Math.round(normalizedHeight)}%"></i></div><small>${escapeHtml(shortDate)}</small></div>`;
+    }).join("");
     const sameDate = (stats.sameDateHistory || []).map(item =>
       `<span class="history-item">${escapeHtml(item.fr)}-${escapeHtml(item.sr)}</span>`
     ).join("");
@@ -228,8 +238,14 @@
           <div class="two-col"><div class="box"><h3>House</h3><div class="num-row">${chips(common.house, "digit", true)}</div></div><div class="box"><h3>Ending</h3><div class="num-row">${chips(common.ending, "digit", true)}</div></div></div>
           <div class="box"><h3>Direct Common Numbers</h3><div class="direct-grid">${chips(common.direct, "direct")}</div></div>
           <div class="accuracy"><div class="accuracy-top"><b>Historical sample</b><span>${Number(sample.total) || 0} checks · ${Number(sample.rate) || 0}%</span></div><div class="bar"><i style="width:${Math.max(0, Math.min(100, Number(sample.rate) || 0))}%"></i></div></div>
-          <div class="last7-table"><table><thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Performance</th></tr></thead><tbody>${performanceRows}</tbody></table></div>
-          <div class="trend-chart"><h4>Last 7 FR Result Flow</h4><div class="bars">${flow}</div></div>
+          <section class="performance-panel" aria-labelledby="${prefix}-performance-title">
+            <div class="performance-heading"><div><span class="performance-kicker">Recent validation</span><h3 id="${prefix}-performance-title">Last 7 Results Performance</h3></div><span class="performance-count">${(data.performance || []).length} records</span></div>
+            <div class="performance-table-wrap"><table class="performance-table"><thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Performance</th></tr></thead><tbody>${performanceRows}</tbody></table></div>
+          </section>
+          <section class="trend-chart flow-panel" aria-label="Last 7 FR result flow">
+            <div class="flow-heading"><div><span class="performance-kicker">Number movement</span><h4>Last 7 FR Result Flow</h4></div><span class="flow-range">${flowMin}–${flowMax}</span></div>
+            <div class="flow-grid">${flow}</div>
+          </section>
         </section>
         <section class="stats-side">
           <div class="panel-label">📊 Statistics</div>
