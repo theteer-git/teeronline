@@ -1,0 +1,222 @@
+/* TeerOnline performance section visual fix v2
+   Targets the CURRENT renderer markup:
+   .last7-table, .trend-chart, .bars and .barcol
+*/
+.common-side .last7-table{
+  margin-top:.8rem;
+  overflow:hidden;
+  border:1px solid #fdba74;
+  border-radius:14px;
+  background:#fff;
+  box-shadow:0 8px 22px rgba(154,52,18,.08);
+}
+.common-side .last7-table table{
+  width:100%;
+  border-collapse:separate;
+  border-spacing:0;
+  table-layout:fixed;
+  font-size:.78rem;
+}
+.common-side .last7-table thead{
+  background:linear-gradient(135deg,#9a3412,#c2410c);
+}
+.common-side .last7-table th{
+  padding:.68rem .42rem;
+  color:#fff;
+  font-size:.66rem;
+  font-weight:900;
+  letter-spacing:.045em;
+  text-transform:uppercase;
+  text-align:center;
+  border:0;
+}
+.common-side .last7-table th:first-child,
+.common-side .last7-table td:first-child{
+  width:34%;
+  text-align:left;
+  padding-left:.72rem;
+}
+.common-side .last7-table th:nth-child(2),
+.common-side .last7-table th:nth-child(3),
+.common-side .last7-table td:nth-child(2),
+.common-side .last7-table td:nth-child(3){
+  width:13%;
+  text-align:center;
+}
+.common-side .last7-table th:last-child,
+.common-side .last7-table td:last-child{
+  width:40%;
+  text-align:center;
+}
+.common-side .last7-table td{
+  padding:.58rem .36rem;
+  color:#1f2937;
+  font-weight:750;
+  border-bottom:1px solid #ffedd5;
+  background:#fff;
+  vertical-align:middle;
+}
+.common-side .last7-table tbody tr:nth-child(even) td{
+  background:#fffaf5;
+}
+.common-side .last7-table tbody tr:last-child td{
+  border-bottom:0;
+}
+.common-side .last7-table td:nth-child(2),
+.common-side .last7-table td:nth-child(3){
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:.82rem;
+  font-weight:950;
+  color:#9a3412;
+}
+.common-side .last7-table td.hit,
+.common-side .last7-table td.miss{
+  display:table-cell;
+  font-weight:950;
+}
+.common-side .last7-table td.hit{
+  color:#166534;
+}
+.common-side .last7-table td.miss{
+  color:#b91c1c;
+}
+.common-side .last7-table td.hit::before,
+.common-side .last7-table td.miss::before{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:82px;
+  padding:.28rem .52rem;
+  border-radius:999px;
+  line-height:1.1;
+}
+.common-side .last7-table td.hit::before{
+  content:attr(data-label);
+}
+.common-side .last7-table td.miss::before{
+  content:attr(data-label);
+}
+/* Keep the actual text visible because current rows do not carry data-label. */
+.common-side .last7-table td.hit,
+.common-side .last7-table td.miss{
+  border-radius:999px;
+}
+
+/* FR flow chart */
+.common-side .trend-chart{
+  margin-top:.82rem;
+  padding:.82rem .78rem .72rem;
+  border:1px solid #fdba74;
+  border-radius:14px;
+  background:linear-gradient(180deg,#fff,#fff7ed);
+  box-shadow:0 8px 22px rgba(154,52,18,.07);
+}
+.common-side .trend-chart h4{
+  margin:0 0 .72rem;
+  color:#9a3412;
+  font-size:.72rem;
+  font-weight:950;
+  letter-spacing:.055em;
+  text-transform:uppercase;
+}
+.common-side .trend-chart .bars{
+  position:relative;
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  align-items:end;
+  gap:.48rem;
+  min-height:142px;
+  padding:1.7rem .42rem .35rem;
+  border-radius:11px;
+  border:1px solid #ffedd5;
+  background:
+    linear-gradient(to top,transparent 24%,rgba(253,186,116,.35) 25%,transparent 26%),
+    linear-gradient(to top,transparent 49%,rgba(253,186,116,.35) 50%,transparent 51%),
+    linear-gradient(to top,transparent 74%,rgba(253,186,116,.35) 75%,transparent 76%),
+    #fff;
+}
+.common-side .trend-chart .barcol{
+  height:108px;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-end;
+  align-items:center;
+  gap:.3rem;
+  min-width:0;
+  position:relative;
+}
+.common-side .trend-chart .barcol i{
+  display:block;
+  width:min(28px,74%);
+  min-height:10px;
+  border:1px solid #9a3412;
+  border-radius:8px 8px 3px 3px;
+  background:linear-gradient(180deg,#fb923c,#c2410c);
+  box-shadow:0 5px 12px rgba(194,65,12,.22);
+}
+.common-side .trend-chart .barcol small{
+  order:-1;
+  position:absolute;
+  top:-1.28rem;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:28px;
+  padding:.12rem .28rem;
+  border:1px solid #fdba74;
+  border-radius:999px;
+  background:#fff;
+  color:#9a3412;
+  font-size:.62rem;
+  font-weight:950;
+  line-height:1.2;
+}
+
+/* Dark mode */
+body.dark .common-side .last7-table,
+body.dark .common-side .trend-chart{
+  background:#181818;
+  border-color:#525252;
+}
+body.dark .common-side .last7-table thead{
+  background:#7c2d12;
+}
+body.dark .common-side .last7-table td,
+body.dark .common-side .last7-table tbody tr:nth-child(even) td{
+  background:#181818;
+  color:#f8fafc;
+  border-color:#2f2f2f;
+}
+body.dark .common-side .last7-table td:nth-child(2),
+body.dark .common-side .last7-table td:nth-child(3),
+body.dark .common-side .trend-chart h4{
+  color:#fb923c;
+}
+body.dark .common-side .trend-chart .bars{
+  border-color:#525252;
+  background:
+    linear-gradient(to top,transparent 24%,rgba(82,82,82,.5) 25%,transparent 26%),
+    linear-gradient(to top,transparent 49%,rgba(82,82,82,.5) 50%,transparent 51%),
+    linear-gradient(to top,transparent 74%,rgba(82,82,82,.5) 75%,transparent 76%),
+    #111;
+}
+body.dark .common-side .trend-chart .barcol small{
+  background:#111;
+  border-color:#525252;
+  color:#fb923c;
+}
+
+@media(max-width:560px){
+  .common-side .last7-table table{font-size:.69rem}
+  .common-side .last7-table th{font-size:.58rem;padding:.55rem .22rem}
+  .common-side .last7-table td{padding:.5rem .2rem}
+  .common-side .last7-table th:first-child,
+  .common-side .last7-table td:first-child{width:32%;padding-left:.42rem}
+  .common-side .last7-table th:last-child,
+  .common-side .last7-table td:last-child{width:42%}
+  .common-side .trend-chart{padding:.68rem .52rem .58rem}
+  .common-side .trend-chart .bars{gap:.25rem;min-height:130px;padding-inline:.2rem}
+  .common-side .trend-chart .barcol{height:96px}
+  .common-side .trend-chart .barcol i{width:min(22px,72%)}
+  .common-side .trend-chart .barcol small{font-size:.56rem;min-width:24px}
+}
