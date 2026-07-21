@@ -192,12 +192,11 @@
   }
 
   const GROUP_STATUS = Object.freeze({
-    normal: { label: "Normal", icon: "🟢" },
-    above_average: { label: "Above Average", icon: "🟡" },
-    near_max: { label: "Near Historical Max", icon: "🟠" },
-    max_reached: { label: "Historical Max Reached", icon: "🔴" },
-    new_record: { label: "New Historical Record", icon: "🔵" },
-    insufficient_history: { label: "Limited History", icon: "⚪" }
+    below_record: { label: "Below Record", icon: "🟢" },
+    near_record: { label: "Near Record", icon: "🟠" },
+    record_reached: { label: "Record Reached", icon: "🔴" },
+    new_record: { label: "New Record in Progress", icon: "🔵" },
+    limited_history: { label: "Limited History", icon: "⚪" }
   });
 
   function days(value) {
@@ -205,7 +204,7 @@
     return Number.isFinite(n) ? `${Math.max(0, Math.ceil(n))} days` : "—";
   }
 
-  const GROUP_STATUS_PRIORITY = Object.freeze({ new_record: 6, max_reached: 5, near_max: 4, above_average: 3, insufficient_history: 2, normal: 1 });
+  const GROUP_STATUS_PRIORITY = Object.freeze({ new_record: 5, record_reached: 4, near_record: 3, below_record: 2, limited_history: 1 });
   const GROUP_ROUND_PRIORITY = Object.freeze({ BOTH: 3, FR: 2, SR: 1 });
 
   function roundItem(group = {}, key = "fr") {
@@ -259,11 +258,11 @@
   function renderGroupCards(groups = []) {
     return groups.slice(0, 5).map((group, index) => {
       const item = group.analysis || {};
-      const statusKey = String(item.status || "normal");
-      const status = GROUP_STATUS[statusKey] || GROUP_STATUS.normal;
+      const statusKey = String(item.status || "below_record");
+      const status = GROUP_STATUS[statusKey] || GROUP_STATUS.below_record;
       const numbers = (group.numbers || []).map(number => `<span>${escapeHtml(number)}</span>`).join("");
       const rank = Math.max(1, Number(group.rank) || index + 1);
-      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><span class="formula-rank">${rank}</span><div class="formula-identity"><strong>${escapeHtml(group.label)}</strong><div class="formula-number-grid">${numbers}</div></div><div class="formula-rounds">${renderRoundBadges(group)}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Average Gap</dt><dd>${days(item.averageGap)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
+      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><span class="formula-rank">${rank}</span><div class="formula-identity"><strong>${escapeHtml(group.label)}</strong><div class="formula-number-grid">${numbers}</div></div><div class="formula-rounds">${renderRoundBadges(group)}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Longest Period</dt><dd>${days(item.longestPeriod)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
     }).join("") || '<p class="empty">Insufficient historical data.</p>';
   }
 
