@@ -262,7 +262,7 @@
       const status = GROUP_STATUS[statusKey] || GROUP_STATUS.below_record;
       const numbers = (group.numbers || []).map(number => `<span>${escapeHtml(number)}</span>`).join("");
       const rank = Math.max(1, Number(group.rank) || index + 1);
-      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><span class="formula-rank">${rank}</span><div class="formula-identity"><strong>${escapeHtml(group.label)}</strong><div class="formula-number-grid">${numbers}</div></div><div class="formula-rounds">${renderRoundBadges(group)}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Longest Period</dt><dd>${days(item.longestPeriod)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
+      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><span class="formula-rank">${rank}</span><div class="formula-identity"><strong>${escapeHtml(group.label)}</strong><div class="formula-number-grid">${numbers}</div></div><div class="formula-rounds">${renderRoundBadges(group)}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Longest Period</dt><dd>${days(item.longestPeriod ?? group.longestPeriod ?? group.categoryLongestPeriod ?? group.rounds?.both?.longestPeriod)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
     }).join("") || '<p class="empty">Insufficient historical data.</p>';
   }
 
