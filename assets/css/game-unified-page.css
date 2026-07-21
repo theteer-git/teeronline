@@ -42,7 +42,7 @@
 /* Performance history + FR flow visual refresh */
 .performance-panel,.flow-panel{border:1px solid var(--accent-line);border-radius:.9rem;background:linear-gradient(180deg,#fff 0%,#fffaf5 100%);padding:.72rem;margin-top:.62rem;box-shadow:0 6px 18px rgba(154,52,18,.05)}
 .performance-heading,.flow-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:.65rem;margin-bottom:.6rem}
-.performance-heading h3,.flow-heading h4{margin:.08rem 0 0!important;color:var(--text)!important;font-size:.86rem!important;text-transform:none!important;letter-spacing:0!important}
+.performance-heading h3,.flow-heading h4{margin:.08rem 0 0!important;margin:.15rem 0 0;color:#064e3b;font-size:1.2rem;color:var(--text)!important;font-size:.86rem!important;text-transform:none!important;letter-spacing:0!important}
 .performance-kicker{display:block;color:var(--accent);font-size:.6rem;font-weight:950;letter-spacing:.08em;text-transform:uppercase}
 .performance-count,.flow-range{display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--accent-line);background:#fff;color:var(--accent-dark);border-radius:999px;padding:.22rem .48rem;font-size:.62rem;font-weight:900;white-space:nowrap}
 .performance-table-wrap{overflow-x:auto;border:1px solid #ffedd5;border-radius:.72rem;background:#fff}
