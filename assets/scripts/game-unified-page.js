@@ -191,10 +191,37 @@
     ).join("")}</div>`;
   }
 
-  function renderFormula(title, items = [], type) {
-    return `<div class="formula-block"><b>${escapeHtml(title)}</b>${items.map(item =>
-      `<button class="mini-chip" type="button" data-popup-title="${escapeHtml(item.label)}" data-popup-days="${Number(item.drawsMissing) || 0}" data-popup-type="${escapeHtml(type)}" data-popup-nums="${escapeHtml((item.numbers || []).join(","))}"><b>${escapeHtml(item.label)}</b> · ${Number(item.drawsMissing) || 0}d</button>`
-    ).join("")}</div>`;
+  const GROUP_STATUS = Object.freeze({
+    normal: { label: "Normal", icon: "🟢" },
+    above_average: { label: "Above Average", icon: "🟡" },
+    near_max: { label: "Near Historical Max", icon: "🟠" },
+    max_reached: { label: "Historical Max Reached", icon: "🔴" },
+    new_record: { label: "New Historical Record", icon: "🔵" },
+    insufficient_history: { label: "Limited History", icon: "⚪" }
+  });
+
+  function metricValue(value) {
+    return Number.isFinite(Number(value)) && value !== null && value !== "" ? escapeHtml(value) : "—";
+  }
+
+  function renderGroupRows(groups = []) {
+    return groups.flatMap(group => ["fr", "sr", "both"].map((roundKey, roundIndex) => {
+      const item = group.rounds?.[roundKey] || {};
+      const statusKey = String(item.status || "normal");
+      const status = GROUP_STATUS[statusKey] || GROUP_STATUS.normal;
+      const groupCell = roundIndex === 0
+        ? `<td rowspan="3" class="group-name-cell"><strong>${escapeHtml(group.label)}</strong><small>${escapeHtml((group.numbers || []).join(", "))}</small></td>`
+        : "";
+      const maxRange = item.maxGapPreviousDate && item.maxGapNextDate
+        ? ` title="Longest gap: ${escapeHtml(fmtDate(item.maxGapPreviousDate))} to ${escapeHtml(fmtDate(item.maxGapNextDate))}"`
+        : "";
+      return `<tr data-gap-status="${escapeHtml(statusKey)}">${groupCell}<td><span class="round-tag round-${escapeHtml(roundKey)}">${escapeHtml(String(item.round || roundKey).toUpperCase())}</span></td><td>${escapeHtml(fmtDate(item.lastSeen))}</td><td class="gap-number">${metricValue(item.currentGap)}</td><td class="gap-number">${metricValue(item.averageGap)}</td><td class="gap-number"${maxRange}>${metricValue(item.historicalMax)}</td><td><span class="group-status group-status-${escapeHtml(statusKey)}" title="${escapeHtml(status.label)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></td></tr>`;
+    })).join("");
+  }
+
+  function renderGroupAnalysis(title, groups = []) {
+    if (!groups.length) return `<section class="group-analysis-panel"><h4>${escapeHtml(title)}</h4><p class="empty">Insufficient historical data.</p></section>`;
+    return `<section class="group-analysis-panel"><div class="group-analysis-heading"><div><span class="performance-kicker">Completed result-days only</span><h4>${escapeHtml(title)}</h4></div><span class="metric-badge">${groups.length} groups</span></div><div class="group-table-wrap"><table class="group-analysis-table"><thead><tr><th>Group</th><th>Round</th><th>Last Seen</th><th>Current Gap</th><th>Avg Gap</th><th>Historical Max</th><th>Status</th></tr></thead><tbody>${renderGroupRows(groups)}</tbody></table></div><p class="group-analysis-note">Gaps count completed result records only. Weekly off-days and dates without a completed result are not added.</p></section>`;
   }
 
   function renderCommonNumbers(data = {}) {
@@ -260,7 +287,7 @@
           <div class="insight-grid"><div class="insight-box"><h4>🔥 Hot Numbers</h4>${chips(stats.hot)}</div><div class="insight-box"><h4>❄️ Long-Missing Numbers</h4>${chips(stats.cold, "chip cold")}</div></div>
           <div class="analytics-wide">
             <div class="blocked-panel"><h4>🚫 Longest Missing by Round</h4><div class="missing-grid">${renderMissing("FR", stats.missing?.fr)}${renderMissing("SR", stats.missing?.sr)}${renderMissing("Both", stats.missing?.both)}</div></div>
-            <div class="formula-panel"><h4>Group & Point Missing</h4><div class="formula-grid">${renderFormula("Groups", stats.groups, "group")}${renderFormula("Points", stats.points, "point")}</div></div>
+            <div class="group-analysis-stack">${renderGroupAnalysis("8-Number Group Gap Analysis", stats.groupAnalysis?.eightNumber)}${renderGroupAnalysis("4-Number Group Gap Analysis", stats.groupAnalysis?.fourNumber)}</div>
           </div>
         </section>
       </div>
