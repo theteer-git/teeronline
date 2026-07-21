@@ -237,9 +237,21 @@
       (GROUP_STATUS_PRIORITY[b.analysis?.status] || 0) - (GROUP_STATUS_PRIORITY[a.analysis?.status] || 0) ||
       String(a.label || "").localeCompare(String(b.label || ""), undefined, { numeric: true });
 
+    const categoryRecords = groupAnalysis.categoryRecords || {};
     const normalized = source.map(group => {
       const both = roundItem(group, "both");
-      return { ...group, round: "BOTH", analysis: both };
+      const size = Number(group.size) || group.numbers?.length || 0;
+      const categoryLongestPeriod = size === 4 ? categoryRecords.fourNumber : size === 8 ? categoryRecords.eightNumber : null;
+      const longestPeriod = both.longestPeriod ?? group.longestPeriod ?? group.categoryLongestPeriod ?? categoryLongestPeriod;
+      return {
+        ...group,
+        size,
+        round: "BOTH",
+        longestPeriod,
+        categoryLongestPeriod: longestPeriod,
+        analysis: { ...both, longestPeriod },
+        rounds: { ...group.rounds, both: { ...both, longestPeriod } }
+      };
     }).filter(group => group.label && group.numbers?.length && Number(group.analysis?.currentGap) > 0);
 
     const four = normalized.filter(group => (Number(group.size) || group.numbers.length) === 4).sort(compare).slice(0, 2);
