@@ -312,7 +312,7 @@
           <div class="box"><h3>Direct Common Numbers</h3><div class="direct-grid">${chips(common.direct, "direct")}</div></div>
           <div class="accuracy"><div class="accuracy-top"><b>Historical sample</b><span>${Number(sample.total) || 0} checks · ${Number(sample.rate) || 0}%</span></div><div class="bar"><i style="width:${Math.max(0, Math.min(100, Number(sample.rate) || 0))}%"></i></div></div>
           <section class="performance-panel" aria-labelledby="${prefix}-performance-title">
-            <div class="performance-heading"><div><span class="performance-kicker">Recent validation</span><h3 id="${prefix}-performance-title">Last 7 Results Performance</h3></div><span class="performance-count">${(data.performance || []).length} records</span></div>
+            <div class="performance-heading"><div><span class="performance-kicker">Recent validation</span><h4 id="${prefix}-performance-title">Last 7 Results Performance</h4></div><span class="performance-count">${(data.performance || []).length} records</span></div>
             <div class="performance-table-wrap"><table class="performance-table"><thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Performance</th></tr></thead><tbody>${performanceRows}</tbody></table></div>
           </section>
           <section class="trend-chart flow-panel" aria-label="Last 7 FR result flow">
