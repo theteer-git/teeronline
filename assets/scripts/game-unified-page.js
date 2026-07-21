@@ -225,16 +225,22 @@
     ).slice(0, 5).map((item, index) => ({ ...item, rank: index + 1 }));
   }
 
+  function renderRoundBadges(group = {}) {
+    return ["fr", "sr", "both"].map(roundKey => {
+      const item = group.rounds?.[roundKey] || {};
+      const round = String(item.round || roundKey).toUpperCase();
+      return `<span class="formula-round-badge round-${escapeHtml(roundKey)}">${escapeHtml(round)} • ${days(item.currentGap)}</span>`;
+    }).join("");
+  }
+
   function renderGroupCards(groups = []) {
     return groups.slice(0, 5).map((group, index) => {
       const item = group.analysis || {};
       const statusKey = String(item.status || "normal");
       const status = GROUP_STATUS[statusKey] || GROUP_STATUS.normal;
-      const round = String(group.round || item.round || "").toUpperCase();
-      const roundClass = round.toLowerCase();
       const numbers = (group.numbers || []).map(number => `<span>${escapeHtml(number)}</span>`).join("");
       const rank = Math.max(1, Number(group.rank) || index + 1);
-      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><span class="formula-rank">${rank}</span><div class="formula-gap-top"><strong>${escapeHtml(group.label)}</strong><span class="formula-round-badge round-${escapeHtml(roundClass)}">${escapeHtml(round)} • ${days(item.currentGap)}</span></div><div class="formula-number-grid">${numbers}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Average Gap</dt><dd>${days(item.averageGap)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
+      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><span class="formula-rank">${rank}</span><div class="formula-identity"><strong>${escapeHtml(group.label)}</strong><div class="formula-number-grid">${numbers}</div></div><div class="formula-rounds">${renderRoundBadges(group)}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Average Gap</dt><dd>${days(item.averageGap)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
     }).join("") || '<p class="empty">Insufficient historical data.</p>';
   }
 
@@ -304,7 +310,7 @@
           </div>
           <div class="insight-grid"><div class="insight-box"><h4>🔥 Hot Numbers</h4>${chips(stats.hot)}</div><div class="insight-box"><h4>❄️ Long-Missing Numbers</h4>${chips(stats.cold, "chip cold")}</div></div>
           <div class="analytics-wide">
-            <div class="blocked-panel"><h4>🚫 Longest Missing by Round</h4><div class="missing-grid">${renderMissing("FR", stats.missing?.fr)}${renderMissing("SR", stats.missing?.sr)}${renderMissing("Both", stats.missing?.both)}</div></div>
+            <div class="blocked-panel analytics-full"><h4>🚫 Longest Missing by Round</h4><div class="missing-grid">${renderMissing("FR", stats.missing?.fr)}${renderMissing("SR", stats.missing?.sr)}${renderMissing("Both", stats.missing?.both)}</div></div>
             <div class="group-analysis-stack">${renderGroupAnalysis(topMissingGroups(stats.groupAnalysis))}</div>
           </div>
         </section>
