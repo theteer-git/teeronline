@@ -237,21 +237,9 @@
       (GROUP_STATUS_PRIORITY[b.analysis?.status] || 0) - (GROUP_STATUS_PRIORITY[a.analysis?.status] || 0) ||
       String(a.label || "").localeCompare(String(b.label || ""), undefined, { numeric: true });
 
-    const categoryRecords = groupAnalysis.categoryRecords || {};
     const normalized = source.map(group => {
       const both = roundItem(group, "both");
-      const size = Number(group.size) || group.numbers?.length || 0;
-      const categoryLongestPeriod = size === 4 ? categoryRecords.fourNumber : size === 8 ? categoryRecords.eightNumber : null;
-      const longestPeriod = both.longestPeriod ?? group.longestPeriod ?? group.categoryLongestPeriod ?? categoryLongestPeriod;
-      return {
-        ...group,
-        size,
-        round: "BOTH",
-        longestPeriod,
-        categoryLongestPeriod: longestPeriod,
-        analysis: { ...both, longestPeriod },
-        rounds: { ...group.rounds, both: { ...both, longestPeriod } }
-      };
+      return { ...group, round: "BOTH", analysis: both };
     }).filter(group => group.label && group.numbers?.length && Number(group.analysis?.currentGap) > 0);
 
     const four = normalized.filter(group => (Number(group.size) || group.numbers.length) === 4).sort(compare).slice(0, 2);
@@ -279,7 +267,7 @@
   }
 
   function renderGroupAnalysis(groups = []) {
-    return `<section class="group-analysis-panel"><div class="group-analysis-heading"><div><span class="performance-kicker">Completed result-days only</span><h4>Most Missing Formula Groups</h4></div><span class="metric-badge">${groups.length} groups</span></div><div class="formula-gap-grid">${renderGroupCards(groups)}</div><p class="group-analysis-note">Two four-number and three eight-number groups that are missing from both FR and SR are ranked by their BOTH gap. Weekly off-days and incomplete result dates are excluded.</p></section>`;
+    return `<section class="group-analysis-panel"><div class="group-analysis-heading"><div><span class="performance-kicker">Completed result-days only</span><h4>Most Missing Formula Groups</h4></div><span class="metric-badge">${groups.length} groups</span></div><div class="formula-gap-grid">${renderGroupCards(groups)}</div></section>`;
   }
 
   function renderCommonNumbers(data = {}) {
@@ -331,10 +319,6 @@
             <div class="flow-heading"><div><span class="performance-kicker">Number movement</span><h4>Last 7 FR Result Flow</h4></div><span class="flow-range">${flowMin}–${flowMax}</span></div>
             <div class="flow-grid">${flow}</div>
           </section>
-        </section>
-        <section class="stats-side">
-          <div class="panel-label">📊 Statistics</div>
-          <div class="stats-main"><div class="metric-title"><h3>Most Frequent Historical Numbers</h3><span class="metric-badge">All records</span></div><div class="stats-grid">${chips(stats.frequent, "statnum")}</div><div class="note-strip">Historical statistics only — not a guaranteed prediction.</div></div>
           <div class="substats">
             <div class="subbox"><div class="metric-title"><h4>Same Date History</h4><span class="metric-badge">Past years</span></div>${sameDate || '<small class="empty">No historical data</small>'}</div>
             <div class="subbox"><div class="metric-title"><h4>${escapeHtml(stats.weekday || "Weekday")} Pattern</h4><span class="metric-badge">Same weekday</span></div>${chips(stats.weekdayPattern, "pattern-item")}</div>
@@ -342,6 +326,10 @@
             <div class="subbox"><div class="metric-title"><h4>Repeated Numbers</h4><span class="metric-badge">Recent</span></div>${chips(stats.repeated)}</div>
             <div class="subbox pair-block span-2"><h4>Repeated FR-SR Pairs</h4>${chips(stats.repeatedPairs, "chip pair")}</div>
           </div>
+        </section>
+        <section class="stats-side">
+          <div class="panel-label">📊 Statistics</div>
+          <div class="stats-main"><div class="metric-title"><h3>Most Frequent Historical Numbers</h3><span class="metric-badge">All records</span></div><div class="stats-grid">${chips(stats.frequent, "statnum")}</div><div class="note-strip">Historical statistics only — not a guaranteed prediction.</div></div>
           <div class="insight-grid"><div class="insight-box"><h4>🔥 Hot Numbers</h4>${chips(stats.hot)}</div><div class="insight-box"><h4>❄️ Long-Missing Numbers</h4>${chips(stats.cold, "chip cold")}</div></div>
           <div class="group-analysis-stack">${renderGroupAnalysis(topMissingGroups(stats.groupAnalysis))}</div>
         </section>
