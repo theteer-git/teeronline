@@ -231,25 +231,21 @@
     const supplied = Array.isArray(groupAnalysis.topMissing) ? groupAnalysis.topMissing : [];
     const source = supplied.length ? supplied.map(item => {
       const legacy = legacyByLabel.get(String(item?.label || "")) || {};
-      const rounds = mergeRounds(item, legacy);
-      return { ...legacy, ...item, rounds, analysis: item?.analysis || legacy?.analysis || {} };
+      return { ...legacy, ...item, rounds: mergeRounds(item, legacy) };
     }) : legacyGroups.map(item => ({ ...item, rounds: mergeRounds(item) }));
 
-    return source.map(group => {
-      const analyses = ["fr", "sr", "both"]
-        .map(key => roundItem(group, key))
-        .filter(item => item && Number.isFinite(Number(item.currentGap)))
-        .sort((a, b) => Number(b.currentGap) - Number(a.currentGap) ||
-          (GROUP_STATUS_PRIORITY[b.status] || 0) - (GROUP_STATUS_PRIORITY[a.status] || 0) ||
-          (GROUP_ROUND_PRIORITY[String(b.round || "").toUpperCase()] || 0) - (GROUP_ROUND_PRIORITY[String(a.round || "").toUpperCase()] || 0));
-      const selected = analyses[0] || group.analysis || {};
-      return { ...group, round: selected.round || group.round || "", analysis: selected };
-    }).filter(group => group.label && group.numbers?.length && Object.keys(group.rounds || {}).length)
-      .sort((a, b) => (Number(b.analysis?.currentGap) || 0) - (Number(a.analysis?.currentGap) || 0) ||
-        (GROUP_STATUS_PRIORITY[b.analysis?.status] || 0) - (GROUP_STATUS_PRIORITY[a.analysis?.status] || 0) ||
-        String(a.label || "").localeCompare(String(b.label || ""), undefined, { numeric: true }))
-      .slice(0, 5)
-      .map((item, index) => ({ ...item, rank: index + 1 }));
+    const compare = (a, b) => (Number(b.analysis?.currentGap) || 0) - (Number(a.analysis?.currentGap) || 0) ||
+      (GROUP_STATUS_PRIORITY[b.analysis?.status] || 0) - (GROUP_STATUS_PRIORITY[a.analysis?.status] || 0) ||
+      String(a.label || "").localeCompare(String(b.label || ""), undefined, { numeric: true });
+
+    const normalized = source.map(group => {
+      const both = roundItem(group, "both");
+      return { ...group, round: "BOTH", analysis: both };
+    }).filter(group => group.label && group.numbers?.length && Number(group.analysis?.currentGap) > 0);
+
+    const four = normalized.filter(group => (Number(group.size) || group.numbers.length) === 4).sort(compare).slice(0, 2);
+    const eight = normalized.filter(group => (Number(group.size) || group.numbers.length) === 8).sort(compare).slice(0, 3);
+    return [...four, ...eight].sort(compare).slice(0, 5).map((item, index) => ({ ...item, rank: index + 1 }));
   }
 
   function renderRoundBadges(group = {}) {
@@ -272,7 +268,7 @@
   }
 
   function renderGroupAnalysis(groups = []) {
-    return `<section class="group-analysis-panel"><div class="group-analysis-heading"><div><span class="performance-kicker">Completed result-days only</span><h4>Most Missing Formula Groups</h4></div><span class="metric-badge">${groups.length} groups</span></div><div class="formula-gap-grid">${renderGroupCards(groups)}</div><p class="group-analysis-note">The five longest-missing formula groups are ranked across FR, SR and BOTH. Weekly off-days and incomplete result dates are excluded.</p></section>`;
+    return `<section class="group-analysis-panel"><div class="group-analysis-heading"><div><span class="performance-kicker">Completed result-days only</span><h4>Most Missing Formula Groups</h4></div><span class="metric-badge">${groups.length} groups</span></div><div class="formula-gap-grid">${renderGroupCards(groups)}</div><p class="group-analysis-note">Two four-number and three eight-number groups that are missing from both FR and SR are ranked by their BOTH gap. Weekly off-days and incomplete result dates are excluded.</p></section>`;
   }
 
   function renderCommonNumbers(data = {}) {
