@@ -336,11 +336,11 @@
             <div class="subbox pair-block span-2"><h4>Repeated FR-SR Pairs</h4>${chips(stats.repeatedPairs, "chip pair")}</div>
           </div>
           <div class="insight-grid"><div class="insight-box"><h4>🔥 Hot Numbers</h4>${chips(stats.hot)}</div><div class="insight-box"><h4>❄️ Long-Missing Numbers</h4>${chips(stats.cold, "chip cold")}</div></div>
+          <div class="group-analysis-stack">${renderGroupAnalysis(topMissingGroups(stats.groupAnalysis))}</div>
         </section>
       </div>
       <div class="analytics-wide">
         <div class="blocked-panel analytics-full"><h4>🚫 Longest Missing by Round</h4><div class="missing-grid">${renderMissing("FR", stats.missing?.fr)}${renderMissing("SR", stats.missing?.sr)}${renderMissing("Both", stats.missing?.both)}</div></div>
-        <div class="group-analysis-stack">${renderGroupAnalysis(topMissingGroups(stats.groupAnalysis))}</div>
       </div>
     </article>`;
   }

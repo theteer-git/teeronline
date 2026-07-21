@@ -323,3 +323,56 @@ body.dark .formula-gap-meta{
     border-top-color:#333;
   }
 }
+
+/* Final placement: formula groups use the previously empty lower-right statistics area. */
+.stats-side > .group-analysis-stack{
+  width:100%;
+  min-width:0;
+  margin-top:1rem;
+}
+.stats-side .group-analysis-panel{
+  width:100%;
+  box-sizing:border-box;
+}
+.stats-side .formula-gap-card{
+  grid-template-columns:minmax(150px,.85fr) minmax(250px,1.5fr);
+  gap:.7rem .9rem;
+  padding:.78rem .82rem .72rem 1rem;
+}
+.stats-side .formula-identity{
+  padding-left:1.65rem;
+}
+.stats-side .formula-rounds{
+  justify-content:flex-start;
+}
+.stats-side .formula-gap-meta{
+  grid-column:1 / -1;
+  margin-top:0;
+  padding-top:.55rem;
+}
+.stats-side .formula-gap-meta > div{
+  min-height:42px;
+  padding:.05rem .8rem;
+}
+.game-card > .analytics-wide{
+  padding-top:1rem;
+}
+@media(max-width:1100px){
+  .stats-side .formula-gap-card{
+    grid-template-columns:1fr;
+  }
+  .stats-side .formula-rounds{
+    padding-left:1.65rem;
+  }
+  .stats-side .formula-gap-meta{
+    grid-column:1;
+  }
+}
+@media(max-width:760px){
+  .stats-side > .group-analysis-stack{
+    margin-top:.75rem;
+  }
+  .stats-side .formula-rounds{
+    padding-left:1.65rem;
+  }
+}
