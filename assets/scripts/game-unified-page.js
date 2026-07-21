@@ -205,15 +205,36 @@
     return Number.isFinite(n) ? `${Math.max(0, Math.ceil(n))} days` : "—";
   }
 
+  const GROUP_STATUS_PRIORITY = Object.freeze({ new_record: 6, max_reached: 5, near_max: 4, above_average: 3, insufficient_history: 2, normal: 1 });
+  const GROUP_ROUND_PRIORITY = Object.freeze({ BOTH: 3, FR: 2, SR: 1 });
+
+  function topMissingGroups(groupAnalysis = {}) {
+    if (Array.isArray(groupAnalysis.topMissing) && groupAnalysis.topMissing.length) return groupAnalysis.topMissing.slice(0, 5);
+    const groups = [...(groupAnalysis.eightNumber || []), ...(groupAnalysis.fourNumber || [])];
+    return groups.map(group => {
+      const analyses = ["fr", "sr", "both"].map(key => group.rounds?.[key]).filter(Boolean).sort((a, b) =>
+        (Number(b.currentGap) || 0) - (Number(a.currentGap) || 0) ||
+        (GROUP_STATUS_PRIORITY[b.status] || 0) - (GROUP_STATUS_PRIORITY[a.status] || 0) ||
+        (GROUP_ROUND_PRIORITY[String(b.round || "").toUpperCase()] || 0) - (GROUP_ROUND_PRIORITY[String(a.round || "").toUpperCase()] || 0)
+      );
+      return { ...group, round: analyses[0]?.round || "", analysis: analyses[0] || {} };
+    }).sort((a, b) =>
+      (Number(b.analysis?.currentGap) || 0) - (Number(a.analysis?.currentGap) || 0) ||
+      (GROUP_STATUS_PRIORITY[b.analysis?.status] || 0) - (GROUP_STATUS_PRIORITY[a.analysis?.status] || 0) ||
+      String(a.label || "").localeCompare(String(b.label || ""), undefined, { numeric: true })
+    ).slice(0, 5).map((item, index) => ({ ...item, rank: index + 1 }));
+  }
+
   function renderGroupCards(groups = []) {
-    return groups.slice(0, 5).map(group => {
+    return groups.slice(0, 5).map((group, index) => {
       const item = group.analysis || {};
       const statusKey = String(item.status || "normal");
       const status = GROUP_STATUS[statusKey] || GROUP_STATUS.normal;
       const round = String(group.round || item.round || "").toUpperCase();
       const roundClass = round.toLowerCase();
       const numbers = (group.numbers || []).map(number => `<span>${escapeHtml(number)}</span>`).join("");
-      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><div class="formula-gap-top"><strong>${escapeHtml(group.label)}</strong><span class="formula-round-badge round-${escapeHtml(roundClass)}">${escapeHtml(round)} • ${days(item.currentGap)}</span></div><div class="formula-number-grid">${numbers}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Average Gap</dt><dd>${days(item.averageGap)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
+      const rank = Math.max(1, Number(group.rank) || index + 1);
+      return `<article class="formula-gap-card" data-gap-status="${escapeHtml(statusKey)}"><span class="formula-rank">${rank}</span><div class="formula-gap-top"><strong>${escapeHtml(group.label)}</strong><span class="formula-round-badge round-${escapeHtml(roundClass)}">${escapeHtml(round)} • ${days(item.currentGap)}</span></div><div class="formula-number-grid">${numbers}</div><dl class="formula-gap-meta"><div><dt>Last Seen</dt><dd>${escapeHtml(fmtDate(item.lastSeen))}</dd></div><div><dt>Average Gap</dt><dd>${days(item.averageGap)}</dd></div><div><dt>Status</dt><dd><span class="group-status group-status-${escapeHtml(statusKey)}">${status.icon}<span>${escapeHtml(status.label)}</span></span></dd></div></dl></article>`;
     }).join("") || '<p class="empty">Insufficient historical data.</p>';
   }
 
@@ -284,7 +305,7 @@
           <div class="insight-grid"><div class="insight-box"><h4>🔥 Hot Numbers</h4>${chips(stats.hot)}</div><div class="insight-box"><h4>❄️ Long-Missing Numbers</h4>${chips(stats.cold, "chip cold")}</div></div>
           <div class="analytics-wide">
             <div class="blocked-panel"><h4>🚫 Longest Missing by Round</h4><div class="missing-grid">${renderMissing("FR", stats.missing?.fr)}${renderMissing("SR", stats.missing?.sr)}${renderMissing("Both", stats.missing?.both)}</div></div>
-            <div class="group-analysis-stack">${renderGroupAnalysis(stats.groupAnalysis?.topMissing)}</div>
+            <div class="group-analysis-stack">${renderGroupAnalysis(topMissingGroups(stats.groupAnalysis))}</div>
           </div>
         </section>
       </div>
