@@ -1,387 +1,358 @@
-<!DOCTYPE html>
+<!DOCTYPE html><html lang="en-IN"><head><meta charset="utf-8"/><meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/><style>
+  * {
+   margin: 0;
+   padding: 0;
+   box-sizing: border-box;
+  }
 
-<html lang="en-IN">
-<head>
-<meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, viewport-fit=cover" name="viewport"/>
-<style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  :root {
+   --primary: #0f172a;
+   --accent: #22c55e;
+   --accent-hover: #16a34a;
+   --bg: #f8fafc;
+   --surface: #ffffff;
+   --text: #0f172a;
+   --text-light: #475569;
+   --border: #e2e8f0;
+   --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
+  }
 
-    :root {
-      --primary: #0f172a;
-      --accent: #22c55e;
-      --accent-hover: #16a34a;
-      --bg: #f8fafc;
-      --surface: #ffffff;
-      --text: #0f172a;
-      --text-light: #475569;
-      --border: #e2e8f0;
-      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.02);
-    }
+  body.dark {
+   --primary: #f1f5f9;
+   --bg: #0f172a;
+   --surface: #1e293b;
+   --text: #f1f5f9;
+   --text-light: #cbd5e1;
+   --border: #334155;
+   --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
+  }
 
-    body.dark {
-      --primary: #f1f5f9;
-      --bg: #0f172a;
-      --surface: #1e293b;
-      --text: #f1f5f9;
-      --text-light: #cbd5e1;
-      --border: #334155;
-      --card-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
-    }
+  body {
+   font-family: 'Poppins', sans-serif;
+   background-color: var(--bg);
+   color: var(--text);
+   line-height: 1.5;
+   transition: background-color 0.3s, color 0.2s;
+  }
 
-    body {
-      font-family: 'Poppins', sans-serif;
-      background-color: var(--bg);
-      color: var(--text);
-      line-height: 1.5;
-      transition: background-color 0.3s, color 0.2s;
-    }
+  .container {
+   max-width: 1400px;
+   margin: 0 auto;
+   padding: 0 1.25rem;
+  }
 
-    .container {
-      max-width: 1400px;
-      margin: 0 auto;
-      padding: 0 1.25rem;
-    }
+  .sticky-header {
+   position: sticky;
+   top: 0;
+   z-index: 100;
+   background: var(--surface);
+   border-bottom: 1px solid var(--border);
+  }
 
-    .sticky-header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: var(--surface);
-      border-bottom: 1px solid var(--border);
-    }
+  .header-inner {
+   display: flex;
+   align-items: center;
+   justify-content: space-between;
+   flex-wrap: wrap;
+   padding: 0.9rem 0;
+   gap: 0.8rem;
+  }
 
-    .header-inner {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      padding: 0.9rem 0;
-      gap: 0.8rem;
-    }
+  .logo {
+   font-size: 1.5rem;
+   font-weight: 800;
+   background: linear-gradient(135deg, var(--accent) 0%, #2dd4bf 100%);
+   -webkit-background-clip: text;
+   background-clip: text;
+   color: transparent;
+  }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent) 0%, #2dd4bf 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
+  .nav-links {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   align-items: center;
+  }
 
-    .nav-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: center;
-    }
+  .nav-links a {
+   text-decoration: none;
+   color: var(--text-light);
+   font-weight: 500;
+   font-size: 0.85rem;
+   transition: color 0.2s;
+  }
 
-    .nav-links a {
-      text-decoration: none;
-      color: var(--text-light);
-      font-weight: 500;
-      font-size: 0.85rem;
-      transition: color 0.2s;
-    }
+  .nav-links a:hover {
+   color: var(--accent);
+  }
 
-    .nav-links a:hover {
-      color: var(--accent);
-    }
+  .dark-toggle {
+   background: var(--accent);
+   border: none;
+   padding: 0.4rem 0.9rem;
+   border-radius: 2rem;
+   cursor: pointer;
+   font-family: Poppins;
+   font-weight: 500;
+   color: #0f172a;
+   transition: 0.2s;
+  }
 
-    .dark-toggle {
-      background: var(--accent);
-      border: none;
-      padding: 0.4rem 0.9rem;
-      border-radius: 2rem;
-      cursor: pointer;
-      font-family: Poppins;
-      font-weight: 500;
-      color: #0f172a;
-      transition: 0.2s;
-    }
+  .dark-toggle:hover {
+   background: var(--accent-hover);
+  }
 
-    .dark-toggle:hover {
-      background: var(--accent-hover);
-    }
+  .hero {
+   padding: 2rem 0 1rem;
+  }
 
-    .hero {
-      padding: 2rem 0 1rem;
-    }
+  .hero h1 {
+   font-size: 1.9rem;
+   font-weight: 800;
+   background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
+   -webkit-background-clip: text;
+   background-clip: text;
+   color: transparent;
+  }
 
-    .hero h1 {
-      font-size: 1.9rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--primary) 0%, var(--accent) 100%);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
+  .hero p {
+   margin-top: 0.5rem;
+   color: var(--text-light);
+  }
 
-    .hero p {
-      margin-top: 0.5rem;
-      color: var(--text-light);
-    }
+  .loading-spinner {
+   text-align: center;
+   padding: 2rem;
+   color: var(--accent);
+  }
 
-    .loading-spinner {
-      text-align: center;
-      padding: 2rem;
-      color: var(--accent);
-    }
+  .error-message {
+   text-align: center;
+   padding: 2rem;
+   color: #ef4444;
+   background: var(--surface);
+   border-radius: 1rem;
+   margin: 1rem 0;
+  }
 
-    .error-message {
-      text-align: center;
-      padding: 2rem;
-      color: #ef4444;
-      background: var(--surface);
-      border-radius: 1rem;
-      margin: 1rem 0;
-    }
+  .search-filters {
+   background: var(--surface);
+   border-radius: 1rem;
+   padding: 1.5rem;
+   margin: 1rem 0;
+   border: 1px solid var(--border);
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   align-items: flex-end;
+  }
 
-    .search-filters {
-      background: var(--surface);
-      border-radius: 1rem;
-      padding: 1.5rem;
-      margin: 1rem 0;
-      border: 1px solid var(--border);
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      align-items: flex-end;
-    }
+  .filter-group {
+   flex: 1;
+   min-width: 160px;
+  }
 
-    .filter-group {
-      flex: 1;
-      min-width: 160px;
-    }
+  .filter-group label {
+   display: block;
+   font-size: 0.75rem;
+   font-weight: 600;
+   margin-bottom: 0.25rem;
+   color: var(--text-light);
+   text-transform: uppercase;
+   letter-spacing: 0.5px;
+  }
 
-    .filter-group label {
-      display: block;
-      font-size: 0.75rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
-      color: var(--text-light);
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-    }
+  .filter-group input, .filter-group select {
+   width: 100%;
+   padding: 0.6rem 0.8rem;
+   border-radius: 0.5rem;
+   border: 1px solid var(--border);
+   background: var(--bg);
+   color: var(--text);
+   font-family: Poppins;
+   font-size: 0.85rem;
+  }
 
-    .filter-group input, .filter-group select {
-      width: 100%;
-      padding: 0.6rem 0.8rem;
-      border-radius: 0.5rem;
-      border: 1px solid var(--border);
-      background: var(--bg);
-      color: var(--text);
-      font-family: Poppins;
-      font-size: 0.85rem;
-    }
+  .filter-group input:focus, .filter-group select:focus {
+   outline: none;
+   border-color: var(--accent);
+  }
 
-    .filter-group input:focus, .filter-group select:focus {
-      outline: none;
-      border-color: var(--accent);
-    }
+  .search-btn, .reset-btn {
+   padding: 0.6rem 1.5rem;
+   border-radius: 0.5rem;
+   font-weight: 600;
+   font-family: Poppins;
+   cursor: pointer;
+   transition: 0.2s;
+  }
 
-    .search-btn, .reset-btn {
-      padding: 0.6rem 1.5rem;
-      border-radius: 0.5rem;
-      font-weight: 600;
-      font-family: Poppins;
-      cursor: pointer;
-      transition: 0.2s;
-    }
+  .search-btn {
+   background: var(--accent);
+   border: none;
+   color: #0f172a;
+  }
 
-    .search-btn {
-      background: var(--accent);
-      border: none;
-      color: #0f172a;
-    }
+  .search-btn:hover {
+   background: var(--accent-hover);
+   transform: translateY(-1px);
+  }
 
-    .search-btn:hover {
-      background: var(--accent-hover);
-      transform: translateY(-1px);
-    }
+  .reset-btn {
+   background: var(--surface);
+   border: 1px solid var(--border);
+   color: var(--text);
+  }
 
-    .reset-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text);
-    }
+  .reset-btn:hover {
+   background: var(--border);
+  }
 
-    .reset-btn:hover {
-      background: var(--border);
-    }
+  .table-wrapper {
+   overflow-x: auto;
+   border-radius: 1rem;
+   border: 1px solid var(--border);
+   background: var(--surface);
+   margin: 1.5rem 0;
+  }
 
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 1rem;
-      border: 1px solid var(--border);
-      background: var(--surface);
-      margin: 1.5rem 0;
-    }
+  .results-table {
+   width: 100% !important;
+   table-layout: fixed !important;
+   font-size: 0.85rem;
+  }
 
-    .results-table {
-      width: 100% !important;
-      table-layout: fixed !important;
-      font-size: 0.85rem;
-    }
+  .results-table th,
+  .results-table td {
+   width: 25% !important;
+   text-align: center;
+   padding: 0.8rem;
+   vertical-align: middle;
+  }
 
-    .results-table th,
-    .results-table td {
-      width: 25% !important;
-      text-align: center;
-      padding: 0.8rem;
-      vertical-align: middle;
-    }
+  .results-table th {
+   background: var(--bg);
+   font-weight: 700;
+   color: var(--accent);
+  }
 
-    .results-table th {
-      background: var(--bg);
-      font-weight: 700;
-      color: var(--accent);
-    }
-
-    @media (max-width: 768px) {
-      .results-table th,
-      .results-table td {
-        width: auto !important;
-        min-width: 100px;
-      }
-      .results-table {
-        table-layout: auto !important;
-      }
-    }
+  @media (max-width: 768px) {
+   .results-table th,
+   .results-table td {
+    width: auto !important;
+    min-width: 100px;
+   }
+   .results-table {
+    table-layout: auto !important;
+   }
+  }
 
 
 .filter-status {
-      margin-bottom: 1rem;
-    }
+   margin-bottom: 1rem;
+  }
 
-    .results-count {
-      display: inline-block;
-      padding: 0.5rem 1rem;
-      background: var(--surface);
-      border-radius: 0.5rem;
-      font-weight: 600;
-      color: var(--accent);
-      font-size: 0.85rem;
-      border: 1px solid var(--border);
-    }
+  .results-count {
+   display: inline-block;
+   padding: 0.5rem 1rem;
+   background: var(--surface);
+   border-radius: 0.5rem;
+   font-weight: 600;
+   color: var(--accent);
+   font-size: 0.85rem;
+   border: 1px solid var(--border);
+  }
 
-    .seo-content {
-      background: var(--surface);
-      border-radius: 1.5rem;
-      padding: 1.8rem;
-      margin: 2rem 0;
-      border: 1px solid var(--border);
-    }
+  .seo-content {
+   background: var(--surface);
+   border-radius: 1.5rem;
+   padding: 1.8rem;
+   margin: 2rem 0;
+   border: 1px solid var(--border);
+  }
 
-    .seo-content h2 {
-      font-size: 1.5rem;
-      margin-bottom: 1rem;
-    }
+  .seo-content h2 {
+   font-size: 1.5rem;
+   margin-bottom: 1rem;
+  }
 
-    .seo-content p {
-      margin-bottom: 1rem;
-      color: var(--text-light);
-    }
+  .seo-content p {
+   margin-bottom: 1rem;
+   color: var(--text-light);
+  }
 
-    .related-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem;
-      margin: 1rem 0 2rem;
-      justify-content: center;
-    }
+  .related-links {
+   display: flex;
+   flex-wrap: wrap;
+   gap: 1rem;
+   margin: 1rem 0 2rem;
+   justify-content: center;
+  }
 
-    .related-links a {
-      background: var(--surface);
-      padding: 0.5rem 1.2rem;
-      border-radius: 2rem;
-      text-decoration: none;
-      color: var(--accent);
-      border: 1px solid var(--accent);
-      font-size: 0.85rem;
-      transition: 0.2s;
-    }
+  .related-links a {
+   background: var(--surface);
+   padding: 0.5rem 1.2rem;
+   border-radius: 2rem;
+   text-decoration: none;
+   color: var(--accent);
+   border: 1px solid var(--accent);
+   font-size: 0.85rem;
+   transition: 0.2s;
+  }
 
-    .related-links a:hover {
-      background: var(--accent);
-      color: white;
-    }
+  .related-links a:hover {
+   background: var(--accent);
+   color: white;
+  }
 
-    footer {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
-      padding: 2rem 0;
-      margin-top: 2rem;
-    }
+  footer {
+   background: var(--surface);
+   border-top: 1px solid var(--border);
+   padding: 2rem 0;
+   margin-top: 2rem;
+  }
 
-    .footer-links {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 1.8rem;
-      margin-bottom: 1.2rem;
-    }
+  .footer-links {
+   display: flex;
+   flex-wrap: wrap;
+   justify-content: center;
+   gap: 1.8rem;
+   margin-bottom: 1.2rem;
+  }
 
-    .footer-links a {
-      text-decoration: none;
-      color: var(--text-light);
-      font-size: 0.85rem;
-    }
+  .footer-links a {
+   text-decoration: none;
+   color: var(--text-light);
+   font-size: 0.85rem;
+  }
 
-    .disclaimer {
-      text-align: center;
-      font-size: 0.75rem;
-      color: var(--text-light);
-    }
+  .disclaimer {
+   text-align: center;
+   font-size: 0.75rem;
+   color: var(--text-light);
+  }
 
-    @media (max-width: 768px) {
-      .search-filters {
-        flex-direction: column;
-      }
-      .filter-group {
-        width: 100%;
-      }
-      .hero h1 {
-        font-size: 1.5rem;
-      }
-    }
+  @media (max-width: 768px) {
+   .search-filters {
+    flex-direction: column;
+   }
+   .filter-group {
+    width: 100%;
+   }
+   .hero h1 {
+    font-size: 1.5rem;
+   }
+  }
 	table.dataTable thead th, table.dataTable thead td {TEXT-ALIGN: CENTER}
-  </style>
-<title>Khanapara Teer Previous Results: FR &amp; SR Archive</title>
-<meta content="Search Khanapara Teer previous results by date, weekday, number and round. Review old FR and SR records in a fast historical archive." name="description"/>
-<meta content="khanapara teer previous results, khanapara teer result list, previous teer results" name="keywords"/>
-<meta content="TeerOnline Editorial Team" name="author"/>
-<meta content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" name="robots"/>
-<meta content="#0b3d2e" name="theme-color"/>
-<link href="./assets/img/favicon.ico" rel="icon" sizes="any"/>
-<link href="./assets/img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/>
-<link href="./assets/img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/>
-<link href="./assets/img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/>
-<link as="image" fetchpriority="high" href="./assets/img/logo.webp" rel="preload" type="image/webp"/>
-<meta content="Khanapara Teer Previous Results: FR &amp; SR Archive" property="og:title"/>
-<meta content="Search Khanapara Teer previous results by date, weekday, number and round. Review old FR and SR records in a fast historical archive." property="og:description"/>
-<meta content="website" property="og:type"/>
-<meta content="https://teeronline.com/khanapara-teer-previous-results" property="og:url"/>
-<meta content="TeerOnline.com" property="og:site_name"/>
-<meta content="https://teeronline.com/assets/img/logo.webp" property="og:image"/>
-<meta content="summary_large_image" name="twitter:card"/>
-<meta content="Khanapara Teer Previous Results: FR &amp; SR Archive" name="twitter:title"/>
-<meta content="Search Khanapara Teer previous results by date, weekday, number and round. Review old FR and SR records in a fast historical archive." name="twitter:description"/>
-<style>
+ </style><title>Khanapara Teer Previous Results: FR &amp; SR Archive</title><meta content="Search Khanapara Teer previous results by date, weekday, number and round. Review old FR and SR records in a fast historical archive." name="description"/><meta content="khanapara teer previous results, khanapara teer result list, previous teer results" name="keywords"/><meta content="TeerOnline Editorial Team" name="author"/><meta content="index,follow,max-image-preview:large,max-snippet:-1,max-video-preview:-1" name="robots"/><meta content="#0b3d2e" name="theme-color"/><link href="./assets/img/favicon.ico" rel="icon" sizes="any"/><link href="./assets/img/favicon-32x32.png" rel="icon" sizes="32x32" type="image/png"/><link href="./assets/img/favicon-16x16.png" rel="icon" sizes="16x16" type="image/png"/><link href="./assets/img/apple-touch-icon.png" rel="apple-touch-icon" sizes="180x180"/><link as="image" fetchpriority="high" href="./assets/img/logo.webp" rel="preload" type="image/webp"/><meta content="Khanapara Teer Previous Results: FR &amp; SR Archive" property="og:title"/><meta content="Search Khanapara Teer previous results by date, weekday, number and round. Review old FR and SR records in a fast historical archive." property="og:description"/><meta content="website" property="og:type"/><meta content="https://teeronline.com/khanapara-teer-previous-results" property="og:url"/><meta content="TeerOnline.com" property="og:site_name"/><meta content="https://teeronline.com/assets/img/logo.webp" property="og:image"/><meta content="summary_large_image" name="twitter:card"/><meta content="Khanapara Teer Previous Results: FR &amp; SR Archive" name="twitter:title"/><meta content="Search Khanapara Teer previous results by date, weekday, number and round. Review old FR and SR records in a fast historical archive." name="twitter:description"/><style>
 /* TeerOnline uniform production theme */
 :root{--primary:#c2410c!important;--accent:#c2410c!important;--accent-hover:#9a3412!important;--accent-dark:#9a3412!important;--bg:#fff7ed!important;--surface:#ffffff!important;--text:#111111!important;--text-light:#475569!important;--border:#fdba74!important;--card-shadow:0 6px 16px rgba(0,0,0,.06)!important;--shadow:0 6px 16px rgba(0,0,0,.06)!important;--table-header-bg:#9a3412!important}
 body.dark{--primary:#fb923c!important;--accent:#fb923c!important;--accent-hover:#fdba74!important;--accent-dark:#fdba74!important;--bg:#111111!important;--surface:#1b1b1b!important;--text:#ffffff!important;--text-light:#e2e8f0!important;--border:#525252!important;--table-header-bg:#1f1f1f!important}
 html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif!important;background:var(--bg)!important;color:var(--text)!important;text-rendering:optimizeLegibility;-webkit-font-smoothing:antialiased}.container{max-width:1180px;margin:0 auto;padding-left:1rem!important;padding-right:1rem!important}.sticky-header{position:sticky;top:0;z-index:100;background:var(--surface)!important;border-bottom:1px solid var(--border)!important;box-shadow:0 1px 3px rgba(0,0,0,.05)!important}.header-inner{display:block!important;padding:0!important}.logo-wrapper{text-align:center;padding:.58rem 0 .28rem}.logo{display:inline-block;text-decoration:none!important;background:none!important;color:inherit!important}.logo picture{display:block;width:100px;height:100px;margin:0 auto}.logo img{width:100px;height:100px;display:block;margin:0 auto;object-fit:contain}.site-title{font-size:clamp(1.3rem,3vw,1.8rem);font-weight:850;line-height:1.05;color:var(--accent);letter-spacing:-.03em}.site-tagline{color:var(--text-light);font-size:.82rem;font-weight:750;margin-top:.12rem}.nav-links{display:flex!important;justify-content:center;flex-wrap:wrap;gap:.42rem!important;align-items:center;padding:.58rem 0 .7rem!important;border-top:1px solid var(--border)}.nav-links a,.dark-toggle{text-decoration:none!important;font-weight:750!important;font-size:.8rem!important;padding:.38rem .7rem!important;border-radius:999px!important;white-space:nowrap!important}.nav-links a{color:#7c2d12!important;background:#fed7aa!important}.dark-toggle{background:var(--accent)!important;border:0!important;cursor:pointer;color:#fff!important;font-family:inherit!important}.hero,.page-header{background:var(--surface)!important;border:1px solid var(--border)!important;color:var(--text)!important;border-radius:.95rem!important;box-shadow:var(--card-shadow)!important;padding:1.2rem!important;margin:1rem 0!important;text-align:center}.hero h1,.page-header h1{color:var(--text)!important;font-size:clamp(1.42rem,5vw,2.25rem)!important;line-height:1.12!important;margin-bottom:.5rem!important;letter-spacing:-.03em}.hero p,.page-header p{color:var(--text-light)!important;max-width:820px;margin:.5rem auto 0!important}.game-card,.stat-card,.content-card,.policy-section,.info-card,.contact-card,.form-card,.table-wrapper,.search-filters,.seo-content,.related-links,.quick-links,.link-card{background:var(--surface)!important;border:1px solid var(--border)!important;box-shadow:var(--card-shadow)!important;border-radius:.95rem!important}.game-header,.card-header,.results-table th,
 .search-btn,.reset-btn,.btn,.home-btn,.submit-btn{background:var(--accent)!important;color:#fff!important;border:0!important;border-radius:999px!important;font-weight:750!important}.reset-btn{background:#475569!important}.related-links,.quick-links{display:grid!important;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:.5rem;padding:.85rem!important;margin:1rem 0!important}.related-links a,.quick-links a,.seo-links a{display:block;text-decoration:none!important;color:var(--text)!important;background:#fff7ed!important;border:1px solid var(--border)!important;border-radius:.65rem!important;padding:.55rem .7rem!important;font-weight:750!important}.internal-links{margin:1.2rem 0}.internal-links h2{text-align:center;margin-bottom:.7rem;font-size:1.2rem}.internal-link-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem}.internal-link-grid a{display:block;text-decoration:none;color:var(--text);background:var(--surface);border:1px solid var(--border);border-radius:.7rem;padding:.65rem .75rem;font-weight:750}.seo-note{background:var(--surface);border:1px solid var(--border);border-radius:.95rem;padding:1rem;margin:1rem 0;color:var(--text-light)}.seo-note h2{color:var(--text);margin-bottom:.5rem;font-size:1.18rem}footer{background:#111!important;color:#fff!important;padding:1.8rem 0 1.55rem!important;margin-top:1.4rem!important}.footer-nav{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:.65rem;padding:.45rem 0 1rem}.footer-nav a{text-decoration:none;color:#e2e8f0!important;font-weight:650;font-size:.86rem}.footer-copyright{text-align:center;padding:.6rem 0 .8rem;color:#cbd5e1;font-size:.86rem}.footer-bottom{text-align:center;max-width:920px;margin:0 auto}.disclaimer,.copyright{color:#cbd5e1;font-size:.74rem;margin-top:.4rem}body.dark .nav-links a{color:#fff!important;background:#2a1a12!important}body.dark .related-links a,body.dark .quick-links a,body.dark .seo-links a,body.dark .internal-link-grid a{background:#151515!important;color:#fff!important}a{color:var(--accent)}img{max-width:100%;height:auto}@media(hover:hover){.nav-links a:hover,.related-links a:hover,.quick-links a:hover,.internal-link-grid a:hover{background:var(--accent)!important;color:#fff!important}}@media(max-width:768px){.container{padding-left:.68rem!important;padding-right:.68rem!important}.sticky-header{position:static}.logo-wrapper{padding:.42rem 0 .22rem}.logo picture,.logo img{width:74px;height:74px}.site-title{font-size:1.18rem}.site-tagline{font-size:.73rem}.nav-links{gap:.28rem!important;padding:.48rem 0 .56rem!important}.nav-links a,.dark-toggle{font-size:.7rem!important;padding:.34rem .5rem!important}.hero,.page-header{padding:.85rem!important;margin:.75rem 0!important}.hero h1,.page-header h1{font-size:1.3rem!important}.related-links,.quick-links,.internal-link-grid{grid-template-columns:1fr!important}.footer-nav{gap:.4rem}}
-</style><link href="https://teeronline.com/khanapara-teer-previous-results" rel="canonical"/>
-<style>
+</style><link href="https://teeronline.com/khanapara-teer-previous-results" rel="canonical"/><style>
 .table-controls{display:flex;justify-content:space-between;align-items:center;gap:.75rem;flex-wrap:wrap;margin:.6rem 0 1rem}.page-size-control{display:flex;align-items:center;gap:.45rem;color:var(--text-light);font-size:.85rem;font-weight:650}.page-size-control select{padding:.42rem .65rem;border:1px solid var(--border);border-radius:.55rem;background:var(--surface);color:var(--text)}.pagination{display:flex;align-items:center;justify-content:center;gap:.35rem;flex-wrap:wrap;margin:1rem 0 1.2rem}.page-btn{border:1px solid var(--border);background:var(--surface);color:var(--text);border-radius:.55rem;padding:.45rem .75rem;cursor:pointer;font-weight:700}.page-btn.active,.page-btn:hover{background:var(--accent);border-color:var(--accent);color:#fff}.page-btn:disabled{opacity:.45;cursor:not-allowed}.results-table tbody td{border-top:1px solid var(--border)}input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer}
-</style>
-<style id="onpage-seo-css">
+</style><style id="onpage-seo-css">
 .onpage-seo-block{background:var(--surface,#fff);border:1px solid var(--border,#e2e8f0);border-radius:1rem;padding:1.1rem;margin:1.25rem 0;box-shadow:var(--shadow,var(--card-shadow,0 6px 16px rgba(0,0,0,.06)))}
 .onpage-seo-block h2{font-size:1.18rem;line-height:1.25;margin:1rem 0 .45rem;color:var(--text,#111)}
 .onpage-seo-block h3{font-size:1rem;margin:.75rem 0 .35rem;color:var(--accent,#c2410c)}
@@ -389,320 +360,164 @@ html{scroll-behavior:smooth}body{font-family:system-ui,-apple-system,BlinkMacSys
 .related-seo-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:.45rem;margin:.65rem 0}
 .related-seo-links a{display:block;text-decoration:none;color:var(--text,#111);background:var(--bg,#fff7ed);border:1px solid var(--border,#fdba74);border-radius:.65rem;padding:.48rem .62rem;font-size:.84rem;font-weight:750}
 @media(max-width:768px){.onpage-seo-block{padding:.85rem}.onpage-seo-block h2{font-size:1.05rem}.onpage-seo-block p{font-size:.84rem}.related-seo-links{grid-template-columns:1fr}}
-</style>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://teeronline.com/#organization","name":"TeerOnline.com","url":"https://teeronline.com/","logo":{"@type":"ImageObject","url":"https://teeronline.com/assets/img/logo.webp"},"contactPoint":{"@type":"ContactPoint","contactType":"customer support","url":"https://teeronline.com/contact"}},{"@type":"WebSite","@id":"https://teeronline.com/#website","url":"https://teeronline.com/","name":"TeerOnline.com","publisher":{"@id":"https://teeronline.com/#organization"}},{"@type":"WebPage","@id":"https://teeronline.com/khanapara-teer-previous-results#webpage","url":"https://teeronline.com/khanapara-teer-previous-results","name":"Khanapara Teer Previous Results | Daily FR SR History","description":"Search Khanapara Teer previous results by date, day, number and round. Check old Khanapara Teer FR SR records in a fast archive table.","inLanguage":"en-IN","isPartOf":{"@id":"https://teeronline.com/#website"},"dateModified":"2026-07-14","isAccessibleForFree":true,"publisher":{"@id":"https://teeronline.com/#organization"}},{"@type":"BreadcrumbList","@id":"https://teeronline.com/khanapara-teer-previous-results#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://teeronline.com/"},{"@type":"ListItem","position":2,"name":"Khanapara Teer Previous Results","item":"https://teeronline.com/khanapara-teer-previous-results"}]},{"@type":"FAQPage","@id":"https://teeronline.com/khanapara-teer-previous-results#faq","mainEntity":[{"@type":"Question","name":"Can I search the Khanapara Teer archive by a specific two-digit number?","acceptedAnswer":{"@type":"Answer","text":"Yes. Use the number filter to locate matching First Round or Second Round records shown in the archive."}},{"@type":"Question","name":"How often is the Khanapara Teer archive updated?","acceptedAnswer":{"@type":"Answer","text":"It is updated after a new completed result or a verified historical correction is added to the site data."}},{"@type":"Question","name":"Why might a date be missing from the archive?","acceptedAnswer":{"@type":"Answer","text":"A game may have been closed, a result may still be unavailable, or the historical record may not yet have been verified."}},{"@type":"Question","name":"Is the archive a prediction tool?","acceptedAnswer":{"@type":"Answer","text":"No. It is a historical reference and does not guarantee future outcomes."}}]},{"@type":"ItemList","@id":"https://teeronline.com/khanapara-teer-previous-results#archive-list","name":"Khanapara Teer FR SR archive tools","itemListElement":[{"@type":"ListItem","position":1,"name":"Date-wise FR SR result table","url":"https://teeronline.com/khanapara-teer-previous-results"},{"@type":"ListItem","position":2,"name":"Search by two-digit number","url":"https://teeronline.com/khanapara-teer-previous-results"},{"@type":"ListItem","position":3,"name":"Filter by day and round","url":"https://teeronline.com/khanapara-teer-previous-results"},{"@type":"ListItem","position":4,"name":"Related Teer result archives","url":"https://teeronline.com/khanapara-teer-previous-results"}]}]}</script>
-<style id="seo-enhancement-css">
+</style><script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@type":"Organization","@id":"https://teeronline.com/#organization","name":"TeerOnline.com","url":"https://teeronline.com/","logo":{"@type":"ImageObject","url":"https://teeronline.com/assets/img/logo.webp"},"contactPoint":{"@type":"ContactPoint","contactType":"customer support","url":"https://teeronline.com/contact"}},{"@type":"WebSite","@id":"https://teeronline.com/#website","url":"https://teeronline.com/","name":"TeerOnline.com","publisher":{"@id":"https://teeronline.com/#organization"}},{"@type":"WebPage","@id":"https://teeronline.com/khanapara-teer-previous-results#webpage","url":"https://teeronline.com/khanapara-teer-previous-results","name":"Khanapara Teer Previous Results | Daily FR SR History","description":"Search Khanapara Teer previous results by date, day, number and round. Check old Khanapara Teer FR SR records in a fast archive table.","inLanguage":"en-IN","isPartOf":{"@id":"https://teeronline.com/#website"},"dateModified":"2026-07-14","isAccessibleForFree":true,"publisher":{"@id":"https://teeronline.com/#organization"}},{"@type":"BreadcrumbList","@id":"https://teeronline.com/khanapara-teer-previous-results#breadcrumb","itemListElement":[{"@type":"ListItem","position":1,"name":"Home","item":"https://teeronline.com/"},{"@type":"ListItem","position":2,"name":"Khanapara Teer Previous Results","item":"https://teeronline.com/khanapara-teer-previous-results"}]},{"@type":"FAQPage","@id":"https://teeronline.com/khanapara-teer-previous-results#faq","mainEntity":[{"@type":"Question","name":"How can I search Khanapara Teer previous results?","acceptedAnswer":{"@type":"Answer","text":"Use the date, weekday, number or round filters to locate historical FR and SR records."}},{"@type":"Question","name":"Can I search by a two-digit number?","acceptedAnswer":{"@type":"Answer","text":"Yes. Enter any value from 00 to 99 to find matching archived entries."}},{"@type":"Question","name":"Can I search only First Round results?","acceptedAnswer":{"@type":"Answer","text":"Yes. Use the round filter to display only FR records."}},{"@type":"Question","name":"Can I search only Second Round results?","acceptedAnswer":{"@type":"Answer","text":"Yes. Select the SR filter to display Second Round entries."}},{"@type":"Question","name":"Why are leading zeroes preserved?","acceptedAnswer":{"@type":"Answer","text":"Values such as 03 and 30 represent different historical records."}},{"@type":"Question","name":"What does FR mean?","acceptedAnswer":{"@type":"Answer","text":"FR stands for First Round."}},{"@type":"Question","name":"What does SR mean?","acceptedAnswer":{"@type":"Answer","text":"SR stands for Second Round."}},{"@type":"Question","name":"Can historical records be corrected?","acceptedAnswer":{"@type":"Answer","text":"Yes. Verified corrections update only the affected record."}},{"@type":"Question","name":"Why might a date be missing?","acceptedAnswer":{"@type":"Answer","text":"The game may not have been played or the record may still require verification."}},{"@type":"Question","name":"Does this archive contain today's result?","acceptedAnswer":{"@type":"Answer","text":"No. Today's result is available on the live Khanapara result page."}},{"@type":"Question","name":"Are repeated numbers predictions?","acceptedAnswer":{"@type":"Answer","text":"No. They describe past occurrences only."}},{"@type":"Question","name":"Can weekday patterns predict future results?","acceptedAnswer":{"@type":"Answer","text":"No. Weekday comparisons are historical observations."}},{"@type":"Question","name":"Is this archive free to use?","acceptedAnswer":{"@type":"Answer","text":"Yes."}},{"@type":"Question","name":"Does TeerOnline sell tickets?","acceptedAnswer":{"@type":"Answer","text":"No."}},{"@type":"Question","name":"Does TeerOnline guarantee numbers?","acceptedAnswer":{"@type":"Answer","text":"No."}},{"@type":"Question","name":"Can I compare multiple dates?","acceptedAnswer":{"@type":"Answer","text":"Yes, by changing the filters and reviewing matching rows."}},{"@type":"Question","name":"How often is the archive updated?","acceptedAnswer":{"@type":"Answer","text":"After verified historical additions or corrections."}},{"@type":"Question","name":"Can I verify yesterday's result?","acceptedAnswer":{"@type":"Answer","text":"Yes, using the date filter."}},{"@type":"Question","name":"Why separate archive and live pages?","acceptedAnswer":{"@type":"Answer","text":"To avoid confusing historical records with today's result."}},{"@type":"Question","name":"Are archive records official announcements?","acceptedAnswer":{"@type":"Answer","text":"No. They are historical references."}},{"@type":"Question","name":"Can old results predict future numbers?","acceptedAnswer":{"@type":"Answer","text":"No."}},{"@type":"Question","name":"Why preserve the playing date?","acceptedAnswer":{"@type":"Answer","text":"The date is part of every historical record."}},{"@type":"Question","name":"Can I search by weekday?","acceptedAnswer":{"@type":"Answer","text":"Yes."}},{"@type":"Question","name":"What is the purpose of this archive?","acceptedAnswer":{"@type":"Answer","text":"Historical verification and research."}},{"@type":"Question","name":"Should historical frequency be treated as certainty?","acceptedAnswer":{"@type":"Answer","text":"No. Frequency describes past data only."}}]},{"@type":"ItemList","@id":"https://teeronline.com/khanapara-teer-previous-results#archive-list","name":"Khanapara Teer FR SR archive tools","itemListElement":[{"@type":"ListItem","position":1,"name":"Date-wise FR SR result table","url":"https://teeronline.com/khanapara-teer-previous-results"},{"@type":"ListItem","position":2,"name":"Search by two-digit number","url":"https://teeronline.com/khanapara-teer-previous-results"},{"@type":"ListItem","position":3,"name":"Filter by day and round","url":"https://teeronline.com/khanapara-teer-previous-results"},{"@type":"ListItem","position":4,"name":"Related Teer result archives","url":"https://teeronline.com/khanapara-teer-previous-results"}]}]}</script><style id="seo-enhancement-css">
 .onpage-seo-block .seo-links{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:.5rem;margin:.75rem 0 1rem}.onpage-seo-block .seo-links a{display:block;text-decoration:none;border:1px solid var(--border,#e2e8f0);border-radius:.7rem;padding:.58rem .72rem;font-weight:750;background:var(--bg,#f8fafc);color:var(--text,#0f172a)}.onpage-seo-block h2{margin-top:.2rem}.onpage-seo-block h3{margin-top:1rem}
-</style>
-<meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="telephone=no" name="format-detection"/><meta content="en_IN" property="og:locale"/><meta content="TeerOnline result information and archive" property="og:image:alt"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="https://teeronline.com/assets/img/logo.webp" name="twitter:image"/><meta content="TeerOnline result information" name="twitter:image:alt"/><link crossorigin="anonymous" href="https://results.teeronline.com" rel="preconnect"/><link href="//results.teeronline.com" rel="dns-prefetch"/><style data-task4="a11y">.skip-link{position:absolute;left:-9999px;top:auto}.skip-link:focus{left:1rem;top:1rem;z-index:99999;background:#fff;color:#111;padding:.75rem 1rem;border-radius:.4rem;box-shadow:0 2px 12px rgba(0,0,0,.25)}.task4-breadcrumb{font-size:.9rem;margin:1rem 0}.task4-breadcrumb ol{display:flex;flex-wrap:wrap;gap:.45rem;list-style:none;padding:0}.task4-breadcrumb li+li:before{content:"/";margin-right:.45rem}.task4-guide{content-visibility:auto;contain-intrinsic-size:600px}.task4-related ul{columns:2;padding-left:1.2rem}@media(max-width:640px){.task4-related ul{columns:1}}</style><link href="/assets/css/task4b-seo.css" rel="stylesheet"/></head>
-<body><a class="skip-link" href="#main-content">Skip to main content</a>
-<header class="sticky-header">
-<div class="container header-inner">
-<div class="logo-wrapper">
-<a aria-label="TeerOnline.com home page" class="logo" href="./">
-<picture><source srcset="./assets/img/logo.webp" type="image/webp"/><img alt="TeerOnline.com logo for Shillong, Khanapara and Juwai Teer results" decoding="async" fetchpriority="high" height="100" src="./assets/img/logo.png" width="100"/></picture>
-</a>
-<div class="site-title">TeerOnline.com</div>
-<div class="site-tagline">Fast • Accurate • Reliable</div>
-</div>
-<nav aria-label="Main navigation" class="nav-links">
-<a aria-current="page" href="/">Shillong Teer</a><a href="/khanapara-teer-results">Khanapara Teer</a><a href="/juwai-teer-results">Juwai Teer</a><a href="/shillong-morning-teer-results">Shillong Morning</a><a href="/khanapara-morning-teer-results">Khanapara Morning</a><a href="/juwai-morning-teer-results">Juwai Morning</a><a href="/shillong-night-teer-results">Shillong Night</a><a href="/shillong-night-teer-2-results">Shillong Night 2</a><a href="/dream-numbers">Dream Numbers</a><a href="/teer-formula">Teer Formula</a><button aria-label="Toggle dark mode" class="dark-toggle" id="darkModeToggle" type="button">🌓</button></nav>
-</div>
-</header>
-<main aria-label="Khanapara Teer Result Archive with Old FR SR Records" class="container" id="main-content"><nav aria-label="Breadcrumb" class="task4-breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Khanapara Teer Previous Results</li></ol></nav>
-<div class="hero">
-<h1>Khanapara Teer Previous Results and FR SR Archive</h1>
-<p>Search khanapara teer previous results by date, weekday, number and round, then compare verified old FR and SR records without treating history as a prediction.</p>
-</div>
-<div class="search-filters">
-<div class="filter-group">
-<label for="numberSearch">🔢 Number (00-99)</label>
-<input id="numberSearch" inputmode="numeric" maxlength="2" placeholder="e.g., 45" type="text"/>
-</div>
-<div class="filter-group">
-<label for="dateCalendar">📅 Pick a Date</label>
-<input autocomplete="off" id="dateCalendar" placeholder="Select date" type="date"/>
-</div>
-<div class="filter-group">
-<label for="daySearch">📆 Day of Week</label>
-<select id="daySearch">
-<option value="">All Days</option>
-<option value="Monday">Monday</option>
-<option value="Tuesday">Tuesday</option>
-<option value="Wednesday">Wednesday</option>
-<option value="Thursday">Thursday</option>
-<option value="Friday">Friday</option>
-<option value="Saturday">Saturday</option>
-<option value="Sunday">Sunday</option>
-</select>
-</div>
-<div class="filter-group">
-<label for="roundSearch">🎯 Round Filter</label>
-<select id="roundSearch">
-<option value="">Both Rounds</option>
-<option value="fr">First Round (FR)</option>
-<option value="sr">Second Round (SR)</option>
-</select>
-</div>
-<div style="display: flex; gap: 0.8rem;">
-<button class="search-btn" id="applyFilters">🔍 Apply Filters</button>
-<button class="reset-btn" id="resetFilters">⟳ Reset</button>
-</div>
-</div>
-<div class="loading-spinner" id="loadingIndicator" style="display: none;">📡 Loading Khanapara Day results from data ...</div>
-<div class="error-message" id="errorMessage" style="display: none;"></div>
-<div class="filter-status">
-<div class="results-count" id="resultsCount">📊 Loading...</div>
-<div class="page-size-control"><label for="pageSize">Rows</label><select id="pageSize"><option selected="" value="25">25</option><option value="50">50</option><option value="100">100</option></select></div>
-</div>
-<div class="table-wrapper">
-<table class="results-table display responsive" id="resultsTable" style="width:100%">
-<thead>
-<tr>
-<th>Date</th>
-<th>Day</th>
-<th>First Round (FR)</th>
-<th>Second Round (SR)</th>
-</tr>
-</thead>
-<tbody>
-<tr><td colspan="4" style="text-align:center;">Loading data...</td></tr>
-</tbody>
-</table>
-</div>
-<div aria-label="Results pagination" class="pagination" id="pagination"></div>
-<section aria-labelledby="onpage-seo-heading" class="seo-content onpage-seo-block">
-<h2 id="onpage-seo-heading">Khanapara Teer Previous Results: Today, FR SR and Archive</h2>
-<p>Use this page to check Khanapara Teer previous results by date, day, number or round. The archive is designed for fast lookup, so users can confirm old FR and SR records without scanning unrelated games.</p>
-<h3>How to Use This Khanapara Teer Archive</h3>
-<p>Enter a two-digit number, choose a date, select a day, or filter by FR/SR round. The table will narrow the result history to the exact records that match your search.</p>
-<h3>FR and SR Result History</h3>
-<p>FR means First Round and SR means Second Round. Each row keeps the result date, day and two-digit round values so the day result history stays easy to verify.</p>
-<h3>Related Teer Result Pages</h3>
-<div class="seo-links"><a href="./khanapara-morning-teer-previous-results">Khanapara Morning Teer Previous Results</a><a href="./shillong-teer-previous-results">Shillong Teer Previous Results</a><a href="./teer-formula">Teer Formula</a><a href="./">Teer Result Today</a></div>
-<h2>Frequently Asked Questions</h2>
-<h3>Where can I check Khanapara Teer previous results?</h3>
-<p>You can check Khanapara Teer previous results on this page using the date-wise FR and SR archive table.</p>
-<h3>Can I search Khanapara Teer old results by number?</h3>
-<p>Yes. Enter any valid two-digit number from 00 to 99 to find matching First Round or Second Round records.</p>
-<h3>How often is this archive updated?</h3>
-<p>The archive is updated when a new verified result or a valid historical correction is added to the site data.</p>
-<h3>Is this page a prediction page?</h3>
-<p>No. This page is a result-history archive. It is meant for checking past FR/SR records, not for guaranteed prediction.</p>
-</section><section aria-labelledby="archive-guide-heading" class="seo-content task4-guide"><h2 id="archive-guide-heading">Khanapara Teer Previous Results and FR SR Archive</h2>
-<p>This archive is designed for visitors who need to check an older Khanapara Teer result by date, weekday, round or two-digit number. It separates historical lookup from the live result page so that old records remain searchable without obscuring today’s status.</p>
-<h3>What the archive contains</h3>
-<p>Each completed row identifies the result date and the published First Round (FR) and Second Round (SR) values. The expected schedule for this game is FR at <strong>4:25 PM</strong> and SR at <strong>5:00 PM</strong> IST. Historical corrections may be reflected when a record is verified or repaired.</p>
-<h3>How to search old Khanapara Teer results</h3>
-<p>Use the available date, day, number and round controls to narrow the table. A two-digit search can help locate every visible occurrence of a number in FR or SR. Clear the filter to return to the complete set. For today’s status, visit the <a href="/khanapara-teer-results">live Khanapara Teer result page</a>.</p>
-<h3>Understanding FR and SR records</h3>
-<p>FR is the First Round and SR is the Second Round. Values should retain a leading zero, so 03 and 30 are different results. Always compare both the date and round before drawing a historical comparison.</p>
-<h3>Responsible use of historical data</h3>
-<p>The archive records past results for informational and research use. Frequency, repeated pairs, missing numbers and day-wise patterns describe earlier records only. They do not create certainty about any future result.</p>
-<h2>Frequently Asked Questions about the Khanapara Teer Archive</h2>
-<h3>Can I search by a specific two-digit number?</h3><p>Yes. Use the number filter to locate matching FR or SR records shown in the archive.</p>
-<h3>How often is the archive updated?</h3><p>It is updated after a new completed result or a verified historical correction is added to the site data.</p>
-<h3>Why might a date be missing?</h3><p>A game may have been closed, a result may still be unavailable, or the historical source record may not yet have been verified.</p>
-<h3>Is the archive a prediction tool?</h3><p>No. It is a historical reference and does not guarantee future outcomes.</p></section><section aria-labelledby="task4b-archive-title" class="task4b-seo">
-<h2 id="task4b-archive-title">Khanapara Teer Previous Results: Search FR and SR History</h2>
-<p>This archive is designed for visitors looking for <strong>khanapara teer previous results</strong>, an old result list or a specific FR/SR record. Use the date, weekday, round and number filters above instead of scrolling through unrelated entries. Each row should be read together with its date and day so that an older number is not mistaken for today’s result.</p>
-<div class="task4b-key-points">
-<div class="task4b-key-point"><b>Search by date</b><span>Choose a date to locate the corresponding historical FR and SR record.</span></div>
-<div class="task4b-key-point"><b>Search by number</b><span>Enter a two-digit value to find matching historical rounds.</span></div>
-<div class="task4b-key-point"><b>Review by weekday</b><span>Use day filtering for research without assuming that a pattern will repeat.</span></div>
-</div>
-<h3>Archive schedule and record interpretation</h3>
-<p>The declared schedule for Khanapara Teer is FR at <strong>4:25 PM</strong> and SR at <strong>5:00 PM</strong>, in Indian Standard Time. The regular day game is generally not scheduled on Sunday. Historical records are maintained for reference and may be corrected when a verified data issue is identified.</p>
-
-<p>The live result page is the correct destination for the current date. The archive is for research, comparison and verification of older entries. Dream-number and formula pages explain traditional references and number-group concepts, but neither provides a guaranteed forecast.</p>
-
-<p class="task4b-context-links">
-          For the current date, use the <a href="/khanapara-teer-results">Khanapara Teer result page</a>.
-          For number-group terminology, read the <a href="/teer-formula">Teer formula guide</a>.
-        </p><div class="task4b-trust">
-<strong>Historical information, not a prediction service</strong>
-<p>Past results and number frequencies do not determine a future result. TeerOnline does not accept bets or sell tickets. Paid participation is for adults only and is subject to applicable local rules. People under 18 should not participate.</p>
-</div>
-<div class="task4b-editorial">
-</div>
-</section></main>
-<div class="container">
-<nav aria-label="Footer navigation" class="footer-nav">
-<a href="./about">About</a><span>•</span>
-<a href="./contact">Contact</a><span>•</span>
-<a href="./privacy-policy">Privacy Policy</a><span>•</span>
-<a href="./terms-and-conditions">Terms &amp; Conditions</a><span>•</span>
-<a href="./disclaimer">Disclaimer</a>
-</nav>
-<div class="footer-copyright">TeerOnline.com <br/>• Fast • Accurate • Reliable</div>
-<div class="footer-bottom">
-<div class="disclaimer">⚠️ Disclaimer: This website is for informational purposes only. Teer results are based on archery events. We do not promote gambling, betting or prediction. Users must verify results with official sources.</div>
-<p class="copyright">© <span id="copyrightYear"></span> TeerOnline.com. All rights reserved.</p>
-</div>
-</div>
-<footer class="site-footer task4b-site-footer">
-<div class="container">
-<p><a href="/about">About</a> · <a href="/contact">Contact</a> · <a href="/privacy-policy">Privacy Policy</a> · <a href="/terms-and-conditions">Terms &amp; Conditions</a> · <a href="/disclaimer">Disclaimer</a></p>
-<p>TeerOnline publishes informational result and historical-reference content. It does not accept bets or sell tickets.</p>
-</div>
-</footer><script>
+</style><meta content="strict-origin-when-cross-origin" name="referrer"/><meta content="telephone=no" name="format-detection"/><meta content="en_IN" property="og:locale"/><meta content="TeerOnline result information and archive" property="og:image:alt"/><meta content="1200" property="og:image:width"/><meta content="630" property="og:image:height"/><meta content="https://teeronline.com/assets/img/logo.webp" name="twitter:image"/><meta content="TeerOnline result information" name="twitter:image:alt"/><link crossorigin="anonymous" href="https://results.teeronline.com" rel="preconnect"/><link href="//results.teeronline.com" rel="dns-prefetch"/><style data-task4="a11y">.skip-link{position:absolute;left:-9999px;top:auto}.skip-link:focus{left:1rem;top:1rem;z-index:99999;background:#fff;color:#111;padding:.75rem 1rem;border-radius:.4rem;box-shadow:0 2px 12px rgba(0,0,0,.25)}.task4-breadcrumb{font-size:.9rem;margin:1rem 0}.task4-breadcrumb ol{display:flex;flex-wrap:wrap;gap:.45rem;list-style:none;padding:0}.task4-breadcrumb li+li:before{content:"/";margin-right:.45rem}.task4-guide{content-visibility:auto;contain-intrinsic-size:600px}.task4-related ul{columns:2;padding-left:1.2rem}@media(max-width:640px){.task4-related ul{columns:1}}</style><link href="/assets/css/task4b-seo.css" rel="stylesheet"/></head><body><a class="skip-link" href="#main-content">Skip to main content</a><header class="sticky-header"><div class="container header-inner"><div class="logo-wrapper"><a aria-label="TeerOnline.com home page" class="logo" href="./"><picture><source srcset="./assets/img/logo.webp" type="image/webp"/><img alt="TeerOnline.com logo for Shillong, Khanapara and Juwai Teer results" decoding="async" fetchpriority="high" height="100" src="./assets/img/logo.png" width="100"/></picture></a><div class="site-title">TeerOnline.com</div><div class="site-tagline">Fast • Accurate • Reliable</div></div><nav aria-label="Main navigation" class="nav-links"><a aria-current="page" href="/">Shillong Teer</a><a href="/khanapara-teer-results">Khanapara Teer</a><a href="/juwai-teer-results">Juwai Teer</a><a href="/shillong-morning-teer-results">Shillong Morning</a><a href="/khanapara-morning-teer-results">Khanapara Morning</a><a href="/juwai-morning-teer-results">Juwai Morning</a><a href="/shillong-night-teer-results">Shillong Night</a><a href="/shillong-night-teer-2-results">Shillong Night 2</a><a href="/dream-numbers">Dream Numbers</a><a href="/teer-formula">Teer Formula</a><button aria-label="Toggle dark mode" class="dark-toggle" id="darkModeToggle" type="button">🌓</button></nav></div></header><main aria-label="Khanapara Teer Result Archive with Old FR SR Records" class="container" id="main-content"><nav aria-label="Breadcrumb" class="task4-breadcrumb"><ol><li><a href="/">Home</a></li><li aria-current="page">Khanapara Teer Previous Results</li></ol></nav><div class="hero"><h1>Khanapara Teer Previous Results – Date-wise FR &amp; SR Archive</h1><p>Search the Khanapara Teer previous results archive by date, weekday, two-digit number or round. Every archived entry preserves the published First Round (FR) and Second Round (SR) values so visitors can quickly verify an older result.</p><p>This page is intended for historical lookup, comparison and record verification. It is separate from today's live Khanapara Teer result page, ensuring archived numbers are not mistaken for the current playing day's result.</p></div><div class="search-filters"><div class="filter-group"><label for="numberSearch">🔢 Number (00-99)</label><input id="numberSearch" inputmode="numeric" maxlength="2" placeholder="e.g., 45" type="text"/></div><div class="filter-group"><label for="dateCalendar">📅 Pick a Date</label><input autocomplete="off" id="dateCalendar" placeholder="Select date" type="date"/></div><div class="filter-group"><label for="daySearch">📆 Day of Week</label><select id="daySearch"><option value="">All Days</option><option value="Monday">Monday</option><option value="Tuesday">Tuesday</option><option value="Wednesday">Wednesday</option><option value="Thursday">Thursday</option><option value="Friday">Friday</option><option value="Saturday">Saturday</option><option value="Sunday">Sunday</option></select></div><div class="filter-group"><label for="roundSearch">🎯 Round Filter</label><select id="roundSearch"><option value="">Both Rounds</option><option value="fr">First Round (FR)</option><option value="sr">Second Round (SR)</option></select></div><div style="display: flex; gap: 0.8rem;"><button class="search-btn" id="applyFilters">🔍 Apply Filters</button><button class="reset-btn" id="resetFilters">⟳ Reset</button></div></div><div class="loading-spinner" id="loadingIndicator" style="display: none;">📡 Loading Khanapara Day results from data ...</div><div class="error-message" id="errorMessage" style="display: none;"></div><div class="filter-status"><div class="results-count" id="resultsCount">📊 Loading...</div><div class="page-size-control"><label for="pageSize">Rows</label><select id="pageSize"><option selected="" value="25">25</option><option value="50">50</option><option value="100">100</option></select></div></div><div class="table-wrapper"><table class="results-table display responsive" id="resultsTable" style="width:100%"><thead><tr><th>Date</th><th>Day</th><th>First Round (FR)</th><th>Second Round (SR)</th></tr></thead><tbody><tr><td colspan="4" style="text-align:center;">Loading data...</td></tr></tbody></table></div><div aria-label="Results pagination" class="pagination" id="pagination"></div><section aria-labelledby="onpage-seo-heading" class="seo-content onpage-seo-block"><h2 id="onpage-seo-heading">Khanapara Teer Previous Results Archive at a Glance</h2><p>This archive allows visitors to search completed Khanapara Teer results by date, weekday, two-digit number and round. It is designed for historical verification, helping users locate earlier FR and SR records without mixing them with today's live result.</p><p>Each archived row should be interpreted together with its playing date and round. Leading zeroes are preserved, meaning values such as 03 and 30 remain distinct historical records. Verified corrections, when necessary, apply only to the affected historical entry.</p><p>The archive is useful for confirming yesterday's result, researching older records and comparing historical FR and SR values. Repeated numbers, frequency and visible patterns describe past records only and should not be interpreted as predictions.</p></section><section aria-labelledby="archive-guide-heading" class="seo-content task4-guide"><h2 id="archive-guide-heading">Complete Guide to the Khanapara Teer Previous Results Archive</h2><p>The archive stores completed Khanapara Teer First Round (FR) and Second Round (SR) records in a searchable format for historical verification.</p><h3>Search by Date</h3><p>Select a calendar date to locate the published FR and SR values for that day.</p><h3>Search by Number</h3><p>Enter any number from 00 to 99 to find matching historical FR or SR records.</p><h3>Search by Weekday</h3><p>Filter by weekday to compare archived results from similar playing days.</p><h3>Understanding FR and SR</h3><p>FR means First Round and SR means Second Round. Leading zeroes are preserved exactly as published.</p><h3>Archive Maintenance</h3><p>Verified historical corrections update only the affected record while preserving the integrity of the remaining archive.</p><h3>Responsible Use</h3><p>Historical records are provided for reference and research only. They do not predict future results.</p></section><section aria-labelledby="task4b-archive-title" class="task4b-seo"><h2 id="task4b-archive-title">How to Interpret Khanapara Teer Historical FR and SR Records</h2><p>The archive should be read as a date-wise record of completed Khanapara Teer results. Every entry contains a playing date, weekday, First Round value and Second Round value. These fields work together: a number without its date and round can easily be misunderstood.</p><h3>First Round and Second Round Are Separate Records</h3><p>FR and SR are published independently. A number appearing in FR on one date is not the same record as the same number appearing in SR on another date. When comparing old results, always identify the round before making any historical observation.</p><h3>Why Leading Zeroes Must Be Preserved</h3><p>Khanapara Teer results use two-digit values from 00 to 99. The archive preserves leading zeroes because 03 and 30 are different records. Removing a leading zero would change the meaning of the historical entry.</p><h3>Understanding Historical Frequency</h3><p>A number that appears several times in the archive may be described as frequent within the selected records. A number with fewer appearances may be described as less frequent. These descriptions summarize past data only and do not establish what will happen in a future round.</p><h3>Repeated Numbers and Pairs</h3><p>Repeated numbers, same-day combinations and recurring FR–SR pairs can be identified from the archive. Their presence shows that a combination occurred before; it does not prove that the same combination will return.</p><h3>Weekday Comparisons</h3><p>The weekday filter helps visitors compare records from Mondays, Tuesdays and other playing days. Such comparisons can be useful for organizing historical research, but a weekday alone cannot determine a future result.</p><h3>Missing or Unavailable Historical Dates</h3><p>A date may be absent because the game was not scheduled, the result was unavailable, or the record has not yet been verified. The archive should not invent values to fill a missing date.</p><h3>Using the Archive Responsibly</h3><p>The archive is intended for checking, comparison and research. It should not be used as a guarantee, betting instruction or promise of a future FR or SR result.</p><h2>Accuracy, Verification and Editorial Standards</h2><p>Every historical entry should correspond to the correct playing date, weekday, First Round and Second Round. If a verified historical correction becomes necessary, only the affected record should be updated while preserving the integrity of the remaining archive.</p><h3>Historical Verification Process</h3><p>The archive separates completed historical records from live result reporting. Older values are never presented as today's result, reducing the risk of confusing archived information with current play.</p><h3>Editorial Principles</h3><p>Historical tables, frequency summaries and explanatory content serve different purposes. The archive records what happened, while explanatory sections help visitors understand how to interpret those records. Neither section predicts future outcomes.</p><h3>Responsible Historical Research</h3><p>Visitors should compare the playing date, round and two-digit value together. A historical match should be treated as an observation only and not as evidence that a future result will repeat.</p><div class="task4b-trust"><strong>Editorial notice</strong><p>TeerOnline publishes historical result information for reference and research. It does not sell tickets, accept bets or guarantee future Khanapara Teer numbers.</p></div></section><section class="seo-content final-seo-review" aria-labelledby="editorial-summary-heading"><h2 id="editorial-summary-heading">Editorial Summary</h2><p>The Khanapara Teer Previous Results page is maintained as a historical reference designed to help visitors verify earlier First Round (FR) and Second Round (SR) results. Archive entries are organized by date and preserved with their original two-digit values for consistent historical interpretation.</p><p>Educational explanations throughout this page are intended to improve understanding of archived records. Descriptions of repeated numbers, frequencies, weekdays and historical comparisons summarize previous results only and should not be interpreted as forecasts or guarantees.</p><p>By separating historical records from the live result page, TeerOnline aims to reduce confusion between completed archives and current results while maintaining a clear, searchable record of past Khanapara Teer outcomes.</p></section></main><div class="container"><nav aria-label="Footer navigation" class="footer-nav"><a href="./about">About</a><span>•</span><a href="./contact">Contact</a><span>•</span><a href="./privacy-policy">Privacy Policy</a><span>•</span><a href="./terms-and-conditions">Terms &amp; Conditions</a><span>•</span><a href="./disclaimer">Disclaimer</a></nav><div class="footer-copyright">TeerOnline.com <br/>• Fast • Accurate • Reliable</div><div class="footer-bottom"><div class="disclaimer">⚠️ Disclaimer: This website is for informational purposes only. Teer results are based on archery events. We do not promote gambling, betting or prediction. Users must verify results with official sources.</div><p class="copyright">© <span id="copyrightYear"></span> TeerOnline.com. All rights reserved.</p></div></div><footer class="site-footer task4b-site-footer"><div class="container"><p><a href="/about">About</a> · <a href="/contact">Contact</a> · <a href="/privacy-policy">Privacy Policy</a> · <a href="/terms-and-conditions">Terms &amp; Conditions</a> · <a href="/disclaimer">Disclaimer</a></p><p>TeerOnline publishes informational result and historical-reference content. It does not accept bets or sell tickets.</p></div></footer><script>
 (() => {
-  'use strict';
-  const $ = (id) => document.getElementById(id);
-  let originalData = [], currentData = [], currentPage = 1;
-  const pageSize = $('pageSize'), tbody = document.querySelector('#resultsTable tbody'), pagination = $('pagination');
-  const numberSearch = $('numberSearch'), dateCalendar = $('dateCalendar'), daySearch = $('daySearch'), roundSearch = $('roundSearch');
-  const loadingDiv = $('loadingIndicator'), errorDiv = $('errorMessage'), resultsCount = $('resultsCount');
-  const GAME_NAME = 'khanapara day';
+ 'use strict';
+ const $ = (id) => document.getElementById(id);
+ let originalData = [], currentData = [], currentPage = 1;
+ const pageSize = $('pageSize'), tbody = document.querySelector('#resultsTable tbody'), pagination = $('pagination');
+ const numberSearch = $('numberSearch'), dateCalendar = $('dateCalendar'), daySearch = $('daySearch'), roundSearch = $('roundSearch');
+ const loadingDiv = $('loadingIndicator'), errorDiv = $('errorMessage'), resultsCount = $('resultsCount');
+ const GAME_NAME = 'khanapara day';
 
-  function parseDate(dateStr){
-    if(!dateStr || dateStr === '0000-00-00') return null;
-    let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
-    if(m) return new Date(+m[1], +m[2]-1, +m[3]);
-    m = String(dateStr).match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
-    if(m) return new Date(+m[3], +m[2]-1, +m[1]);
-    const d = new Date(dateStr); return Number.isNaN(d.getTime()) ? null : d;
-  }
-  function ymd(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
-  function dmy(d){return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;}
-  function dayName(dateStr){const d=parseDate(dateStr);return d?['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]:'';}
-  function cleanNumber(v){
-    const s = String(v ?? '').toLowerCase().trim();
-    if(['xx','off','—','-','na',''].includes(s)) return null;
-    const n = parseInt(s,10);
-    return (!Number.isNaN(n) && n >= 0 && n <= 99) ? String(n).padStart(2,'0') : null;
-  }
-  function extractData(raw){
-    if(!Array.isArray(raw)) return [];
+ function parseDate(dateStr){
+  if(!dateStr || dateStr === '0000-00-00') return null;
+  let m = String(dateStr).match(/^(\d{4})-(\d{1,2})-(\d{1,2})$/);
+  if(m) return new Date(+m[1], +m[2]-1, +m[3]);
+  m = String(dateStr).match(/^(\d{1,2})-(\d{1,2})-(\d{4})$/);
+  if(m) return new Date(+m[3], +m[2]-1, +m[1]);
+  const d = new Date(dateStr); return Number.isNaN(d.getTime()) ? null : d;
+ }
+ function ymd(d){return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;}
+ function dmy(d){return `${String(d.getDate()).padStart(2,'0')}-${String(d.getMonth()+1).padStart(2,'0')}-${d.getFullYear()}`;}
+ function dayName(dateStr){const d=parseDate(dateStr);return d?['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'][d.getDay()]:'';}
+ function cleanNumber(v){
+  const s = String(v ?? '').toLowerCase().trim();
+  if(['xx','off','—','-','na',''].includes(s)) return null;
+  const n = parseInt(s,10);
+  return (!Number.isNaN(n) && n >= 0 && n <= 99) ? String(n).padStart(2,'0') : null;
+ }
+ function extractData(raw){
+  if(!Array.isArray(raw)) return [];
 
-    const idByName = {
-      'shillong day': 'SHD',
-      'shillong teer': 'SHD',
-      'khanapara day': 'KH',
-      'khanapara teer': 'KH',
-      'juwai day': 'JWD',
-      'juwai teer': 'JWD',
-      'juwai morning': 'JWM',
-      'khanapara morning': 'KHM',
-      'shillong morning': 'SHM',
-      'shillong night': 'SHN1',
-      'shillong hills night teer': 'SHN1',
-      'shillong night 2': 'SHN2',
-      'shillong night teer 2': 'SHN2'
-    };
+  const idByName = {
+   'shillong day': 'SHD',
+   'shillong teer': 'SHD',
+   'khanapara day': 'KH',
+   'khanapara teer': 'KH',
+   'juwai day': 'JWD',
+   'juwai teer': 'JWD',
+   'juwai morning': 'JWM',
+   'khanapara morning': 'KHM',
+   'shillong morning': 'SHM',
+   'shillong night': 'SHN1',
+   'shillong hills night teer': 'SHN1',
+   'shillong night 2': 'SHN2',
+   'shillong night teer 2': 'SHN2'
+  };
 
-    const aliases = {
-      SHD: ['shillong day', 'shillong teer'],
-      KH: ['khanapara day', 'khanapara teer'],
-      JWD: ['juwai day', 'juwai teer'],
-      JWM: ['juwai morning'],
-      KHM: ['khanapara morning'],
-      SHM: ['shillong morning'],
-      SHN1: ['shillong night', 'shillong hills night teer'],
-      SHN2: ['shillong night 2', 'shillong night teer 2']
-    };
+  const aliases = {
+   SHD: ['shillong day', 'shillong teer'],
+   KH: ['khanapara day', 'khanapara teer'],
+   JWD: ['juwai day', 'juwai teer'],
+   JWM: ['juwai morning'],
+   KHM: ['khanapara morning'],
+   SHM: ['shillong morning'],
+   SHN1: ['shillong night', 'shillong hills night teer'],
+   SHN2: ['shillong night 2', 'shillong night teer 2']
+  };
 
-    const targetGame = (typeof GAME_NAME !== 'undefined' ? GAME_NAME : 'khanapara day').toLowerCase().trim();
-    const targetId = idByName[targetGame] || '';
+  const targetGame = (typeof GAME_NAME !== 'undefined' ? GAME_NAME : 'khanapara day').toLowerCase().trim();
+  const targetId = idByName[targetGame] || '';
 
-    return raw.filter(item => {
-      const gameId = String(item.g || item.gameId || item.game_id || '').toUpperCase().trim();
-      const game = String(item.game || '').toLowerCase().trim();
-      if(targetId && gameId === targetId) return true;
-      if(targetId && aliases[targetId] && aliases[targetId].includes(game)) return true;
-      return game === targetGame;
-    })
-    .map(item => {
-      const fr = cleanNumber(item.f || item.fr || item.first_round);
-      const sr = cleanNumber(item.s || item.sr || item.second_round);
-      const date = item.d || item.date || '';
-      const d = parseDate(date);
-      return d && fr !== null && sr !== null
-        ? {date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(date), first_round:fr, second_round:sr}
-        : null;
-    }).filter(Boolean);
+  return raw.filter(item => {
+   const gameId = String(item.g || item.gameId || item.game_id || '').toUpperCase().trim();
+   const game = String(item.game || '').toLowerCase().trim();
+   if(targetId && gameId === targetId) return true;
+   if(targetId && aliases[targetId] && aliases[targetId].includes(game)) return true;
+   return game === targetGame;
+  })
+  .map(item => {
+   const fr = cleanNumber(item.f || item.fr || item.first_round);
+   const sr = cleanNumber(item.s || item.sr || item.second_round);
+   const date = item.d || item.date || '';
+   const d = parseDate(date);
+   return d && fr !== null && sr !== null
+    ? {date, dateValue:ymd(d), displayDate:dmy(d), day:dayName(date), first_round:fr, second_round:sr}
+    : null;
+  }).filter(Boolean);
+ }
+ function updateCount(){
+  const f = currentData.length, t = originalData.length;
+  resultsCount.textContent = f === t ? `📊 Showing all ${t} results` : `📊 Found ${f} result${f === 1 ? '' : 's'} (filtered from ${t} total)`;
+  resultsCount.style.color = f === 0 ? '#ef4444' : 'var(--accent)';
+ }
+ function renderTable(){
+  const size = parseInt(pageSize.value,10) || 25, totalPages = Math.max(1, Math.ceil(currentData.length / size));
+  if(currentPage > totalPages) currentPage = totalPages;
+  const rows = currentData.slice((currentPage - 1) * size, currentPage * size);
+  tbody.innerHTML = rows.length ? rows.map(r => `<tr><td>${r.displayDate}</td><td>${r.day}</td><td>${r.first_round}</td><td>${r.second_round}</td></tr>`).join('') : '<tr><td colspan="4">No matching results found.</td></tr>';
+  renderPagination(totalPages); updateCount();
+ }
+ function renderPagination(totalPages){
+  if(totalPages <= 1){ pagination.innerHTML = ''; return; }
+  const items = [`<button class="page-btn" ${currentPage===1?'disabled':''} data-page="${currentPage-1}">Previous</button>`];
+  const start = Math.max(1, currentPage - 2), end = Math.min(totalPages, currentPage + 2);
+  if(start > 1) items.push('<button class="page-btn" data-page="1">1</button>');
+  if(start > 2) items.push('<span>…</span>');
+  for(let i=start;i<=end;i++) items.push(`<button class="page-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`);
+  if(end < totalPages - 1) items.push('<span>…</span>');
+  if(end < totalPages) items.push(`<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`);
+  items.push(`<button class="page-btn" ${currentPage===totalPages?'disabled':''} data-page="${currentPage+1}">Next</button>`);
+  pagination.innerHTML = items.join('');
+ }
+ function applyFilters(){
+  const numberValue = numberSearch.value.trim(); let numberFilter = null;
+  if(numberValue){
+   const n = parseInt(numberValue,10);
+   if(Number.isNaN(n) || n < 0 || n > 99){ alert('Please enter a valid number between 00 and 99'); return; }
+   numberFilter = n;
   }
-  function updateCount(){
-    const f = currentData.length, t = originalData.length;
-    resultsCount.textContent = f === t ? `📊 Showing all ${t} results` : `📊 Found ${f} result${f === 1 ? '' : 's'} (filtered from ${t} total)`;
-    resultsCount.style.color = f === 0 ? '#ef4444' : 'var(--accent)';
+  const dateValue = dateCalendar.value, dayValue = daySearch.value, roundValue = roundSearch.value;
+  currentData = originalData.filter(item => {
+   if(numberFilter !== null){
+    const fr = parseInt(item.first_round,10), sr = parseInt(item.second_round,10);
+    if(roundValue === 'fr' && fr !== numberFilter) return false;
+    if(roundValue === 'sr' && sr !== numberFilter) return false;
+    if(!roundValue && fr !== numberFilter && sr !== numberFilter) return false;
+   }
+   if(dateValue && item.dateValue !== dateValue) return false;
+   if(dayValue && item.day !== dayValue) return false;
+   return true;
+  });
+  currentPage = 1; renderTable();
+ }
+ function resetFilters(){ numberSearch.value=''; dateCalendar.value=''; daySearch.value=''; roundSearch.value=''; currentData=originalData.slice(); currentPage=1; renderTable(); }
+ async function loadData(){
+  try{
+   const res = await fetch('https://results.teeronline.com/all-results.json', {cache:'default'});
+   if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at https://results.teeronline.com/all-results.json`);
+   originalData = extractData(await res.json()).sort((a,b) => parseDate(b.date) - parseDate(a.date));
+   if(!originalData.length) throw new Error(`No valid "${GAME_NAME}" records found. Please check your data file.`);
+   currentData = originalData.slice();
+   const dates = originalData.map(r => r.dateValue).filter(Boolean).sort(); if(dates.length){ dateCalendar.min = dates[0]; dateCalendar.max = dates[dates.length-1]; }
+   loadingDiv.hidden = true; loadingDiv.style.display = 'none'; renderTable();
+  }catch(err){
+   loadingDiv.hidden = true; loadingDiv.style.display = 'none'; errorDiv.hidden = false; errorDiv.style.display = 'block';
+   errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+   resultsCount.textContent = '📊 Error loading data'; tbody.innerHTML = '<tr><td colspan="4">Unable to load results.</td></tr>';
   }
-  function renderTable(){
-    const size = parseInt(pageSize.value,10) || 25, totalPages = Math.max(1, Math.ceil(currentData.length / size));
-    if(currentPage > totalPages) currentPage = totalPages;
-    const rows = currentData.slice((currentPage - 1) * size, currentPage * size);
-    tbody.innerHTML = rows.length ? rows.map(r => `<tr><td>${r.displayDate}</td><td>${r.day}</td><td>${r.first_round}</td><td>${r.second_round}</td></tr>`).join('') : '<tr><td colspan="4">No matching results found.</td></tr>';
-    renderPagination(totalPages); updateCount();
-  }
-  function renderPagination(totalPages){
-    if(totalPages <= 1){ pagination.innerHTML = ''; return; }
-    const items = [`<button class="page-btn" ${currentPage===1?'disabled':''} data-page="${currentPage-1}">Previous</button>`];
-    const start = Math.max(1, currentPage - 2), end = Math.min(totalPages, currentPage + 2);
-    if(start > 1) items.push('<button class="page-btn" data-page="1">1</button>');
-    if(start > 2) items.push('<span>…</span>');
-    for(let i=start;i<=end;i++) items.push(`<button class="page-btn ${i===currentPage?'active':''}" data-page="${i}">${i}</button>`);
-    if(end < totalPages - 1) items.push('<span>…</span>');
-    if(end < totalPages) items.push(`<button class="page-btn" data-page="${totalPages}">${totalPages}</button>`);
-    items.push(`<button class="page-btn" ${currentPage===totalPages?'disabled':''} data-page="${currentPage+1}">Next</button>`);
-    pagination.innerHTML = items.join('');
-  }
-  function applyFilters(){
-    const numberValue = numberSearch.value.trim(); let numberFilter = null;
-    if(numberValue){
-      const n = parseInt(numberValue,10);
-      if(Number.isNaN(n) || n < 0 || n > 99){ alert('Please enter a valid number between 00 and 99'); return; }
-      numberFilter = n;
-    }
-    const dateValue = dateCalendar.value, dayValue = daySearch.value, roundValue = roundSearch.value;
-    currentData = originalData.filter(item => {
-      if(numberFilter !== null){
-        const fr = parseInt(item.first_round,10), sr = parseInt(item.second_round,10);
-        if(roundValue === 'fr' && fr !== numberFilter) return false;
-        if(roundValue === 'sr' && sr !== numberFilter) return false;
-        if(!roundValue && fr !== numberFilter && sr !== numberFilter) return false;
-      }
-      if(dateValue && item.dateValue !== dateValue) return false;
-      if(dayValue && item.day !== dayValue) return false;
-      return true;
-    });
-    currentPage = 1; renderTable();
-  }
-  function resetFilters(){ numberSearch.value=''; dateCalendar.value=''; daySearch.value=''; roundSearch.value=''; currentData=originalData.slice(); currentPage=1; renderTable(); }
-  async function loadData(){
-    try{
-      const res = await fetch('https://results.teeronline.com/all-results.json', {cache:'default'});
-      if(!res.ok) throw new Error(`HTTP ${res.status} - File not found at https://results.teeronline.com/all-results.json`);
-      originalData = extractData(await res.json()).sort((a,b) => parseDate(b.date) - parseDate(a.date));
-      if(!originalData.length) throw new Error(`No valid "${GAME_NAME}" records found. Please check your data file.`);
-      currentData = originalData.slice();
-      const dates = originalData.map(r => r.dateValue).filter(Boolean).sort(); if(dates.length){ dateCalendar.min = dates[0]; dateCalendar.max = dates[dates.length-1]; }
-      loadingDiv.hidden = true; loadingDiv.style.display = 'none'; renderTable();
-    }catch(err){
-      loadingDiv.hidden = true; loadingDiv.style.display = 'none'; errorDiv.hidden = false; errorDiv.style.display = 'block';
-      errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
-      resultsCount.textContent = '📊 Error loading data'; tbody.innerHTML = '<tr><td colspan="4">Unable to load results.</td></tr>';
-    }
-  }
-  function initDarkMode(){
-    const toggle = $('darkModeToggle'); if(!toggle) return;
-    const stored = localStorage.getItem('darkMode') === 'true'; if(stored) document.body.classList.add('dark');
-    toggle.textContent = stored ? '☀️ Light' : '🌓 Dark';
-    toggle.addEventListener('click', () => { document.body.classList.toggle('dark'); const isDark = document.body.classList.contains('dark'); localStorage.setItem('darkMode', isDark); toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark'; });
-  }
-  $('applyFilters').addEventListener('click', applyFilters); $('resetFilters').addEventListener('click', resetFilters);
-  numberSearch.addEventListener('keydown', e => { if(e.key === 'Enter') applyFilters(); });
-  pageSize.addEventListener('change', () => { currentPage = 1; renderTable(); });
-  pagination.addEventListener('click', e => { const btn = e.target.closest('[data-page]'); if(!btn || btn.disabled) return; currentPage = parseInt(btn.dataset.page,10); renderTable(); });
-  const year = $('copyrightYear'); if(year) year.textContent = new Date().getFullYear();
-  initDarkMode();
-  const start = () => ('requestIdleCallback' in window ? requestIdleCallback(loadData, {timeout:1500}) : setTimeout(loadData, 1));
-  window.addEventListener('load', start, {once:true});
-  setTimeout(() => {
-    const s = document.createElement('script'); s.src = 'https://www.googletagmanager.com/gtag/js?id=G-R7H1L7VWZS'; s.async = true;
-    s.onload = () => { window.dataLayer = window.dataLayer || []; window.gtag = function(){dataLayer.push(arguments)}; gtag('js', new Date()); gtag('config', 'G-R7H1L7VWZS'); };
-    document.head.appendChild(s);
-  }, 3500);
+ }
+ function initDarkMode(){
+  const toggle = $('darkModeToggle'); if(!toggle) return;
+  const stored = localStorage.getItem('darkMode') === 'true'; if(stored) document.body.classList.add('dark');
+  toggle.textContent = stored ? '☀️ Light' : '🌓 Dark';
+  toggle.addEventListener('click', () => { document.body.classList.toggle('dark'); const isDark = document.body.classList.contains('dark'); localStorage.setItem('darkMode', isDark); toggle.textContent = isDark ? '☀️ Light' : '🌓 Dark'; });
+ }
+ $('applyFilters').addEventListener('click', applyFilters); $('resetFilters').addEventListener('click', resetFilters);
+ numberSearch.addEventListener('keydown', e => { if(e.key === 'Enter') applyFilters(); });
+ pageSize.addEventListener('change', () => { currentPage = 1; renderTable(); });
+ pagination.addEventListener('click', e => { const btn = e.target.closest('[data-page]'); if(!btn || btn.disabled) return; currentPage = parseInt(btn.dataset.page,10); renderTable(); });
+ const year = $('copyrightYear'); if(year) year.textContent = new Date().getFullYear();
+ initDarkMode();
+ const start = () => ('requestIdleCallback' in window ? requestIdleCallback(loadData, {timeout:1500}) : setTimeout(loadData, 1));
+ window.addEventListener('load', start, {once:true});
+ setTimeout(() => {
+  const s = document.createElement('script'); s.src = 'https://www.googletagmanager.com/gtag/js?id=G-R7H1L7VWZS'; s.async = true;
+  s.onload = () => { window.dataLayer = window.dataLayer || []; window.gtag = function(){dataLayer.push(arguments)}; gtag('js', new Date()); gtag('config', 'G-R7H1L7VWZS'); };
+  document.head.appendChild(s);
+ }, 3500);
 })();
-</script>
-</body>
-</html>
+</script></body></html>
