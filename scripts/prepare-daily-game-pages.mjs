@@ -70,6 +70,12 @@ function displayDate(isoDate) {
   return `${day}/${month}/${year}`;
 }
 
+function shiftIsoDate(isoDate, days) {
+  const date = new Date(`${isoDate}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + Number(days || 0));
+  return date.toISOString().slice(0, 10);
+}
+
 function minutes(value) {
   const [hour, minute] = String(value).split(":").map(Number);
   return hour * 60 + minute;
@@ -401,40 +407,51 @@ function isOffDay(game, targetDate) {
   return Array.isArray(game.weeklyOffDays) && game.weeklyOffDays.includes(weekday);
 }
 
-function dueGames(now) {
-  return config.gameOrder.filter(gameId => {
+function duePreparations(now) {
+  return config.gameOrder.flatMap(gameId => {
     const game = config.games[gameId];
-    const preparationTime = minutes(game.rounds.fr) - Number(game.prepareBeforeMinutes || 300);
-    return now.minutesOfDay >= preparationTime && !isOffDay(game, now.isoDate);
+    const leadMinutes = Number(game.prepareBeforeMinutes || 720);
+    const rawPreparationMinute = minutes(game.rounds.fr) - leadMinutes;
+    const preparesPreviousDay = rawPreparationMinute < 0;
+    const preparationMinute = (rawPreparationMinute + 1440) % 1440;
+    const targetDate = preparesPreviousDay
+      ? shiftIsoDate(now.isoDate, 1)
+      : now.isoDate;
+
+    if (now.minutesOfDay < preparationMinute || isOffDay(game, targetDate)) {
+      return [];
+    }
+
+    return [{ gameId, targetDate }];
   });
 }
 
 async function main() {
   const now = istParts();
-  let games;
+  let preparations;
   if (requestedGame) {
     if (!config.getGame(requestedGame)) throw new Error(`Unknown game ID: ${requestedGame}`);
-    games = [requestedGame];
+    preparations = [{ gameId: requestedGame, targetDate: now.isoDate }];
   } else if (dueMode) {
-    games = dueGames(now);
+    preparations = duePreparations(now);
   } else {
-    games = [];
+    preparations = [];
   }
 
-  if (!games.length) {
+  if (!preparations.length) {
     console.log(`No game is due for preparation at ${now.isoDate} ${String(now.hour).padStart(2, "0")}:${String(now.minute).padStart(2, "0")} IST.`);
     return;
   }
 
-  console.log(`Preparing ${games.join(", ")} for ${now.isoDate} (${now.hour}:${String(now.minute).padStart(2, "0")} IST).`);
+  console.log(`Preparing ${preparations.map(item => `${item.gameId}:${item.targetDate}`).join(", ")} (${now.hour}:${String(now.minute).padStart(2, "0")} IST).`);
   const records = await loadHistory();
   let updated = 0;
-  for (const gameId of games) {
-    if (isOffDay(config.games[gameId], now.isoDate) && !requestedGame) {
-      console.log(`[OFF DAY] ${gameId} skipped for ${now.isoDate}.`);
+  for (const { gameId, targetDate } of preparations) {
+    if (isOffDay(config.games[gameId], targetDate) && !requestedGame) {
+      console.log(`[OFF DAY] ${gameId} skipped for ${targetDate}.`);
       continue;
     }
-    if (preparePage(gameId, now.isoDate, records)) updated += 1;
+    if (preparePage(gameId, targetDate, records)) updated += 1;
   }
   console.log(`Daily preparation complete. ${updated} page(s) changed.`);
 }

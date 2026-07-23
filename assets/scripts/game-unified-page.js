@@ -107,8 +107,8 @@
   function renderResult(record = {}) {
     const fr = num(record.fr);
     const sr = num(record.sr);
-    const frTime = fmtClock(record.frUpdatedAt) || fmtClock(record.frDeclaredTime) || fmtClock(game.rounds.fr);
-    const srTime = fmtClock(record.srUpdatedAt) || fmtClock(record.srDeclaredTime) || fmtClock(game.rounds.sr);
+    const frTime = fmtClock(record.frDeclaredTime) || fmtClock(game.rounds.fr);
+    const srTime = fmtClock(record.srDeclaredTime) || fmtClock(game.rounds.sr);
 
     if (byId("date")) byId("date").textContent = `📅 ${fmtDate(record.date)}`;
     if (byId("fr-time")) byId("fr-time").textContent = `🏹 FR: ${frTime}`;
