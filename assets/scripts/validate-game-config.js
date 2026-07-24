@@ -5,7 +5,7 @@ const config = require("./game-config.js");
 
 const EXPECTED_IDS = ["SHD", "KH", "JWD", "SHM", "KHM", "JWM", "SHN1", "SHN2"];
 const EXPECTED_PATHS = {
-  SHD: "/shillong-teer-results",
+  SHD: "/",
   KH: "/khanapara-teer-results",
   JWD: "/juwai-teer-results",
   SHM: "/shillong-morning-teer-results",

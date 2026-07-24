@@ -78,3 +78,5 @@ body.dark .performance-table td{border-color:#2d2d2d}
 body.dark .performance-date,body.dark .performance-heading h3,body.dark .flow-heading h4{color:#f8fafc!important}
 body.dark .flow-grid{background:#111;border-color:#525252}
 @media(max-width:520px){.performance-panel,.flow-panel{padding:.58rem}.performance-table{font-size:.69rem}.performance-table th,.performance-table td{padding:.4rem .32rem}.round-number{width:1.78rem;height:1.78rem;font-size:.72rem}.performance-badge{min-width:68px;font-size:.6rem;padding:.22rem .35rem}.flow-grid{gap:.22rem;height:116px}.flow-track{height:68px}.flow-track i{width:min(18px,72%)}.flow-value{font-size:.58rem;padding:.06rem .22rem}.flow-item small{font-size:.5rem}}
+
+.common-publication-note{margin:0 0 12px;padding:10px 14px;border:1px solid rgba(127,127,127,.24);border-radius:10px;background:rgba(127,127,127,.06);font-size:.94rem;line-height:1.45}

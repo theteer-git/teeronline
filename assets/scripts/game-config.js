@@ -39,8 +39,8 @@
       name: "Shillong Teer",
       resultTitle: "Shillong Teer Result",
       seo: Object.freeze({
-        title: "Shillong Teer Today – {date} | FR/SR Updated",
-        description: "Verified Shillong Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+        title: "Shillong Teer Today – {date}",
+        description: "Shillong Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
       }),
       navLabel: "Shillong Teer",
       primaryTopic: "Shillong Teer",
@@ -48,7 +48,6 @@
       legacyArchivePath: "/shillong-teer-previous-results",
       previousResultsPath: "/shillong-teer-previous-results",
       rounds: Object.freeze({ fr: "16:15", sr: "17:15" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([0]),
       crossesMidnight: false,
@@ -59,8 +58,8 @@
       name: "Khanapara Teer",
       resultTitle: "Khanapara Teer Result",
       seo: Object.freeze({
-        title: "Khanapara Teer Today – {date} | FR/SR Updated",
-        description: "Verified Khanapara Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+        title: "Khanapara Teer Today – {date}",
+        description: "Khanapara Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
       }),
       navLabel: "Khanapara Teer",
       primaryTopic: "Khanapara Teer",
@@ -68,7 +67,6 @@
       legacyArchivePath: "/khanapara-teer-previous-results",
       previousResultsPath: "/khanapara-teer-previous-results",
       rounds: Object.freeze({ fr: "16:25", sr: "17:00" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([0]),
       crossesMidnight: false,
@@ -79,8 +77,8 @@
       name: "Juwai Teer",
       resultTitle: "Juwai Teer Result",
       seo: Object.freeze({
-        title: "Juwai Teer Result Today – {date} | FR/SR Updated",
-        description: "Verified Juwai Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
+        title: "Juwai Teer Result Today – {date}",
+        description: "Juwai Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
       }),
       navLabel: "Juwai Teer",
       primaryTopic: "Juwai Teer",
@@ -88,7 +86,6 @@
       legacyArchivePath: "/juwai-teer-previous-results",
       previousResultsPath: "/juwai-teer-previous-results",
       rounds: Object.freeze({ fr: "14:30", sr: "15:15" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([0]),
       crossesMidnight: false,
@@ -99,8 +96,8 @@
       name: "Shillong Morning Teer",
       resultTitle: "Shillong Morning Teer Result",
       seo: Object.freeze({
-        title: "Shillong Morning Result – {date} | Updated",
-        description: "Verified Shillong Morning Teer result for {date}. Check today’s common numbers and previous results on TeerOnline."
+        title: "Shillong Morning Result – {date}",
+        description: "Shillong Morning Teer result for {date}. Check today’s common numbers and previous results on TeerOnline."
       }),
       navLabel: "Shillong Morning",
       primaryTopic: "Shillong Morning Teer",
@@ -108,7 +105,6 @@
       legacyArchivePath: "/shillong-morning-teer-previous-results",
       previousResultsPath: "/shillong-morning-teer-previous-results",
       rounds: Object.freeze({ fr: "10:30", sr: "11:30" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([]),
       crossesMidnight: false,
@@ -119,7 +115,7 @@
       name: "Khanapara Morning Teer",
       resultTitle: "Khanapara Morning Teer Result",
       seo: Object.freeze({
-        title: "Khanapara Morning Result – {date} | Updated",
+        title: "Khanapara Morning Result – {date}",
         description: "Khanapara Morning Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
       }),
       navLabel: "Khanapara Morning",
@@ -128,7 +124,6 @@
       legacyArchivePath: "/khanapara-morning-teer-previous-results",
       previousResultsPath: "/khanapara-morning-teer-previous-results",
       rounds: Object.freeze({ fr: "11:00", sr: "12:00" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([]),
       crossesMidnight: false,
@@ -139,7 +134,7 @@
       name: "Juwai Morning Teer",
       resultTitle: "Juwai Morning Teer Result",
       seo: Object.freeze({
-        title: "Juwai Morning Result – {date} | FR/SR Updated",
+        title: "Juwai Morning Result – {date}",
         description: "Juwai Morning Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
       }),
       navLabel: "Juwai Morning",
@@ -148,7 +143,6 @@
       legacyArchivePath: "/juwai-morning-teer-previous-results",
       previousResultsPath: "/juwai-morning-teer-previous-results",
       rounds: Object.freeze({ fr: "10:30", sr: "11:30" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([]),
       crossesMidnight: false,
@@ -159,7 +153,7 @@
       name: "Shillong Night Teer",
       resultTitle: "Shillong Night Teer Result",
       seo: Object.freeze({
-        title: "Shillong Night Result – {date} | FR/SR Updated",
+        title: "Shillong Night Result – {date}",
         description: "Verified Shillong Night Teer result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
       }),
       navLabel: "Shillong Night",
@@ -168,7 +162,6 @@
       legacyArchivePath: "/shillong-night-teer-previous-results",
       previousResultsPath: "/shillong-night-teer-previous-results",
       rounds: Object.freeze({ fr: "20:45", sr: "21:45" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([]),
       crossesMidnight: false,
@@ -179,7 +172,7 @@
       name: "Shillong Night Teer 2",
       resultTitle: "Shillong Night Teer 2 Result",
       seo: Object.freeze({
-        title: "Shillong Night 2 Result – {date} | FR/SR Updated",
+        title: "Shillong Night 2 Result – {date}",
         description: "Verified Shillong Night Teer 2 result for {date}. Check today’s FR/SR status, common numbers and previous results on TeerOnline."
       }),
       navLabel: "Shillong Night 2",
@@ -188,7 +181,6 @@
       legacyArchivePath: "/shillong-night-teer-2-previous-results",
       previousResultsPath: "/shillong-night-teer-2-previous-results",
       rounds: Object.freeze({ fr: "23:10", sr: "00:10" }),
-      prepareBeforeMinutes: 720,
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([]),
       crossesMidnight: true,

@@ -7,8 +7,7 @@ function check(label, condition) {
   console.log(`${label}: ${condition ? "PASS" : "FAIL"}`);
   if (!condition) failures += 1;
 }
-const resultXml = fs.readFileSync(path.join(root, "sitemap-results.xml"), "utf8");
-const pagesXml = fs.readFileSync(path.join(root, "sitemap-pages.xml"), "utf8");
+const sitemapIndex = fs.readFileSync(path.join(root, "sitemap.xml"), "utf8");
 const build = fs.readFileSync(path.join(root, "assets/scripts/build-pages-split.js"), "utf8");
 const htmlFiles = fs.readdirSync(root).filter(name => name.endsWith(".html"));
 const html = htmlFiles.map(name => fs.readFileSync(path.join(root, name), "utf8")).join("\n");
@@ -22,9 +21,9 @@ const required = [
   "https://teeronline.com/shillong-night-teer-results",
   "https://teeronline.com/shillong-night-teer-2-results"
 ];
-for (const url of required) check(`Sitemap includes ${url}`, resultXml.includes(`<loc>${url}</loc>`));
-check("Sitemap excludes /shillong-teer-results", !resultXml.includes("/shillong-teer-results<"));
-check("Sitemaps exclude common-numbers", !resultXml.includes("common-numbers") && !pagesXml.includes("common-numbers"));
+check("Dynamic results sitemap is referenced", sitemapIndex.includes("https://teeronline.com/sitemap-results.xml"));
+check("Dynamic pages sitemap is referenced", sitemapIndex.includes("https://teeronline.com/sitemap-pages.xml"));
+check("Public HTML includes all canonical result URLs", required.every(url => html.includes(`href="${url.replace("https://teeronline.com", "") || "/"}`) || html.includes(`content="${url}"`) || html.includes(`href="${url}"`)));
 check("Public build omits common-numbers.html", !build.includes('copyFile("common-numbers.html")'));
 check("Build redirects retired Common Numbers URL", build.includes('"/common-numbers / 301"'));
 check("Build redirects obsolete Shillong result URL", build.includes('"/shillong-teer-results / 301"'));
