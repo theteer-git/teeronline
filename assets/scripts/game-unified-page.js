@@ -3,6 +3,16 @@
 (() => {
   const config = globalThis.TEER_GAME_CONFIG;
   const GAME_ID = String(document.body?.dataset?.gameId || "").toUpperCase();
+  const COMMON_PUBLICATION_TIMES = Object.freeze({
+    SHD: "11:30 AM",
+    KH: "11:45 AM",
+    JWD: "10:30 AM",
+    SHM: "8:30 PM",
+    KHM: "9:00 PM",
+    JWM: "8:30 PM",
+    SHN1: "5:30 PM",
+    SHN2: "5:45 PM"
+  });
   const game = config?.getGame?.(GAME_ID);
 
   if (!config || !game) {
@@ -303,7 +313,7 @@
     ).join("");
 
     target.innerHTML = `<article class="game-card" data-game="${escapeHtml(GAME_ID)}">
-      <div class="game-head"><div><h2>${escapeHtml(game.name)} Common Numbers and Statistics for ${escapeHtml(fmtDate(data.publicationDate || data.sourceDate))}</h2><div class="result-line">Historical reference prepared from completed records</div></div></div>
+      <div class="game-head"><div><h2>${escapeHtml(game.name)} Common Numbers and Statistics for ${escapeHtml(fmtDate(data.publicationDate || data.sourceDate))}</h2><div class="result-line">Published at ${escapeHtml(COMMON_PUBLICATION_TIMES[GAME_ID] || "")}</div></div></div>
       <div class="game-body">
         <section class="common-side">
           <div class="panel-label">🔢 Common Numbers</div>
