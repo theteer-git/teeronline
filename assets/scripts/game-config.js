@@ -210,6 +210,7 @@
 
   const ENDPOINTS = Object.freeze({
     latestResults: `${RESULTS_ORIGIN}/latest-results.json`,
+    latestVersion: `${RESULTS_ORIGIN}/latest-version.json`,
     recentResults: `${RESULTS_ORIGIN}/recent-results.json`,
     pollingPlan: `${RESULTS_ORIGIN}/polling-plan.json`,
     commonNumbers: `${RESULTS_ORIGIN}/common-numbers.json`

@@ -22,11 +22,14 @@
 
   const prefix = GAME_ID.toLowerCase();
   const LATEST_URL = config.endpoints.latestResults;
+  const LATEST_VERSION_URL = config.endpoints.latestVersion;
   const RECENT_URL = config.endpoints.recentResults;
   const POLLING_PLAN_URL = config.endpoints.pollingPlan;
   const COMMON_NUMBERS_URL = config.endpoints.commonNumbers;
 
   let loadingLatest = null;
+  let loadingLatestVersion = null;
+  let latestVersion = null;
   let loadingRecent = null;
   let timer = null;
   let pollingPlan = null;
@@ -75,6 +78,27 @@
     fr: item?.fr ?? item?.f ?? "",
     sr: item?.sr ?? item?.s ?? ""
   });
+
+
+  async function fetchLatestVersion() {
+    if (loadingLatestVersion) return loadingLatestVersion;
+    loadingLatestVersion = (async () => {
+      const response = await fetch(LATEST_VERSION_URL, {
+        cache: "no-store",
+        referrerPolicy: "no-referrer"
+      });
+      if (!response.ok) throw new Error(`Latest version request failed: ${response.status}`);
+      const payload = await response.json();
+      const version = String(payload?.v || "").trim();
+      if (!/^[a-f0-9]{64}$/i.test(version)) throw new Error("Latest version response is invalid");
+      return version;
+    })();
+    try {
+      return await loadingLatestVersion;
+    } finally {
+      loadingLatestVersion = null;
+    }
+  }
 
   async function fetchLatest() {
     if (loadingLatest) return loadingLatest;
@@ -399,19 +423,50 @@
   }
 
   async function refresh(manual = true) {
-    const [latestResult, recentResult, commonResult] = await Promise.allSettled([
-      fetchLatest(),
-      fetchRecent(),
-      fetchCommonNumbers()
-    ]);
+    const initialLoad = latestVersion === null;
+    let versionChanged = manual || initialLoad;
+
+    if (!manual) {
+      try {
+        const nextVersion = await fetchLatestVersion();
+        versionChanged = initialLoad || nextVersion !== latestVersion;
+        latestVersion = nextVersion;
+      } catch (error) {
+        // Safe fallback: preserve live updates even if the tiny version object is unavailable.
+        versionChanged = true;
+        console.warn(`${GAME_ID} latest version check failed; falling back to latest results:`, error);
+      }
+    }
+
+    if (!versionChanged) return;
+
+    const requests = [fetchLatest()];
+    if (manual || initialLoad) requests.push(fetchRecent(), fetchCommonNumbers());
+    else requests.push(fetchRecent());
+
+    const settled = await Promise.allSettled(requests);
+    const latestResult = settled[0];
+    const recentResult = settled[1];
+    const commonResult = manual || initialLoad ? settled[2] : null;
     const latest = latestResult.status === "fulfilled" ? latestResult.value : {};
-    const recent = recentResult.status === "fulfilled" ? recentResult.value : [];
+    const recent = recentResult?.status === "fulfilled" ? recentResult.value : [];
+
     if (latestResult.status === "rejected") console.warn(`${GAME_ID} latest result refresh failed:`, latestResult.reason);
-    if (recentResult.status === "rejected") console.warn(`${GAME_ID} recent result refresh failed:`, recentResult.reason);
-    if (commonResult.status === "fulfilled") renderCommonNumbers(commonResult.value);
-    else console.warn(`${GAME_ID} common numbers refresh failed:`, commonResult.reason);
+    if (recentResult?.status === "rejected") console.warn(`${GAME_ID} recent result refresh failed:`, recentResult.reason);
+    if (commonResult?.status === "fulfilled") renderCommonNumbers(commonResult.value);
+    else if (commonResult?.status === "rejected") console.warn(`${GAME_ID} common numbers refresh failed:`, commonResult.reason);
+
     renderResult(latest && Object.keys(latest).length ? latest : recent[0] || {});
-    renderHistory(recent);
+    if (recentResult?.status === "fulfilled") renderHistory(recent);
+
+    // Capture the current fingerprint after a manual/initial full refresh.
+    if (manual || initialLoad) {
+      try {
+        latestVersion = await fetchLatestVersion();
+      } catch (error) {
+        console.warn(`${GAME_ID} latest version baseline failed:`, error);
+      }
+    }
   }
 
   document.addEventListener("DOMContentLoaded", async () => {
