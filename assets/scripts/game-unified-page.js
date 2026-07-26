@@ -35,6 +35,42 @@
   let pollingPlan = null;
   let loadingCommonNumbers = null;
 
+  const CACHE_SCHEMA = 1;
+  const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
+  const CACHE_TTL = Object.freeze({
+    latest: 36 * 60 * 60 * 1000,
+    recent: 7 * 24 * 60 * 60 * 1000,
+    common: 7 * 24 * 60 * 60 * 1000
+  });
+
+  const readCache = (name) => {
+    try {
+      const raw = localStorage.getItem(`${CACHE_PREFIX}${name}`);
+      if (!raw) return null;
+      const cached = JSON.parse(raw);
+      if (!cached || cached.schema !== CACHE_SCHEMA || !cached.savedAt) return null;
+      if (Date.now() - Number(cached.savedAt) > (CACHE_TTL[name] || 0)) {
+        localStorage.removeItem(`${CACHE_PREFIX}${name}`);
+        return null;
+      }
+      return cached.value ?? null;
+    } catch {
+      return null;
+    }
+  };
+
+  const writeCache = (name, value) => {
+    try {
+      localStorage.setItem(`${CACHE_PREFIX}${name}`, JSON.stringify({
+        schema: CACHE_SCHEMA,
+        savedAt: Date.now(),
+        value
+      }));
+    } catch {
+      // Storage may be unavailable in private browsing or restricted contexts.
+    }
+  };
+
   const byId = suffix => document.getElementById(`${prefix}-${suffix}`);
   const valid = value => /^\d{1,2}$/.test(String(value ?? "").trim());
   const num = value => valid(value) ? String(value).padStart(2, "0") : "XX";
@@ -422,14 +458,26 @@
     }, intervalMs());
   }
 
+  function restoreCachedState() {
+    const latest = readCache("latest");
+    const recent = readCache("recent");
+    const common = readCache("common");
+
+    if (latest && typeof latest === "object") renderResult(latest);
+    if (Array.isArray(recent)) renderHistory(recent);
+    if (common && typeof common === "object") renderCommonNumbers(common);
+  }
+
   async function refresh(manual = true) {
     const initialLoad = latestVersion === null;
     let versionChanged = manual || initialLoad;
 
-    if (!manual) {
+    // Initial rendering should not wait for a version round-trip. The full payload and
+    // fingerprint are requested together, allowing the result card to update first.
+    if (!manual && !initialLoad) {
       try {
         const nextVersion = await fetchLatestVersion();
-        versionChanged = initialLoad || nextVersion !== latestVersion;
+        versionChanged = nextVersion !== latestVersion;
         latestVersion = nextVersion;
       } catch (error) {
         // Safe fallback: preserve live updates even if the tiny version object is unavailable.
@@ -440,29 +488,49 @@
 
     if (!versionChanged) return;
 
-    const requests = [fetchLatest()];
-    if (manual || initialLoad) requests.push(fetchRecent(), fetchCommonNumbers());
-    else requests.push(fetchRecent());
+    const latestPromise = fetchLatest();
+    const recentPromise = fetchRecent();
+    const commonPromise = manual || initialLoad ? fetchCommonNumbers() : null;
+    const versionPromise = manual || initialLoad ? fetchLatestVersion() : null;
 
-    const settled = await Promise.allSettled(requests);
-    const latestResult = settled[0];
-    const recentResult = settled[1];
-    const commonResult = manual || initialLoad ? settled[2] : null;
-    const latest = latestResult.status === "fulfilled" ? latestResult.value : {};
-    const recent = recentResult?.status === "fulfilled" ? recentResult.value : [];
+    let latestRendered = false;
+    try {
+      const latest = await latestPromise;
+      if (latest && Object.keys(latest).length) {
+        renderResult(latest);
+        writeCache("latest", latest);
+        latestRendered = true;
+      }
+    } catch (error) {
+      console.warn(`${GAME_ID} latest result refresh failed:`, error);
+    }
 
-    if (latestResult.status === "rejected") console.warn(`${GAME_ID} latest result refresh failed:`, latestResult.reason);
-    if (recentResult?.status === "rejected") console.warn(`${GAME_ID} recent result refresh failed:`, recentResult.reason);
-    if (commonResult?.status === "fulfilled") renderCommonNumbers(commonResult.value);
-    else if (commonResult?.status === "rejected") console.warn(`${GAME_ID} common numbers refresh failed:`, commonResult.reason);
+    try {
+      const recent = await recentPromise;
+      renderHistory(recent);
+      writeCache("recent", recent);
+      if (!latestRendered && recent[0]) {
+        renderResult(recent[0]);
+      }
+    } catch (error) {
+      console.warn(`${GAME_ID} recent result refresh failed:`, error);
+    }
 
-    renderResult(latest && Object.keys(latest).length ? latest : recent[0] || {});
-    if (recentResult?.status === "fulfilled") renderHistory(recent);
-
-    // Capture the current fingerprint after a manual/initial full refresh.
-    if (manual || initialLoad) {
+    if (commonPromise) {
       try {
-        latestVersion = await fetchLatestVersion();
+        const common = await commonPromise;
+        if (common) {
+          renderCommonNumbers(common);
+          writeCache("common", common);
+        }
+      } catch (error) {
+        console.warn(`${GAME_ID} common numbers refresh failed:`, error);
+      }
+    }
+
+    if (versionPromise) {
+      try {
+        latestVersion = await versionPromise;
       } catch (error) {
         console.warn(`${GAME_ID} latest version baseline failed:`, error);
       }
@@ -471,8 +539,9 @@
 
   document.addEventListener("DOMContentLoaded", async () => {
     bindPopup();
+    restoreCachedState();
     byId("refresh")?.addEventListener("click", () => refresh(true));
-    await Promise.all([loadPlan(), refresh(false)]);
+    await Promise.allSettled([loadPlan(), refresh(false)]);
     schedule();
   });
 
