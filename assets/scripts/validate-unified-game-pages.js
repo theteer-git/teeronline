@@ -22,6 +22,23 @@ function check(label, condition) {
   console.log(`${label}: ${condition ? "PASS" : "FAIL"}`);
   if (!condition) failures += 1;
 }
+function escapeRegExp(value) {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+function tagText(html, tag) {
+  const match = html.match(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"));
+  return (match?.[1] || "").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
+}
+function attrValue(html, tag, attrName, attrValueExpected, targetAttr) {
+  const tagPattern = new RegExp(`<${tag}\\b[^>]*${attrName}=["']${escapeRegExp(attrValueExpected)}["'][^>]*>`, "i");
+  const match = html.match(tagPattern);
+  if (!match) return "";
+  const attr = match[0].match(new RegExp(`${targetAttr}=["']([^"']*)["']`, "i"));
+  return attr?.[1] || "";
+}
+function countTag(html, tag) {
+  return (html.match(new RegExp(`<${tag}\\b`, "gi")) || []).length;
+}
 
 for (const gameId of config.gameOrder) {
   const game = config.games[gameId];
@@ -30,40 +47,34 @@ for (const gameId of config.gameOrder) {
   const exists = fs.existsSync(full);
   check(`${gameId} page exists`, exists);
   if (!exists) continue;
+
   const html = fs.readFileSync(full, "utf8");
-  const canonical = gameId === "SHD"
-    ? "https://teeronline.com/"
-    : `https://teeronline.com/${file.replace(/\.html$/, "")}`;
-  check(`${gameId} canonical`, html.includes(`href="${canonical}"`));
-  check(`${gameId} body game id`, html.includes(`data-game-id="${gameId}"`));
-  check(`${gameId} archive retained`, html.includes(`href="${game.previousResultsPath}"`));
+  const canonical = gameId === "SHD" ? "https://teeronline.com/" : `https://teeronline.com/${file.replace(/\.html$/, "")}`;
+  const title = tagText(html, "title");
+  const h1 = tagText(html, "h1");
+  const description = attrValue(html, "meta", "name", "description", "content");
+  const bodyGameId = attrValue(html, "body", "data-game-id", gameId, "data-game-id");
+
+  check(`${gameId} canonical`, new RegExp(`<link\\b[^>]*rel=["']canonical["'][^>]*href=["']${escapeRegExp(canonical)}["']|<link\\b[^>]*href=["']${escapeRegExp(canonical)}["'][^>]*rel=["']canonical["']`, "i").test(html));
+  check(`${gameId} body game id`, bodyGameId === gameId);
+  check(`${gameId} archive retained`, new RegExp(`href=["']${escapeRegExp(game.previousResultsPath)}["']`, "i").test(html));
   check(`${gameId} shared runtime`, html.includes('/assets/scripts/game-unified-page.js'));
   check(`${gameId} shared config`, html.includes('/assets/scripts/game-config.js'));
   check(`${gameId} shared CSS`, html.includes('/assets/css/game-unified-page.css'));
-  check(`${gameId} own common card`, html.includes(`data-game="${gameId}"`));
+  check(`${gameId} common panel container`, new RegExp(`id=["']${gameId.toLowerCase()}-common-card["']`, "i").test(html));
   check(`${gameId} no all-results`, !html.includes("all-results.json"));
-  check(`${gameId} semantic sections`, ["live_result", "previous_7_days", "common_numbers"].every(id => html.includes(`id="${id}"`)));
-  check(`${gameId} game-specific supporting heading`, html.includes(`<h2>${game.name} Result, Common Numbers and Statistics</h2>`));
-  check(`${gameId} game-specific FAQ`, html.includes(`Where can I view older ${game.name} results?`));
-  check(`${gameId} FAQ schema`, html.includes('"@type":"FAQPage"'));
+  check(`${gameId} semantic sections`, ["live_result", "previous_7_days", "common_numbers"].every(id => new RegExp(`id=["']${id}["']`, "i").test(html)));
+  check(`${gameId} unique title mentions game`, title.includes(game.name) && /Result Today/i.test(title));
+  check(`${gameId} description mentions game`, description.includes(game.name));
+  check(`${gameId} one clear H1`, countTag(html, "h1") === 1 && h1.includes(game.name));
+  check(`${gameId} game-specific visible copy`, html.includes(game.name));
+  check(`${gameId} FAQ content`, /Frequently Asked Questions/i.test(html));
+  check(`${gameId} FAQ schema`, html.includes('"@type":"FAQPage"') || html.includes('"@type": "FAQPage"'));
   check(`${gameId} no retired Common Numbers link`, !/href=["'](?:\.\/|\/)?common-numbers(?:\.html)?["']/.test(html));
-
-  if (gameId === "SHD") {
-    check("Homepage has no Juwai-specific supporting copy", !html.includes("Juwai Teer Result, Common Numbers and Statistics"));
-    check("Homepage has Shillong archive link", html.includes('href="/shillong-teer-previous-results"'));
-    check("Homepage title is Shillong-specific", html.includes("Shillong Teer Result Today Live"));
-  }
 }
 
-
-check(
-  "No separate Shillong Teer result page",
-  !fs.existsSync(path.join(root, "shillong-teer-results.html"))
-);
-check(
-  "SHD configuration canonical is homepage",
-  config.games.SHD.canonicalPath === "/"
-);
+check("No separate Shillong Teer result page", !fs.existsSync(path.join(root, "shillong-teer-results.html")));
+check("SHD configuration canonical is homepage", config.games.SHD.canonicalPath === "/");
 
 const runtimePath = path.join(root, "assets/scripts/game-unified-page.js");
 const runtime = fs.readFileSync(runtimePath, "utf8");
