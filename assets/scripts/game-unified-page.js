@@ -443,15 +443,36 @@
     }).filter(Boolean).join("");
   }
 
-  function weekdayPatternRows(items = []) {
-    return (items || []).slice(0, 6).map(item => {
-      if (item && typeof item === "object") {
-        const date = item.date ? fmtDate(item.date).slice(0, 5) : "";
-        const pair = item.fr != null || item.sr != null ? `${num(item.fr)}-${num(item.sr)}` : String(item.number ?? item.value ?? "");
-        return `<span class="pattern-item pattern-with-date">${date ? `<small>${escapeHtml(date)}</small>` : ""}<b>${escapeHtml(pair)}</b></span>`;
-      }
-      return `<span class="pattern-item"><b>${escapeHtml(String(item))}</b></span>`;
-    }).join("") || '<small class="empty">No Saturday history available.</small>';
+  function previousSaturdayDates(referenceDate, count = 6) {
+    const parsed = new Date(`${String(referenceDate || "")}T00:00:00`);
+    const base = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
+    const day = base.getDay();
+    const daysBack = (day - 6 + 7) % 7;
+    base.setDate(base.getDate() - daysBack);
+    return Array.from({ length: count }, (_, index) => {
+      const date = new Date(base);
+      date.setDate(base.getDate() - (index * 7));
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, "0");
+      const dayOfMonth = String(date.getDate()).padStart(2, "0");
+      return `${year}-${month}-${dayOfMonth}`;
+    });
+  }
+
+  function weekdayPatternRows(items = [], referenceDate = "") {
+    const values = (items || []).slice(0, 6);
+    if (!values.length) return '<small class="empty">No Saturday history available.</small>';
+
+    const inferredDates = previousSaturdayDates(referenceDate, values.length);
+    const rows = values.map((item, index) => {
+      const objectItem = item && typeof item === "object" ? item : null;
+      const date = objectItem?.date || inferredDates[index] || "";
+      const frValue = objectItem ? (objectItem.fr ?? objectItem.f ?? objectItem.number ?? objectItem.value) : item;
+      const srValue = objectItem ? (objectItem.sr ?? objectItem.s) : null;
+      return `<tr><td><strong>${escapeHtml(fmtDate(date).slice(0, 5))}</strong></td><td>${escapeHtml(num(frValue))}</td><td>${escapeHtml(num(srValue))}</td></tr>`;
+    }).join("");
+
+    return `<div class="saturday-table-wrap"><table class="saturday-table"><thead><tr><th>Date</th><th>FR</th><th>SR</th></tr></thead><tbody>${rows}</tbody></table></div>`;
   }
 
   function completedWeekNumbers(rows = []) {
@@ -500,7 +521,7 @@
     const weekSource = [...(data.performance || []), ...(data.flow || [])];
     const weekRows = currentWeekRows(data.publicationDate || data.sourceDate || previous.date, weekSource);
     const sameDate = sameDateHistoryRows(stats.sameDateHistory || []);
-    const saturdayPattern = weekdayPatternRows(stats.weekdayPattern || []);
+    const saturdayPattern = weekdayPatternRows(stats.weekdayPattern || [], data.publicationDate || data.sourceDate || previous.date);
 
     target.innerHTML = `<article class="game-card" data-game="${escapeHtml(GAME_ID)}">
       <div class="game-head"><div><h2>${escapeHtml(game.name)} Common Numbers and Statistics for ${escapeHtml(fmtDate(data.publicationDate || data.sourceDate))}</h2><div class="result-line">Published at ${escapeHtml(COMMON_PUBLICATION_TIMES[GAME_ID] || "")}</div></div></div>
@@ -521,7 +542,7 @@
           </section>
           <div class="substats enhanced-substats">
             <div class="subbox"><div class="metric-title"><h4>Same Date History</h4><span class="metric-badge">Past years</span></div>${sameDate || '<small class="empty">No historical data</small>'}</div>
-            <div class="subbox"><div class="metric-title"><h4>Last 6 Saturdays</h4><span class="metric-badge">Saturday history</span></div>${saturdayPattern}</div>
+            <div class="subbox"><div class="metric-title"><h4>Last 6 Saturdays</h4><span class="metric-badge">FR · SR history</span></div>${saturdayPattern}</div>
             <div class="subbox span-2 weekly-insights"><div class="metric-title"><h4>This Week’s Insights</h4><span class="metric-badge">Completed rounds</span></div>${renderWeeklyInsights(weekRows)}</div>
             <div class="subbox"><div class="metric-title"><h4>Repeated Numbers</h4><span class="metric-badge">With frequency</span></div><div class="frequency-chip-row">${renderCountedChips(stats.repeated)}</div></div>
             <div class="subbox pair-block"><div class="metric-title"><h4>Repeated FR-SR Pairs</h4><span class="metric-badge">With frequency</span></div><div class="frequency-chip-row">${renderCountedChips(stats.repeatedPairs, "chip pair frequency-chip")}</div></div>
