@@ -39,6 +39,8 @@
   let monitoringTimer = null;
   let transientBannerUntil = 0;
   let transientBannerRound = "";
+  let initialAvailableUntil = 0;
+  let initialAvailableRound = "";
   let latestRecordSignature = "";
   let historySignature = "";
 
@@ -171,24 +173,31 @@
     banner.className = "live-monitoring-banner";
     banner.setAttribute("aria-live", "polite");
     banner.setAttribute("aria-atomic", "true");
-    banner.hidden = true;
-    banner.innerHTML = '<strong class="live-monitoring-title"></strong><span class="live-monitoring-message"></span>';
-    card.insertAdjacentElement("afterend", banner);
+    banner.innerHTML = [
+      '<span class="live-monitoring-icon" aria-hidden="true"></span>',
+      '<span class="live-monitoring-copy">',
+      '<strong class="live-monitoring-title"></strong>',
+      '<span class="live-monitoring-message"></span>',
+      '</span>',
+      '<span class="live-monitoring-badge"></span>'
+    ].join("");
+    card.insertAdjacentElement("beforebegin", banner);
     return banner;
   }
 
-  function showMonitoringBanner(state, title, message) {
+  function showMonitoringBanner(state, title, message, badge = "", icon = "") {
     const banner = ensureMonitoringBanner();
     if (!banner) return;
     banner.dataset.state = state;
+    banner.querySelector(".live-monitoring-icon").textContent = icon;
     banner.querySelector(".live-monitoring-title").textContent = title;
     banner.querySelector(".live-monitoring-message").textContent = message;
+    banner.querySelector(".live-monitoring-badge").textContent = badge;
     banner.hidden = false;
   }
 
-  function hideMonitoringBanner() {
-    const banner = ensureMonitoringBanner();
-    if (banner) banner.hidden = true;
+  function fmtExpectedTime(round) {
+    return fmtClock(game.rounds?.[round]) || String(game.rounds?.[round] || "");
   }
 
   function roundWindow(round, now) {
@@ -220,41 +229,101 @@
     const isCurrentRecord = recordDate === businessDate;
     const isOffDay = Array.isArray(game.weeklyOffDays) && game.weeklyOffDays.includes(now.weekday);
 
+    // scheduled off-day: retain the fixed-height ribbon to prevent layout shift.
     if (isOffDay) {
-      showMonitoringBanner("off", "Today is a scheduled off-day", `No active monitoring is required for ${game.name}.`);
+      showMonitoringBanner(
+        "off",
+        "Scheduled Off Day",
+        `${game.name} is not conducted today. Live monitoring will resume on the next scheduled game day.`,
+        "OFF DAY",
+        "▣"
+      );
       return;
     }
     if (Date.now() < transientBannerUntil) {
-      showMonitoringBanner("updated", "✅ Result Updated", `The latest ${transientBannerRound} result has been received and displayed automatically. Updated at ${now.clock} IST.`);
+      showMonitoringBanner(
+        "updated",
+        "Result Updated",
+        `The latest ${transientBannerRound} result has been received and displayed automatically.`,
+        `UPDATED ${now.clock} IST`,
+        "✓"
+      );
       return;
     }
     if (isCurrentRecord && state.fr && state.sr) {
-      showMonitoringBanner("complete", "✅ Today’s Result Complete", "Both rounds have been received and displayed.");
+      showMonitoringBanner(
+        "complete",
+        "Today’s Result Complete",
+        "Both rounds have been received and displayed.",
+        "COMPLETE",
+        "★"
+      );
       return;
     }
 
     const pendingRound = !state.fr ? "fr" : !state.sr ? "sr" : null;
     if (!pendingRound) {
-      hideMonitoringBanner();
+      showMonitoringBanner(
+        "waiting",
+        "Waiting for Live Monitoring",
+        "We’ll indicate here when live monitoring begins and results will update automatically.",
+        "UPCOMING",
+        "◷"
+      );
       return;
     }
+
     const window = roundWindow(pendingRound, now);
     const label = pendingRound.toUpperCase();
+    const expectedTime = fmtExpectedTime(pendingRound);
+
+    if (isCurrentRecord && Date.now() < initialAvailableUntil && initialAvailableRound) {
+      showMonitoringBanner(
+        "available",
+        `Today’s ${initialAvailableRound} Result Available`,
+        "The latest result was already available when this page opened.",
+        "AVAILABLE",
+        "i"
+      );
+      return;
+    }
     if (window.active) {
-      showMonitoringBanner("active", `🔴 Live ${label} Result Monitoring`, "Please keep this page open. The result will appear automatically as soon as it is published.");
+      showMonitoringBanner(
+        "active",
+        `Live ${label} Result Monitoring`,
+        "Results will appear automatically as soon as they are published. Auto updating instantly.",
+        "ACTIVE NOW",
+        "◉"
+      );
       return;
     }
     if (isCurrentRecord && window.extended) {
-      showMonitoringBanner("extended", "🟡 Monitoring Extended", "The result has not yet been published. Automatic monitoring is continuing.");
+      showMonitoringBanner(
+        "extended",
+        "Monitoring Extended",
+        "The result has not yet been published. Automatic monitoring is continuing.",
+        "MONITORING",
+        "◷"
+      );
       return;
     }
-    hideMonitoringBanner();
+    showMonitoringBanner(
+      "waiting",
+      "Waiting for Live Monitoring",
+      `We’ll indicate here when live ${label} monitoring begins. The result will update automatically.`,
+      `UPCOMING · ${expectedTime}`,
+      "◷"
+    );
   }
 
   function noteResultTransition(record) {
     const next = resultState(record);
     if (initialResultState === null) {
       initialResultState = next;
+      if (next.fr !== next.sr) {
+        initialAvailableRound = next.fr ? "FR" : "SR";
+        initialAvailableUntil = Date.now() + 8000;
+      }
       return;
     }
     const round = !initialResultState.fr && next.fr ? "FR" : !initialResultState.sr && next.sr ? "SR" : "";
