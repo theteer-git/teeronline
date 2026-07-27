@@ -39,6 +39,8 @@
   let monitoringTimer = null;
   let transientBannerUntil = 0;
   let transientBannerRound = "";
+  let latestRecordSignature = "";
+  let historySignature = "";
 
   const CACHE_SCHEMA = 1;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
@@ -275,8 +277,7 @@
       const version = String(payload?.v || "").trim();
       if (!/^[a-f0-9]{64}$/i.test(version)) throw new Error("Latest version response is invalid");
       return version;
-      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
-})();
+    })();
     try {
       return await loadingLatestVersion;
     } finally {
@@ -294,8 +295,7 @@
       if (!response.ok) throw new Error(`Latest results request failed: ${response.status}`);
       const data = await response.json();
       return normalizeItem(data?.records?.[GAME_ID] ?? data?.[GAME_ID] ?? {});
-      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
-})();
+    })();
     try {
       return await loadingLatest;
     } finally {
@@ -315,8 +315,7 @@
         .map(normalizeItem)
         .filter(item => item.gameId === GAME_ID && item.date && valid(item.fr) && valid(item.sr))
         .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
-})();
+    })();
     try {
       return await loadingRecent;
     } finally {
@@ -324,7 +323,22 @@
     }
   }
 
+  function resultSignature(record = {}) {
+    return [record.date || "", num(record.fr), num(record.sr), record.status || "", record.lastUpdatedAt || record.updatedAt || ""].join("|");
+  }
+
+  function recentSignature(records = []) {
+    return records.map(item => [item.date || "", num(item.fr), num(item.sr)].join(":" )).join("|");
+  }
+
   function renderResult(record = {}) {
+    const signature = resultSignature(record);
+    if (signature && signature === latestRecordSignature) {
+      latestRecord = { ...record };
+      updateMonitoringBanner();
+      return false;
+    }
+    latestRecordSignature = signature;
     noteResultTransition(record);
     latestRecord = { ...record };
     const fr = num(record.fr);
@@ -570,8 +584,7 @@
       if (!response.ok) throw new Error(`Common numbers request failed: ${response.status}`);
       const payload = await response.json();
       return payload?.games?.[GAME_ID] || null;
-      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
-})();
+    })();
     try {
       return await loadingCommonNumbers;
     } finally {
@@ -626,15 +639,12 @@
     const initialLoad = latestVersion === null;
     let versionChanged = manual || initialLoad;
 
-    // Initial rendering should not wait for a version round-trip. The full payload and
-    // fingerprint are requested together, allowing the result card to update first.
     if (!manual && !initialLoad) {
       try {
         const nextVersion = await fetchLatestVersion();
         versionChanged = nextVersion !== latestVersion;
         latestVersion = nextVersion;
       } catch (error) {
-        // Safe fallback: preserve live updates even if the tiny version object is unavailable.
         versionChanged = true;
         console.warn(`${GAME_ID} latest version check failed; falling back to latest results:`, error);
       }
@@ -642,37 +652,38 @@
 
     if (!versionChanged) return;
 
-    const latestPromise = fetchLatest();
-    const recentPromise = fetchRecent();
-    const commonPromise = manual || initialLoad ? fetchCommonNumbers() : null;
-    const versionPromise = manual || initialLoad ? fetchLatestVersion() : null;
-
+    const previousSignature = latestRecordSignature;
     let latestRendered = false;
+    let gameRecordChanged = manual || initialLoad;
+
     try {
-      const latest = await latestPromise;
+      const latest = await fetchLatest();
       if (latest && Object.keys(latest).length) {
-        renderResult(latest);
-        writeCache("latest", latest);
-        latestRendered = true;
+        const nextSignature = resultSignature(latest);
+        gameRecordChanged = gameRecordChanged || nextSignature !== previousSignature;
+        latestRendered = renderResult(latest) !== false;
+        if (latestRendered || gameRecordChanged) writeCache("latest", latest);
       }
     } catch (error) {
       console.warn(`${GAME_ID} latest result refresh failed:`, error);
+      gameRecordChanged = true;
     }
 
-    try {
-      const recent = await recentPromise;
-      renderHistory(recent);
-      writeCache("recent", recent);
-      if (!latestRendered && recent[0]) {
-        renderResult(recent[0]);
-      }
-    } catch (error) {
-      console.warn(`${GAME_ID} recent result refresh failed:`, error);
-    }
-
-    if (commonPromise) {
+    // recent-results.json is substantially larger than latest-results.json. Fetch it only
+    // when this game's record changed, on first load, or after an explicit manual refresh.
+    if (gameRecordChanged) {
       try {
-        const common = await commonPromise;
+        const recent = await fetchRecent();
+        if (renderHistory(recent) !== false) writeCache("recent", recent);
+        if (!latestRendered && recent[0] && !latestRecord) renderResult(recent[0]);
+      } catch (error) {
+        console.warn(`${GAME_ID} recent result refresh failed:`, error);
+      }
+    }
+
+    if (manual || initialLoad) {
+      try {
+        const common = await fetchCommonNumbers();
         if (common) {
           renderCommonNumbers(common);
           writeCache("common", common);
@@ -680,11 +691,9 @@
       } catch (error) {
         console.warn(`${GAME_ID} common numbers refresh failed:`, error);
       }
-    }
 
-    if (versionPromise) {
       try {
-        latestVersion = await versionPromise;
+        latestVersion = await fetchLatestVersion();
       } catch (error) {
         console.warn(`${GAME_ID} latest version baseline failed:`, error);
       }
