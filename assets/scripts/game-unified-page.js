@@ -34,15 +34,6 @@
   let timer = null;
   let pollingPlan = null;
   let loadingCommonNumbers = null;
-  let latestRecord = null;
-  let initialResultState = null;
-  let monitoringTimer = null;
-  let transientBannerUntil = 0;
-  let transientBannerRound = "";
-  let initialAvailableUntil = 0;
-  let initialAvailableRound = "";
-  let latestRecordSignature = "";
-  let historySignature = "";
 
   const CACHE_SCHEMA = 1;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
@@ -125,224 +116,6 @@
   });
 
 
-
-  const MONITORING_FALLBACK = Object.freeze({ before: 30, after: 45 });
-
-  function istParts(date = new Date()) {
-    const parts = new Intl.DateTimeFormat("en-CA", {
-      timeZone: "Asia/Kolkata",
-      year: "numeric", month: "2-digit", day: "2-digit",
-      weekday: "short", hour: "2-digit", minute: "2-digit", second: "2-digit",
-      hourCycle: "h23"
-    }).formatToParts(date).reduce((out, part) => {
-      if (part.type !== "literal") out[part.type] = part.value;
-      return out;
-    }, {});
-    return {
-      date: `${parts.year}-${parts.month}-${parts.day}`,
-      weekday: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(parts.weekday),
-      minutes: Number(parts.hour) * 60 + Number(parts.minute),
-      seconds: Number(parts.second),
-      clock: date.toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true }).toUpperCase()
-    };
-  }
-
-  function addDateDays(value, days) {
-    const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if (!match) return value;
-    const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
-    date.setUTCDate(date.getUTCDate() + Number(days || 0));
-    return date.toISOString().slice(0, 10);
-  }
-
-  function currentBusinessDate(now = istParts()) {
-    return game.crossesMidnight && now.minutes <= 60 ? addDateDays(now.date, -1) : now.date;
-  }
-
-  function resultState(record = {}) {
-    return { fr: valid(record.fr), sr: valid(record.sr) };
-  }
-
-  function ensureMonitoringBanner() {
-    let banner = byId("monitoring");
-    if (banner) return banner;
-    const card = document.querySelector(".result-card");
-    if (!card) return null;
-
-    let stack = card.closest(".result-live-stack");
-    if (!stack) {
-      stack = document.createElement("div");
-      stack.className = "result-live-stack";
-      card.parentNode.insertBefore(stack, card);
-      stack.appendChild(card);
-    }
-
-    banner = document.createElement("section");
-    banner.id = `${prefix}-monitoring`;
-    banner.className = "live-monitoring-banner";
-    banner.setAttribute("aria-live", "polite");
-    banner.setAttribute("aria-atomic", "true");
-    banner.innerHTML = [
-      '<span class="live-monitoring-icon" aria-hidden="true"></span>',
-      '<span class="live-monitoring-copy">',
-      '<strong class="live-monitoring-title"></strong>',
-      '<span class="live-monitoring-message"></span>',
-      '</span>',
-      '<span class="live-monitoring-badge"></span>'
-    ].join("");
-    stack.insertBefore(banner, card);
-    return banner;
-  }
-
-  function showMonitoringBanner(state, title, message, badge = "", icon = "") {
-    const banner = ensureMonitoringBanner();
-    if (!banner) return;
-    banner.dataset.state = state;
-    banner.querySelector(".live-monitoring-icon").textContent = icon;
-    banner.querySelector(".live-monitoring-title").textContent = title;
-    banner.querySelector(".live-monitoring-message").textContent = message;
-    banner.querySelector(".live-monitoring-badge").textContent = badge;
-    banner.hidden = false;
-  }
-
-  function fmtExpectedTime(round) {
-    return fmtClock(game.rounds?.[round]) || String(game.rounds?.[round] || "");
-  }
-
-  function roundWindow(round, now) {
-    const planRound = pollingPlan?.games?.[GAME_ID]?.rounds?.[round];
-    const declared = String(game.rounds?.[round] || "00:00");
-    let [hour, minute] = declared.split(":").map(Number);
-    let target = hour * 60 + minute;
-    let current = now.minutes;
-    if (game.crossesMidnight && round === "sr") {
-      target += 1440;
-      if (current <= 60) current += 1440;
-    }
-    const before = Number.isFinite(Number(planRound?.beforeMinutes)) ? Number(planRound.beforeMinutes) : MONITORING_FALLBACK.before;
-    const after = Number.isFinite(Number(planRound?.afterMinutes)) ? Number(planRound.afterMinutes) : MONITORING_FALLBACK.after;
-    return {
-      round, current, target, before, after,
-      active: planRound?.active === true || (current >= target - before && current <= target + after),
-      extended: current > target + after,
-      expectedDate: planRound?.expectedDate || currentBusinessDate(now),
-      completed: planRound?.completed === true
-    };
-  }
-
-  function updateMonitoringBanner() {
-    const now = istParts();
-    const state = resultState(latestRecord || {});
-    const businessDate = currentBusinessDate(now);
-    const recordDate = String(latestRecord?.date || "");
-    const isCurrentRecord = recordDate === businessDate;
-    const isOffDay = Array.isArray(game.weeklyOffDays) && game.weeklyOffDays.includes(now.weekday);
-
-    // scheduled off-day: retain the fixed-height ribbon to prevent layout shift.
-    if (isOffDay) {
-      showMonitoringBanner(
-        "off",
-        "Scheduled Off Day",
-        `${game.name} is not conducted today. Live monitoring will resume on the next scheduled game day.`,
-        "OFF DAY",
-        "▣"
-      );
-      return;
-    }
-    if (Date.now() < transientBannerUntil) {
-      showMonitoringBanner(
-        "updated",
-        "Result Updated",
-        `The latest ${transientBannerRound} result has been received and displayed automatically.`,
-        `UPDATED ${now.clock} IST`,
-        "✓"
-      );
-      return;
-    }
-    if (isCurrentRecord && state.fr && state.sr) {
-      showMonitoringBanner(
-        "complete",
-        "Today’s Result Complete",
-        "Both rounds have been received and displayed.",
-        "COMPLETE",
-        "★"
-      );
-      return;
-    }
-
-    const pendingRound = !state.fr ? "fr" : !state.sr ? "sr" : null;
-    if (!pendingRound) {
-      showMonitoringBanner(
-        "waiting",
-        "Waiting for Live Monitoring",
-        "We’ll indicate here when live monitoring begins and results will update automatically.",
-        "UPCOMING",
-        "◷"
-      );
-      return;
-    }
-
-    const window = roundWindow(pendingRound, now);
-    const label = pendingRound.toUpperCase();
-    const expectedTime = fmtExpectedTime(pendingRound);
-
-    if (isCurrentRecord && Date.now() < initialAvailableUntil && initialAvailableRound) {
-      showMonitoringBanner(
-        "available",
-        `Today’s ${initialAvailableRound} Result Available`,
-        "The latest result was already available when this page opened.",
-        "AVAILABLE",
-        "i"
-      );
-      return;
-    }
-    if (window.active) {
-      showMonitoringBanner(
-        "active",
-        `Live ${label} Result Monitoring`,
-        "Results will appear automatically as soon as they are published. Auto updating instantly.",
-        "ACTIVE NOW",
-        "◉"
-      );
-      return;
-    }
-    if (isCurrentRecord && window.extended) {
-      showMonitoringBanner(
-        "extended",
-        "Monitoring Extended",
-        "The result has not yet been published. Automatic monitoring is continuing.",
-        "MONITORING",
-        "◷"
-      );
-      return;
-    }
-    showMonitoringBanner(
-      "waiting",
-      "Waiting for Live Monitoring",
-      `We’ll indicate here when live ${label} monitoring begins. The result will update automatically.`,
-      `UPCOMING · ${expectedTime}`,
-      "◷"
-    );
-  }
-
-  function noteResultTransition(record) {
-    const next = resultState(record);
-    if (initialResultState === null) {
-      initialResultState = next;
-      if (next.fr !== next.sr) {
-        initialAvailableRound = next.fr ? "FR" : "SR";
-        initialAvailableUntil = Date.now() + 8000;
-      }
-      return;
-    }
-    const round = !initialResultState.fr && next.fr ? "FR" : !initialResultState.sr && next.sr ? "SR" : "";
-    initialResultState = next;
-    if (round) {
-      transientBannerRound = round;
-      transientBannerUntil = Date.now() + 12000;
-    }
-  }
-
   async function fetchLatestVersion() {
     if (loadingLatestVersion) return loadingLatestVersion;
     loadingLatestVersion = (async () => {
@@ -401,24 +174,7 @@
     }
   }
 
-  function resultSignature(record = {}) {
-    return [record.date || "", num(record.fr), num(record.sr), record.status || "", record.lastUpdatedAt || record.updatedAt || ""].join("|");
-  }
-
-  function recentSignature(records = []) {
-    return records.map(item => [item.date || "", num(item.fr), num(item.sr)].join(":" )).join("|");
-  }
-
   function renderResult(record = {}) {
-    const signature = resultSignature(record);
-    if (signature && signature === latestRecordSignature) {
-      latestRecord = { ...record };
-      updateMonitoringBanner();
-      return false;
-    }
-    latestRecordSignature = signature;
-    noteResultTransition(record);
-    latestRecord = { ...record };
     const fr = num(record.fr);
     const sr = num(record.sr);
     const frTime = fmtClock(record.frDeclaredTime) || fmtClock(game.rounds.fr);
@@ -438,7 +194,6 @@
           ? "Partial"
           : "Pending";
     }
-    updateMonitoringBanner();
   }
 
   function renderHistory(records = []) {
@@ -585,6 +340,146 @@
     return `<section class="group-analysis-panel"><div class="group-analysis-heading"><div><h4>Most Missing Formula Groups</h4></div><span class="metric-badge">${groups.length} groups</span></div><div class="formula-gap-grid">${renderGroupCards(groups)}</div></section>`;
   }
 
+
+
+  const DAY_GAMES_WITH_SUNDAY_OFF = new Set(["SHD", "KH", "JWD"]);
+  const WEEKDAYS = Object.freeze(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]);
+
+  function parseLocalDate(value) {
+    const match = /^(\d{4})-(\d{2})-(\d{2})$/.exec(String(value || ""));
+    if (!match) return null;
+    const date = new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3]));
+    return Number.isNaN(date.getTime()) ? null : date;
+  }
+
+  function isoLocalDate(date) {
+    if (!(date instanceof Date) || Number.isNaN(date.getTime())) return "";
+    return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+  }
+
+  function startOfWeek(value) {
+    const date = parseLocalDate(value) || new Date();
+    const day = date.getDay();
+    const mondayOffset = day === 0 ? -6 : 1 - day;
+    const monday = new Date(date);
+    monday.setHours(0, 0, 0, 0);
+    monday.setDate(date.getDate() + mondayOffset);
+    return monday;
+  }
+
+  function normaliseResultRecord(item = {}) {
+    return {
+      date: String(item.date || item.d || ""),
+      fr: num(item.fr ?? item.f),
+      sr: num(item.sr ?? item.s)
+    };
+  }
+
+  function currentWeekRows(referenceDate, records = []) {
+    const monday = startOfWeek(referenceDate);
+    const recordMap = new Map((records || []).map(item => {
+      const row = normaliseResultRecord(item);
+      return [row.date, row];
+    }));
+    return WEEKDAYS.map((dayName, index) => {
+      const date = new Date(monday);
+      date.setDate(monday.getDate() + index);
+      const dateKey = isoLocalDate(date);
+      const record = recordMap.get(dateKey);
+      const off = index === 6 && DAY_GAMES_WITH_SUNDAY_OFF.has(GAME_ID);
+      return {
+        dayName,
+        date: dateKey,
+        fr: off ? "OFF" : (record?.fr || "XX"),
+        sr: off ? "OFF" : (record?.sr || "XX"),
+        off
+      };
+    });
+  }
+
+  function renderWeekTable(rows = []) {
+    return `<div class="week-table-wrap"><table class="week-table"><thead><tr><th>Day</th><th>FR</th><th>SR</th></tr></thead><tbody>${rows.map(row => `<tr${row.off ? ' class="off-day"' : ""}><td><strong>${escapeHtml(row.dayName)}</strong><small>${escapeHtml(fmtDate(row.date).slice(0, 5))}</small></td><td>${escapeHtml(row.fr)}</td><td>${escapeHtml(row.sr)}</td></tr>`).join("")}</tbody></table></div>`;
+  }
+
+  function valueAndCount(item) {
+    if (item && typeof item === "object") {
+      const value = item.number ?? item.value ?? item.pair ?? item.label ?? item.result ?? "";
+      const count = Number(item.count ?? item.frequency ?? item.occurrences ?? item.times ?? 0);
+      return { value: String(value), count: Number.isFinite(count) ? count : 0 };
+    }
+    const text = String(item ?? "");
+    const match = text.match(/^(.+?)\s*(?:\(|\[)?(\d+)\s*[x×](?:\)|\])?$/i);
+    return match ? { value: match[1].trim(), count: Number(match[2]) } : { value: text, count: 0 };
+  }
+
+  function countedValues(items = [], formatter = value => value) {
+    const counts = new Map();
+    for (const item of items || []) {
+      const parsed = valueAndCount(item);
+      if (!parsed.value) continue;
+      const key = formatter(parsed.value);
+      const increment = parsed.count > 0 ? parsed.count : 1;
+      counts.set(key, (counts.get(key) || 0) + increment);
+    }
+    return [...counts.entries()]
+      .filter(([, count]) => count >= 2)
+      .sort((a, b) => b[1] - a[1] || String(a[0]).localeCompare(String(b[0]), undefined, { numeric: true }))
+      .map(([value, count]) => ({ value, count }));
+  }
+
+  function renderCountedChips(items = [], className = "chip") {
+    const rows = countedValues(items, value => value.includes("-") ? value.split("-").map(part => num(part)).join("-") : num(value));
+    return rows.length ? rows.map(item => `<span class="${className}"><b>${escapeHtml(item.value)}</b><small>${item.count}×</small></span>`).join("") : '<small class="empty">No repeated values in the available range.</small>';
+  }
+
+  function sameDateHistoryRows(items = []) {
+    return (items || []).map(item => {
+      const date = String(item?.date || item?.year || "");
+      const yearMatch = date.match(/\b(19|20)\d{2}\b/);
+      const year = yearMatch ? yearMatch[0] : "";
+      const fr = num(item?.fr ?? item?.f);
+      const sr = num(item?.sr ?? item?.s);
+      return year ? `<span class="history-item history-with-year"><b>${escapeHtml(year)}</b><i>→</i><span>${escapeHtml(fr)}-${escapeHtml(sr)}</span></span>` : "";
+    }).filter(Boolean).join("");
+  }
+
+  function weekdayPatternRows(items = []) {
+    return (items || []).slice(0, 6).map(item => {
+      if (item && typeof item === "object") {
+        const date = item.date ? fmtDate(item.date).slice(0, 5) : "";
+        const pair = item.fr != null || item.sr != null ? `${num(item.fr)}-${num(item.sr)}` : String(item.number ?? item.value ?? "");
+        return `<span class="pattern-item pattern-with-date">${date ? `<small>${escapeHtml(date)}</small>` : ""}<b>${escapeHtml(pair)}</b></span>`;
+      }
+      return `<span class="pattern-item"><b>${escapeHtml(String(item))}</b></span>`;
+    }).join("") || '<small class="empty">No Saturday history available.</small>';
+  }
+
+  function completedWeekNumbers(rows = []) {
+    return rows.flatMap(row => [row.fr, row.sr]).filter(value => /^\d{2}$/.test(String(value)));
+  }
+
+  function renderWeeklyInsights(rows = []) {
+    const values = completedWeekNumbers(rows);
+    if (values.length < 2) return '<p class="empty">Not enough completed results this week.</p>';
+    const numberCounts = new Map();
+    const houseCounts = new Map();
+    let even = 0;
+    let odd = 0;
+    let low = 0;
+    let high = 0;
+    values.forEach(value => {
+      numberCounts.set(value, (numberCounts.get(value) || 0) + 1);
+      const house = value.charAt(0);
+      houseCounts.set(house, (houseCounts.get(house) || 0) + 1);
+      const n = Number(value);
+      n % 2 === 0 ? even++ : odd++;
+      n <= 49 ? low++ : high++;
+    });
+    const repeated = [...numberCounts.entries()].filter(([, count]) => count > 1).sort((a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0])).slice(0, 4);
+    const activeHouse = [...houseCounts.entries()].sort((a, b) => b[1] - a[1] || Number(a[0]) - Number(b[0]))[0];
+    return `<div class="weekly-insight-grid"><article><span>Most Repeated Numbers</span><strong>${repeated.length ? repeated.map(([value, count]) => `${escapeHtml(value)} (${count}×)`).join(", ") : "No repeats yet"}</strong></article><article><span>Most Active House</span><strong>${activeHouse ? `House ${escapeHtml(activeHouse[0])} · ${activeHouse[1]} appearances` : "—"}</strong></article><article><span>Even vs Odd</span><strong>Even ${even} · Odd ${odd}</strong></article><article><span>High vs Low</span><strong>00–49: ${low} · 50–99: ${high}</strong></article></div>`;
+  }
+
   function renderCommonNumbers(data = {}) {
     const target = document.getElementById(`${prefix}-common-card`);
     if (!target) return;
@@ -602,20 +497,10 @@
       const statusClass = status === "miss" ? "performance-miss" : status === "hit_both" ? "performance-both" : status === "hit_fr" ? "performance-fr" : "performance-sr";
       return `<tr><td><span class="performance-date">${escapeHtml(fmtDate(item.date))}</span></td><td><span class="round-number round-fr">${escapeHtml(item.fr || "XX")}</span></td><td><span class="round-number round-sr">${escapeHtml(item.sr || "XX")}</span></td><td><span class="performance-badge ${statusClass}">${escapeHtml(item.label || "Miss")}</span></td></tr>`;
     }).join("");
-    const flowItems = data.flow || [];
-    const flowValues = flowItems.map(item => Number(item.fr)).filter(Number.isFinite);
-    const flowMin = flowValues.length ? Math.min(...flowValues) : 0;
-    const flowMax = flowValues.length ? Math.max(...flowValues) : 99;
-    const flowRange = Math.max(1, flowMax - flowMin);
-    const flow = flowItems.map((item, index) => {
-      const value = Number(item.fr);
-      const normalizedHeight = Number.isFinite(value) ? 28 + ((value - flowMin) / flowRange) * 62 : 28;
-      const shortDate = item.date ? fmtDate(item.date).slice(0, 5) : `#${index + 1}`;
-      return `<div class="flow-item"><span class="flow-value">${escapeHtml(item.fr || "XX")}</span><div class="flow-track"><i style="height:${Math.round(normalizedHeight)}%"></i></div><small>${escapeHtml(shortDate)}</small></div>`;
-    }).join("");
-    const sameDate = (stats.sameDateHistory || []).map(item =>
-      `<span class="history-item">${escapeHtml(item.fr)}-${escapeHtml(item.sr)}</span>`
-    ).join("");
+    const weekSource = [...(data.performance || []), ...(data.flow || [])];
+    const weekRows = currentWeekRows(data.publicationDate || data.sourceDate || previous.date, weekSource);
+    const sameDate = sameDateHistoryRows(stats.sameDateHistory || []);
+    const saturdayPattern = weekdayPatternRows(stats.weekdayPattern || []);
 
     target.innerHTML = `<article class="game-card" data-game="${escapeHtml(GAME_ID)}">
       <div class="game-head"><div><h2>${escapeHtml(game.name)} Common Numbers and Statistics for ${escapeHtml(fmtDate(data.publicationDate || data.sourceDate))}</h2><div class="result-line">Published at ${escapeHtml(COMMON_PUBLICATION_TIMES[GAME_ID] || "")}</div></div></div>
@@ -630,22 +515,22 @@
             <div class="performance-heading"><div><span class="performance-kicker">Recent validation</span><h4 id="${prefix}-performance-title">Last 7 Results Performance</h4></div><span class="performance-count">${(data.performance || []).length} records</span></div>
             <div class="performance-table-wrap"><table class="performance-table"><thead><tr><th>Date</th><th>FR</th><th>SR</th><th>Performance</th></tr></thead><tbody>${performanceRows}</tbody></table></div>
           </section>
-          <section class="trend-chart flow-panel" aria-label="Last 7 FR result flow">
-            <div class="flow-heading"><div><span class="performance-kicker">Number movement</span><h4>Last 7 FR Result Flow</h4></div><span class="flow-range">${flowMin}–${flowMax}</span></div>
-            <div class="flow-grid">${flow}</div>
+          <section class="week-results-panel" aria-labelledby="${prefix}-week-results-title">
+            <div class="flow-heading"><div><span class="performance-kicker">Monday → Sunday</span><h4 id="${prefix}-week-results-title">This Week’s Results</h4></div><span class="flow-range">FR · SR</span></div>
+            ${renderWeekTable(weekRows)}
           </section>
-          <div class="substats">
+          <div class="substats enhanced-substats">
             <div class="subbox"><div class="metric-title"><h4>Same Date History</h4><span class="metric-badge">Past years</span></div>${sameDate || '<small class="empty">No historical data</small>'}</div>
-            <div class="subbox"><div class="metric-title"><h4>${escapeHtml(stats.weekday || "Weekday")} Pattern</h4><span class="metric-badge">Same weekday</span></div>${chips(stats.weekdayPattern, "pattern-item")}</div>
-            <div class="subbox"><div class="metric-title"><h4>Last 7 Days Trend</h4><span class="metric-badge">Recent</span></div>${chips(stats.recentTrend, "history-item")}</div>
-            <div class="subbox"><div class="metric-title"><h4>Repeated Numbers</h4><span class="metric-badge">Recent</span></div>${chips(stats.repeated)}</div>
-            <div class="subbox pair-block span-2"><h4>Repeated FR-SR Pairs</h4>${chips(stats.repeatedPairs, "chip pair")}</div>
+            <div class="subbox"><div class="metric-title"><h4>Last 6 Saturdays</h4><span class="metric-badge">Saturday history</span></div>${saturdayPattern}</div>
+            <div class="subbox span-2 weekly-insights"><div class="metric-title"><h4>This Week’s Insights</h4><span class="metric-badge">Completed rounds</span></div>${renderWeeklyInsights(weekRows)}</div>
+            <div class="subbox"><div class="metric-title"><h4>Repeated Numbers</h4><span class="metric-badge">With frequency</span></div><div class="frequency-chip-row">${renderCountedChips(stats.repeated)}</div></div>
+            <div class="subbox pair-block"><div class="metric-title"><h4>Repeated FR-SR Pairs</h4><span class="metric-badge">With frequency</span></div><div class="frequency-chip-row">${renderCountedChips(stats.repeatedPairs, "chip pair frequency-chip")}</div></div>
           </div>
         </section>
         <section class="stats-side">
           <div class="panel-label">📊 Statistics</div>
-          <div class="stats-main"><div class="metric-title"><h3>Most Frequent Historical Numbers</h3><span class="metric-badge">All records</span></div><div class="stats-grid">${chips(stats.frequent, "statnum")}</div></div>
-          <div class="insight-grid"><div class="insight-box"><h4>🔥 Hot Numbers</h4>${chips(stats.hot)}</div><div class="insight-box"><h4>❄️ Long-Missing Numbers</h4>${chips(stats.cold, "chip cold")}</div></div>
+          <div class="stats-main"><div class="metric-title"><div><h3>Most Frequent Historical Numbers</h3><p class="metric-explanation">Numbers with the highest occurrence across all available historical records.</p></div><span class="metric-badge">All records</span></div><div class="stats-grid">${chips(stats.frequent, "statnum")}</div></div>
+          <div class="insight-grid"><div class="insight-box"><h4>🔥 Hot Numbers</h4><p class="metric-explanation">Numbers appearing most frequently in recent completed draws.</p>${chips(stats.hot)}</div><div class="insight-box"><h4>❄️ Long-Missing Numbers</h4><p class="metric-explanation">Numbers that have not appeared for an extended period in the available records.</p>${chips(stats.cold, "chip cold")}</div></div>
           <div class="group-analysis-stack">${renderGroupAnalysis(topMissingGroups(stats.groupAnalysis))}</div>
         </section>
       </div>
@@ -676,7 +561,7 @@
         cache: "no-store",
         referrerPolicy: "no-referrer"
       });
-      if (response.ok) { pollingPlan = await response.json(); updateMonitoringBanner(); }
+      if (response.ok) pollingPlan = await response.json();
     } catch (error) {
       console.warn(`${GAME_ID} polling plan request failed:`, error);
     }
@@ -717,12 +602,15 @@
     const initialLoad = latestVersion === null;
     let versionChanged = manual || initialLoad;
 
+    // Initial rendering should not wait for a version round-trip. The full payload and
+    // fingerprint are requested together, allowing the result card to update first.
     if (!manual && !initialLoad) {
       try {
         const nextVersion = await fetchLatestVersion();
         versionChanged = nextVersion !== latestVersion;
         latestVersion = nextVersion;
       } catch (error) {
+        // Safe fallback: preserve live updates even if the tiny version object is unavailable.
         versionChanged = true;
         console.warn(`${GAME_ID} latest version check failed; falling back to latest results:`, error);
       }
@@ -730,44 +618,35 @@
 
     if (!versionChanged) return;
 
-    const previousSignature = latestRecordSignature;
-    let latestRendered = false;
-    let gameRecordChanged = manual || initialLoad;
-
-    // On initial load and manual refresh, start the independent data requests together.
-    // Await the compact latest payload first so the live result can render before the
-    // larger recent-history and common-number responses complete.
     const latestPromise = fetchLatest();
-    const recentPromise = manual || initialLoad ? fetchRecent() : null;
+    const recentPromise = fetchRecent();
     const commonPromise = manual || initialLoad ? fetchCommonNumbers() : null;
+    const versionPromise = manual || initialLoad ? fetchLatestVersion() : null;
 
+    let latestRendered = false;
     try {
       const latest = await latestPromise;
       if (latest && Object.keys(latest).length) {
-        const nextSignature = resultSignature(latest);
-        gameRecordChanged = gameRecordChanged || nextSignature !== previousSignature;
-        latestRendered = renderResult(latest) !== false;
-        if (latestRendered || gameRecordChanged) writeCache("latest", latest);
+        renderResult(latest);
+        writeCache("latest", latest);
+        latestRendered = true;
       }
     } catch (error) {
       console.warn(`${GAME_ID} latest result refresh failed:`, error);
-      gameRecordChanged = true;
     }
 
-    // recent-results.json is substantially larger than latest-results.json. During
-    // polling, fetch it only when this game's own record changed. Initial/manual loads
-    // use the already-started independent promise above.
-    if (gameRecordChanged) {
-      try {
-        const recent = await (recentPromise || fetchRecent());
-        if (renderHistory(recent) !== false) writeCache("recent", recent);
-        if (!latestRendered && recent[0] && !latestRecord) renderResult(recent[0]);
-      } catch (error) {
-        console.warn(`${GAME_ID} recent result refresh failed:`, error);
+    try {
+      const recent = await recentPromise;
+      renderHistory(recent);
+      writeCache("recent", recent);
+      if (!latestRendered && recent[0]) {
+        renderResult(recent[0]);
       }
+    } catch (error) {
+      console.warn(`${GAME_ID} recent result refresh failed:`, error);
     }
 
-    if (manual || initialLoad) {
+    if (commonPromise) {
       try {
         const common = await commonPromise;
         if (common) {
@@ -777,9 +656,11 @@
       } catch (error) {
         console.warn(`${GAME_ID} common numbers refresh failed:`, error);
       }
+    }
 
+    if (versionPromise) {
       try {
-        latestVersion = await fetchLatestVersion();
+        latestVersion = await versionPromise;
       } catch (error) {
         console.warn(`${GAME_ID} latest version baseline failed:`, error);
       }
@@ -791,8 +672,6 @@
     restoreCachedState();
     byId("refresh")?.addEventListener("click", () => refresh(true));
     await Promise.allSettled([loadPlan(), refresh(false)]);
-    updateMonitoringBanner();
-    monitoringTimer = setInterval(updateMonitoringBanner, 30000);
     schedule();
   });
 
@@ -802,8 +681,6 @@
       return;
     }
     refresh(false);
-    updateMonitoringBanner();
     schedule();
   });
-  window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
 })();
