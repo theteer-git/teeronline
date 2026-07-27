@@ -168,6 +168,15 @@
     if (banner) return banner;
     const card = document.querySelector(".result-card");
     if (!card) return null;
+
+    let stack = card.closest(".result-live-stack");
+    if (!stack) {
+      stack = document.createElement("div");
+      stack.className = "result-live-stack";
+      card.parentNode.insertBefore(stack, card);
+      stack.appendChild(card);
+    }
+
     banner = document.createElement("section");
     banner.id = `${prefix}-monitoring`;
     banner.className = "live-monitoring-banner";
@@ -181,7 +190,7 @@
       '</span>',
       '<span class="live-monitoring-badge"></span>'
     ].join("");
-    card.insertAdjacentElement("beforebegin", banner);
+    stack.insertBefore(banner, card);
     return banner;
   }
 
