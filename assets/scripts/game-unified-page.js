@@ -656,8 +656,15 @@
     let latestRendered = false;
     let gameRecordChanged = manual || initialLoad;
 
+    // On initial load and manual refresh, start the independent data requests together.
+    // Await the compact latest payload first so the live result can render before the
+    // larger recent-history and common-number responses complete.
+    const latestPromise = fetchLatest();
+    const recentPromise = manual || initialLoad ? fetchRecent() : null;
+    const commonPromise = manual || initialLoad ? fetchCommonNumbers() : null;
+
     try {
-      const latest = await fetchLatest();
+      const latest = await latestPromise;
       if (latest && Object.keys(latest).length) {
         const nextSignature = resultSignature(latest);
         gameRecordChanged = gameRecordChanged || nextSignature !== previousSignature;
@@ -669,11 +676,12 @@
       gameRecordChanged = true;
     }
 
-    // recent-results.json is substantially larger than latest-results.json. Fetch it only
-    // when this game's record changed, on first load, or after an explicit manual refresh.
+    // recent-results.json is substantially larger than latest-results.json. During
+    // polling, fetch it only when this game's own record changed. Initial/manual loads
+    // use the already-started independent promise above.
     if (gameRecordChanged) {
       try {
-        const recent = await fetchRecent();
+        const recent = await (recentPromise || fetchRecent());
         if (renderHistory(recent) !== false) writeCache("recent", recent);
         if (!latestRendered && recent[0] && !latestRecord) renderResult(recent[0]);
       } catch (error) {
@@ -683,7 +691,7 @@
 
     if (manual || initialLoad) {
       try {
-        const common = await fetchCommonNumbers();
+        const common = await commonPromise;
         if (common) {
           renderCommonNumbers(common);
           writeCache("common", common);

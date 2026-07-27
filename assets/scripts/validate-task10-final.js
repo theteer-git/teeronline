@@ -21,9 +21,9 @@ const checks = [
   ['version polling bypasses browser cache', /fetch\([^\n]*LATEST_VERSION_URL[\s\S]{0,180}cache:\s*["']no-store["']/],
   ['unchanged versions avoid a full result refresh', /versionChanged\s*=\s*manual\s*\|\|\s*initialLoad/],
   ['version failure has a latest-result fallback', /catch \(error\) \{[\s\S]{0,220}versionChanged\s*=\s*true;[\s\S]{0,220}latest version check failed/],
-  ['latest, recent and common data load independently', /const latestPromise\s*=\s*fetchLatest\(\)[\s\S]{0,200}const recentPromise\s*=\s*fetchRecent\(\)[\s\S]{0,200}const commonPromise/],
+  ['latest, recent and common data load independently', /const latestPromise\s*=\s*fetchLatest\(\)[\s\S]{0,260}const recentPromise\s*=\s*manual\s*\|\|\s*initialLoad\s*\?\s*fetchRecent\(\)[\s\S]{0,260}const commonPromise\s*=\s*manual\s*\|\|\s*initialLoad\s*\?\s*fetchCommonNumbers\(\)/],
   ['latest result renders before secondary data completes', /const latest\s*=\s*await latestPromise[\s\S]{0,220}renderResult/],
-  ['recent history renders independently', /const recent\s*=\s*await recentPromise[\s\S]{0,220}renderHistory/],
+  ['recent history renders independently', /const recent\s*=\s*await\s*\(recentPromise\s*\|\|\s*fetchRecent\(\)\)[\s\S]{0,220}renderHistory/],
   ['local cache has schema and expiry controls', /CACHE_SCHEMA[\s\S]{0,500}CACHE_TTL[\s\S]{0,1000}localStorage\.removeItem/],
   ['hidden-tab polling protection is present', /visibilitychange[\s\S]{0,300}document\.hidden/],
   ['manual refresh remains available', /getElementById|byId\(["']refresh["']\)[\s\S]{0,120}refresh\(true\)/]
