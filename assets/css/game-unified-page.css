@@ -80,3 +80,16 @@ body.dark .flow-grid{background:#111;border-color:#525252}
 @media(max-width:520px){.performance-panel,.flow-panel{padding:.58rem}.performance-table{font-size:.69rem}.performance-table th,.performance-table td{padding:.4rem .32rem}.round-number{width:1.78rem;height:1.78rem;font-size:.72rem}.performance-badge{min-width:68px;font-size:.6rem;padding:.22rem .35rem}.flow-grid{gap:.22rem;height:116px}.flow-track{height:68px}.flow-track i{width:min(18px,72%)}.flow-value{font-size:.58rem;padding:.06rem .22rem}.flow-item small{font-size:.5rem}}
 
 .common-publication-note{margin:0 0 12px;padding:10px 14px;border:1px solid rgba(127,127,127,.24);border-radius:10px;background:rgba(127,127,127,.06);font-size:.94rem;line-height:1.45}
+
+
+/* Task 11: state-aware live result monitoring */
+.live-monitoring-banner{min-height:68px;margin:.65rem 0 1rem;padding:.72rem .9rem;border:1px solid var(--border,#e2e8f0);border-radius:.85rem;background:var(--surface,#fff);display:grid;gap:.18rem;align-content:center;box-shadow:0 5px 16px rgba(15,23,42,.06)}
+.live-monitoring-banner[hidden]{display:none}
+.live-monitoring-title{font-size:.92rem;line-height:1.25;color:var(--text,#0f172a)}
+.live-monitoring-message{font-size:.78rem;line-height:1.45;color:var(--text-light,#475569)}
+.live-monitoring-banner[data-state="active"]{border-color:#fca5a5;background:#fff7f7}
+.live-monitoring-banner[data-state="extended"]{border-color:#fcd34d;background:#fffbeb}
+.live-monitoring-banner[data-state="updated"],.live-monitoring-banner[data-state="complete"]{border-color:#86efac;background:#f0fdf4}
+.live-monitoring-banner[data-state="off"]{border-color:#cbd5e1;background:#f8fafc}
+body.dark .live-monitoring-banner{background:#171717;border-color:#525252}body.dark .live-monitoring-title{color:#f8fafc}body.dark .live-monitoring-message{color:#cbd5e1}
+@media(max-width:520px){.live-monitoring-banner{min-height:72px;padding:.65rem .72rem}.live-monitoring-title{font-size:.86rem}.live-monitoring-message{font-size:.74rem}}

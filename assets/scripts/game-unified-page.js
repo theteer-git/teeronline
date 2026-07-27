@@ -34,6 +34,11 @@
   let timer = null;
   let pollingPlan = null;
   let loadingCommonNumbers = null;
+  let latestRecord = null;
+  let initialResultState = null;
+  let monitoringTimer = null;
+  let transientBannerUntil = 0;
+  let transientBannerRound = "";
 
   const CACHE_SCHEMA = 1;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
@@ -116,6 +121,148 @@
   });
 
 
+
+  const MONITORING_FALLBACK = Object.freeze({ before: 30, after: 45 });
+
+  function istParts(date = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Kolkata",
+      year: "numeric", month: "2-digit", day: "2-digit",
+      weekday: "short", hour: "2-digit", minute: "2-digit", second: "2-digit",
+      hourCycle: "h23"
+    }).formatToParts(date).reduce((out, part) => {
+      if (part.type !== "literal") out[part.type] = part.value;
+      return out;
+    }, {});
+    return {
+      date: `${parts.year}-${parts.month}-${parts.day}`,
+      weekday: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(parts.weekday),
+      minutes: Number(parts.hour) * 60 + Number(parts.minute),
+      seconds: Number(parts.second),
+      clock: date.toLocaleTimeString("en-IN", { timeZone: "Asia/Kolkata", hour: "numeric", minute: "2-digit", second: "2-digit", hour12: true }).toUpperCase()
+    };
+  }
+
+  function addDateDays(value, days) {
+    const match = String(value || "").match(/^(\d{4})-(\d{2})-(\d{2})$/);
+    if (!match) return value;
+    const date = new Date(Date.UTC(Number(match[1]), Number(match[2]) - 1, Number(match[3])));
+    date.setUTCDate(date.getUTCDate() + Number(days || 0));
+    return date.toISOString().slice(0, 10);
+  }
+
+  function currentBusinessDate(now = istParts()) {
+    return game.crossesMidnight && now.minutes <= 60 ? addDateDays(now.date, -1) : now.date;
+  }
+
+  function resultState(record = {}) {
+    return { fr: valid(record.fr), sr: valid(record.sr) };
+  }
+
+  function ensureMonitoringBanner() {
+    let banner = byId("monitoring");
+    if (banner) return banner;
+    const card = document.querySelector(".result-card");
+    if (!card) return null;
+    banner = document.createElement("section");
+    banner.id = `${prefix}-monitoring`;
+    banner.className = "live-monitoring-banner";
+    banner.setAttribute("aria-live", "polite");
+    banner.setAttribute("aria-atomic", "true");
+    banner.hidden = true;
+    banner.innerHTML = '<strong class="live-monitoring-title"></strong><span class="live-monitoring-message"></span>';
+    card.insertAdjacentElement("afterend", banner);
+    return banner;
+  }
+
+  function showMonitoringBanner(state, title, message) {
+    const banner = ensureMonitoringBanner();
+    if (!banner) return;
+    banner.dataset.state = state;
+    banner.querySelector(".live-monitoring-title").textContent = title;
+    banner.querySelector(".live-monitoring-message").textContent = message;
+    banner.hidden = false;
+  }
+
+  function hideMonitoringBanner() {
+    const banner = ensureMonitoringBanner();
+    if (banner) banner.hidden = true;
+  }
+
+  function roundWindow(round, now) {
+    const planRound = pollingPlan?.games?.[GAME_ID]?.rounds?.[round];
+    const declared = String(game.rounds?.[round] || "00:00");
+    let [hour, minute] = declared.split(":").map(Number);
+    let target = hour * 60 + minute;
+    let current = now.minutes;
+    if (game.crossesMidnight && round === "sr") {
+      target += 1440;
+      if (current <= 60) current += 1440;
+    }
+    const before = Number.isFinite(Number(planRound?.beforeMinutes)) ? Number(planRound.beforeMinutes) : MONITORING_FALLBACK.before;
+    const after = Number.isFinite(Number(planRound?.afterMinutes)) ? Number(planRound.afterMinutes) : MONITORING_FALLBACK.after;
+    return {
+      round, current, target, before, after,
+      active: planRound?.active === true || (current >= target - before && current <= target + after),
+      extended: current > target + after,
+      expectedDate: planRound?.expectedDate || currentBusinessDate(now),
+      completed: planRound?.completed === true
+    };
+  }
+
+  function updateMonitoringBanner() {
+    const now = istParts();
+    const state = resultState(latestRecord || {});
+    const businessDate = currentBusinessDate(now);
+    const recordDate = String(latestRecord?.date || "");
+    const isCurrentRecord = recordDate === businessDate;
+    const isOffDay = Array.isArray(game.weeklyOffDays) && game.weeklyOffDays.includes(now.weekday);
+
+    if (isOffDay) {
+      showMonitoringBanner("off", "Today is a scheduled off-day", `No active monitoring is required for ${game.name}.`);
+      return;
+    }
+    if (Date.now() < transientBannerUntil) {
+      showMonitoringBanner("updated", "✅ Result Updated", `The latest ${transientBannerRound} result has been received and displayed automatically. Updated at ${now.clock} IST.`);
+      return;
+    }
+    if (isCurrentRecord && state.fr && state.sr) {
+      showMonitoringBanner("complete", "✅ Today’s Result Complete", "Both rounds have been received and displayed.");
+      return;
+    }
+
+    const pendingRound = !state.fr ? "fr" : !state.sr ? "sr" : null;
+    if (!pendingRound) {
+      hideMonitoringBanner();
+      return;
+    }
+    const window = roundWindow(pendingRound, now);
+    const label = pendingRound.toUpperCase();
+    if (window.active) {
+      showMonitoringBanner("active", `🔴 Live ${label} Result Monitoring`, "Please keep this page open. The result will appear automatically as soon as it is published.");
+      return;
+    }
+    if (isCurrentRecord && window.extended) {
+      showMonitoringBanner("extended", "🟡 Monitoring Extended", "The result has not yet been published. Automatic monitoring is continuing.");
+      return;
+    }
+    hideMonitoringBanner();
+  }
+
+  function noteResultTransition(record) {
+    const next = resultState(record);
+    if (initialResultState === null) {
+      initialResultState = next;
+      return;
+    }
+    const round = !initialResultState.fr && next.fr ? "FR" : !initialResultState.sr && next.sr ? "SR" : "";
+    initialResultState = next;
+    if (round) {
+      transientBannerRound = round;
+      transientBannerUntil = Date.now() + 12000;
+    }
+  }
+
   async function fetchLatestVersion() {
     if (loadingLatestVersion) return loadingLatestVersion;
     loadingLatestVersion = (async () => {
@@ -128,7 +275,8 @@
       const version = String(payload?.v || "").trim();
       if (!/^[a-f0-9]{64}$/i.test(version)) throw new Error("Latest version response is invalid");
       return version;
-    })();
+      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
+})();
     try {
       return await loadingLatestVersion;
     } finally {
@@ -146,7 +294,8 @@
       if (!response.ok) throw new Error(`Latest results request failed: ${response.status}`);
       const data = await response.json();
       return normalizeItem(data?.records?.[GAME_ID] ?? data?.[GAME_ID] ?? {});
-    })();
+      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
+})();
     try {
       return await loadingLatest;
     } finally {
@@ -166,7 +315,8 @@
         .map(normalizeItem)
         .filter(item => item.gameId === GAME_ID && item.date && valid(item.fr) && valid(item.sr))
         .sort((a, b) => dateValue(b.date) - dateValue(a.date));
-    })();
+      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
+})();
     try {
       return await loadingRecent;
     } finally {
@@ -175,6 +325,8 @@
   }
 
   function renderResult(record = {}) {
+    noteResultTransition(record);
+    latestRecord = { ...record };
     const fr = num(record.fr);
     const sr = num(record.sr);
     const frTime = fmtClock(record.frDeclaredTime) || fmtClock(game.rounds.fr);
@@ -194,6 +346,7 @@
           ? "Partial"
           : "Pending";
     }
+    updateMonitoringBanner();
   }
 
   function renderHistory(records = []) {
@@ -417,7 +570,8 @@
       if (!response.ok) throw new Error(`Common numbers request failed: ${response.status}`);
       const payload = await response.json();
       return payload?.games?.[GAME_ID] || null;
-    })();
+      window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
+})();
     try {
       return await loadingCommonNumbers;
     } finally {
@@ -431,7 +585,7 @@
         cache: "no-store",
         referrerPolicy: "no-referrer"
       });
-      if (response.ok) pollingPlan = await response.json();
+      if (response.ok) { pollingPlan = await response.json(); updateMonitoringBanner(); }
     } catch (error) {
       console.warn(`${GAME_ID} polling plan request failed:`, error);
     }
@@ -542,6 +696,8 @@
     restoreCachedState();
     byId("refresh")?.addEventListener("click", () => refresh(true));
     await Promise.allSettled([loadPlan(), refresh(false)]);
+    updateMonitoringBanner();
+    monitoringTimer = setInterval(updateMonitoringBanner, 30000);
     schedule();
   });
 
@@ -551,6 +707,8 @@
       return;
     }
     refresh(false);
+    updateMonitoringBanner();
     schedule();
   });
+  window.addEventListener("pagehide", () => clearInterval(monitoringTimer), { once: true });
 })();
