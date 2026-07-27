@@ -26,6 +26,7 @@
   const RECENT_URL = config.endpoints.recentResults;
   const POLLING_PLAN_URL = config.endpoints.pollingPlan;
   const COMMON_NUMBERS_URL = config.endpoints.commonNumbers;
+  const ALL_RESULTS_URL = config.endpoints.allResults || RECENT_URL.replace(/recent-results\.json(?:\?.*)?$/i, "all-results.json");
 
   let loadingLatest = null;
   let loadingLatestVersion = null;
@@ -34,13 +35,17 @@
   let timer = null;
   let pollingPlan = null;
   let loadingCommonNumbers = null;
+  let loadingAllResults = null;
+  let allResultRecords = [];
+  let latestCommonData = null;
 
   const CACHE_SCHEMA = 1;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
   const CACHE_TTL = Object.freeze({
     latest: 36 * 60 * 60 * 1000,
     recent: 7 * 24 * 60 * 60 * 1000,
-    common: 7 * 24 * 60 * 60 * 1000
+    common: 7 * 24 * 60 * 60 * 1000,
+    all: 7 * 24 * 60 * 60 * 1000
   });
 
   const readCache = (name) => {
@@ -443,36 +448,37 @@
     }).filter(Boolean).join("");
   }
 
-  function previousSaturdayDates(referenceDate, count = 6) {
-    const parsed = new Date(`${String(referenceDate || "")}T00:00:00`);
-    const base = Number.isNaN(parsed.getTime()) ? new Date() : parsed;
-    const day = base.getDay();
-    const daysBack = (day - 6 + 7) % 7;
-    base.setDate(base.getDate() - daysBack);
-    return Array.from({ length: count }, (_, index) => {
-      const date = new Date(base);
-      date.setDate(base.getDate() - (index * 7));
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, "0");
-      const dayOfMonth = String(date.getDate()).padStart(2, "0");
-      return `${year}-${month}-${dayOfMonth}`;
-    });
+  function extractGameRecords(payload) {
+    const candidates = [];
+    if (Array.isArray(payload)) candidates.push(...payload);
+    if (Array.isArray(payload?.records)) candidates.push(...payload.records);
+    if (Array.isArray(payload?.results)) candidates.push(...payload.results);
+    if (Array.isArray(payload?.games?.[GAME_ID])) candidates.push(...payload.games[GAME_ID]);
+    if (Array.isArray(payload?.[GAME_ID])) candidates.push(...payload[GAME_ID]);
+
+    return candidates
+      .filter(item => {
+        const itemGameId = String(item?.gameId || item?.game || item?.g || "").toUpperCase();
+        return !itemGameId || itemGameId === GAME_ID;
+      })
+      .map(normaliseResultRecord)
+      .filter(item => item.date && /^\d{2}$/.test(item.fr) && /^\d{2}$/.test(item.sr));
   }
 
-  function weekdayPatternRows(items = [], referenceDate = "") {
-    const values = (items || []).slice(0, 6);
-    if (!values.length) return '<small class="empty">No Saturday history available.</small>';
+  function saturdayHistoryRows(records = []) {
+    const rows = (records || [])
+      .map(normaliseResultRecord)
+      .filter(item => {
+        const date = parseLocalDate(item.date);
+        return date && date.getDay() === 6 && /^\d{2}$/.test(item.fr) && /^\d{2}$/.test(item.sr);
+      })
+      .sort((a, b) => dateValue(b.date) - dateValue(a.date))
+      .filter((item, index, list) => index === list.findIndex(other => other.date === item.date))
+      .slice(0, 6);
 
-    const inferredDates = previousSaturdayDates(referenceDate, values.length);
-    const rows = values.map((item, index) => {
-      const objectItem = item && typeof item === "object" ? item : null;
-      const date = objectItem?.date || inferredDates[index] || "";
-      const frValue = objectItem ? (objectItem.fr ?? objectItem.f ?? objectItem.number ?? objectItem.value) : item;
-      const srValue = objectItem ? (objectItem.sr ?? objectItem.s) : null;
-      return `<tr><td><strong>${escapeHtml(fmtDate(date).slice(0, 5))}</strong></td><td>${escapeHtml(num(frValue))}</td><td>${escapeHtml(num(srValue))}</td></tr>`;
-    }).join("");
+    if (!rows.length) return '<small class="empty">No completed Saturday FR/SR history available.</small>';
 
-    return `<div class="saturday-table-wrap"><table class="saturday-table"><thead><tr><th>Date</th><th>FR</th><th>SR</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+    return `<div class="saturday-table-wrap"><table class="saturday-table"><thead><tr><th>Date</th><th>FR</th><th>SR</th></tr></thead><tbody>${rows.map(item => `<tr><td><strong>${escapeHtml(fmtDate(item.date).slice(0, 5))}</strong></td><td>${escapeHtml(item.fr)}</td><td>${escapeHtml(item.sr)}</td></tr>`).join("")}</tbody></table></div>`;
   }
 
   function completedWeekNumbers(rows = []) {
@@ -502,6 +508,7 @@
   }
 
   function renderCommonNumbers(data = {}) {
+    latestCommonData = data;
     const target = document.getElementById(`${prefix}-common-card`);
     if (!target) return;
     if (!data || data.empty) {
@@ -521,7 +528,7 @@
     const weekSource = [...(data.performance || []), ...(data.flow || [])];
     const weekRows = currentWeekRows(data.publicationDate || data.sourceDate || previous.date, weekSource);
     const sameDate = sameDateHistoryRows(stats.sameDateHistory || []);
-    const saturdayPattern = weekdayPatternRows(stats.weekdayPattern || [], data.publicationDate || data.sourceDate || previous.date);
+    const saturdayPattern = saturdayHistoryRows(allResultRecords);
 
     target.innerHTML = `<article class="game-card" data-game="${escapeHtml(GAME_ID)}">
       <div class="game-head"><div><h2>${escapeHtml(game.name)} Common Numbers and Statistics for ${escapeHtml(fmtDate(data.publicationDate || data.sourceDate))}</h2><div class="result-line">Published at ${escapeHtml(COMMON_PUBLICATION_TIMES[GAME_ID] || "")}</div></div></div>
@@ -559,6 +566,20 @@
         <div class="blocked-panel analytics-full"><h4>🚫 Longest Missing by Round</h4><div class="missing-grid">${renderMissing("FR", stats.missing?.fr)}${renderMissing("SR", stats.missing?.sr)}${renderMissing("Both", stats.missing?.both)}</div></div>
       </div>
     </article>`;
+  }
+
+  async function fetchAllResults() {
+    if (loadingAllResults) return loadingAllResults;
+    loadingAllResults = (async () => {
+      const response = await fetch(ALL_RESULTS_URL, { cache: "no-store", referrerPolicy: "no-referrer" });
+      if (!response.ok) throw new Error(`All results request failed: ${response.status}`);
+      return extractGameRecords(await response.json());
+    })();
+    try {
+      return await loadingAllResults;
+    } finally {
+      loadingAllResults = null;
+    }
   }
 
   async function fetchCommonNumbers() {
@@ -613,7 +634,9 @@
     const latest = readCache("latest");
     const recent = readCache("recent");
     const common = readCache("common");
+    const all = readCache("all");
 
+    if (Array.isArray(all)) allResultRecords = all;
     if (latest && typeof latest === "object") renderResult(latest);
     if (Array.isArray(recent)) renderHistory(recent);
     if (common && typeof common === "object") renderCommonNumbers(common);
@@ -642,6 +665,7 @@
     const latestPromise = fetchLatest();
     const recentPromise = fetchRecent();
     const commonPromise = manual || initialLoad ? fetchCommonNumbers() : null;
+    const allResultsPromise = manual || initialLoad ? fetchAllResults() : null;
     const versionPromise = manual || initialLoad ? fetchLatestVersion() : null;
 
     let latestRendered = false;
@@ -665,6 +689,16 @@
       }
     } catch (error) {
       console.warn(`${GAME_ID} recent result refresh failed:`, error);
+    }
+
+    if (allResultsPromise) {
+      try {
+        allResultRecords = await allResultsPromise;
+        writeCache("all", allResultRecords);
+        if (latestCommonData) renderCommonNumbers(latestCommonData);
+      } catch (error) {
+        console.warn(`${GAME_ID} all-results refresh failed:`, error);
+      }
     }
 
     if (commonPromise) {
