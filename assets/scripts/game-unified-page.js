@@ -38,6 +38,7 @@
   let loadingAllResults = null;
   let allResultRecords = [];
   let latestCommonData = null;
+  let latestResultRecord = null;
 
   const CACHE_SCHEMA = 1;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
@@ -150,7 +151,9 @@
       });
       if (!response.ok) throw new Error(`Latest results request failed: ${response.status}`);
       const data = await response.json();
-      return normalizeItem(data?.records?.[GAME_ID] ?? data?.[GAME_ID] ?? {});
+      const record = normalizeItem(data?.records?.[GAME_ID] ?? data?.[GAME_ID] ?? {});
+      latestResultRecord = record?.date ? record : latestResultRecord;
+      return record;
     })();
     try {
       return await loadingLatest;
@@ -180,6 +183,7 @@
   }
 
   function renderResult(record = {}) {
+    if (record?.date) latestResultRecord = normalizeItem(record);
     const fr = num(record.fr);
     const sr = num(record.sr);
     const frTime = fmtClock(record.frDeclaredTime) || fmtClock(game.rounds.fr);
@@ -199,6 +203,11 @@
           ? "Partial"
           : "Pending";
     }
+
+    // The weekly table is rendered from the common-numbers panel. Re-render it
+    // whenever the live record changes so today's row immediately receives the
+    // latest FR/SR values, including partial results.
+    if (latestCommonData) renderCommonNumbers(latestCommonData);
   }
 
   function renderHistory(records = []) {
@@ -525,8 +534,17 @@
       const statusClass = status === "miss" ? "performance-miss" : status === "hit_both" ? "performance-both" : status === "hit_fr" ? "performance-fr" : "performance-sr";
       return `<tr><td><span class="performance-date">${escapeHtml(fmtDate(item.date))}</span></td><td><span class="round-number round-fr">${escapeHtml(item.fr || "XX")}</span></td><td><span class="round-number round-sr">${escapeHtml(item.sr || "XX")}</span></td><td><span class="performance-badge ${statusClass}">${escapeHtml(item.label || "Miss")}</span></td></tr>`;
     }).join("");
-    const weekSource = [...(data.performance || []), ...(data.flow || [])];
-    const weekRows = currentWeekRows(data.publicationDate || data.sourceDate || previous.date, weekSource);
+    // Merge historical, common-number performance and the live result. The
+    // live record is intentionally last so it wins for today's date and can
+    // supply FR-only or FR+SR without waiting for all-results.json to refresh.
+    const weekSource = [
+      ...allResultRecords,
+      ...(data.performance || []),
+      ...(data.flow || []),
+      ...(latestResultRecord?.date ? [latestResultRecord] : [])
+    ];
+    const weekReferenceDate = latestResultRecord?.date || data.publicationDate || data.sourceDate || previous.date;
+    const weekRows = currentWeekRows(weekReferenceDate, weekSource);
     const sameDate = sameDateHistoryRows(stats.sameDateHistory || []);
     const saturdayPattern = saturdayHistoryRows(allResultRecords);
 
