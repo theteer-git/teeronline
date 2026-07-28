@@ -19,7 +19,8 @@
     "validate:technical-seo": "node assets/scripts/validate-technical-seo.js",
     "validate:content-quality": "node assets/scripts/validate-content-quality.js",
     "validate:task10": "node assets/scripts/validate-task10-final.js",
-    "validate:task11": "node assets/scripts/validate-task11-final.js"
+    "validate:task11": "node assets/scripts/validate-task11-final.js",
+    "gate:task12:batch7": "node --check assets/scripts/game-page.js && node --check assets/scripts/game-unified-page.js && node assets/scripts/validate-task12-batch7.js"
   },
   "dependencies": {
     "axios": "^1.17.0",

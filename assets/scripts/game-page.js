@@ -9,6 +9,45 @@
   const MIN_POLL_MS = 5000;
   const IDLE_POLL_MS = 60000;
   const PLAN_REFRESH_MS = 60000;
+
+  const TASK12_POLL = Object.freeze({
+    HOT_MS: 1000,
+    IDLE_MS: 45000,
+    PRE_WINDOW_MS: 5 * 60 * 1000,
+    POST_WINDOW_MS: 20 * 60 * 1000
+  });
+
+  function istClockMinutes(now = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
+    }).formatToParts(now);
+    const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    return Number(values.hour) * 60 + Number(values.minute) + Number(values.second) / 60;
+  }
+
+  function roundDistanceMs(time, now = new Date()) {
+    const match = String(time || "").match(/^(\d{1,2}):(\d{2})$/);
+    if (!match) return Number.POSITIVE_INFINITY;
+    let target = Number(match[1]) * 60 + Number(match[2]);
+    const current = istClockMinutes(now);
+    let minutes = target - current;
+    if (minutes < -12 * 60) minutes += 24 * 60;
+    if (minutes > 12 * 60) minutes -= 24 * 60;
+    return minutes * 60 * 1000;
+  }
+
+  function adaptivePollingInterval(record, now = new Date()) {
+    const rounds = [["fr", game.rounds?.fr], ["sr", game.rounds?.sr]];
+    for (const [key, declaredTime] of rounds) {
+      const published = /^\d{2}$/.test(String(record?.[key] || ""));
+      if (published) continue;
+      const distance = roundDistanceMs(declaredTime, now);
+      if (distance <= TASK12_POLL.PRE_WINDOW_MS && distance >= -TASK12_POLL.POST_WINDOW_MS) {
+        return TASK12_POLL.HOT_MS;
+      }
+    }
+    return TASK12_POLL.IDLE_MS;
+  }
   let latestRecord = null;
   let recentRecords = [];
   let pollingPlan = null;
@@ -99,9 +138,12 @@
   }
 
   function ownPollingInterval() {
+    const adaptive = adaptivePollingInterval(latestRecord);
+    if (adaptive === TASK12_POLL.HOT_MS) return adaptive;
     const rounds = pollingPlan?.games?.[gameId]?.rounds || {};
     const active = [rounds.fr, rounds.sr].filter((round) => round?.active === true && Number(round.intervalMs) > 0);
-    return active.length ? Math.max(MIN_POLL_MS, Math.min(...active.map((round) => Number(round.intervalMs)))) : IDLE_POLL_MS;
+    const planned = active.length ? Math.min(...active.map((round) => Number(round.intervalMs))) : TASK12_POLL.IDLE_MS;
+    return Math.max(TASK12_POLL.HOT_MS, Math.min(TASK12_POLL.IDLE_MS, planned));
   }
 
   function scheduleResultPoll() {
