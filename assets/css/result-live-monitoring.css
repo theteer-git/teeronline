@@ -1,0 +1,142 @@
+.result-live-monitor {
+  --monitor-border: #f5c2c7;
+  --monitor-bg: linear-gradient(90deg, rgba(254,242,242,.98), rgba(255,247,237,.96));
+  --monitor-title: #dc2626;
+  --monitor-badge-bg: #fff1f2;
+  --monitor-badge-border: #fda4af;
+  --monitor-badge-text: #dc2626;
+  display: grid;
+  grid-template-columns: minmax(190px, .9fr) minmax(280px, 2.2fr) auto;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+  margin: 0 0 1rem;
+  padding: .8rem 1rem;
+  border: 1px solid var(--monitor-border);
+  border-radius: 12px;
+  background: var(--monitor-bg);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, .05);
+}
+.result-live-monitor__title-wrap {
+  display: flex;
+  align-items: center;
+  gap: .65rem;
+  min-width: 0;
+}
+.result-live-monitor__icon {
+  display: inline-grid;
+  place-items: center;
+  flex: 0 0 2rem;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,.72);
+  color: var(--monitor-title);
+  font-size: 1.15rem;
+  font-weight: 900;
+}
+.result-live-monitor__title {
+  margin: 0;
+  color: var(--monitor-title);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.result-live-monitor__message {
+  min-width: 0;
+  padding-left: 1rem;
+  border-left: 1px solid var(--monitor-border);
+  color: var(--text, #172033);
+  font-size: .82rem;
+  font-weight: 600;
+  line-height: 1.45;
+}
+.result-live-monitor__badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2rem;
+  padding: .42rem .75rem;
+  border: 1px solid var(--monitor-badge-border);
+  border-radius: 9px;
+  background: var(--monitor-badge-bg);
+  color: var(--monitor-badge-text);
+  font-size: .72rem;
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  white-space: nowrap;
+}
+.result-live-monitor[data-state="updated"] {
+  --monitor-border: #b7e4c7;
+  --monitor-bg: linear-gradient(90deg, rgba(240,253,244,.98), rgba(248,255,250,.96));
+  --monitor-title: #15803d;
+  --monitor-badge-bg: #ecfdf3;
+  --monitor-badge-border: #bbf7d0;
+  --monitor-badge-text: #15803d;
+}
+.result-live-monitor[data-state="complete"] {
+  --monitor-border: #a7dfbd;
+  --monitor-bg: linear-gradient(90deg, rgba(236,253,245,.99), rgba(247,254,250,.97));
+  --monitor-title: #15803d;
+  --monitor-badge-bg: #dcfce7;
+  --monitor-badge-border: #86efac;
+  --monitor-badge-text: #166534;
+}
+.result-live-monitor[data-state="waiting"] {
+  --monitor-border: #f4cf83;
+  --monitor-bg: linear-gradient(90deg, rgba(255,251,235,.99), rgba(255,247,226,.97));
+  --monitor-title: #d97706;
+  --monitor-badge-bg: #fffbeb;
+  --monitor-badge-border: #fcd34d;
+  --monitor-badge-text: #c2410c;
+}
+.result-live-monitor[data-state="off"] {
+  --monitor-border: #d7c4f5;
+  --monitor-bg: linear-gradient(90deg, rgba(250,245,255,.99), rgba(245,243,255,.97));
+  --monitor-title: #7c3aed;
+  --monitor-badge-bg: #f5f3ff;
+  --monitor-badge-border: #c4b5fd;
+  --monitor-badge-text: #6d28d9;
+}
+.result-live-monitor[data-state="scheduled"] {
+  --monitor-border: #cbd5e1;
+  --monitor-bg: linear-gradient(90deg, rgba(248,250,252,.99), rgba(241,245,249,.96));
+  --monitor-title: #475569;
+  --monitor-badge-bg: #f8fafc;
+  --monitor-badge-border: #cbd5e1;
+  --monitor-badge-text: #334155;
+}
+.result-live-monitor[data-state="error"] {
+  --monitor-border: #fecaca;
+  --monitor-bg: linear-gradient(90deg, rgba(254,242,242,.99), rgba(255,247,247,.96));
+  --monitor-title: #b91c1c;
+  --monitor-badge-bg: #fff1f2;
+  --monitor-badge-border: #fda4af;
+  --monitor-badge-text: #b91c1c;
+}
+@media (max-width: 820px) {
+  .result-live-monitor {
+    grid-template-columns: 1fr auto;
+  }
+  .result-live-monitor__message {
+    grid-column: 1 / -1;
+    padding: .7rem 0 0;
+    border-left: 0;
+    border-top: 1px solid var(--monitor-border);
+  }
+}
+@media (max-width: 520px) {
+  .result-live-monitor {
+    grid-template-columns: 1fr;
+    gap: .65rem;
+    padding: .75rem;
+  }
+  .result-live-monitor__message {
+    grid-column: auto;
+  }
+  .result-live-monitor__badge {
+    justify-self: stretch;
+    white-space: normal;
+  }
+}

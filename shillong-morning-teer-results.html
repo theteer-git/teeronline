@@ -80,7 +80,7 @@
 <meta content="TeerOnline Editorial Team" name="author"/>
 <meta content="shillong morning teer result today, shillong morning result, morning teer result, shillong morning common number" name="keywords"/>
 <link href="/assets/css/performance-section-v2.css?v=20260718-1" rel="stylesheet"/>
-<link href="/assets/css/task13-live-pages.css" rel="stylesheet"/><link href="/assets/css/live-monitoring.css?v=20260728-task13g" rel="stylesheet"/>
+<link href="/assets/css/task13-live-pages.css" rel="stylesheet"/><link href="/assets/css/result-live-monitoring.css?v=20260728-task13g2" rel="stylesheet"/>
 </head>
 <body data-game-id="SHM">
 <a class="skip-link" href="#main-content">Skip to main content</a>
@@ -118,6 +118,14 @@
 <section aria-label="Shillong Morning Teer live result" data-semantic-section="live_result" id="live_result">
 <div class="game-dashboard" id="gameDashboard">
 <section class="game-row" id="result-SHM">
+<div class="result-live-monitor" data-result-live-monitor data-state="scheduled" role="status" aria-live="polite">
+  <div class="result-live-monitor__title-wrap">
+    <span class="result-live-monitor__icon" data-monitor-icon aria-hidden="true">◷</span>
+    <p class="result-live-monitor__title" data-monitor-title>Result Scheduled</p>
+  </div>
+  <div class="result-live-monitor__message" data-monitor-message>Live monitoring is initialising.</div>
+  <div class="result-live-monitor__badge" data-monitor-badge>CHECKING STATUS</div>
+</div>
 <article aria-labelledby="title-SHM" class="result-card">
 <h2 class="card-title" id="title-SHM">Shillong Morning Teer Results</h2>
 <div class="game-timings">
@@ -184,19 +192,6 @@
 <p>This page is informational. TeerOnline does not organise games, sell tickets, accept wagers or guarantee outcomes. Use the records responsibly and follow the laws and age restrictions applicable in your location.</p>
 <h2>Frequently Asked Questions</h2>
 <div class="faq-list"><details><summary>What time is Shillong Morning Teer FR?</summary><p>The declared First Round time is 10:30 AM IST.</p></details><details><summary>What time is Shillong Morning Teer SR?</summary><p>The declared Second Round time is 11:30 AM IST.</p></details><details><summary>What does XX mean on the result card?</summary><p>XX means a verified number is not yet available for that round; it is not a result value.</p></details><details><summary>Can FR appear while SR is still pending?</summary><p>Yes. FR and SR are published separately, so the page may temporarily show one completed round and one pending round.</p></details><details><summary>Where can I check older Shillong Morning Teer results?</summary><p>Use the dedicated previous-results archive for date-wise FR and SR records.</p></details><details><summary>Are common numbers predictions?</summary><p>No. Common numbers and frequency summaries describe historical records only and do not guarantee a future result.</p></details><details><summary>Why should I check the displayed date?</summary><p>The date identifies the playing record and prevents a current result from being confused with an older screenshot or another game.</p></details><details><summary>Does TeerOnline sell tickets or accept bets?</summary><p>No. TeerOnline publishes informational result and historical-reference pages only.</p></details></div></section>
-<section class="live-monitor" data-live-monitor data-monitor-type="live" aria-labelledby="live-monitor-title">
-  <div class="live-monitor__head">
-    <h2 class="live-monitor__title" id="live-monitor-title">Live Monitoring</h2>
-    <span class="live-monitor__summary"><span class="live-monitor__dot" aria-hidden="true"></span><span data-monitor-summary>Initialising</span></span>
-  </div>
-  <div class="live-monitor__grid">
-    <div class="live-monitor__item"><span class="live-monitor__label">Connection</span><span class="live-monitor__value" data-monitor-connection>Checking</span></div>
-    <div class="live-monitor__item"><span class="live-monitor__label">Data freshness</span><span class="live-monitor__value" data-monitor-freshness>Checking</span></div>
-    <div class="live-monitor__item"><span class="live-monitor__label">Last successful sync</span><span class="live-monitor__value" data-monitor-sync>Checking</span></div>
-    <div class="live-monitor__item"><span class="live-monitor__label">Current state</span><span class="live-monitor__value" data-monitor-state>Checking</span></div>
-  </div>
-  <p class="live-monitor__note"><span data-monitor-note>Monitoring the public result feed.</span> <button class="live-monitor__retry" type="button" data-monitor-retry>Check now</button></p>
-</section>
 </main>
 <footer>
 <div class="container">
@@ -232,6 +227,6 @@
 <script defer="" src="/assets/scripts/game-config.js?v=20260727-task11"></script>
 <script defer="" src="/assets/scripts/game-unified-page.js?v=20260727-task11-allgames-week-v7"></script>
 <script defer="" src="/assets/scripts/intent-telemetry.js"></script>
-<script defer src="/assets/scripts/live-monitoring.js?v=20260728-task13g"></script>
+<script defer src="/assets/scripts/result-live-monitoring.js?v=20260728-task13g2"></script>
 </body>
 </html>
