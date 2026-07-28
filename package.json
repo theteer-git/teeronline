@@ -24,8 +24,9 @@
     "audit:task12:batch8": "node assets/scripts/validate-task12-final.js",
     "gate:task12:batch8": "npm run validate:technical-seo && npm run validate:content-quality && npm run validate:stage8-seo && npm run gate:task12:batch7 && npm run audit:task12:batch8",
     "gate:task13:batch-a": "node assets/scripts/validate-task13-batch-a.js",
-    "gate:task13": "npm run gate:task13:batch-a && npm run gate:task13:batch-b",
-    "gate:task13:batch-b": "node assets/scripts/validate-task13-batch-b.js"
+    "gate:task13": "npm run gate:task13:batch-a && npm run gate:task13:batch-b && npm run gate:task13:batch-c",
+    "gate:task13:batch-b": "node assets/scripts/validate-task13-batch-b.js",
+    "gate:task13:batch-c": "node assets/scripts/validate-task13-batch-c.js"
   },
   "dependencies": {
     "axios": "^1.17.0",
