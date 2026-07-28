@@ -20,7 +20,9 @@
     "validate:content-quality": "node assets/scripts/validate-content-quality.js",
     "validate:task10": "node assets/scripts/validate-task10-final.js",
     "validate:task11": "node assets/scripts/validate-task11-final.js",
-    "gate:task12:batch7": "node --check assets/scripts/game-page.js && node --check assets/scripts/game-unified-page.js && node assets/scripts/validate-task12-batch7.js"
+    "gate:task12:batch7": "node --check assets/scripts/game-page.js && node --check assets/scripts/game-unified-page.js && node assets/scripts/validate-task12-batch7.js",
+    "audit:task12:batch8": "node assets/scripts/validate-task12-final.js",
+    "gate:task12:batch8": "npm run validate:technical-seo && npm run validate:content-quality && npm run validate:stage8-seo && npm run gate:task12:batch7 && npm run audit:task12:batch8"
   },
   "dependencies": {
     "axios": "^1.17.0",
