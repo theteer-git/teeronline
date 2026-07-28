@@ -1,5 +1,5 @@
 // sw.js - Safe caching for static assets and live result JSON
-const CACHE_NAME = 'teer-v3';
+const CACHE_NAME = 'teer-v4-navigation-network-first';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -40,6 +40,24 @@ async function networkFirst(request) {
         }
       }
     );
+  }
+}
+
+async function navigationNetworkFirst(request) {
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response && response.ok) {
+      const cache = await caches.open(CACHE_NAME);
+      await cache.put(request, response.clone());
+    }
+    return response;
+  } catch (error) {
+    const cached = await caches.match(request);
+    if (cached) return cached;
+    return new Response('The page is temporarily unavailable.', {
+      status: 503,
+      headers: { 'content-type': 'text/plain; charset=UTF-8' }
+    });
   }
 }
 
@@ -93,6 +111,14 @@ self.addEventListener('fetch', event => {
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) {
+    return;
+  }
+
+  // HTML navigations must see the newly published GitHub Pages document.
+  // Serving cached HTML first can leave a result page visually stuck even
+  // after the publication engine has committed and verified the new page.
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    event.respondWith(navigationNetworkFirst(request));
     return;
   }
 
