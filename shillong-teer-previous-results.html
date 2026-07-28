@@ -1126,7 +1126,8 @@
       </style>
       <link href="/assets/css/task4b-seo.css" rel="stylesheet" />
       <link href="/assets/css/task13-archive-pages.css" rel="stylesheet" />
-   </head>
+   <link href="/assets/css/live-monitoring.css?v=20260728-task13g" rel="stylesheet"/>
+</head>
    <body>
       <a class="skip-link" href="#main-content">Skip to main content</a>
       <header class="sticky-header">
@@ -1422,7 +1423,20 @@
                </p>
             </details>
          </section>
-      </main>
+      <section class="live-monitor" data-live-monitor data-monitor-type="archive" aria-labelledby="live-monitor-title">
+  <div class="live-monitor__head">
+    <h2 class="live-monitor__title" id="live-monitor-title">Live Monitoring</h2>
+    <span class="live-monitor__summary"><span class="live-monitor__dot" aria-hidden="true"></span><span data-monitor-summary>Initialising</span></span>
+  </div>
+  <div class="live-monitor__grid">
+    <div class="live-monitor__item"><span class="live-monitor__label">Connection</span><span class="live-monitor__value" data-monitor-connection>Checking</span></div>
+    <div class="live-monitor__item"><span class="live-monitor__label">Data freshness</span><span class="live-monitor__value" data-monitor-freshness>Checking</span></div>
+    <div class="live-monitor__item"><span class="live-monitor__label">Last successful sync</span><span class="live-monitor__value" data-monitor-sync>Checking</span></div>
+    <div class="live-monitor__item"><span class="live-monitor__label">Current state</span><span class="live-monitor__value" data-monitor-state>Checking</span></div>
+  </div>
+  <p class="live-monitor__note"><span data-monitor-note>Monitoring archive availability and table rendering.</span> <button class="live-monitor__retry" type="button" data-monitor-retry>Check now</button></p>
+</section>
+</main>
       <footer class="site-footer task4b-site-footer">
          <div class="container">
          <nav aria-label="Footer navigation" class="footer-nav">
@@ -1783,5 +1797,6 @@
             }, 3500);
          })();
       </script>
-   </body>
+   <script defer src="/assets/scripts/live-monitoring.js?v=20260728-task13g"></script>
+</body>
 </html>
