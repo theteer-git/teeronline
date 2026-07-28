@@ -61,12 +61,7 @@ check("Schema graph serialises as valid JSON", (() => { try { JSON.parse(JSON.st
 
 const files = fs.readdirSync(root).filter(file => file.endsWith(".html") && file !== "pinterest-ac87f.html");
 const filePaths = new Set(files.map(file => framework.htmlFileToPath(file)));
-const deferredSources = new Set(["/shillong-teer-previous-results"]);
 for (const pagePath of framework.pagePaths) {
-  if (deferredSources.has(pagePath)) {
-    check(`Missing source is explicitly registered for Batch D: ${pagePath}`, !filePaths.has(pagePath), "creation required");
-    continue;
-  }
   check(`Framework path has an HTML source: ${pagePath}`, filePaths.has(pagePath), pagePath);
 }
 
