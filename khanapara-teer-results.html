@@ -36,10 +36,10 @@
 <p>When a round has not yet been published, the page continues to display <strong>XX</strong> and a pending status instead of showing an older number as today's result.</p></section>
 <section aria-label="Khanapara Teer live result" data-semantic-section="live_result" id="live_result">
 <div class="game-dashboard" id="gameDashboard">
-<div class="result-monitor-ribbon" data-result-monitor-ribbon data-state="waiting" role="status" aria-live="polite">
-  <div class="result-monitor-ribbon__lead"><span class="result-monitor-ribbon__icon" data-rm-icon aria-hidden="true">◷</span><p class="result-monitor-ribbon__title" data-rm-title>Waiting for Live Monitoring</p></div>
-  <div class="result-monitor-ribbon__message" data-rm-message>Live monitoring will begin automatically before the next scheduled result. Results will update automatically.</div>
-  <div class="result-monitor-ribbon__badge" data-rm-badge>UPCOMING</div>
+<div aria-live="polite" class="result-monitor-ribbon" data-result-monitor-ribbon="" data-state="waiting" role="status">
+<div class="result-monitor-ribbon__lead"><span aria-hidden="true" class="result-monitor-ribbon__icon" data-rm-icon="">◷</span><p class="result-monitor-ribbon__title" data-rm-title="">Waiting for Live Monitoring</p></div>
+<div class="result-monitor-ribbon__message" data-rm-message="">Live monitoring will begin automatically before the next scheduled result. Results will update automatically.</div>
+<div class="result-monitor-ribbon__badge" data-rm-badge="">UPCOMING</div>
 </div>
 <section class="game-row" id="result-KH">
 <article aria-labelledby="title-KH" class="result-card">
@@ -51,7 +51,7 @@
 </article>
 <aside aria-label="Previous 7 results of Khanapara Teer" class="game-history-card" data-semantic-section="previous_7_days" id="previous_7_days"><h3 class="history-title">📅 Previous 7 Results of Khanapara Teer</h3><div class="mini-history-list" id="kh-history"><div class="mini-history-row"><span class="mini-history-date">Loading</span><span class="mini-history-result">XX-XX</span></div></div></aside>
 </section></div></section>
-<section aria-label="Khanapara Teer common numbers and statistics" class="common-unified-wrap" data-semantic-section="common_numbers" id="common_numbers"><p class="common-publication-note"><strong>Khanapara Teer Common Numbers and Statistics are generally published at approximately 11:45 AM IST.</strong></p><div id="kh-common-card"><article class="game-card"><div class="game-body"><p class="empty">Loading common numbers and statistics…</p></div></article></div></section>
+<section aria-label="Khanapara Teer common numbers and statistics" class="common-unified-wrap" data-semantic-section="common_numbers" id="common_numbers"><div id="kh-common-card"><article class="game-card"><div class="game-body"><p class="empty">Loading common numbers and statistics…</p></div></article></div></section>
 <section aria-labelledby="khanapara-teer-results-guide-heading" class="seo-content unified-seo task4-guide task13-live-guide" data-semantic-section="supporting_content">
 <h2 id="khanapara-teer-results-guide-heading">Khanapara Teer Result Today: FR, SR and Playing-Date Guide</h2>
 <p>Khanapara Teer has one of the shortest intervals between its two declared rounds. This page keeps the current playing date, FR, SR and completion status together so visitors can check the day’s result without confusing one round with another.</p>
@@ -97,5 +97,87 @@
 </footer>
 <div aria-hidden="true" class="modal-backdrop" id="numberPopup"><div aria-labelledby="popupTitle" aria-modal="true" class="modal-box" role="dialog"><div class="modal-head"><h3 id="popupTitle">Numbers</h3><button aria-label="Close popup" class="modal-close" type="button">×</button></div><div class="modal-body"><div class="modal-meta" id="popupMeta"></div><div class="modal-number-grid" id="popupNumbers"></div><div class="modal-note">These are the full numbers for the selected group or point as per the Teer formula reference.</div></div></div></div>
 <script defer="" src="/assets/scripts/game-config.js?v=20260727-task11"></script><script defer="" src="/assets/scripts/game-unified-page.js?v=20260727-task11-allgames-week-v7"></script>
-<script defer="" src="/assets/scripts/intent-telemetry.js"></script><script defer src="/assets/scripts/result-live-monitoring.js?v=20260728-task13g4"></script>
-</body></html>
+<script defer="" src="/assets/scripts/intent-telemetry.js"></script><script defer="" src="/assets/scripts/result-live-monitoring.js?v=20260728-task13g4"></script>
+<script data-remove-common-extras="true">(function () {
+  'use strict';
+
+  function normalise(value) {
+    return String(value || '')
+      .replace(/[’‘`]/g, "'")
+      .replace(/\s+/g, ' ')
+      .trim()
+      .toLowerCase();
+  }
+
+  function smallestAncestorContaining(element, root, requiredTexts) {
+    let node = element;
+    while (node && node !== root) {
+      const text = normalise(node.textContent);
+      if (requiredTexts.every(function (required) { return text.includes(required); })) {
+        return node;
+      }
+      node = node.parentElement;
+    }
+    return null;
+  }
+
+  function removeGeneratedSections() {
+    const root = document.getElementById('common_numbers');
+    if (!root) return;
+
+    root.querySelectorAll('.common-publication-note').forEach(function (note) {
+      note.remove();
+    });
+
+    const elements = Array.from(root.querySelectorAll('*'));
+
+    const insightHeading = elements.find(function (element) {
+      return normalise(element.textContent) === "this week's insights";
+    });
+    if (insightHeading) {
+      const insightBlock = smallestAncestorContaining(insightHeading, root, [
+        "this week's insights",
+        'most repeated numbers',
+        'most active house',
+        'even vs odd',
+        'high vs low'
+      ]);
+      if (insightBlock) insightBlock.remove();
+    }
+
+    const repeatedHeading = elements.find(function (element) {
+      return normalise(element.textContent) === 'repeated numbers';
+    });
+    if (repeatedHeading) {
+      const repeatedBlock = smallestAncestorContaining(repeatedHeading, root, [
+        'repeated numbers',
+        'with frequency'
+      ]);
+      if (repeatedBlock) repeatedBlock.remove();
+    }
+
+    const pairHeading = elements.find(function (element) {
+      const text = normalise(element.textContent);
+      return text === 'repeated fr-sr pairs' || text === 'repeated fr–sr pairs';
+    });
+    if (pairHeading) {
+      const pairBlock = smallestAncestorContaining(pairHeading, root, [
+        'repeated fr',
+        'with frequency'
+      ]);
+      if (pairBlock) pairBlock.remove();
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', removeGeneratedSections, { once: true });
+  } else {
+    removeGeneratedSections();
+  }
+
+  const root = document.getElementById('common_numbers');
+  if (root) {
+    const observer = new MutationObserver(removeGeneratedSections);
+    observer.observe(root, { childList: true, subtree: true });
+  }
+})();</script></body></html>
