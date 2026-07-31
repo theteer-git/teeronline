@@ -11,7 +11,7 @@
     KHM: "9:00 PM",
     JWM: "8:30 PM",
     SHN1: "5:30 PM",
-    SHN2: "5:45 PM"
+    SHN2: "6:10 PM"
   });
   const game = config?.getGame?.(GAME_ID);
 
@@ -79,7 +79,7 @@
     return TASK12_POLL.IDLE_MS;
   }
 
-  const CACHE_SCHEMA = 1;
+  const CACHE_SCHEMA = 2;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
   const CACHE_TTL = Object.freeze({
     latest: 36 * 60 * 60 * 1000,
@@ -225,6 +225,16 @@
     if (record?.date) latestResultRecord = normalizeItem(record);
     const fr = num(record.fr);
     const sr = num(record.sr);
+
+    // A new pending record is created in latest-results.json before the page's
+    // scheduled publication window. Do not let that background placeholder
+    // overwrite the still-current static page. The GitHub page and the due
+    // game's common-number payload are published together; once their dates
+    // match, the pending date/XX-XX may be shown. Real partial/completed results
+    // are never hidden.
+    const fullyPending = fr === "XX" && sr === "XX";
+    const publishedDate = String(latestCommonData?.publicationDate || latestCommonData?.sourceDate || "");
+    if (fullyPending && record?.date && publishedDate !== String(record.date)) return;
     const frTime = fmtClock(record.frDeclaredTime) || fmtClock(game.rounds.fr);
     const srTime = fmtClock(record.srDeclaredTime) || fmtClock(game.rounds.sr);
 
@@ -557,6 +567,7 @@
 
   function renderCommonNumbers(data = {}) {
     latestCommonData = data;
+    if (latestResultRecord?.date) renderResult(latestResultRecord);
     const target = document.getElementById(`${prefix}-common-card`);
     if (!target) return;
     if (!data || data.empty) {
