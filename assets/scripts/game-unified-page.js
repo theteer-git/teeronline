@@ -221,7 +221,7 @@
     }
   }
 
-  function renderResult(record = {}) {
+  function renderResult(record = {}, options = {}) {
     if (record?.date) latestResultRecord = normalizeItem(record);
     const fr = num(record.fr);
     const sr = num(record.sr);
@@ -256,7 +256,7 @@
     // The weekly table is rendered from the common-numbers panel. Re-render it
     // whenever the live record changes so today's row immediately receives the
     // latest FR/SR values, including partial results.
-    if (latestCommonData) renderCommonNumbers(latestCommonData);
+    if (options.refreshCommon !== false && latestCommonData) renderCommonNumbers(latestCommonData);
   }
 
   function renderHistory(records = []) {
@@ -567,7 +567,7 @@
 
   function renderCommonNumbers(data = {}) {
     latestCommonData = data;
-    if (latestResultRecord?.date) renderResult(latestResultRecord);
+    if (latestResultRecord?.date) renderResult(latestResultRecord, { refreshCommon: false });
     const target = document.getElementById(`${prefix}-common-card`);
     if (!target) return;
     if (!data || data.empty) {
