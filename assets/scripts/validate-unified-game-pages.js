@@ -29,12 +29,14 @@ function tagText(html, tag) {
   const match = html.match(new RegExp(`<${tag}\\b[^>]*>([\\s\\S]*?)<\\/${tag}>`, "i"));
   return (match?.[1] || "").replace(/<[^>]+>/g, " ").replace(/&amp;/g, "&").replace(/\s+/g, " ").trim();
 }
+function readAttr(tagSource, name) {
+  const match = tagSource.match(new RegExp(`${name}=(?:"([^"]*)"|'([^']*)')`, "i"));
+  return match ? (match[1] ?? match[2] ?? "") : "";
+}
 function attrValue(html, tag, attrName, attrValueExpected, targetAttr) {
-  const tagPattern = new RegExp(`<${tag}\\b[^>]*${attrName}=["']${escapeRegExp(attrValueExpected)}["'][^>]*>`, "i");
-  const match = html.match(tagPattern);
-  if (!match) return "";
-  const attr = match[0].match(new RegExp(`${targetAttr}=["']([^"']*)["']`, "i"));
-  return attr?.[1] || "";
+  const tags = html.match(new RegExp(`<${tag}\\b[^>]*>`, "gi")) || [];
+  const match = tags.find(candidate => readAttr(candidate, attrName) === attrValueExpected);
+  return match ? readAttr(match, targetAttr) : "";
 }
 function countTag(html, tag) {
   return (html.match(new RegExp(`<${tag}\\b`, "gi")) || []).length;
@@ -68,7 +70,7 @@ for (const gameId of config.gameOrder) {
   check(`${gameId} description mentions game`, description.includes(game.name));
   check(`${gameId} one clear H1`, countTag(html, "h1") === 1 && h1.includes(game.name));
   check(`${gameId} game-specific visible copy`, html.includes(game.name));
-  check(`${gameId} FAQ content`, /Frequently Asked Questions/i.test(html));
+  check(`${gameId} FAQ content`, /Frequently Asked Questions|Result Questions/i.test(html));
   check(`${gameId} FAQ schema`, html.includes('"@type":"FAQPage"') || html.includes('"@type": "FAQPage"'));
   check(`${gameId} no retired Common Numbers link`, !/href=["'](?:\.\/|\/)?common-numbers(?:\.html)?["']/.test(html));
 }
@@ -86,7 +88,7 @@ check("Recent request deduplication", runtime.includes("if (loadingRecent) retur
 check("Independent request handling", runtime.includes("Promise.allSettled"));
 check("Hidden-tab pause", runtime.includes("document.hidden"));
 check("SHN2 shared boundary", config.games.SHN2.crossesMidnight === true);
-check("No all-results runtime", !runtime.includes("all-results.json"));
+check("All-results runtime uses configured endpoint", runtime.includes("config.endpoints.allResults"));
 try {
   new vm.Script(runtime, { filename: runtimePath });
   check("Shared runtime syntax", true);

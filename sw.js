@@ -1,9 +1,11 @@
-// sw.js - Safe caching for static assets and live result JSON
-const CACHE_NAME = 'teer-v4-navigation-network-first';
+// sw.js - resilient static caching and last-known-good live result fallback
+const CACHE_NAME = 'teer-v5-last-known-results';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
-  '/assets/css/styles.css',
+  '/assets/css/game-unified-page.css',
+  '/assets/css/task4b-seo.css',
+  '/assets/css/task13-homepage.css',
   '/assets/img/logo.webp'
 ];
 
@@ -16,20 +18,22 @@ const LIVE_JSON_PATHS = new Set([
 function isLiveResultJson(requestUrl) {
   try {
     const url = new URL(requestUrl);
-    return (
-      url.hostname === 'results.teeronline.com' &&
-      LIVE_JSON_PATHS.has(url.pathname)
-    );
+    return url.hostname === 'results.teeronline.com' && LIVE_JSON_PATHS.has(url.pathname);
   } catch (_) {
     return false;
   }
 }
 
-async function networkFirst(request) {
-  try {
-    return await fetch(request, { cache: 'no-store' });
-  } catch (error) {
-    // Live result JSON must never fall back to a stale cached copy.
+async function cacheSuccessfulResponse(request, response) {
+  if (!response || !response.ok) return response;
+  const cache = await caches.open(CACHE_NAME);
+  await cache.put(request, response.clone());
+  return response;
+}
+
+async function staleResultResponse(request, reason) {
+  const cached = await caches.match(request);
+  if (!cached) {
     return new Response(
       JSON.stringify({ error: 'Live result data is temporarily unavailable.' }),
       {
@@ -41,15 +45,36 @@ async function networkFirst(request) {
       }
     );
   }
+
+  const headers = new Headers(cached.headers);
+  headers.set('x-teeronline-stale', '1');
+  headers.set('warning', '110 - "Response is stale"');
+  headers.set('cache-control', 'no-store');
+  headers.set('x-teeronline-fallback-reason', String(reason || 'network-error').slice(0, 80));
+  return new Response(await cached.clone().arrayBuffer(), {
+    status: 200,
+    statusText: 'OK (last known result)',
+    headers
+  });
+}
+
+async function liveJsonNetworkFirst(request) {
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response && response.ok) {
+      await cacheSuccessfulResponse(request, response);
+      return response;
+    }
+    return staleResultResponse(request, `http-${response ? response.status : 'unknown'}`);
+  } catch (error) {
+    return staleResultResponse(request, error && error.name ? error.name : 'network-error');
+  }
 }
 
 async function navigationNetworkFirst(request) {
   try {
     const response = await fetch(request, { cache: 'no-store' });
-    if (response && response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      await cache.put(request, response.clone());
-    }
+    if (response && response.ok) await cacheSuccessfulResponse(request, response);
     return response;
   } catch (error) {
     const cached = await caches.match(request);
@@ -63,60 +88,43 @@ async function navigationNetworkFirst(request) {
 
 async function staleWhileRevalidate(request, event) {
   const cached = await caches.match(request);
-  const refresh = fetch(request).then(async response => {
-    if (response && response.ok) {
-      const cache = await caches.open(CACHE_NAME);
-      await cache.put(request, response.clone());
-    }
-    return response;
-  });
-
+  const refresh = fetch(request).then(response => cacheSuccessfulResponse(request, response));
   if (cached) {
     event.waitUntil(refresh.catch(() => undefined));
     return cached;
   }
-
   return refresh;
 }
 
 self.addEventListener('install', event => {
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(cache => cache.addAll(STATIC_ASSETS))
-      .then(() => self.skipWaiting())
-  );
+  event.waitUntil((async () => {
+    const cache = await caches.open(CACHE_NAME);
+    // One missing optional asset must not abort installation of the complete SW.
+    await Promise.allSettled(STATIC_ASSETS.map(asset => cache.add(asset)));
+    await self.skipWaiting();
+  })());
 });
 
 self.addEventListener('activate', event => {
   event.waitUntil(
     caches.keys()
-      .then(keys => Promise.all(
-        keys
-          .filter(key => key !== CACHE_NAME)
-          .map(key => caches.delete(key))
-      ))
+      .then(keys => Promise.all(keys.filter(key => key !== CACHE_NAME).map(key => caches.delete(key))))
       .then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', event => {
   const request = event.request;
-
   if (request.method !== 'GET') return;
 
   if (isLiveResultJson(request.url)) {
-    event.respondWith(networkFirst(request));
+    event.respondWith(liveJsonNetworkFirst(request));
     return;
   }
 
   const url = new URL(request.url);
-  if (url.origin !== self.location.origin) {
-    return;
-  }
+  if (url.origin !== self.location.origin) return;
 
-  // HTML navigations must see the newly published GitHub Pages document.
-  // Serving cached HTML first can leave a result page visually stuck even
-  // after the publication engine has committed and verified the new page.
   if (request.mode === 'navigate' || request.destination === 'document') {
     event.respondWith(navigationNetworkFirst(request));
     return;
