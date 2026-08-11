@@ -4,7 +4,7 @@
   const CONFIG = {
     SHD:{name:"Shillong Teer",fr:975,sr:1035,off:[0]},
     KH:{name:"Khanapara Teer",fr:985,sr:1020,off:[0]},
-    JWD:{name:"Juwai Teer",fr:870,sr:915,off:[0]},
+    JWD:{name:"Juwai Teer",fr:840,sr:880,off:[0]},
     SHM:{name:"Shillong Morning Teer",fr:630,sr:690,off:[]},
     KHM:{name:"Khanapara Morning Teer",fr:660,sr:720,off:[]},
     JWM:{name:"Juwai Morning Teer",fr:630,sr:690,off:[]},
