@@ -235,7 +235,8 @@
             z-index: 999;
          }
 
-         .fixed-buttons .refresh-btn {
+         .fixed-buttons .refresh-btn,
+         .fixed-buttons .whats-btn {
             background: var(--accent);
             width: 50px;
             height: 50px;
@@ -248,13 +249,18 @@
             transition: transform 0.2s;
          }
 
-         .fixed-buttons .refresh-btn:hover {
+         .fixed-buttons .refresh-btn:hover,
+         .fixed-buttons .whats-btn:hover {
             transform: scale(1.05);
          }
 
          .fixed-buttons img {
             width: 28px;
             height: 28px;
+         }
+
+         .whats-btn {
+            background: #25d366;
          }
 
          @media (max-width: 768px) {
