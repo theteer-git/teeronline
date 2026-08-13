@@ -1,0 +1,35 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(cd D:\\teer-api-v2; node scripts/run-tests.mjs 2>&1 | Select-Object -Last 50)",
+      "Bash(cd D:\\teer-api-v2; node scripts/task5-deployment-gate.mjs --syntax-only 2>&1 | Select-Object -Last 30)",
+      "Bash(cd D:\\teer-api-v2; node scripts/task13-predeploy-check.mjs 2>&1 | Select-Object -Last 30; Write-Output \"=== task16 ===\";…)",
+      "Bash(cd D:\\teer-api-v2 && node scripts/run-tests.mjs 2>&1 | Select-Object -Last 20)",
+      "Bash(cd D:\\teer-api-v2 && node --check src/index.js 2>&1; echo \"---index exit: $LASTEXITCODE---\"; Get-ChildItem src -Recurse …)",
+      "Bash(cd D:\\teer-api-v2; Get-ChildItem -Recurse -File src | ForEach-Object { $_.FullName.Replace('D:\\teer-api-v2\\','') })",
+      "Bash(cd D:\\teer-api-v2; Get-ChildItem src\\parsers\\*.js | ForEach-Object { \"{0}`t{1} lines\" -f $_.Name, (Get-Content $_.FullNa…)",
+      "Bash(cd D:\\teer-api-v2; Get-ChildItem tests -Recurse -File | ForEach-Object { $_.FullName.Replace('D:\\teer-api-v2\\','') })",
+      "Bash(cd D:\\teer-api-v2; node scripts/run-tests.mjs 2>&1 | Select-Object -Last 40)",
+      "Bash(Get-ChildItem 'D:\\teer-api-v2\\src' -Recurse -File | Select-Object FullName | ForEach-Object { $_.FullName.Replace('D:\\te…)",
+      "Bash(cd D:\\teer-api-v2; node scripts/run-tests.mjs 2>&1 | Select-Object -Last 100)",
+      "Bash(cd D:\\teer-api-v2; node scripts/task5-deployment-gate.mjs --syntax-only 2>&1 | Select-Object -Last 80)",
+      "Bash(cd D:\\teer-api-v2; node scripts/task13-predeploy-check.mjs 2>&1 | Select-Object -Last 150)",
+      "Bash(cd D:\\teer-api-v2; node scripts/task16-audit.mjs 2>&1 | Select-Object -Last 150)",
+      "Bash(cd D:\\teer-api-v2; node scripts/cleanup-audit.mjs 2>&1 | Select-Object -Last 150)",
+      "Bash(try { $r = Invoke-WebRequest -Uri \"https://live.teeronline.com/health\" -UseBasicParsing -TimeoutSec 20; Write-Output $r.…)",
+      "Bash($eps = @(\"https://live.teeronline.com/health\",\"https://live.teeronline.com/version\",\"https://live.teeronline.com/results…)",
+      "Bash($eps = @(\"https://admin.teeronline.com/admin/status\",\"https://admin.teeronline.com/dashboard\",\"https://live.teeronline.c…)",
+      "Bash($eps = @(\"https://teeronline.com/\",\"https://teeronline.com/shillong-teer-results.html\",\"https://teeronline.com/khanapara…)",
+      "Bash(cd \"D:\\teer-api-v2\" && (Get-Content src/index.js | Measure-Object -Line).Lines)",
+      "Bash(cd \"D:\\teer-api-v2\" && cat > /tmp/check_coverage.js << 'EOF'\nconst GAMES = {\n  SHD: { name: \"Shillong Teer\", priority: \"…)",
+      "Bash(cd D:\\GitHub\\teeronline; node assets/scripts/validate-game-config.js 2>&1 | Select-Object -Last 60)",
+      "Bash(cd D:\\GitHub\\teeronline; node assets/scripts/validate-unified-game-pages.js 2>&1 | Select-Object -Last 80)",
+      "Bash(cd D:\\GitHub\\teeronline; node assets/scripts/validate-content-quality.js 2>&1 | Select-Object -Last 80)",
+      "Bash(cd D:\\GitHub\\teeronline; node assets/scripts/validate-production-package.js 2>&1 | Select-Object -Last 100)",
+      "Bash(cd D:\\GitHub\\teeronline; node assets/scripts/validate-technical-seo.js 2>&1 | Select-Object -Last 60\nWrite-Output '===st…)",
+      "Bash(cd D:\\GitHub\\teeronline\nnode -e \"console.log(require('fs').existsSync('assets/scripts/update-results.js'))\"\nWrite-Output…)",
+      "Bash(Get-ChildItem 'D:\\GitHub\\teeronline\\.github' -Recurse -File | ForEach-Object { $_.FullName })",
+      "Bash(try { $r = Invoke-WebRequest -Uri \"https://admin.teeronline.com/dashboard\" -UseBasicParsing -TimeoutSec 20; Write-Output…)"
+    ]
+  }
+}
