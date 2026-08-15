@@ -1526,6 +1526,7 @@
             const loadingDiv = $("loadingIndicator"),
                errorDiv = $("errorMessage"),
                resultsCount = $("resultsCount");
+            const GAME_NAME = "juwai morning";
 
             function parseDate(dateStr) {
                if (!dateStr || dateStr === "0000-00-00") return null;
@@ -1610,6 +1611,7 @@
                   "shillong night teer 2": "SHN2",
                };
 
+               // FIXED: Corrected aliases - removed "shillong day" from JWM
                const aliases = {
                   SHD: ["shillong day", "shillong teer"],
                   KH: ["khanapara day", "khanapara teer"],
