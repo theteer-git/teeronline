@@ -1656,7 +1656,7 @@
                const idByName = {
                   "shillong day": "SHD",
                   "shillong teer": "SHD",
-                  "shillong day": "KH",
+                  "khanapara day": "KH",
                   "khanapara teer": "KH",
                   "juwai day": "JWD",
                   "juwai teer": "JWD",
@@ -1669,9 +1669,10 @@
                   "shillong night teer 2": "SHN2",
                };
 
+               // FIXED: Removed "shillong day" from KH aliases to prevent data mixing
                const aliases = {
                   SHD: ["shillong day", "shillong teer"],
-                  KH: ["shillong day", "khanapara teer"],
+                  KH: ["khanapara day", "khanapara teer"],
                   JWD: ["juwai day", "juwai teer"],
                   JWM: ["juwai morning"],
                   KHM: ["khanapara morning"],
