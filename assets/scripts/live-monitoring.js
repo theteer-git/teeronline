@@ -7,8 +7,8 @@
   const isArchive = root.dataset.monitorType === "archive";
   const gameId = (document.body.dataset.gameId || root.dataset.gameId || "").toUpperCase();
   const endpoint = isArchive
-    ? `https://results.teeronline.com/api/game-history?game=${encodeURIComponent(gameId)}`
-    : `https://results.teeronline.com/api/game-result?game=${encodeURIComponent(gameId)}`;
+    ? "https://results.teeronline.com/api/game-history"
+    : "https://results.teeronline.com/api/game-result";
 
   const el = (name) => root.querySelector(`[data-monitor-${name}]`);
   const summary = el("summary");
@@ -145,7 +145,7 @@
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 8000);
     try {
-      const response = await fetch(endpoint, {
+      const response = await fetch(`${endpoint}?game=${encodeURIComponent(gameId)}`, {
         cache: "no-store",
         credentials: "omit",
         signal: controller.signal,

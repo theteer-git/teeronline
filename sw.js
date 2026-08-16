@@ -1,5 +1,5 @@
 // sw.js - resilient static caching and last-known-good live result fallback
-const CACHE_NAME = 'teer-v6-private-json-api';
+const CACHE_NAME = 'teer-v5-last-known-results';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -8,6 +8,18 @@ const STATIC_ASSETS = [
   '/assets/css/task13-homepage.css',
   '/assets/img/logo.webp'
 ];
+
+const LIVE_JSON_PATHS = new Set([
+]);
+
+function isLiveResultJson(requestUrl) {
+  try {
+    const url = new URL(requestUrl);
+    return url.hostname === 'results.teeronline.com' && LIVE_JSON_PATHS.has(url.pathname);
+  } catch (_) {
+    return false;
+  }
+}
 
 async function cacheSuccessfulResponse(request, response) {
   if (!response || !response.ok) return response;
@@ -41,6 +53,19 @@ async function staleResultResponse(request, reason) {
     statusText: 'OK (last known result)',
     headers
   });
+}
+
+async function liveJsonNetworkFirst(request) {
+  try {
+    const response = await fetch(request, { cache: 'no-store' });
+    if (response && response.ok) {
+      await cacheSuccessfulResponse(request, response);
+      return response;
+    }
+    return staleResultResponse(request, `http-${response ? response.status : 'unknown'}`);
+  } catch (error) {
+    return staleResultResponse(request, error && error.name ? error.name : 'network-error');
+  }
 }
 
 async function navigationNetworkFirst(request) {
@@ -89,6 +114,10 @@ self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
 
+  if (isLiveResultJson(request.url)) {
+    event.respondWith(liveJsonNetworkFirst(request));
+    return;
+  }
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
