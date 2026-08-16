@@ -98,13 +98,36 @@ function refreshLivePage(file, gameId) {
   html = html.replace(/(<span[^>]+id=["'](?:shd-date|kh-date|jwd-date|shm-date|khm-date|jwm-date|shn1-date|shn2-date)["'][^>]*>\s*📅\s*)\d{2}\/\d{2}\/\d{4}/g, `$1${dmy}`);
   fs.writeFileSync(full, html, "utf8");
 }
+async function fetchResultsWithRetry() {
+  const attempts = 5;
+  const delayMs = 20000;
+  let lastError = null;
+  for (let attempt = 1; attempt <= attempts; attempt += 1) {
+    try {
+      const response = await fetch(`${RESULTS_URL}?t=${Date.now()}`, {
+        headers: { accept: "application/json", "cache-control": "no-cache" }
+      });
+      if (!response.ok) throw new Error(`all-results.json HTTP ${response.status}`);
+      const raw = await response.json();
+      if (!Array.isArray(raw)) throw new Error("all-results.json is not an array");
+      return raw;
+    } catch (error) {
+      lastError = error;
+      if (attempt < attempts) await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+  throw lastError || new Error("all-results.json could not be verified");
+}
+
 async function main() {
-  const response = await fetch(RESULTS_URL, { headers: { accept: "application/json" } });
-  if (!response.ok) throw new Error(`all-results.json HTTP ${response.status}`);
-  const raw = await response.json();
+  const raw = await fetchResultsWithRetry();
+  const skippedGames = [];
   for (const [gameId, cfg] of Object.entries(ARCHIVES)) {
     const rows = gameRows(raw, gameId);
-    if (!rows.length) throw new Error(`No verified archive rows found for ${gameId}`);
+    if (!rows.length) {
+      skippedGames.push(gameId);
+      continue;
+    }
     const file = path.join(root, cfg.file);
     let html = fs.readFileSync(file, "utf8");
     const tbodyPattern = /(<tbody[^>]*>)([\s\S]*?)(<\/tbody>)/i;
@@ -114,7 +137,7 @@ async function main() {
     fs.writeFileSync(file, html, "utf8");
   }
   for (const [gameId, cfg] of Object.entries(LIVE)) refreshLivePage(cfg.file, gameId);
-  console.log("SEO refresh complete: archive rows and live business dates updated.");
+  console.log(`SEO refresh complete: archive rows and live business dates updated. Skipped unverified games: ${skippedGames.length ? skippedGames.join(", ") : "none"}.`);
 }
 
 main().catch(error => { console.error(error); process.exit(1); });

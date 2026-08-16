@@ -17,7 +17,7 @@ const EXPECTED_PATHS = {
 const EXPECTED_ROUNDS = {
   SHD: { fr: "16:15", sr: "17:15" },
   KH: { fr: "16:25", sr: "17:00" },
-  JWD: { fr: "14:00", sr: "14:40" },
+  JWD: { fr: "14:30", sr: "15:15" },
   SHM: { fr: "10:30", sr: "11:30" },
   KHM: { fr: "11:00", sr: "12:00" },
   JWM: { fr: "10:30", sr: "11:30" },

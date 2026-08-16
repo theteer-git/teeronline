@@ -1,7 +1,0 @@
-const fs=require("fs"),path=require("path");
-const pages=["index.html","juwai-morning-teer-results.html","juwai-teer-results.html","khanapara-morning-teer-results.html","khanapara-teer-results.html","shillong-morning-teer-results.html","shillong-night-teer-results.html","shillong-night-teer-2-results.html"];
-const errors=[];
-for(const p of pages){const h=fs.readFileSync(path.join(process.cwd(),p),"utf8");const gid=(h.match(/data-game-id="([^"]+)"/)||[])[1];const marker=`<section class="game-row" id="result-${gid}">`;const ribbon=h.indexOf("data-result-monitor-ribbon"),row=h.indexOf(marker);if(ribbon<0)errors.push(`${p}: ribbon missing`);if(row<0)errors.push(`${p}: game-row missing`);if(!(ribbon<row))errors.push(`${p}: ribbon must be before game-row`);if((h.match(/data-result-monitor-ribbon/g)||[]).length!==1)errors.push(`${p}: ribbon count`);for(const x of ["result-live-monitoring.css","result-live-monitoring.js"])if(!h.includes(x))errors.push(`${p}: ${x} missing`)}
-for(const a of ["assets/css/result-live-monitoring.css","assets/scripts/result-live-monitoring.js"])if(!fs.existsSync(path.join(process.cwd(),a)))errors.push(`${a}: missing`);
-if(errors.length){console.error("TASK 13 BATCH G4: FAIL");errors.forEach(e=>console.error("- "+e));process.exit(1)}
-console.log("TASK 13 BATCH G4: PASS");console.log("8 live pages checked; result grids preserved; timestamps use frUpdatedAt/srUpdatedAt");

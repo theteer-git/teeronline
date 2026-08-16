@@ -44,7 +44,7 @@ try {
   }
 
   const jwd = read('juwai-teer-results.html');
-  if (!/(2:00\s*PM|14:00)/i.test(jwd) || !/(2:40\s*PM|14:40)/i.test(jwd)) {
+  if (!/(2:30\s*PM|14:30)/i.test(jwd) || !/(3:15\s*PM|15:15)/i.test(jwd)) {
     throw new Error('JWD live page does not contain the corrected 2:00 PM / 2:40 PM schedule');
   }
 
