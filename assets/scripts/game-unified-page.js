@@ -22,6 +22,7 @@
 
   const prefix = GAME_ID.toLowerCase();
   const API_ORIGIN = "https://results.teeronline.com";
+  // API-only build: legacy public JSON files are intentionally never requested.
   const LATEST_URL = `${API_ORIGIN}/api/game-result?game=${encodeURIComponent(GAME_ID)}`;
   const LATEST_VERSION_URL = `${API_ORIGIN}/api/latest-version?game=${encodeURIComponent(GAME_ID)}`;
   const RECENT_URL = `${API_ORIGIN}/api/game-history?game=${encodeURIComponent(GAME_ID)}`;

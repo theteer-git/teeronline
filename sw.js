@@ -1,5 +1,5 @@
 // sw.js - resilient static caching and last-known-good live result fallback
-const CACHE_NAME = 'teer-v6-api-only-results';
+const CACHE_NAME = 'teer-v7-api-only-results';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
