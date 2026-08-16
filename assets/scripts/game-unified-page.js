@@ -22,7 +22,7 @@
 
   const prefix = GAME_ID.toLowerCase();
   const LATEST_URL = `${config.endpoints.latestResults}?game=${encodeURIComponent(GAME_ID)}`;
-  const LATEST_VERSION_URL = config.endpoints.latestVersion;
+  const LATEST_VERSION_URL = `${config.endpoints.latestVersion}?game=${encodeURIComponent(GAME_ID)}`;
   const RECENT_URL = `${config.endpoints.recentResults}?game=${encodeURIComponent(GAME_ID)}`;
   const POLLING_PLAN_URL = `${config.endpoints.pollingPlan}?game=${encodeURIComponent(GAME_ID)}`;
   const COMMON_NUMBERS_URL = `${config.endpoints.commonNumbers}?game=${encodeURIComponent(GAME_ID)}`;
@@ -654,7 +654,16 @@
     if (loadingCommonNumbers) return loadingCommonNumbers;
     loadingCommonNumbers = (async () => {
       const response = await fetch(COMMON_NUMBERS_URL, { cache: "no-store", referrerPolicy: "no-referrer" });
-      if (!response.ok) throw new Error(`Common numbers request failed: ${response.status}`);
+      if (!response.ok) {
+        const historyResponse = await fetch(RECENT_URL, { cache: "no-store", referrerPolicy: "no-referrer" });
+        if (!historyResponse.ok) throw new Error(`Common numbers request failed: ${response.status}`);
+        const history = await historyResponse.json();
+        const rows = extractGameRecords(history)
+          .map(normalizeItem)
+          .filter(item => item.gameId === GAME_ID && item.date && valid(item.fr) && valid(item.sr))
+          .sort((a, b) => dateValue(b.date) - dateValue(a.date));
+        return { empty: true, publicationDate: latestResultRecord?.date || "", previousResult: rows[0] || {}, performance: rows.slice(0, 7), commonNumbers: {}, statistics: {}, historicalSample: { total: 0, rate: 0 } };
+      }
       const payload = await response.json();
       return payload && typeof payload === "object" && payload.ok === false ? null : payload;
     })();

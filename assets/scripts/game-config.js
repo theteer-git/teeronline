@@ -210,7 +210,7 @@
 
   const ENDPOINTS = Object.freeze({
     latestResults: `${RESULTS_ORIGIN}/api/game-result`,
-    latestVersion: `${RESULTS_ORIGIN}/latest-version.json`,
+    latestVersion: `${RESULTS_ORIGIN}/api/latest-version`,
     recentResults: `${RESULTS_ORIGIN}/api/game-history`,
     pollingPlan: `${RESULTS_ORIGIN}/api/polling-plan`,
     commonNumbers: `${RESULTS_ORIGIN}/api/common-numbers`
