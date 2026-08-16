@@ -80,8 +80,8 @@ assert.deepEqual(Object.values(config.sectionIds), [
   "related_games"
 ]);
 
-assert.equal(config.endpoints.latestResults, "https://results.teeronline.com/latest-results.json");
-assert.equal(config.endpoints.recentResults, "https://results.teeronline.com/recent-results.json");
+assert.equal(config.endpoints.gameResult, "https://results.teeronline.com/api/game-result");
+assert.equal(config.endpoints.gameHistory, "https://results.teeronline.com/api/game-history");
 assert.equal(config.endpoints.pollingPlan, "https://results.teeronline.com/polling-plan.json");
 assert.equal(Object.prototype.hasOwnProperty.call(config.endpoints, "allResults"), false);
 

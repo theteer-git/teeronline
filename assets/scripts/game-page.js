@@ -112,7 +112,8 @@
     if (loadingLatest) return loadingLatest;
     loadingLatest = (async () => {
       const previous = latestRecord;
-      latestRecord = extractLatest(await fetchJson(config.endpoints.latestResults));
+      const payload = await fetchJson(`${config.endpoints.gameResult}?game=${encodeURIComponent(gameId)}`);
+      latestRecord = normalize(payload?.record || {});
       const signature = latestRecord ? `${latestRecord.date}|${latestRecord.fr}|${latestRecord.sr}` : "none";
       if (lastSignature && signature !== lastSignature) emit("result_changed", { status: latestRecord?.status || "missing" });
       lastSignature = signature;
@@ -125,7 +126,8 @@
   async function loadRecent() {
     if (loadingRecent) return loadingRecent;
     loadingRecent = (async () => {
-      recentRecords = normalizedList(await fetchJson(config.endpoints.recentResults)).filter((row) => row.gameId === gameId).sort((a,b) => dateValue(b.date) - dateValue(a.date)).slice(0,7);
+      const payload = await fetchJson(`${config.endpoints.gameHistory}?game=${encodeURIComponent(gameId)}`);
+      recentRecords = normalizedList(payload?.results || []).filter((row) => row.gameId === gameId).sort((a,b) => dateValue(b.date) - dateValue(a.date)).slice(0,7);
       renderPrevious(); renderStats();
     })().catch((error) => renderError("Unable to load recent results.", error)).finally(() => { loadingRecent = null; });
     return loadingRecent;

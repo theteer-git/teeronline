@@ -1527,6 +1527,7 @@
                errorDiv = $("errorMessage"),
                resultsCount = $("resultsCount");
             const GAME_NAME = "juwai morning";
+            const GAME_ID = "JWM";
 
             function parseDate(dateStr) {
                if (!dateStr || dateStr === "0000-00-00") return null;
@@ -1781,14 +1782,14 @@
             async function loadData() {
                try {
                   const res = await fetch(
-                     "https://results.teeronline.com/all-results.json",
+                     `https://results.teeronline.com/api/game-history?game=${encodeURIComponent(GAME_ID)}`,
                      { cache: "default" },
                   );
                   if (!res.ok)
                      throw new Error(
-                        `HTTP ${res.status} - File not found at https://results.teeronline.com/all-results.json`,
+                        `HTTP ${res.status} - Game history is temporarily unavailable`,
                      );
-                  originalData = extractData(await res.json()).sort(
+                  originalData = extractData((await res.json())?.results || []).sort(
                      (a, b) =>
                         (parseDate(b.date) || 0) - (parseDate(a.date) || 0),
                   );

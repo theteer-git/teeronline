@@ -209,9 +209,9 @@
   ]);
 
   const ENDPOINTS = Object.freeze({
-    latestResults: `${RESULTS_ORIGIN}/latest-results.json`,
+    gameResult: `${RESULTS_ORIGIN}/api/game-result`,
+    gameHistory: `${RESULTS_ORIGIN}/api/game-history`,
     latestVersion: `${RESULTS_ORIGIN}/latest-version.json`,
-    recentResults: `${RESULTS_ORIGIN}/recent-results.json`,
     pollingPlan: `${RESULTS_ORIGIN}/polling-plan.json`,
     commonNumbers: `${RESULTS_ORIGIN}/common-numbers.json`
   });

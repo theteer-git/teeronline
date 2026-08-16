@@ -9,16 +9,13 @@ const STATIC_ASSETS = [
   '/assets/img/logo.webp'
 ];
 
-const LIVE_JSON_PATHS = new Set([
-  '/latest-results.json',
-  '/recent-results.json',
-  '/all-results.json'
-]);
+const LIVE_JSON_PREFIX = "/api/game-";
 
 function isLiveResultJson(requestUrl) {
   try {
     const url = new URL(requestUrl);
-    return url.hostname === 'results.teeronline.com' && LIVE_JSON_PATHS.has(url.pathname);
+    return url.hostname === 'results.teeronline.com' && url.pathname.startsWith(LIVE_JSON_PREFIX) &&
+      (url.pathname === '/api/game-result' || url.pathname === '/api/game-history');
   } catch (_) {
     return false;
   }

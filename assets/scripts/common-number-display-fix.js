@@ -1,8 +1,9 @@
 (() => {
   "use strict";
 
-  const LATEST_URL = "https://results.teeronline.com/latest-results.json";
-  const RECENT_URL = "https://results.teeronline.com/recent-results.json";
+  const RESULTS_ORIGIN = "https://results.teeronline.com";
+  const GAME_RESULT_URL = `${RESULTS_ORIGIN}/api/game-result`;
+  const GAME_HISTORY_URL = `${RESULTS_ORIGIN}/api/game-history`;
 
   const validNumber = value => /^(?:\d{1,2})$/.test(String(value ?? "").trim());
   const normalizedNumber = value => String(value).trim().padStart(2, "0");
@@ -105,8 +106,8 @@
     try {
       const cacheBust = Date.now();
       const [latestResponse, recentResponse] = await Promise.all([
-        fetch(`${LATEST_URL}?v=${cacheBust}`, { cache: "no-store" }),
-        fetch(`${RECENT_URL}?v=${cacheBust}`, { cache: "no-store" })
+        fetch(`${GAME_RESULT_URL}?game=${encodeURIComponent(gameId)}&v=${cacheBust}`, { cache: "no-store" }),
+        fetch(`${GAME_HISTORY_URL}?game=${encodeURIComponent(gameId)}&v=${cacheBust}`, { cache: "no-store" })
       ]);
 
       if (!latestResponse.ok || !recentResponse.ok) return;
@@ -116,7 +117,7 @@
         recentResponse.json()
       ]);
 
-      const latestRecord = extractLatestRecord(latestPayload, gameId);
+      const latestRecord = latestPayload?.record || extractLatestRecord(latestPayload, gameId);
       const currentDate = normalizeDate(latestRecord?.date || latestPayload?.date);
       const records = collectRecentRecords(recentPayload, gameId);
 

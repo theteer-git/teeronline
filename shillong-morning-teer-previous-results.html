@@ -1874,6 +1874,7 @@
                errorDiv = $("errorMessage"),
                resultsCount = $("resultsCount");
             const GAME_NAME = "shillong morning";
+            const GAME_ID = "SHM";
 
             function parseDate(dateStr) {
                if (!dateStr || dateStr === "0000-00-00") return null;
@@ -2103,14 +2104,14 @@
             async function loadData() {
                try {
                   const res = await fetch(
-                     "https://results.teeronline.com/all-results.json",
+                     `https://results.teeronline.com/api/game-history?game=${encodeURIComponent(GAME_ID)}`,
                      { cache: "default" },
                   );
                   if (!res.ok)
                      throw new Error(
-                        `HTTP ${res.status} - File not found at https://results.teeronline.com/all-results.json`,
+                        `HTTP ${res.status} - Game history is temporarily unavailable`,
                      );
-                  originalData = extractData(await res.json()).sort(
+                  originalData = extractData((await res.json())?.results || []).sort(
                      (a, b) => parseDate(b.date) - parseDate(a.date),
                   );
                   if (!originalData.length)
@@ -2134,7 +2135,7 @@
                   loadingDiv.style.display = "none";
                   errorDiv.hidden = false;
                   errorDiv.style.display = "block";
-                  errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+                  errorDiv.innerHTML = `<strong>❌ Failed to load game history</strong><br><br>${err.message}<br><br>Please try again in a moment.`;
                   resultsCount.textContent = "📊 Error loading data";
                   if (!tbody.querySelector('tr[data-static-archive-row="true"]')) {
                      tbody.innerHTML =
