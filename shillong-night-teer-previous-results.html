@@ -1594,7 +1594,6 @@
                errorDiv = $("errorMessage"),
                resultsCount = $("resultsCount");
             const GAME_NAME = "shillong night";
-            const GAME_ID = "SHN1";
 
             function parseDate(dateStr) {
                if (!dateStr || dateStr === "0000-00-00") return null;
@@ -1829,14 +1828,14 @@
             async function loadData() {
                try {
                   const res = await fetch(
-                     `https://results.teeronline.com/api/game-history?game=${encodeURIComponent(GAME_ID)}`,
+                     "https://results.teeronline.com/api/game-history?game=SHN1",
                      { cache: "default" },
                   );
                   if (!res.ok)
                      throw new Error(
-                        `HTTP ${res.status} - Game history is temporarily unavailable`,
+                        `HTTP ${res.status} - File not found at https://results.teeronline.com/api/game-history?game=SHN1`,
                      );
-                  originalData = extractData((await res.json())?.results || []).sort(
+                  originalData = extractData(await res.json()).sort(
                      (a, b) => parseDate(b.date) - parseDate(a.date),
                   );
                   if (!originalData.length)
@@ -1865,7 +1864,7 @@
                   if (errorDiv) {
                      errorDiv.hidden = false;
                      errorDiv.style.display = "block";
-                     errorDiv.innerHTML = `<strong>❌ Failed to load game history</strong><br><br>${err.message}<br><br>Please try again in a moment.`;
+                     errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/api/game-history?game=SHN1</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
                   }
                   if (resultsCount)
                      resultsCount.textContent = "📊 Error loading data";

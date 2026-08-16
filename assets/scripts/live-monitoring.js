@@ -50,7 +50,6 @@
 
   const findRecord = (payload) => {
     if (!payload || !gameId) return null;
-    if (payload.record && typeof payload.record === "object") return payload.record;
     if (payload.records && !Array.isArray(payload.records)) {
       return payload.records[gameId] || null;
     }
@@ -58,9 +57,7 @@
       ? payload
       : Array.isArray(payload.records)
         ? payload.records
-        : Array.isArray(payload.results)
-          ? payload.results
-          : [];
+        : [];
     return rows.find((row) =>
       String(row.gameId || row.game || row.g || "").toUpperCase() === gameId
     ) || null;

@@ -1,9 +1,8 @@
 (() => {
   "use strict";
 
-  const RESULTS_ORIGIN = "https://results.teeronline.com";
-  const GAME_RESULT_URL = `${RESULTS_ORIGIN}/api/game-result`;
-  const GAME_HISTORY_URL = `${RESULTS_ORIGIN}/api/game-history`;
+  const LATEST_URL = "https://results.teeronline.com/api/game-result";
+  const RECENT_URL = "https://results.teeronline.com/api/game-history";
 
   const validNumber = value => /^(?:\d{1,2})$/.test(String(value ?? "").trim());
   const normalizedNumber = value => String(value).trim().padStart(2, "0");
@@ -106,8 +105,8 @@
     try {
       const cacheBust = Date.now();
       const [latestResponse, recentResponse] = await Promise.all([
-        fetch(`${GAME_RESULT_URL}?game=${encodeURIComponent(gameId)}&v=${cacheBust}`, { cache: "no-store" }),
-        fetch(`${GAME_HISTORY_URL}?game=${encodeURIComponent(gameId)}&v=${cacheBust}`, { cache: "no-store" })
+        fetch(`${LATEST_URL}?game=${encodeURIComponent(gameId)}&v=${cacheBust}`, { cache: "no-store" }),
+        fetch(`${RECENT_URL}?game=${encodeURIComponent(gameId)}&v=${cacheBust}`, { cache: "no-store" })
       ]);
 
       if (!latestResponse.ok || !recentResponse.ok) return;

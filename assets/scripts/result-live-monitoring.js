@@ -35,7 +35,7 @@
   const clock=v=>{if(!v)return"";const d=new Date(v);if(Number.isNaN(d.getTime()))return"";return new Intl.DateTimeFormat("en-IN",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true}).format(d)+" IST"};
   const stamp=round=>clock(round==="fr"?record?.frUpdatedAt:record?.srUpdatedAt);
   const fmt=t=>{const n=t%1440,d=new Date(2000,0,1,Math.floor(n/60),n%60);return new Intl.DateTimeFormat("en-IN",{hour:"numeric",minute:"2-digit",hour12:true}).format(d)};
-  const refreshRecord=async()=>{if(loading)return;loading=true;try{const r=await fetch(`${ENDPOINT}?game=${encodeURIComponent(gameId)}`,{cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});if(r.ok){const j=await r.json();record=j?.record||null}}catch(_){/* banner remains functional without timestamp */}finally{loading=false;evaluate()}};
+  const refreshRecord=async()=>{if(loading)return;loading=true;try{const r=await fetch(`${ENDPOINT}?game=${encodeURIComponent(gameId)}`,{cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});if(r.ok){const j=await r.json();record=j?.record||j?.records?.[gameId]||null}}catch(_){/* banner remains functional without timestamp */}finally{loading=false;evaluate()}};
 
   function evaluate(){
     if(!navigator.onLine){set("offline","!","Connection Interrupted","Your browser is offline. The displayed result remains unchanged until the connection returns.","OFFLINE");return}

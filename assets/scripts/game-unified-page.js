@@ -21,11 +21,12 @@
   }
 
   const prefix = GAME_ID.toLowerCase();
-  const GAME_RESULT_URL = config.endpoints.gameResult;
-  const GAME_HISTORY_URL = config.endpoints.gameHistory;
+  const LATEST_URL = `${config.endpoints.latestResults}?game=${encodeURIComponent(GAME_ID)}`;
   const LATEST_VERSION_URL = config.endpoints.latestVersion;
-  const POLLING_PLAN_URL = config.endpoints.pollingPlan;
-  const COMMON_NUMBERS_URL = config.endpoints.commonNumbers;
+  const RECENT_URL = `${config.endpoints.recentResults}?game=${encodeURIComponent(GAME_ID)}`;
+  const POLLING_PLAN_URL = `${config.endpoints.pollingPlan}?game=${encodeURIComponent(GAME_ID)}`;
+  const COMMON_NUMBERS_URL = `${config.endpoints.commonNumbers}?game=${encodeURIComponent(GAME_ID)}`;
+  const ALL_RESULTS_URL = RECENT_URL;
 
   let loadingLatest = null;
   let loadingLatestVersion = null;
@@ -183,13 +184,13 @@
   async function fetchLatest() {
     if (loadingLatest) return loadingLatest;
     loadingLatest = (async () => {
-      const response = await fetch(`${GAME_RESULT_URL}?game=${encodeURIComponent(GAME_ID)}`, {
+      const response = await fetch(LATEST_URL, {
         cache: "no-store",
         referrerPolicy: "no-referrer"
       });
       if (!response.ok) throw new Error(`Latest results request failed: ${response.status}`);
       const data = await response.json();
-      const record = normalizeItem(data?.record || {});
+      const record = normalizeItem(data?.record ?? data?.records?.[GAME_ID] ?? data?.[GAME_ID] ?? {});
       latestResultRecord = record?.date ? record : latestResultRecord;
       return record;
     })();
@@ -203,12 +204,12 @@
   async function fetchRecent() {
     if (loadingRecent) return loadingRecent;
     loadingRecent = (async () => {
-      const response = await fetch(`${GAME_HISTORY_URL}?game=${encodeURIComponent(GAME_ID)}`, {
+      const response = await fetch(RECENT_URL, {
         cache: "no-store",
         referrerPolicy: "no-referrer"
       });
       if (!response.ok) throw new Error(`Recent results request failed: ${response.status}`);
-      return normalize((await response.json())?.results || [])
+      return normalize(await response.json())
         .map(normalizeItem)
         .filter(item => item.gameId === GAME_ID && item.date && valid(item.fr) && valid(item.sr))
         .sort((a, b) => dateValue(b.date) - dateValue(a.date));
@@ -638,9 +639,9 @@
   async function fetchAllResults() {
     if (loadingAllResults) return loadingAllResults;
     loadingAllResults = (async () => {
-      const response = await fetch(`${GAME_HISTORY_URL}?game=${encodeURIComponent(GAME_ID)}`, { cache: "no-store", referrerPolicy: "no-referrer" });
-      if (!response.ok) throw new Error(`Game history request failed: ${response.status}`);
-      return normalize((await response.json())?.results || []).map(normalizeItem);
+      const response = await fetch(ALL_RESULTS_URL, { cache: "no-store", referrerPolicy: "no-referrer" });
+      if (!response.ok) throw new Error(`All results request failed: ${response.status}`);
+      return extractGameRecords(await response.json());
     })();
     try {
       return await loadingAllResults;
@@ -655,7 +656,7 @@
       const response = await fetch(COMMON_NUMBERS_URL, { cache: "no-store", referrerPolicy: "no-referrer" });
       if (!response.ok) throw new Error(`Common numbers request failed: ${response.status}`);
       const payload = await response.json();
-      return payload?.games?.[GAME_ID] || null;
+      return payload && typeof payload === "object" && payload.ok === false ? null : payload;
     })();
     try {
       return await loadingCommonNumbers;
@@ -670,7 +671,10 @@
         cache: "no-store",
         referrerPolicy: "no-referrer"
       });
-      if (response.ok) pollingPlan = await response.json();
+      if (response.ok) {
+        const payload = await response.json();
+        pollingPlan = { games: { [GAME_ID]: payload?.plan || null } };
+      }
     } catch (error) {
       console.warn(`${GAME_ID} polling plan request failed:`, error);
     }

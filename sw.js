@@ -9,18 +9,6 @@ const STATIC_ASSETS = [
   '/assets/img/logo.webp'
 ];
 
-const LIVE_JSON_PREFIX = "/api/game-";
-
-function isLiveResultJson(requestUrl) {
-  try {
-    const url = new URL(requestUrl);
-    return url.hostname === 'results.teeronline.com' && url.pathname.startsWith(LIVE_JSON_PREFIX) &&
-      (url.pathname === '/api/game-result' || url.pathname === '/api/game-history');
-  } catch (_) {
-    return false;
-  }
-}
-
 async function cacheSuccessfulResponse(request, response) {
   if (!response || !response.ok) return response;
   const cache = await caches.open(CACHE_NAME);
@@ -53,19 +41,6 @@ async function staleResultResponse(request, reason) {
     statusText: 'OK (last known result)',
     headers
   });
-}
-
-async function liveJsonNetworkFirst(request) {
-  try {
-    const response = await fetch(request, { cache: 'no-store' });
-    if (response && response.ok) {
-      await cacheSuccessfulResponse(request, response);
-      return response;
-    }
-    return staleResultResponse(request, `http-${response ? response.status : 'unknown'}`);
-  } catch (error) {
-    return staleResultResponse(request, error && error.name ? error.name : 'network-error');
-  }
 }
 
 async function navigationNetworkFirst(request) {
@@ -113,11 +88,6 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
-
-  if (isLiveResultJson(request.url)) {
-    event.respondWith(liveJsonNetworkFirst(request));
-    return;
-  }
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;

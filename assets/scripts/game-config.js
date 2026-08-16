@@ -209,11 +209,11 @@
   ]);
 
   const ENDPOINTS = Object.freeze({
-    gameResult: `${RESULTS_ORIGIN}/api/game-result`,
-    gameHistory: `${RESULTS_ORIGIN}/api/game-history`,
+    latestResults: `${RESULTS_ORIGIN}/api/game-result`,
     latestVersion: `${RESULTS_ORIGIN}/latest-version.json`,
-    pollingPlan: `${RESULTS_ORIGIN}/polling-plan.json`,
-    commonNumbers: `${RESULTS_ORIGIN}/common-numbers.json`
+    recentResults: `${RESULTS_ORIGIN}/api/game-history`,
+    pollingPlan: `${RESULTS_ORIGIN}/api/polling-plan`,
+    commonNumbers: `${RESULTS_ORIGIN}/api/common-numbers`
   });
 
   const ALIAS_TO_GAME_ID = Object.freeze(GAME_ORDER.reduce((map, gameId) => {

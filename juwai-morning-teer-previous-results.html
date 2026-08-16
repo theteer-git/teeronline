@@ -1527,7 +1527,6 @@
                errorDiv = $("errorMessage"),
                resultsCount = $("resultsCount");
             const GAME_NAME = "juwai morning";
-            const GAME_ID = "JWM";
 
             function parseDate(dateStr) {
                if (!dateStr || dateStr === "0000-00-00") return null;
@@ -1782,14 +1781,14 @@
             async function loadData() {
                try {
                   const res = await fetch(
-                     `https://results.teeronline.com/api/game-history?game=${encodeURIComponent(GAME_ID)}`,
+                     "https://results.teeronline.com/api/game-history?game=JWM",
                      { cache: "default" },
                   );
                   if (!res.ok)
                      throw new Error(
-                        `HTTP ${res.status} - Game history is temporarily unavailable`,
+                        `HTTP ${res.status} - File not found at https://results.teeronline.com/api/game-history?game=JWM`,
                      );
-                  originalData = extractData((await res.json())?.results || []).sort(
+                  originalData = extractData(await res.json()).sort(
                      (a, b) =>
                         (parseDate(b.date) || 0) - (parseDate(a.date) || 0),
                   );
@@ -1813,7 +1812,7 @@
                   loadingDiv.hidden = true;
                   loadingDiv.style.display = "none";
                   errorDiv.hidden = false;
-                  errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "juwai morning"</code>.`;
+                  errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/api/game-history?game=JWM</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "juwai morning"</code>.`;
                   resultsCount.textContent = "📊 Error loading data";
                   if (!tbody.querySelector('tr[data-static-archive-row="true"]')) {
                      tbody.innerHTML =
