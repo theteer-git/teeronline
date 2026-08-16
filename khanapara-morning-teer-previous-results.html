@@ -1555,13 +1555,14 @@
                try {
                   const res = await fetch(
                      `https://results.teeronline.com/api/game-history?game=KHM`,
-                     { cache: "default" },
+                     { cache: "no-store" },
                   );
                   if (!res.ok)
                      throw new Error(
-                        `HTTP ${res.status} - File not found at https://results.teeronline.com/api/game-history?game=KHM`,
+                        `HTTP ${res.status} - Unable to load game history for KHM`,
                      );
-                  originalData = extractData(await res.json()).sort(
+                  const payload = await res.json();
+                  originalData = extractData(payload?.records || payload).sort(
                      (a, b) =>
                         (parseDate(b.date) || 0) - (parseDate(a.date) || 0),
                   );
@@ -1585,7 +1586,7 @@
                   loadingDiv.hidden = true;
                   loadingDiv.style.display = "none";
                   errorDiv.hidden = false;
-                  errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/api/game-history?game=KHM</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "khanapara morning"</code>.`;
+                  errorDiv.innerHTML = `<strong>❌ Failed to load KHM game history</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "khanapara morning"</code>.`;
                   resultsCount.textContent = "📊 Error loading data";
                   if (!tbody.querySelector('tr[data-static-archive-row="true"]')) {
                      tbody.innerHTML =

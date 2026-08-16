@@ -2104,13 +2104,14 @@
                try {
                   const res = await fetch(
                      `https://results.teeronline.com/api/game-history?game=SHM`,
-                     { cache: "default" },
+                     { cache: "no-store" },
                   );
                   if (!res.ok)
                      throw new Error(
-                        `HTTP ${res.status} - File not found at https://results.teeronline.com/api/game-history?game=SHM`,
+                        `HTTP ${res.status} - Unable to load game history for SHM`,
                      );
-                  originalData = extractData(await res.json()).sort(
+                  const payload = await res.json();
+                  originalData = extractData(payload?.records || payload).sort(
                      (a, b) => parseDate(b.date) - parseDate(a.date),
                   );
                   if (!originalData.length)
@@ -2134,7 +2135,7 @@
                   loadingDiv.style.display = "none";
                   errorDiv.hidden = false;
                   errorDiv.style.display = "block";
-                  errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/api/game-history?game=SHM</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+                  errorDiv.innerHTML = `<strong>❌ Failed to load SHM game history</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
                   resultsCount.textContent = "📊 Error loading data";
                   if (!tbody.querySelector('tr[data-static-archive-row="true"]')) {
                      tbody.innerHTML =
