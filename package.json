@@ -32,7 +32,8 @@
     "gate:task13:batch-f": "node assets/scripts/validate-task13-batch-f.js",
     "gate:task13:final": "npm run gate:task13 && npm run gate:task13:batch-f && npm run validate:technical-seo && npm run validate:content-quality && npm run validate:stage8-seo && npm run gate:task12:batch7",
     "validate:production-package": "node assets/scripts/validate-production-package.js",
-    "gate:production": "npm run validate:game-config && npm run validate:unified-games && npm run validate:content-quality && npm run validate:production-package"
+    "gate:production": "npm run validate:game-config && npm run validate:unified-games && npm run validate:content-quality && npm run validate:production-package",
+    "refresh:seo": "node assets/scripts/refresh-seo-content.js"
   },
   "dependencies": {
     "axios": "^1.17.0",

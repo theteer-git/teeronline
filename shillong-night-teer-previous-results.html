@@ -1868,7 +1868,7 @@
                   }
                   if (resultsCount)
                      resultsCount.textContent = "📊 Error loading data";
-                  if (tbody)
+                  if (tbody && !tbody.querySelector('tr[data-static-archive-row="true"]'))
                      tbody.innerHTML =
                         '<tr><td colspan="4">Unable to load results.</td></tr>';
                }

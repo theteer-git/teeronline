@@ -1851,8 +1851,10 @@
                   errorDiv.style.display = "block";
                   errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
                   resultsCount.textContent = "📊 Error loading data";
-                  tbody.innerHTML =
-                     '<tr><td colspan="4">Unable to load results.</td></tr>';
+                  if (!tbody.querySelector('tr[data-static-archive-row="true"]')) {
+                     tbody.innerHTML =
+                        '<tr><td colspan="4">Unable to load results.</td></tr>';
+                  }
                }
             }
             function initDarkMode() {
