@@ -21,12 +21,13 @@
   }
 
   const prefix = GAME_ID.toLowerCase();
-  const LATEST_URL = `${config.endpoints.latestResults}?game=${encodeURIComponent(GAME_ID)}`;
-  const LATEST_VERSION_URL = `${config.endpoints.latestVersion}?game=${encodeURIComponent(GAME_ID)}`;
-  const RECENT_URL = `${config.endpoints.recentResults}?game=${encodeURIComponent(GAME_ID)}`;
-  const POLLING_PLAN_URL = `${config.endpoints.pollingPlan}?game=${encodeURIComponent(GAME_ID)}`;
-  const COMMON_NUMBERS_URL = `${config.endpoints.commonNumbers}?game=${encodeURIComponent(GAME_ID)}`;
-  const ALL_RESULTS_URL = `${config.endpoints.allResults}?game=${encodeURIComponent(GAME_ID)}`;
+  const API_ORIGIN = "https://results.teeronline.com";
+  const LATEST_URL = `${API_ORIGIN}/api/game-result?game=${encodeURIComponent(GAME_ID)}`;
+  const LATEST_VERSION_URL = `${API_ORIGIN}/api/latest-version?game=${encodeURIComponent(GAME_ID)}`;
+  const RECENT_URL = `${API_ORIGIN}/api/game-history?game=${encodeURIComponent(GAME_ID)}`;
+  const POLLING_PLAN_URL = `${API_ORIGIN}/api/polling-plan?game=${encodeURIComponent(GAME_ID)}`;
+  const COMMON_NUMBERS_URL = `${API_ORIGIN}/api/common-numbers?game=${encodeURIComponent(GAME_ID)}`;
+  const ALL_RESULTS_URL = `${API_ORIGIN}/api/game-history?game=${encodeURIComponent(GAME_ID)}`;
 
   let loadingLatest = null;
   let loadingLatestVersion = null;
