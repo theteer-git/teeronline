@@ -85,7 +85,7 @@
       canonicalPath: "/juwai-teer-results",
       legacyArchivePath: "/juwai-teer-previous-results",
       previousResultsPath: "/juwai-teer-previous-results",
-      rounds: Object.freeze({ fr: "14:30", sr: "15:15" }),
+      rounds: Object.freeze({ fr: "14:00", sr: "14:40" }),
       roundLabels: Object.freeze({ fr: "First Round", sr: "Second Round" }),
       weeklyOffDays: Object.freeze([0]),
       crossesMidnight: false,
