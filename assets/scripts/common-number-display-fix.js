@@ -2,7 +2,7 @@
   "use strict";
 
   const LATEST_URL = "https://results.teeronline.com/api/game-result";
-  const RECENT_URL = "https://results.teeronline.com/api/game-history"
+  const RECENT_URL = "https://results.teeronline.com/api/game-history";
 
   const validNumber = value => /^(?:\d{1,2})$/.test(String(value ?? "").trim());
   const normalizedNumber = value => String(value).trim().padStart(2, "0");

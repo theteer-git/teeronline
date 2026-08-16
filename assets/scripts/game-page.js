@@ -112,8 +112,8 @@
     if (loadingLatest) return loadingLatest;
     loadingLatest = (async () => {
       const previous = latestRecord;
-      const payload = await fetchJson(`${config.endpoints.gameResult}?game=${encodeURIComponent(gameId)}`);
-      latestRecord = normalize(payload?.record || {});
+      const latestPayload = await fetchJson(`${config.endpoints.latestResults}?game=${encodeURIComponent(gameId)}`);
+      latestRecord = latestPayload?.record || extractLatest(latestPayload);
       const signature = latestRecord ? `${latestRecord.date}|${latestRecord.fr}|${latestRecord.sr}` : "none";
       if (lastSignature && signature !== lastSignature) emit("result_changed", { status: latestRecord?.status || "missing" });
       lastSignature = signature;
@@ -126,8 +126,7 @@
   async function loadRecent() {
     if (loadingRecent) return loadingRecent;
     loadingRecent = (async () => {
-      const payload = await fetchJson(`${config.endpoints.gameHistory}?game=${encodeURIComponent(gameId)}`);
-      recentRecords = normalizedList(payload?.results || []).filter((row) => row.gameId === gameId).sort((a,b) => dateValue(b.date) - dateValue(a.date)).slice(0,7);
+      recentRecords = normalizedList((await fetchJson(`${config.endpoints.recentResults}?game=${encodeURIComponent(gameId)}`))?.records || []).filter((row) => row.gameId === gameId).sort((a,b) => dateValue(b.date) - dateValue(a.date)).slice(0,7);
       renderPrevious(); renderStats();
     })().catch((error) => renderError("Unable to load recent results.", error)).finally(() => { loadingRecent = null; });
     return loadingRecent;
@@ -135,7 +134,7 @@
 
   async function loadPlan() {
     if (loadingPlan) return loadingPlan;
-    loadingPlan = fetchJson(config.endpoints.pollingPlan).then((value) => { pollingPlan = value; scheduleResultPoll(); }).catch((error) => console.warn("Polling plan unavailable; using idle interval.", error)).finally(() => { loadingPlan = null; });
+    loadingPlan = fetchJson(`${config.endpoints.pollingPlan}?game=${encodeURIComponent(gameId)}`).then((value) => { pollingPlan = value?.plan || value; scheduleResultPoll(); }).catch((error) => console.warn("Polling plan unavailable; using idle interval.", error)).finally(() => { loadingPlan = null; });
     return loadingPlan;
   }
 

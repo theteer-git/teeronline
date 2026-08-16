@@ -208,15 +208,13 @@
     Object.freeze({ label: "Disclaimer", path: "/disclaimer" })
   ]);
 
-  const API_ORIGIN = "https://results.teeronline.com";
   const ENDPOINTS = Object.freeze({
-    latestResults: `${API_ORIGIN}/api/game-result`,
-    latestVersion: `${API_ORIGIN}/api/latest-version`,
-    recentResults: `${API_ORIGIN}/api/game-history`,
-    pollingPlan: `${API_ORIGIN}/api/polling-plan`,
-    commonNumbers: `${API_ORIGIN}/api/common-numbers`,
-    allResults: `${API_ORIGIN}/api/game-history`
-  });;
+    latestResults: `${RESULTS_ORIGIN}/api/game-result`,
+    latestVersion: `${RESULTS_ORIGIN}/api/latest-version`,
+    recentResults: `${RESULTS_ORIGIN}/api/game-history`,
+    pollingPlan: `${RESULTS_ORIGIN}/api/polling-plan`,
+    commonNumbers: `${RESULTS_ORIGIN}/api/common-numbers`
+  });
 
   const ALIAS_TO_GAME_ID = Object.freeze(GAME_ORDER.reduce((map, gameId) => {
     map[gameId] = gameId;

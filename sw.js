@@ -10,6 +10,9 @@ const STATIC_ASSETS = [
 ];
 
 const LIVE_JSON_PATHS = new Set([
+  '/latest-results.json',
+  '/recent-results.json',
+  '/all-results.json'
 ]);
 
 function isLiveResultJson(requestUrl) {

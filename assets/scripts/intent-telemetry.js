@@ -40,9 +40,9 @@
     const key=`${round}:${value}`;
     if (seenValues.has(key)) return;
     seenValues.add(key);
-    fetch(`https://results.teeronline.com/api/game-result?game=${encodeURIComponent(String(document.body.dataset.gameId||""))}&t=${Date.now()}`,{cache:"no-store"})
+    fetch(`https://results.teeronline.com/api/game-result?game=${encodeURIComponent(gameId)}&t=${Date.now()}`,{cache:"no-store"})
       .then(r=>r.json()).then(data=>{
-        const record=data?.records?.[gameId]||{};
+        const record=data?.record||data?.records?.[gameId]||{};
         const capturedAt=record?.[`${round}UpdatedAt`]||record?.lastCheckedAt||"";
         const capturedMs=Date.parse(capturedAt);
         const delay=Number.isFinite(capturedMs)?Math.max(0,Date.now()-capturedMs):0;
