@@ -1,5 +1,5 @@
 // sw.js - resilient static caching and last-known-good live result fallback
-const CACHE_NAME = 'teer-v5-last-known-results';
+const CACHE_NAME = 'teer-v6-api-only-results';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -10,9 +10,11 @@ const STATIC_ASSETS = [
 ];
 
 const LIVE_JSON_PATHS = new Set([
-  '/latest-results.json',
-  '/recent-results.json',
-  '/all-results.json'
+  '/api/game-result',
+  '/api/game-history',
+  '/api/common-numbers',
+  '/api/polling-plan',
+  '/api/latest-version'
 ]);
 
 function isLiveResultJson(requestUrl) {
