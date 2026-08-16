@@ -1,5 +1,5 @@
 // sw.js - resilient static caching and last-known-good live result fallback
-const CACHE_NAME = 'teer-v5-last-known-results';
+const CACHE_NAME = 'teer-v6-private-json-api';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
@@ -88,6 +88,7 @@ self.addEventListener('activate', event => {
 self.addEventListener('fetch', event => {
   const request = event.request;
   if (request.method !== 'GET') return;
+
 
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
