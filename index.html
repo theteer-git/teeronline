@@ -42,9 +42,9 @@
     var d=new Date();
     var ist=new Date(d.getTime()+5.5*3600000);
     var today=ist.toISOString().slice(0,10);
-    var raw={"@context": "https://schema.org", "@type": "NewsArticle", "@id": "https://teeronline.com/#newsarticle", "headline": "Shillong Teer Result Today – Live FR and SR", "name": "Shillong Teer Result Today – Live FR and SR", "description": "Check today's Shillong Teer result for FR at 4:15 PM and SR at 5:15 PM IST.", "url": "https://teeronline.com/", "datePublished": "2026-08-16T00:00:00+05:30", "dateModified":"2026-08-16T00:00:00+05:30", "image": {"@type": "ImageObject", "url": "https://teeronline.com/assets/img/logo.webp", "width": 1200, "height": 630}, "author": {"@type": "Organization", "name": "TeerOnline.com", "url": "https://teeronline.com/"}, "publisher": {"@type": "Organization", "name": "TeerOnline.com", "url": "https://teeronline.com/", "logo": {"@type": "ImageObject", "url": "https://teeronline.com/assets/img/logo.webp", "width": 600, "height": 60}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://teeronline.com/"}, "inLanguage": "en-IN", "isAccessibleForFree": true, "articleSection": "Shillong Teer Results", "keywords": "shillong teer result today, shillong teer fr sr, teer result", "about": [{"@type": "Place", "name": "Meghalaya, India"}]};
-    raw.datePublished=today+'T00:00:00+05:30';
-    raw.dateModified=today+'T00:00:00+05:30';
+    var raw={"@context": "https://schema.org", "@type": "NewsArticle", "@id": "https://teeronline.com/#newsarticle", "headline": "Shillong Teer Result Today – Live FR and SR", "name": "Shillong Teer Result Today – Live FR and SR", "description": "Check today's Shillong Teer result for FR at 4:15 PM and SR at 5:15 PM IST.", "url": "https://teeronline.com/", "datePublished": "2026-08-16T00:00:00+05:30", "dateModified": "2026-08-16T00:00:00+05:30", "image": {"@type": "ImageObject", "url": "https://teeronline.com/assets/img/logo.webp", "width": 1200, "height": 630}, "author": {"@type": "Organization", "name": "TeerOnline.com", "url": "https://teeronline.com/"}, "publisher": {"@type": "Organization", "name": "TeerOnline.com", "url": "https://teeronline.com/", "logo": {"@type": "ImageObject", "url": "https://teeronline.com/assets/img/logo.webp", "width": 600, "height": 60}}, "mainEntityOfPage": {"@type": "WebPage", "@id": "https://teeronline.com/"}, "inLanguage": "en-IN", "isAccessibleForFree": true, "articleSection": "Shillong Teer Results", "keywords": "shillong teer result today, shillong teer fr sr, teer result", "about": [{"@type": "Place", "name": "Meghalaya, India"}]};
+    raw.datePublished=today;
+    raw.dateModified=today;
     var s=document.createElement('script');
     s.type='application/ld+json';
     s.id='news-article-ld';
@@ -99,7 +99,42 @@
 .teeronline-fixed-buttons .to-whatsapp-btn:hover{transform:scale(1.08)}
 .teeronline-fixed-buttons img{width:28px;height:28px}
 </style>
-</head>
+    <script type="application/ld+json" id="teeronline-page-schema">
+{
+  "@context": "https://schema.org",
+  "@type": "NewsArticle",
+  "headline": "Shillong Teer Result Today \u2013 Live FR and SR",
+  "description": "Check today's Shillong Teer result for FR at 4:15 PM and SR at 5:15 PM IST.",
+  "url": "https://teeronline.com/",
+  "datePublished": "2026-08-16T00:00:00+05:30",
+  "dateModified": "2026-08-16T00:00:00+05:30",
+  "author": {
+    "@type": "Organization",
+    "name": "TeerOnline.com",
+    "url": "https://teeronline.com/"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "TeerOnline.com",
+    "url": "https://teeronline.com/",
+    "logo": {
+      "@type": "ImageObject",
+      "url": "https://teeronline.com/assets/img/logo.webp",
+      "width": 600,
+      "height": 60
+    }
+  },
+  "articleSection": "Shillong Teer Results",
+  "keywords": "shillong teer result today, shillong teer fr sr, teer result",
+  "image": {
+    "@type": "ImageObject",
+    "url": "https://teeronline.com/assets/img/logo.webp",
+    "width": 600,
+    "height": 60
+  }
+}
+</script>
+  </head>
   <body data-game-id="SHD" data-page-type="homepage"><a class="skip-link" href="#main-content">Skip to main content</a>
   <header class="sticky-header">
     <div class="container header-inner">
