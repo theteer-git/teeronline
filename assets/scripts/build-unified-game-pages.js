@@ -70,6 +70,9 @@ for (const gameId of config.gameOrder) {
 
   $("html").attr("lang", "en-IN");
   $("body").attr("data-game-id", gameId);
+  if (!$("script[data-teer-dark-mode]").length) {
+    $('meta[name="theme-color"]').after(`<script data-teer-dark-mode="1">(function(){try{var k="darkMode";var on=localStorage.getItem(k)==="true";document.documentElement.classList.toggle("dark",on);document.addEventListener("DOMContentLoaded",function(){var t=document.getElementById("darkModeToggle");if(!t)return;document.body.classList.toggle("dark",on);t.textContent=on?"☀️ Light":"🌓 Dark";if(t.dataset.darkBound==="1")return;t.dataset.darkBound="1";t.addEventListener("click",function(){on=!document.body.classList.contains("dark");localStorage.setItem(k,on);document.documentElement.classList.toggle("dark",on);document.body.classList.toggle("dark",on);t.textContent=on?"☀️ Light":"🌓 Dark";});});}catch(e){}})();</script>`);
+  }
   $("title").text(`${game.name} Result Today Live | FR SR, Common Numbers & Statistics`);
   $('meta[name="description"]').attr("content", `Check ${game.name} result today live with FR and SR publication time, previous 7 results, common numbers and complete statistics.`);
   $('link[rel="canonical"]').attr("href", canonical);
