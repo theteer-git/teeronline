@@ -1,17 +1,23 @@
 "use strict";
 
 (() => {
+  function applyDarkMode(isDark, toggle) {
+    document.documentElement.classList.toggle("dark", isDark);
+    document.body.classList.toggle("dark", isDark);
+    if (toggle) toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
+  }
+
   function initDarkMode() {
     const toggle = document.getElementById("darkModeToggle");
     if (!toggle) return;
     const stored = localStorage.getItem("darkMode") === "true";
-    if (stored) document.body.classList.add("dark");
-    toggle.textContent = stored ? "☀️ Light" : "🌓 Dark";
+    applyDarkMode(stored, toggle);
+    if (toggle.dataset.darkBound === "1") return;
+    toggle.dataset.darkBound = "1";
     toggle.addEventListener("click", () => {
-      document.body.classList.toggle("dark");
-      const isDark = document.body.classList.contains("dark");
+      const isDark = !document.body.classList.contains("dark");
       localStorage.setItem("darkMode", isDark);
-      toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
+      applyDarkMode(isDark, toggle);
     });
   }
   initDarkMode();
