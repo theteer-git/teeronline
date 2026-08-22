@@ -12,17 +12,17 @@
     const brand = header && header.querySelector(".logo-wrapper");
     const toggle = document.getElementById("darkModeToggle");
     if (brand && toggle && toggle.parentElement !== brand) brand.appendChild(toggle);
+    const crumbs = document.querySelector('nav[aria-label="Breadcrumb"], nav.task4-breadcrumb');
+    if (header && crumbs && crumbs.previousElementSibling !== header) {
+      header.insertAdjacentElement("afterend", crumbs);
+    }
     const main = document.querySelector("main");
-    const hero = main && main.querySelector(":scope > .hero");
-    const crumbs = main && main.querySelector(":scope > .task4-breadcrumb");
-    if (hero && !document.querySelector(".page-mast")) {
+    const hero = main && main.querySelector(":scope > .hero, .page-mast > .hero");
+    if (hero && !hero.closest(".page-mast")) {
       const mast = document.createElement("div");
       mast.className = "page-mast";
-      if (crumbs) mast.appendChild(crumbs);
+      hero.parentNode.insertBefore(mast, hero);
       mast.appendChild(hero);
-      const live = main.querySelector("#live_result, [data-semantic-section='live_result']");
-      if (live) main.insertBefore(mast, live.nextSibling);
-      else main.insertBefore(mast, main.firstChild);
     }
     document.querySelectorAll(".more-games, #teer-more-games").forEach((node) => node.remove());
     if (!header || !nav || document.getElementById("teerNavToggle")) return;
