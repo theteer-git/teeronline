@@ -1,6 +1,21 @@
 "use strict";
 
 (() => {
+  function initDarkMode() {
+    const toggle = document.getElementById("darkModeToggle");
+    if (!toggle) return;
+    const stored = localStorage.getItem("darkMode") === "true";
+    if (stored) document.body.classList.add("dark");
+    toggle.textContent = stored ? "☀️ Light" : "🌓 Dark";
+    toggle.addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const isDark = document.body.classList.contains("dark");
+      localStorage.setItem("darkMode", isDark);
+      toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
+    });
+  }
+  initDarkMode();
+
   const config = globalThis.TEER_GAME_CONFIG;
   const GAME_ID = String(document.body?.dataset?.gameId || "").toUpperCase();
   const COMMON_PUBLICATION_TIMES = Object.freeze({

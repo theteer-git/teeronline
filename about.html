@@ -1320,23 +1320,6 @@
          </div>
       </div>
       <script>
-         // Dark Mode Toggle
-         const initDarkMode = () => {
-            const toggleBtn = document.getElementById("darkModeToggle");
-            const isDark = localStorage.getItem("darkModeAbout") === "true";
-            if (isDark) document.body.classList.add("dark");
-            if (toggleBtn) {
-               toggleBtn.addEventListener("click", () => {
-                  document.body.classList.toggle("dark");
-                  const darkEnabled = document.body.classList.contains("dark");
-                  localStorage.setItem("darkModeAbout", darkEnabled);
-                  toggleBtn.textContent = darkEnabled ? "☀️ Light" : "🌓 Dark";
-               });
-               if (isDark) toggleBtn.textContent = "☀️ Light";
-               else toggleBtn.textContent = "🌓 Dark";
-            }
-         };
-
          // Refresh button
          const refreshBtn = document.getElementById("refreshPage");
          if (refreshBtn) {
@@ -1348,7 +1331,6 @@
          // Set copyright year
          document.getElementById("ThisYear").innerHTML =
             new Date().getFullYear();
-         initDarkMode();
       </script>
       <script>
          (function () {
