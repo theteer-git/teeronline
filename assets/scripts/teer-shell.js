@@ -22,12 +22,14 @@
     else fn();
   }
 
-  function initMenu() {
+  function layoutChrome() {
     const header = document.querySelector(".sticky-header");
     const nav = document.querySelector("nav.nav-links, nav.nav, nav.primary-nav");
+    const brand = header && header.querySelector(".logo-wrapper");
+    const toggle = document.getElementById("darkModeToggle");
+    if (brand && toggle && toggle.parentElement !== brand) brand.appendChild(toggle);
     if (!header || !nav || document.getElementById("teerNavToggle")) return;
     if (!nav.id) nav.id = "siteNav";
-    const brand = header.querySelector(".logo-wrapper") || header.querySelector(".header-inner") || header;
     const btn = document.createElement("button");
     btn.id = "teerNavToggle";
     btn.type = "button";
@@ -36,7 +38,7 @@
     btn.setAttribute("aria-expanded", "false");
     btn.setAttribute("aria-label", "Open menu");
     btn.textContent = "Menu";
-    brand.appendChild(btn);
+    (brand || header).appendChild(btn);
     const close = () => {
       header.classList.remove("nav-open");
       btn.setAttribute("aria-expanded", "false");
@@ -70,7 +72,7 @@
   }
 
   ready(() => {
-    initMenu();
+    layoutChrome();
     addMoreGames();
   });
 })();

@@ -82,9 +82,9 @@ for (const gameId of config.gameOrder) {
   $('meta[name="twitter:title"]').attr("content", `${game.name} Result Today Live`);
   $('meta[name="twitter:description"]').attr("content", `Live ${game.name} FR SR result, previous 7 results, common numbers and complete statistics.`);
   $('link[href="./assets/css/jwd-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css");
-  $('link[href*="game-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css?v=20260822-ux-v3");
+  $('link[href*="game-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css?v=20260822-ux-v4");
   if (!$('link[href*="theme-ux.css"]').length) {
-    $("head").append('<link href="/assets/css/theme-ux.css?v=20260822-ux-v3" rel="stylesheet"/>');
+    $("head").append('<link href="/assets/css/theme-ux.css?v=20260822-ux-v4" rel="stylesheet"/>');
   }
 
   const faqItems = [
