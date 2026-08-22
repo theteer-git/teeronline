@@ -1,8 +1,31 @@
-/* Shared light + dark polish. Does not change markup, IDs, or JS behavior. */
+/* TeerOnline visual layer. Last stylesheet. Does not change markup, IDs, or JS. */
+
 :root{
-  --ux-radius:1rem;
-  --ux-pad:1.05rem;
+  --ux-paper:#f4ece1;
+  --ux-ink:#1c1917;
+  --ux-ember:#c2410c;
+  --ux-ember-deep:#9a3412;
+  --ux-radius:1.15rem;
 }
+html{
+  hanging-punctuation:first last;
+}
+body{
+  font-family:"Segoe UI",system-ui,-apple-system,BlinkMacSystemFont,Roboto,Arial,sans-serif;
+  background:
+    radial-gradient(1200px 480px at 50% -80px,rgba(251,146,60,.18),transparent 70%),
+    var(--bg,var(--ux-paper));
+  color:var(--text,var(--ux-ink));
+  letter-spacing:-.011em;
+}
+.site-title,
+.hero h1,
+.card-title,
+.seo-content h2{
+  font-family:Georgia,"Iowan Old Style","Palatino Linotype",Times,serif;
+  letter-spacing:-.03em;
+}
+
 html.dark,body.dark{
   --bg:#0c0c0e;
   --surface:#171717;
@@ -13,439 +36,528 @@ html.dark,body.dark{
   --border:#3f3f46;
   --accent-line:#3f3f46;
   --accent-soft:#18181b;
-  --shadow:0 14px 36px rgba(0,0,0,.38);
+  --shadow:0 18px 40px rgba(0,0,0,.42);
   color-scheme:dark;
 }
 html.dark body,body.dark{
-  background:var(--bg);
+  background:
+    radial-gradient(900px 380px at 50% -60px,rgba(194,65,12,.22),transparent 68%),
+    #0c0c0e;
   color:var(--text);
 }
 
-/* Navigation */
-.nav-links a[aria-current="page"],
-.nav a[aria-current="page"]{
-  background:var(--accent,#c2410c);
-  color:#fff;
+/* Header */
+.sticky-header{
+  background:rgba(255,253,249,.88);
+  border-bottom:1px solid rgba(194,65,12,.12);
+  box-shadow:0 10px 30px rgba(28,25,23,.04);
+  backdrop-filter:saturate(1.2) blur(16px);
 }
-html.dark .nav-links a,
-html.dark .nav a,
-body.dark .nav-links a,
-body.dark .nav a{
-  background:#241810;
-  color:#fff;
-  border:1px solid #3f3f46;
+html.dark .sticky-header,body.dark .sticky-header{
+  background:rgba(17,17,17,.86);
+  border-bottom-color:#3f3f46;
+  box-shadow:0 10px 28px rgba(0,0,0,.35);
 }
-html.dark .nav-links a[aria-current="page"],
-html.dark .nav a[aria-current="page"],
-body.dark .nav-links a[aria-current="page"],
-body.dark .nav a[aria-current="page"]{
-  background:#c2410c;
-  color:#fff;
-  border-color:#ea580c;
+.logo picture,.logo img{
+  width:72px !important;
+  height:72px !important;
 }
-
-/* Cards, boxes, panels with hardcoded white */
-html.dark .box,
-html.dark .previous-card,
-html.dark .stats-main,
-html.dark .subbox,
-html.dark .trend-chart,
-html.dark .history-panel,
-html.dark .insight-box,
-html.dark .blocked-panel,
-html.dark .formula-panel,
-html.dark .panel-label,
-html.dark .direct,
-html.dark .statnum,
-html.dark .locked-points span,
-html.dark .modal-box,
-html.dark .modal-body,
-html.dark .onpage-seo-block,
-html.dark .seo-content,
-html.dark .result-card,
-html.dark .game-history-card,
-html.dark .hero,
-html.dark .game-card,
-html.dark .task4b-seo,
-html.dark .task4b-key-point,
-body.dark .box,
-body.dark .previous-card,
-body.dark .stats-main,
-body.dark .subbox,
-body.dark .trend-chart,
-body.dark .history-panel,
-body.dark .insight-box,
-body.dark .blocked-panel,
-body.dark .formula-panel,
-body.dark .onpage-seo-block,
-body.dark .seo-content,
-body.dark .task4b-seo,
-body.dark .task4b-key-point{
-  background:var(--card-bg,#1c1c1e);
-  border-color:var(--border,#3f3f46);
-  color:var(--text,#f4f4f5);
+.site-title{
+  font-size:clamp(1.35rem,2.8vw,1.85rem) !important;
+  font-weight:700 !important;
 }
-
-html.dark .seo-content p,
-html.dark .seo-content li,
-html.dark .onpage-seo-block p,
-html.dark .onpage-seo-block li,
-html.dark .task4b-seo p,
-html.dark .hero p,
-html.dark .site-tagline,
-html.dark .prev-label,
-html.dark .prev-date,
-html.dark .mini-timer,
-html.dark .unlock-time,
-html.dark .note-strip,
-html.dark .empty,
-html.dark .chart-legend,
-html.dark .section-title p,
-html.dark .fr-label,
-html.dark .sr-label,
-html.dark .mini-history-date,
-html.dark .task4b-editorial,
-body.dark .seo-content p,
-body.dark .seo-content li,
-body.dark .onpage-seo-block p,
-body.dark .onpage-seo-block li,
-body.dark .task4b-seo p{
-  color:#d4d4d8 !important;
+.site-tagline{
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  font-size:.68rem !important;
+  font-weight:800 !important;
 }
-html.dark .seo-content h2,
-html.dark .seo-content h3,
-html.dark .seo-content h4,
-html.dark .onpage-seo-block h2,
-html.dark .onpage-seo-block h3,
-html.dark .task4b-seo h2,
-html.dark .task4b-seo h3,
-html.dark .box h3,
-html.dark .box h4,
-html.dark .stats-main h3,
-html.dark .subbox h4,
-html.dark .insight-box h4,
-html.dark .prev-result,
-body.dark .seo-content h2,
-body.dark .seo-content h3,
-body.dark .seo-content h4{
+.nav-links,.nav{
+  gap:.32rem !important;
+  padding:.55rem 0 .85rem !important;
+}
+.nav-links a,.nav a{
+  background:transparent !important;
+  color:var(--text,#44403c) !important;
+  border:1px solid transparent !important;
+  border-radius:999px !important;
+  padding:.4rem .72rem !important;
+  font-size:.78rem !important;
+  font-weight:750 !important;
+}
+.nav-links a:hover,.nav a:hover{
+  background:#fff7ed !important;
+  color:#9a3412 !important;
+}
+.nav-links a[aria-current="page"],.nav a[aria-current="page"]{
+  background:var(--accent,#c2410c) !important;
   color:#fff !important;
+  box-shadow:0 8px 18px rgba(194,65,12,.22);
+}
+.dark-toggle{
+  background:var(--accent,#c2410c) !important;
+  color:#fff !important;
+  border-radius:999px !important;
+  padding:.4rem .85rem !important;
+  font-weight:800 !important;
+  box-shadow:0 8px 18px rgba(194,65,12,.2);
+}
+html.dark .nav-links a,html.dark .nav a,body.dark .nav-links a,body.dark .nav a{
+  background:transparent !important;
+  color:#f4f4f5 !important;
+  border-color:transparent !important;
+}
+html.dark .nav-links a:hover,html.dark .nav a:hover,body.dark .nav-links a:hover,body.dark .nav a:hover{
+  background:#241810 !important;
+  color:#fed7aa !important;
+}
+html.dark .nav-links a[aria-current="page"],html.dark .nav a[aria-current="page"],
+body.dark .nav-links a[aria-current="page"],body.dark .nav a[aria-current="page"]{
+  background:#c2410c !important;
+  color:#fff !important;
+  border-color:#ea580c !important;
 }
 
-/* FAQ + fact cards: white-on-white in dark mode */
+/* Breadcrumb + hero */
+.task4-breadcrumb ol{
+  display:flex;
+  flex-wrap:wrap;
+  gap:.35rem .7rem;
+  list-style:none;
+  padding:0;
+  margin:.85rem 0 0;
+  color:var(--muted,#78716c);
+  font-size:.82rem;
+  font-weight:700;
+}
+.hero{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+  padding:1.15rem 0 0 !important;
+  margin:.35rem 0 .4rem !important;
+  text-align:left !important;
+}
+.hero h1{
+  font-size:clamp(1.55rem,4.2vw,2.35rem) !important;
+  line-height:1.15 !important;
+  max-width:18ch;
+}
+.hero p{
+  max-width:62ch !important;
+  margin:.55rem 0 0 !important;
+  color:var(--muted,#57534e) !important;
+}
+
+/* Live result */
+.result-card,.game-history-card,.game-card,.seo-content,.onpage-seo-block,.task4b-seo{
+  border:1px solid rgba(194,65,12,.13) !important;
+  box-shadow:0 16px 40px rgba(120,53,15,.07) !important;
+  border-radius:1.15rem !important;
+}
+.result-card{
+  padding:1.05rem 1.1rem !important;
+}
+.card-title{
+  font-size:1.28rem !important;
+  margin-bottom:.35rem !important;
+}
+.game-timings{
+  font-size:.72rem !important;
+  gap:.55rem !important;
+  color:var(--accent,#c2410c) !important;
+}
+.fr-sr-container{gap:.7rem !important;margin:.7rem 0 !important}
+.fr-box,.sr-box{
+  background:linear-gradient(180deg,#fff,#fff7ed) !important;
+  border:1px solid rgba(194,65,12,.14) !important;
+  border-radius:1rem !important;
+  padding:.7rem .4rem .8rem !important;
+  min-height:96px !important;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.8);
+}
+.fr-label,.sr-label{
+  font-size:.62rem !important;
+  letter-spacing:.08em !important;
+}
+.fr-value,.sr-value{
+  font-size:clamp(1.85rem,5vw,2.55rem) !important;
+  font-weight:800 !important;
+  letter-spacing:-.04em !important;
+  color:#9a3412 !important;
+}
+.time-badge{
+  background:#9a3412 !important;
+  color:#fff !important;
+  font-size:.62rem !important;
+  padding:.22rem .5rem !important;
+}
+.status-pill{
+  padding:.38rem .85rem !important;
+  font-size:.72rem !important;
+}
+.prev-page-link{
+  border-radius:999px !important;
+  padding:.55rem .85rem !important;
+}
+.mini-history-row{
+  border-radius:.65rem !important;
+  padding:.28rem .55rem !important;
+  min-height:28px !important;
+}
+.game-history-card{padding:.85rem !important}
+
+/* Monitor ribbon */
+.result-monitor-ribbon{
+  border-radius:1rem !important;
+  box-shadow:none !important;
+}
+
+/* Common numbers */
+.common-publication-note{
+  text-align:center;
+  background:rgba(255,247,237,.9);
+  border:1px solid rgba(194,65,12,.14);
+  border-radius:.9rem;
+  padding:.7rem 1rem;
+  margin:0 0 .85rem;
+  font-size:.9rem;
+}
+.game-head{
+  padding:.9rem 1.05rem !important;
+}
+.common-side,.stats-side{padding:1rem !important}
+.common-side{
+  background:#fffaf5 !important;
+}
+.box,.previous-card,.stats-main,.subbox,.insight-box,.trend-chart,.history-panel,
+.blocked-panel,.formula-panel{
+  border-color:rgba(194,65,12,.14) !important;
+  border-radius:.9rem !important;
+  box-shadow:none !important;
+}
+.prev-result{
+  font-size:1.55rem !important;
+  letter-spacing:-.03em !important;
+}
+.digit{
+  min-width:1.75rem !important;
+  height:1.75rem !important;
+  font-size:.82rem !important;
+  background:#fff7ed !important;
+  color:#9a3412 !important;
+  border:1px solid #fdba74;
+}
+.direct,.statnum{
+  border-radius:.7rem !important;
+  min-height:2.55rem !important;
+}
+.chip{
+  border-radius:.65rem !important;
+}
+
+/* Guide + FAQ */
+.seo-content{
+  padding:1.35rem 1.3rem !important;
+  margin:1.35rem 0 !important;
+}
+.seo-content h2{
+  font-size:clamp(1.25rem,3vw,1.55rem) !important;
+  margin:1.15rem 0 .5rem !important;
+}
+.task13-fact-grid{
+  gap:.85rem !important;
+}
 .task13-fact-grid>div,
 .task13-check-grid article{
-  box-shadow:0 10px 28px rgba(154,52,18,.07);
+  border:1px solid rgba(194,65,12,.14) !important;
+  border-radius:1rem !important;
+  padding:1.05rem 1.1rem !important;
+  background:#fff !important;
+  box-shadow:0 10px 24px rgba(154,52,18,.05);
+}
+.task13-fact-grid h3,.task13-check-grid h3{
+  font-size:.72rem !important;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:#c2410c !important;
+  margin-bottom:.3rem !important;
+}
+.task13-fact-grid p,.task13-check-grid p{
+  font-size:1.12rem !important;
+  font-weight:800;
+  color:#1c1917 !important;
 }
 .task13-live-guide details,
 .task13-faq-list details,
 .task13-archive-faq details,
 .faq-list details{
-  transition:border-color .15s ease, box-shadow .15s ease;
+  border:1px solid rgba(194,65,12,.14) !important;
+  border-radius:.95rem !important;
+  padding:.15rem .2rem !important;
+  background:#fff !important;
+  box-shadow:0 8px 20px rgba(154,52,18,.04);
 }
 .task13-live-guide summary,
 .task13-faq-list summary,
 .task13-archive-faq summary,
 .faq-list summary{
-  color:var(--text,#111827);
+  cursor:pointer;
   font-weight:750;
+  color:#1c1917;
+  list-style:none;
+  padding:.75rem .95rem;
 }
-html.dark .task13-fact-grid>div,
-html.dark .task13-check-grid article,
-html.dark .task13-status-list>div,
-html.dark .task13-callout,
-html.dark .task13-live-guide details,
-html.dark .task13-faq-list details,
-html.dark .task13-archive-faq details,
-html.dark .faq-list details,
-html.dark details,
-body.dark .task13-fact-grid>div,
-body.dark .task13-check-grid article,
-body.dark .task13-status-list>div,
-body.dark .task13-callout,
-body.dark .task13-live-guide details,
-body.dark .task13-faq-list details,
-body.dark .task13-archive-faq details,
-body.dark .faq-list details,
-body.dark details{
-  background:#1c1c1e !important;
-  border-color:#3f3f46 !important;
-  color:#f4f4f5 !important;
-  box-shadow:0 8px 24px rgba(0,0,0,.28);
+.task13-live-guide summary::-webkit-details-marker,
+.task13-faq-list summary::-webkit-details-marker,
+.task13-archive-faq summary::-webkit-details-marker,
+.faq-list summary::-webkit-details-marker{display:none}
+.task13-live-guide summary::after,
+.task13-faq-list summary::after,
+.task13-archive-faq summary::after,
+.faq-list summary::after{
+  content:"+";
+  float:right;
+  color:#c2410c;
+  font-weight:800;
 }
-html.dark .task13-fact-grid h3,
-html.dark .task13-check-grid h3,
-html.dark summary,
-html.dark .task13-live-guide summary,
-html.dark .task13-faq-list summary,
-html.dark .task13-archive-faq summary,
-html.dark .faq-list summary,
-body.dark .task13-fact-grid h3,
-body.dark .task13-check-grid h3,
-body.dark summary,
-body.dark .task13-live-guide summary,
-body.dark .task13-faq-list summary,
-body.dark .task13-archive-faq summary,
-body.dark .faq-list summary{
-  color:#fff !important;
-}
-html.dark .task13-fact-grid p,
-html.dark .task13-check-grid p,
-html.dark .task13-status-list dd,
-html.dark details p,
-html.dark .task13-live-guide details p,
-html.dark .task13-faq-list p,
-html.dark .task13-archive-faq details p,
-html.dark .faq-list p,
-body.dark .task13-fact-grid p,
-body.dark .task13-check-grid p,
-body.dark details p,
-body.dark .task13-live-guide details p,
-body.dark .task13-faq-list p,
-body.dark .task13-archive-faq details p,
-body.dark .faq-list p{
-  color:#e4e4e7 !important;
-}
-
-/* House/ending digits and chips */
-html.dark .digit,
-html.dark .chip,
-html.dark .pill,
-html.dark .unlock-badge,
-html.dark .history-item,
-html.dark .mini-chip,
-html.dark .missing-chip,
-html.dark .formula-number-grid span,
-html.dark .formula-round-badge,
-html.dark .modal-number-grid span,
-html.dark .date-badge,
-html.dark .number-chip,
-body.dark .digit,
-body.dark .chip,
-body.dark .pill,
-body.dark .unlock-badge,
-body.dark .history-item,
-body.dark .mini-chip,
-body.dark .missing-chip,
-body.dark .formula-number-grid span,
-body.dark .formula-round-badge,
-body.dark .modal-number-grid span,
-body.dark .date-badge,
-body.dark .number-chip{
-  background:#2a1a12 !important;
-  color:#fed7aa !important;
-  border-color:#9a3412 !important;
-}
-html.dark .chip.cold,
-html.dark .pattern-item,
-body.dark .chip.cold,
-body.dark .pattern-item{
-  background:#0f172a !important;
-  color:#93c5fd !important;
-  border-color:#1d4ed8 !important;
-}
-html.dark .direct,
-html.dark .statnum,
-body.dark .direct,
-body.dark .statnum{
-  background:#111 !important;
-  color:#fb923c !important;
-  border-color:#c2410c !important;
-}
-html.dark .common-side,
-html.dark .accuracy,
-html.dark .source-strip span,
-html.dark .why-strip span,
-html.dark .seo-mini,
-html.dark .missing-col,
-html.dark .formula-block,
-html.dark .formula-gap-card,
-html.dark .group-analysis-panel,
-html.dark .performance-panel,
-html.dark .flow-panel,
-html.dark .performance-table-wrap,
-body.dark .common-side,
-body.dark .accuracy,
-body.dark .source-strip span,
-body.dark .why-strip span,
-body.dark .seo-mini,
-body.dark .missing-col,
-body.dark .formula-block,
-body.dark .formula-gap-card,
-body.dark .group-analysis-panel,
-body.dark .performance-panel,
-body.dark .flow-panel,
-body.dark .performance-table-wrap{
-  background:#151515 !important;
-  border-color:#3f3f46 !important;
-  color:#f4f4f5 !important;
-}
-html.dark .formula-gap-meta dt,
-html.dark .group-analysis-note,
-html.dark .missing-chip i,
-html.dark .source-strip span,
-html.dark .why-strip span,
-html.dark .seo-mini p,
-html.dark .flow-col small,
-html.dark .flow-col-v4 small,
-html.dark .barcol small,
-html.dark .flow-item small,
-html.dark .performance-kicker,
-body.dark .formula-gap-meta dt,
-body.dark .group-analysis-note,
-body.dark .seo-mini p{
-  color:#d4d4d8 !important;
-}
-html.dark .formula-gap-meta dd,
-html.dark .formula-identity>strong,
-html.dark .group-analysis-heading h4,
-html.dark .performance-date,
-html.dark .performance-heading h4,
-html.dark .flow-heading h4,
-html.dark .missing-col b,
-html.dark .formula-block b,
-html.dark .mini-chip b,
-body.dark .formula-gap-meta dd,
-body.dark .formula-identity>strong,
-body.dark .group-analysis-heading h4,
-body.dark .performance-date,
-body.dark .formula-gap-meta dd{
-  color:#fff !important;
-}
-html.dark .flow-col small,
-html.dark .flow-dot small,
-html.dark .flow-col b,
-html.dark .flow-dot b{
-  color:#e4e4e7 !important;
-}
-
-html.dark .status-pill,
-body.dark .status-pill{
-  color:#ffedd5 !important;
-  background:#7c2d12 !important;
-  border-color:#9a3412 !important;
-}
-html.dark .prev-page-link,
-body.dark .prev-page-link{
-  background:#2a1a12 !important;
-  color:#fdba74 !important;
-  border-color:#9a3412 !important;
-}
-html.dark .time-badge,
-body.dark .time-badge{
-  background:#fdba74 !important;
-  color:#111 !important;
-}
-html.dark .fr-box,
-html.dark .sr-box,
-html.dark .mini-history-row,
-html.dark .seo-links a,
-html.dark .related-links a,
-html.dark .related-seo-links a,
-html.dark .task4b-links a,
-body.dark .fr-box,
-body.dark .sr-box,
-body.dark .mini-history-row,
-body.dark .seo-links a,
-body.dark .related-links a,
-body.dark .related-seo-links a,
-body.dark .task4b-links a{
-  background:#151515 !important;
-  color:#fff !important;
-  border-color:#3f3f46 !important;
-}
-html.dark .fr-value,
-html.dark .sr-value,
-html.dark .mini-history-result,
-body.dark .fr-value,
-body.dark .sr-value,
-body.dark .mini-history-result{
-  color:#fff !important;
-}
-html.dark table th,
-html.dark .history-table th,
-html.dark .performance-table th,
-html.dark .saturday-table th,
-body.dark table th,
-body.dark .history-table th,
-body.dark .performance-table th{
-  background:#2a1a12 !important;
-  color:#fed7aa !important;
-  border-color:#3f3f46 !important;
-}
-html.dark table td,
-html.dark .history-table td,
-html.dark .performance-table td,
-html.dark .saturday-table td,
-body.dark table td,
-body.dark .history-table td,
-body.dark .performance-table td{
-  color:#f4f4f5 !important;
-  border-color:#2d2d2d !important;
-}
-html.dark .performance-badge,
-body.dark .performance-badge{
-  color:#fff !important;
-}
-html.dark .performance-both{background:#14532d !important;border-color:#166534 !important;color:#bbf7d0 !important}
-html.dark .performance-fr{background:#7c2d12 !important;border-color:#9a3412 !important;color:#ffedd5 !important}
-html.dark .performance-sr{background:#1e3a8a !important;border-color:#2563eb !important;color:#dbeafe !important}
-html.dark .performance-miss{background:#7f1d1d !important;border-color:#b91c1c !important;color:#fecaca !important}
-
-html.dark .pct-badge{background:#14532d !important;border-color:#166534 !important;color:#bbf7d0 !important}
-html.dark .pct-badge.warn{background:#78350f !important;border-color:#b45309 !important;color:#fde68a !important}
-html.dark .pct-badge.bad{background:#7f1d1d !important;border-color:#b91c1c !important;color:#fecaca !important}
-
-html.dark .task13e-support,
-html.dark .legal-note,
-body.dark .task13e-support{
-  background:#151515 !important;
-  border-color:#3f3f46 !important;
-  color:#f4f4f5 !important;
-}
-
-html.dark input,
-html.dark select,
-html.dark textarea,
-html.dark button:not(.dark-toggle):not(.refresh-btn):not(.modal-close),
-body.dark input,
-body.dark select,
-body.dark textarea{
-  color:inherit;
-}
-html.dark input,
-html.dark select,
-html.dark textarea,
-body.dark input,
-body.dark select,
-body.dark textarea{
-  background:#111;
-  border-color:#3f3f46;
-  color:#f4f4f5;
-}
-
-/* Light-mode polish */
-.sticky-header{
-  backdrop-filter:saturate(1.2) blur(10px);
-}
-.task13-live-guide details,
-.task13-faq-list details,
-.task13-archive-faq details,
-.faq-list details{
-  border-radius:.85rem;
-  padding:.9rem 1.05rem;
-}
-.task13-fact-grid>div{
-  border-radius:.9rem;
-  padding:1rem 1.05rem;
-}
-.dark-toggle{
-  letter-spacing:.01em;
+.task13-live-guide details[open] summary::after,
+.task13-faq-list details[open] summary::after,
+.task13-archive-faq details[open] summary::after,
+.faq-list details[open] summary::after{content:"–"}
+.task13-live-guide details p,
+.task13-faq-list p,
+.task13-archive-faq details p,
+.faq-list p{
+  padding:0 .95rem .9rem;
+  margin:.1rem 0 0 !important;
+  color:#57534e !important;
 }
 @media (hover:hover){
   .task13-live-guide details:hover,
   .task13-faq-list details:hover,
   .task13-archive-faq details:hover,
   .faq-list details:hover{
-    border-color:var(--accent,#c2410c);
+    border-color:#fdba74 !important;
   }
+}
+
+/* Floating actions */
+.teeronline-fixed-buttons{
+  gap:12px !important;
+  right:18px !important;
+  bottom:18px !important;
+}
+.teeronline-fixed-buttons .to-whatsapp-btn{
+  background:#22c55e !important;
+}
+.teeronline-fixed-buttons .to-refresh-btn{
+  background:#c2410c !important;
+}
+.teeronline-fixed-buttons .to-refresh-btn,
+.teeronline-fixed-buttons .to-whatsapp-btn{
+  width:52px !important;
+  height:52px !important;
+  box-shadow:0 12px 24px rgba(28,25,23,.18) !important;
+}
+
+footer{
+  margin-top:2rem !important;
+}
+
+/* Dark mode contrast (kept after light restyle) */
+html.dark .box,html.dark .previous-card,html.dark .stats-main,html.dark .subbox,
+html.dark .trend-chart,html.dark .history-panel,html.dark .insight-box,
+html.dark .blocked-panel,html.dark .formula-panel,html.dark .panel-label,
+html.dark .direct,html.dark .statnum,html.dark .locked-points span,
+html.dark .modal-box,html.dark .modal-body,html.dark .onpage-seo-block,
+html.dark .seo-content,html.dark .result-card,html.dark .game-history-card,
+html.dark .game-card,html.dark .task4b-seo,html.dark .task4b-key-point,
+body.dark .box,body.dark .previous-card,body.dark .stats-main,body.dark .subbox,
+body.dark .trend-chart,body.dark .history-panel,body.dark .insight-box,
+body.dark .blocked-panel,body.dark .formula-panel,body.dark .onpage-seo-block,
+body.dark .seo-content,body.dark .result-card,body.dark .game-history-card,
+body.dark .game-card,body.dark .task4b-seo,body.dark .task4b-key-point{
+  background:var(--card-bg,#1c1c1e) !important;
+  border-color:var(--border,#3f3f46) !important;
+  color:var(--text,#f4f4f5) !important;
+  box-shadow:0 16px 36px rgba(0,0,0,.28) !important;
+}
+html.dark .hero,body.dark .hero{
+  background:transparent !important;
+  border:0 !important;
+  box-shadow:none !important;
+}
+html.dark .seo-content p,html.dark .seo-content li,html.dark .onpage-seo-block p,
+html.dark .onpage-seo-block li,html.dark .task4b-seo p,html.dark .hero p,
+html.dark .site-tagline,html.dark .prev-label,html.dark .prev-date,
+html.dark .mini-timer,html.dark .unlock-time,html.dark .note-strip,
+html.dark .empty,html.dark .chart-legend,html.dark .section-title p,
+html.dark .fr-label,html.dark .sr-label,html.dark .mini-history-date,
+html.dark .task4b-editorial,body.dark .seo-content p,body.dark .seo-content li,
+body.dark .onpage-seo-block p,body.dark .onpage-seo-block li,body.dark .task4b-seo p,
+body.dark .hero p{
+  color:#d4d4d8 !important;
+}
+html.dark .seo-content h2,html.dark .seo-content h3,html.dark .seo-content h4,
+html.dark .onpage-seo-block h2,html.dark .onpage-seo-block h3,html.dark .task4b-seo h2,
+html.dark .task4b-seo h3,html.dark .box h3,html.dark .box h4,html.dark .stats-main h3,
+html.dark .subbox h4,html.dark .insight-box h4,html.dark .prev-result,html.dark .card-title,
+html.dark .hero h1,body.dark .seo-content h2,body.dark .seo-content h3,body.dark .seo-content h4,
+body.dark .hero h1,body.dark .card-title{
+  color:#fff !important;
+}
+html.dark .fr-box,html.dark .sr-box,body.dark .fr-box,body.dark .sr-box{
+  background:linear-gradient(180deg,#1f1f1f,#171717) !important;
+  border-color:#3f3f46 !important;
+}
+html.dark .fr-value,html.dark .sr-value,body.dark .fr-value,body.dark .sr-value{
+  color:#fdba74 !important;
+}
+html.dark .task13-fact-grid>div,html.dark .task13-check-grid article,
+html.dark .task13-status-list>div,html.dark .task13-callout,
+html.dark .task13-live-guide details,html.dark .task13-faq-list details,
+html.dark .task13-archive-faq details,html.dark .faq-list details,html.dark details,
+body.dark .task13-fact-grid>div,body.dark .task13-check-grid article,
+body.dark .task13-status-list>div,body.dark .task13-callout,
+body.dark .task13-live-guide details,body.dark .task13-faq-list details,
+body.dark .task13-archive-faq details,body.dark .faq-list details,body.dark details{
+  background:#1c1c1e !important;
+  border-color:#3f3f46 !important;
+  color:#f4f4f5 !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.28) !important;
+}
+html.dark .task13-fact-grid h3,html.dark .task13-check-grid h3,html.dark summary,
+html.dark .task13-live-guide summary,html.dark .task13-faq-list summary,
+html.dark .task13-archive-faq summary,html.dark .faq-list summary,
+body.dark .task13-fact-grid h3,body.dark .task13-check-grid h3,body.dark summary,
+body.dark .task13-live-guide summary,body.dark .task13-faq-list summary,
+body.dark .task13-archive-faq summary,body.dark .faq-list summary{
+  color:#fff !important;
+}
+html.dark .task13-fact-grid p,html.dark .task13-check-grid p,html.dark details p,
+html.dark .task13-live-guide details p,html.dark .task13-faq-list p,
+html.dark .task13-archive-faq details p,html.dark .faq-list p,
+body.dark .task13-fact-grid p,body.dark .task13-check-grid p,body.dark details p,
+body.dark .task13-live-guide details p,body.dark .task13-faq-list p,
+body.dark .task13-archive-faq details p,body.dark .faq-list p{
+  color:#e4e4e7 !important;
+}
+html.dark .digit,html.dark .chip,html.dark .pill,html.dark .unlock-badge,
+html.dark .history-item,html.dark .mini-chip,html.dark .missing-chip,
+html.dark .formula-number-grid span,html.dark .formula-round-badge,
+html.dark .modal-number-grid span,html.dark .date-badge,html.dark .number-chip,
+body.dark .digit,body.dark .chip,body.dark .pill,body.dark .unlock-badge,
+body.dark .history-item,body.dark .mini-chip,body.dark .missing-chip,
+body.dark .formula-number-grid span,body.dark .formula-round-badge,
+body.dark .modal-number-grid span,body.dark .date-badge,body.dark .number-chip{
+  background:#2a1a12 !important;
+  color:#fed7aa !important;
+  border-color:#9a3412 !important;
+}
+html.dark .chip.cold,html.dark .pattern-item,body.dark .chip.cold,body.dark .pattern-item{
+  background:#0f172a !important;
+  color:#93c5fd !important;
+  border-color:#1d4ed8 !important;
+}
+html.dark .direct,html.dark .statnum,body.dark .direct,body.dark .statnum{
+  background:#111 !important;
+  color:#fb923c !important;
+  border-color:#c2410c !important;
+}
+html.dark .common-side,html.dark .accuracy,html.dark .source-strip span,
+html.dark .why-strip span,html.dark .seo-mini,html.dark .missing-col,
+html.dark .formula-block,html.dark .formula-gap-card,html.dark .group-analysis-panel,
+html.dark .performance-panel,html.dark .flow-panel,html.dark .performance-table-wrap,
+html.dark .common-publication-note,
+body.dark .common-side,body.dark .accuracy,body.dark .source-strip span,
+body.dark .why-strip span,body.dark .seo-mini,body.dark .missing-col,
+body.dark .formula-block,body.dark .formula-gap-card,body.dark .group-analysis-panel,
+body.dark .performance-panel,body.dark .flow-panel,body.dark .performance-table-wrap,
+body.dark .common-publication-note{
+  background:#151515 !important;
+  border-color:#3f3f46 !important;
+  color:#f4f4f5 !important;
+}
+html.dark .formula-gap-meta dt,html.dark .group-analysis-note,html.dark .seo-mini p,
+body.dark .formula-gap-meta dt,body.dark .group-analysis-note,body.dark .seo-mini p{
+  color:#d4d4d8 !important;
+}
+html.dark .formula-gap-meta dd,html.dark .formula-identity>strong,
+html.dark .group-analysis-heading h4,html.dark .performance-date,
+body.dark .formula-gap-meta dd,body.dark .formula-identity>strong,
+body.dark .group-analysis-heading h4,body.dark .performance-date{
+  color:#fff !important;
+}
+html.dark .status-pill,body.dark .status-pill{
+  color:#ffedd5 !important;
+  background:#7c2d12 !important;
+  border-color:#9a3412 !important;
+}
+html.dark .prev-page-link,body.dark .prev-page-link{
+  background:#2a1a12 !important;
+  color:#fdba74 !important;
+  border-color:#9a3412 !important;
+}
+html.dark .time-badge,body.dark .time-badge{
+  background:#fdba74 !important;
+  color:#111 !important;
+}
+html.dark .mini-history-row,html.dark .seo-links a,html.dark .related-links a,
+html.dark .related-seo-links a,html.dark .task4b-links a,
+body.dark .mini-history-row,body.dark .seo-links a,body.dark .related-links a,
+body.dark .related-seo-links a,body.dark .task4b-links a{
+  background:#151515 !important;
+  color:#fff !important;
+  border-color:#3f3f46 !important;
+}
+html.dark .mini-history-result,body.dark .mini-history-result{color:#fff !important}
+html.dark table th,html.dark .history-table th,html.dark .performance-table th,
+body.dark table th,body.dark .history-table th,body.dark .performance-table th{
+  background:#2a1a12 !important;
+  color:#fed7aa !important;
+  border-color:#3f3f46 !important;
+}
+html.dark table td,html.dark .history-table td,html.dark .performance-table td,
+body.dark table td,body.dark .history-table td,body.dark .performance-table td{
+  color:#f4f4f5 !important;
+  border-color:#2d2d2d !important;
+}
+html.dark .performance-both{background:#14532d !important;border-color:#166534 !important;color:#bbf7d0 !important}
+html.dark .performance-fr{background:#7c2d12 !important;border-color:#9a3412 !important;color:#ffedd5 !important}
+html.dark .performance-sr{background:#1e3a8a !important;border-color:#2563eb !important;color:#dbeafe !important}
+html.dark .performance-miss{background:#7f1d1d !important;border-color:#b91c1c !important;color:#fecaca !important}
+html.dark .pct-badge{background:#14532d !important;border-color:#166534 !important;color:#bbf7d0 !important}
+html.dark .pct-badge.warn{background:#78350f !important;border-color:#b45309 !important;color:#fde68a !important}
+html.dark .pct-badge.bad{background:#7f1d1d !important;border-color:#b91c1c !important;color:#fecaca !important}
+html.dark .task13e-support,html.dark .legal-note,body.dark .task13e-support{
+  background:#151515 !important;
+  border-color:#3f3f46 !important;
+  color:#f4f4f5 !important;
+}
+html.dark input,html.dark select,html.dark textarea,
+body.dark input,body.dark select,body.dark textarea{
+  background:#111;
+  border-color:#3f3f46;
+  color:#f4f4f5;
+}
+html.dark .result-monitor-ribbon,body.dark .result-monitor-ribbon{
+  --rm-border:#3f3f46;
+  --rm-bg:#171717;
+  --rm-title:#e4e4e7;
+  --rm-badge-bg:#111;
+  --rm-badge-border:#3f3f46;
+  --rm-badge-text:#e4e4e7;
+}
+html.dark .result-monitor-ribbon__message,body.dark .result-monitor-ribbon__message{
+  color:#d4d4d8;
+}
+
+@media(max-width:768px){
+  .hero h1{max-width:none}
+  .logo picture,.logo img{width:60px !important;height:60px !important}
+  .seo-content{padding:1rem .9rem !important}
+}
+@media(prefers-reduced-motion:reduce){
+  *{transition:none !important}
 }
