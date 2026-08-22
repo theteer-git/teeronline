@@ -55,18 +55,11 @@ body.dark {
   outline-offset: 3px;
 }
 
-/* Results first: keep H1 in the document, show the board immediately */
+/* Source order is the SEO order: H1, then live results */
 main.container {
   display: flex;
   flex-direction: column;
 }
-main.container > * { order: 20; }
-main.container > #live_result,
-main.container > [data-semantic-section="live_result"] { order: 2; }
-main.container > .page-mast { order: 3; }
-main.container > .hero { order: 3; }
-main.container > .common-unified-wrap { order: 4; }
-main.container > .seo-content { order: 5; }
 
 /* Product header — win against older page CSS */
 html body header.sticky-header,
@@ -254,23 +247,30 @@ html body .nav a[aria-current="page"] {
   border: 1px solid rgba(245, 165, 36, 0.22);
   box-shadow: 0 22px 50px rgba(11, 13, 18, 0.18);
 }
+html body main > .task4-breadcrumb,
 html body .sticky-header + .task4-breadcrumb {
   max-width: 1180px;
   margin: 0 auto;
   padding: 0.55rem 1rem 0.2rem;
 }
+html body main > .task4-breadcrumb ol,
 html body .sticky-header + .task4-breadcrumb ol {
   margin: 0;
 }
+html body main > .task4-breadcrumb a,
 html body .sticky-header + .task4-breadcrumb a {
   color: #c2410c;
   text-decoration: none;
   font-weight: 750;
 }
+html.dark body main > .task4-breadcrumb,
+body.dark main > .task4-breadcrumb,
 html.dark body .sticky-header + .task4-breadcrumb,
 body.dark .sticky-header + .task4-breadcrumb {
   color: #c4bbb0;
 }
+html.dark body main > .task4-breadcrumb a,
+body.dark main > .task4-breadcrumb a,
 html.dark body .sticky-header + .task4-breadcrumb a,
 body.dark .sticky-header + .task4-breadcrumb a {
   color: #f5a524;

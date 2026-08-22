@@ -82,9 +82,9 @@ for (const gameId of config.gameOrder) {
   $('meta[name="twitter:title"]').attr("content", `${game.name} Result Today Live`);
   $('meta[name="twitter:description"]').attr("content", `Live ${game.name} FR SR result, previous 7 results, common numbers and complete statistics.`);
   $('link[href="./assets/css/jwd-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css");
-  $('link[href*="game-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css?v=20260822-ux-v7");
+  $('link[href*="game-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css?v=20260822-ux-v8");
   if (!$('link[href*="theme-ux.css"]').length) {
-    $("head").append('<link href="/assets/css/theme-ux.css?v=20260822-ux-v7" rel="stylesheet"/>');
+    $("head").append('<link href="/assets/css/theme-ux.css?v=20260822-ux-v8" rel="stylesheet"/>');
   }
 
   const faqItems = [
@@ -206,7 +206,7 @@ for (const gameId of config.gameOrder) {
   $('a[href="/common-numbers"], a[href="/common-numbers.html"], a[href="./common-numbers"], a[href="./common-numbers.html"]').remove();
 
   $("script[src*='jwd-unified-page'], script[src*='game-unified-page'], script[src*='game-config.js']").remove();
-  $("body").append('<script src="/assets/scripts/game-config.js" defer></script><script src="/assets/scripts/game-unified-page.js" defer></script><script src="/assets/scripts/teer-shell.js?v=20260822-ux-v7" defer></script>');
+  $("body").append('<script src="/assets/scripts/game-config.js" defer></script><script src="/assets/scripts/game-unified-page.js" defer></script><script src="/assets/scripts/teer-shell.js?v=20260822-ux-v8" defer></script>');
 
   fs.writeFileSync(path.join(root, outputFiles[gameId]), $.html(), "utf8");
 }

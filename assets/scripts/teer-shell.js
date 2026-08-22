@@ -10,7 +10,7 @@
     if (document.getElementById("teer-ux-overrides")) return;
     const style = document.createElement("style");
     style.id = "teer-ux-overrides";
-    style.textContent = 'html.dark .result-monitor-ribbon__message,body.dark .result-monitor-ribbon__message,html.dark [data-rm-message],body.dark [data-rm-message]{color:#f6f1ea!important}html body .hero,html body .page-mast .hero{text-align:center!important}html body .hero p,html body .page-mast .hero p{max-width:none!important}';
+    style.textContent = 'main.container>*,main.container>.hero,main.container>.page-mast,main.container>#live_result{order:unset!important}html.dark .result-monitor-ribbon__message,body.dark .result-monitor-ribbon__message,html.dark [data-rm-message],body.dark [data-rm-message]{color:#f6f1ea!important}html body .hero,html body .page-mast .hero{text-align:center!important}html body .hero p,html body .page-mast .hero p{max-width:none!important}';
     document.head.appendChild(style);
   }
 
@@ -22,8 +22,9 @@
     const toggle = document.getElementById("darkModeToggle");
     if (brand && toggle && toggle.parentElement !== brand) brand.appendChild(toggle);
     const crumbs = document.querySelector('nav[aria-label="Breadcrumb"], nav.task4-breadcrumb');
-    if (header && crumbs) header.insertAdjacentElement("afterend", crumbs);
     const main = document.querySelector("main");
+    if (crumbs && main && crumbs.parentElement !== main) main.insertBefore(crumbs, main.firstChild);
+    else if (crumbs && main && main.firstElementChild !== crumbs) main.insertBefore(crumbs, main.firstChild);
     const hero = main && main.querySelector(":scope > .hero, .page-mast > .hero");
     if (hero && !hero.closest(".page-mast")) {
       const mast = document.createElement("div");
@@ -31,6 +32,8 @@
       hero.parentNode.insertBefore(mast, hero);
       mast.appendChild(hero);
     }
+    const mast = main && main.querySelector(":scope > .page-mast");
+    if (mast && crumbs && crumbs.nextElementSibling !== mast) crumbs.insertAdjacentElement("afterend", mast);
     document.querySelectorAll(".more-games, #teer-more-games").forEach((node) => node.remove());
     if (!header || !nav || document.getElementById("teerNavToggle")) return;
     if (!nav.id) nav.id = "siteNav";
