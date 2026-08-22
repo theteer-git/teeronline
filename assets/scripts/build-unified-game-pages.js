@@ -71,7 +71,7 @@ for (const gameId of config.gameOrder) {
   $("html").attr("lang", "en-IN");
   $("body").attr("data-game-id", gameId);
   if (!$("script[data-teer-dark-mode]").length) {
-    $('meta[name="theme-color"]').after(`<script data-teer-dark-mode="1">(function(){try{var k="darkMode";var on=localStorage.getItem(k)==="true";document.documentElement.classList.toggle("dark",on);document.addEventListener("DOMContentLoaded",function(){var t=document.getElementById("darkModeToggle");if(!t)return;document.body.classList.toggle("dark",on);t.textContent=on?"☀️ Light":"🌓 Dark";if(t.dataset.darkBound==="1")return;t.dataset.darkBound="1";t.addEventListener("click",function(){on=!document.body.classList.contains("dark");localStorage.setItem(k,on);document.documentElement.classList.toggle("dark",on);document.body.classList.toggle("dark",on);t.textContent=on?"☀️ Light":"🌓 Dark";});});}catch(e){}})();</script>`);
+    $('meta[name="theme-color"]').after(`<script data-teer-dark-mode="1">(function(){try{var k="darkMode";var on=localStorage.getItem(k)==="true";document.documentElement.classList.toggle("dark",on);function apply(){if(document.body)document.body.classList.toggle("dark",on);}apply();document.addEventListener("DOMContentLoaded",function(){apply();var t=document.getElementById("darkModeToggle");if(!t)return;t.textContent=on?"☀️ Light":"🌓 Dark";if(t.dataset.darkBound==="1")return;t.dataset.darkBound="1";t.addEventListener("click",function(){on=!document.documentElement.classList.contains("dark");localStorage.setItem(k,String(on));document.documentElement.classList.toggle("dark",on);document.body.classList.toggle("dark",on);t.textContent=on?"☀️ Light":"🌓 Dark";});});}catch(e){}})();</script>`);
   }
   $("title").text(`${game.name} Result Today Live | FR SR, Common Numbers & Statistics`);
   $('meta[name="description"]').attr("content", `Check ${game.name} result today live with FR and SR publication time, previous 7 results, common numbers and complete statistics.`);
@@ -82,6 +82,10 @@ for (const gameId of config.gameOrder) {
   $('meta[name="twitter:title"]').attr("content", `${game.name} Result Today Live`);
   $('meta[name="twitter:description"]').attr("content", `Live ${game.name} FR SR result, previous 7 results, common numbers and complete statistics.`);
   $('link[href="./assets/css/jwd-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css");
+  $('link[href*="game-unified-page.css"]').attr("href", "/assets/css/game-unified-page.css?v=20260822-ux-v1");
+  if (!$('link[href*="theme-ux.css"]').length) {
+    $("head").append('<link href="/assets/css/theme-ux.css?v=20260822-ux-v1" rel="stylesheet"/>');
+  }
 
   const faqItems = [
     {

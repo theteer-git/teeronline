@@ -1,16 +1,19 @@
 .task13-homepage{margin-top:1.25rem}
 .task13-homepage h2{scroll-margin-top:6rem}
 .task13-check-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin:1rem 0}
-.task13-check-grid article{border:1px solid var(--border,#d8e1dc);border-radius:.75rem;padding:1rem;background:var(--card-bg,#fff)}
-.task13-check-grid h3{margin:0 0 .45rem;font-size:1rem}
-.task13-check-grid p{margin:0}
+.task13-check-grid article{border:1px solid var(--border,#d8e1dc);border-radius:.75rem;padding:1rem;background:var(--card-bg,#fff);color:var(--text,#111827)}
+.task13-check-grid h3{margin:0 0 .45rem;font-size:1rem;color:var(--text,#111827)}
+.task13-check-grid p{margin:0;color:var(--text-light,var(--muted,#475569))}
 .task13-status-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:.75rem;margin:1rem 0}
 .task13-status-list>div{border-left:4px solid #357a62;padding:.75rem 1rem;background:rgba(53,122,98,.08);border-radius:.35rem}
 .task13-status-list dt{font-weight:700;margin-bottom:.25rem}
 .task13-status-list dd{margin:0}
 .task13-callout{display:flex;flex-direction:column;gap:.25rem;border:1px solid #357a62;border-radius:.75rem;padding:1rem;margin:1rem 0;background:rgba(53,122,98,.08)}
 .task13-faq-list{display:grid;gap:.65rem}
-.task13-faq-list details{border:1px solid var(--border,#d8e1dc);border-radius:.65rem;padding:.8rem 1rem;background:var(--card-bg,#fff)}
-.task13-faq-list summary{cursor:pointer;font-weight:700}
-.task13-faq-list p{margin:.7rem 0 0}
+.task13-faq-list details{border:1px solid var(--border,#d8e1dc);border-radius:.65rem;padding:.8rem 1rem;background:var(--card-bg,#fff);color:var(--text,#111827)}
+.task13-faq-list summary{cursor:pointer;font-weight:700;color:var(--text,#111827)}
+.task13-faq-list p{margin:.7rem 0 0;color:var(--text-light,var(--muted,#475569))}
 @media(max-width:700px){.task13-check-grid,.task13-status-list{grid-template-columns:1fr}}
+html.dark .task13-check-grid article,body.dark .task13-check-grid article,html.dark .task13-faq-list details,body.dark .task13-faq-list details,html.dark .task13-status-list>div,body.dark .task13-status-list>div,html.dark .task13-callout,body.dark .task13-callout{background:#1c1c1e;border-color:#3f3f46;color:#f4f4f5}
+html.dark .task13-check-grid h3,body.dark .task13-check-grid h3,html.dark .task13-faq-list summary,body.dark .task13-faq-list summary{color:#fff}
+html.dark .task13-check-grid p,body.dark .task13-check-grid p,html.dark .task13-faq-list p,body.dark .task13-faq-list p,html.dark .task13-status-list dd,body.dark .task13-status-list dd{color:#e4e4e7}

@@ -9,14 +9,13 @@
 
   function initDarkMode() {
     const toggle = document.getElementById("darkModeToggle");
-    if (!toggle) return;
     const stored = localStorage.getItem("darkMode") === "true";
     applyDarkMode(stored, toggle);
-    if (toggle.dataset.darkBound === "1") return;
+    if (!toggle || toggle.dataset.darkBound === "1") return;
     toggle.dataset.darkBound = "1";
     toggle.addEventListener("click", () => {
-      const isDark = !document.body.classList.contains("dark");
-      localStorage.setItem("darkMode", isDark);
+      const isDark = !document.documentElement.classList.contains("dark");
+      localStorage.setItem("darkMode", String(isDark));
       applyDarkMode(isDark, toggle);
     });
   }

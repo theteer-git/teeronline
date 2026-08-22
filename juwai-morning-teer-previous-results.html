@@ -163,7 +163,7 @@
 <link crossorigin="anonymous" href="https://results.teeronline.com" rel="preconnect"/>
 <link href="//results.teeronline.com" rel="dns-prefetch"/>
 <link href="/assets/css/task4b-seo.css" rel="stylesheet"/>
-<link href="/assets/css/task13-archive-pages.css" rel="stylesheet"/>
+<link href="/assets/css/task13-archive-pages.css?v=20260822-ux-v1" rel="stylesheet"/>
 <script type="application/ld+json">{
   "@context": "https://schema.org",
   "@type": "Article",
@@ -857,6 +857,7 @@
 .teeronline-fixed-buttons .to-whatsapp-btn:hover{transform:scale(1.08)}
 .teeronline-fixed-buttons img{width:28px;height:28px}
 </style>
+    <link href="/assets/css/theme-ux.css?v=20260822-ux-v1" rel="stylesheet"/>
 </head>
 <body><a class="skip-link" href="#main-content">Skip to main content</a>
 <header class="sticky-header">
@@ -1652,10 +1653,10 @@
             function initDarkMode() {
                const toggle = $("darkModeToggle");
                const stored = localStorage.getItem("darkMode") === "true";
-               if (stored) document.body.classList.add("dark");
+               if (stored) { document.documentElement.classList.add("dark"); document.body.classList.add("dark"); }
                toggle.textContent = stored ? "☀️ Light" : "🌓 Dark";
                toggle.addEventListener("click", () => {
-                  document.body.classList.toggle("dark");
+                  document.documentElement.classList.toggle("dark"); document.body.classList.toggle("dark", document.documentElement.classList.contains("dark"));
                   const isDark = document.body.classList.contains("dark");
                   localStorage.setItem("darkMode", isDark);
                   toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";

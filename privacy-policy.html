@@ -840,8 +840,9 @@
             }
          }
       </style>
-      <link href="/assets/css/task13-support-pages.css" rel="stylesheet" />
-   </head>
+      <link href="/assets/css/task13-support-pages.css?v=20260822-ux-v1" rel="stylesheet" />
+       <link href="/assets/css/theme-ux.css?v=20260822-ux-v1" rel="stylesheet"/>
+</head>
    <body>
       <a class="skip-link" href="#main-content">Skip to main content</a>
       <header class="sticky-header">
@@ -1162,10 +1163,10 @@
             const toggle = document.getElementById("darkModeToggle");
             if (!toggle) return;
             const isDark = localStorage.getItem("darkMode") === "true";
-            if (isDark) document.body.classList.add("dark");
+            if (isDark) { document.documentElement.classList.add("dark"); document.body.classList.add("dark"); }
             toggle.textContent = isDark ? "☀️ Light" : "🌓 Dark";
             toggle.addEventListener("click", () => {
-               document.body.classList.toggle("dark");
+               document.documentElement.classList.toggle("dark"); document.body.classList.toggle("dark", document.documentElement.classList.contains("dark"));
                const d = document.body.classList.contains("dark");
                localStorage.setItem("darkMode", d);
                toggle.textContent = d ? "☀️ Light" : "🌓 Dark";

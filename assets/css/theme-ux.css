@@ -1,0 +1,451 @@
+/* Shared light + dark polish. Does not change markup, IDs, or JS behavior. */
+:root{
+  --ux-radius:1rem;
+  --ux-pad:1.05rem;
+}
+html.dark,body.dark{
+  --bg:#0c0c0e;
+  --surface:#171717;
+  --card-bg:#1c1c1e;
+  --text:#f4f4f5;
+  --text-light:#e4e4e7;
+  --muted:#d4d4d8;
+  --border:#3f3f46;
+  --accent-line:#3f3f46;
+  --accent-soft:#18181b;
+  --shadow:0 14px 36px rgba(0,0,0,.38);
+  color-scheme:dark;
+}
+html.dark body,body.dark{
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* Navigation */
+.nav-links a[aria-current="page"],
+.nav a[aria-current="page"]{
+  background:var(--accent,#c2410c);
+  color:#fff;
+}
+html.dark .nav-links a,
+html.dark .nav a,
+body.dark .nav-links a,
+body.dark .nav a{
+  background:#241810;
+  color:#fff;
+  border:1px solid #3f3f46;
+}
+html.dark .nav-links a[aria-current="page"],
+html.dark .nav a[aria-current="page"],
+body.dark .nav-links a[aria-current="page"],
+body.dark .nav a[aria-current="page"]{
+  background:#c2410c;
+  color:#fff;
+  border-color:#ea580c;
+}
+
+/* Cards, boxes, panels with hardcoded white */
+html.dark .box,
+html.dark .previous-card,
+html.dark .stats-main,
+html.dark .subbox,
+html.dark .trend-chart,
+html.dark .history-panel,
+html.dark .insight-box,
+html.dark .blocked-panel,
+html.dark .formula-panel,
+html.dark .panel-label,
+html.dark .direct,
+html.dark .statnum,
+html.dark .locked-points span,
+html.dark .modal-box,
+html.dark .modal-body,
+html.dark .onpage-seo-block,
+html.dark .seo-content,
+html.dark .result-card,
+html.dark .game-history-card,
+html.dark .hero,
+html.dark .game-card,
+html.dark .task4b-seo,
+html.dark .task4b-key-point,
+body.dark .box,
+body.dark .previous-card,
+body.dark .stats-main,
+body.dark .subbox,
+body.dark .trend-chart,
+body.dark .history-panel,
+body.dark .insight-box,
+body.dark .blocked-panel,
+body.dark .formula-panel,
+body.dark .onpage-seo-block,
+body.dark .seo-content,
+body.dark .task4b-seo,
+body.dark .task4b-key-point{
+  background:var(--card-bg,#1c1c1e);
+  border-color:var(--border,#3f3f46);
+  color:var(--text,#f4f4f5);
+}
+
+html.dark .seo-content p,
+html.dark .seo-content li,
+html.dark .onpage-seo-block p,
+html.dark .onpage-seo-block li,
+html.dark .task4b-seo p,
+html.dark .hero p,
+html.dark .site-tagline,
+html.dark .prev-label,
+html.dark .prev-date,
+html.dark .mini-timer,
+html.dark .unlock-time,
+html.dark .note-strip,
+html.dark .empty,
+html.dark .chart-legend,
+html.dark .section-title p,
+html.dark .fr-label,
+html.dark .sr-label,
+html.dark .mini-history-date,
+html.dark .task4b-editorial,
+body.dark .seo-content p,
+body.dark .seo-content li,
+body.dark .onpage-seo-block p,
+body.dark .onpage-seo-block li,
+body.dark .task4b-seo p{
+  color:#d4d4d8 !important;
+}
+html.dark .seo-content h2,
+html.dark .seo-content h3,
+html.dark .seo-content h4,
+html.dark .onpage-seo-block h2,
+html.dark .onpage-seo-block h3,
+html.dark .task4b-seo h2,
+html.dark .task4b-seo h3,
+html.dark .box h3,
+html.dark .box h4,
+html.dark .stats-main h3,
+html.dark .subbox h4,
+html.dark .insight-box h4,
+html.dark .prev-result,
+body.dark .seo-content h2,
+body.dark .seo-content h3,
+body.dark .seo-content h4{
+  color:#fff !important;
+}
+
+/* FAQ + fact cards: white-on-white in dark mode */
+.task13-fact-grid>div,
+.task13-check-grid article{
+  box-shadow:0 10px 28px rgba(154,52,18,.07);
+}
+.task13-live-guide details,
+.task13-faq-list details,
+.task13-archive-faq details,
+.faq-list details{
+  transition:border-color .15s ease, box-shadow .15s ease;
+}
+.task13-live-guide summary,
+.task13-faq-list summary,
+.task13-archive-faq summary,
+.faq-list summary{
+  color:var(--text,#111827);
+  font-weight:750;
+}
+html.dark .task13-fact-grid>div,
+html.dark .task13-check-grid article,
+html.dark .task13-status-list>div,
+html.dark .task13-callout,
+html.dark .task13-live-guide details,
+html.dark .task13-faq-list details,
+html.dark .task13-archive-faq details,
+html.dark .faq-list details,
+html.dark details,
+body.dark .task13-fact-grid>div,
+body.dark .task13-check-grid article,
+body.dark .task13-status-list>div,
+body.dark .task13-callout,
+body.dark .task13-live-guide details,
+body.dark .task13-faq-list details,
+body.dark .task13-archive-faq details,
+body.dark .faq-list details,
+body.dark details{
+  background:#1c1c1e !important;
+  border-color:#3f3f46 !important;
+  color:#f4f4f5 !important;
+  box-shadow:0 8px 24px rgba(0,0,0,.28);
+}
+html.dark .task13-fact-grid h3,
+html.dark .task13-check-grid h3,
+html.dark summary,
+html.dark .task13-live-guide summary,
+html.dark .task13-faq-list summary,
+html.dark .task13-archive-faq summary,
+html.dark .faq-list summary,
+body.dark .task13-fact-grid h3,
+body.dark .task13-check-grid h3,
+body.dark summary,
+body.dark .task13-live-guide summary,
+body.dark .task13-faq-list summary,
+body.dark .task13-archive-faq summary,
+body.dark .faq-list summary{
+  color:#fff !important;
+}
+html.dark .task13-fact-grid p,
+html.dark .task13-check-grid p,
+html.dark .task13-status-list dd,
+html.dark details p,
+html.dark .task13-live-guide details p,
+html.dark .task13-faq-list p,
+html.dark .task13-archive-faq details p,
+html.dark .faq-list p,
+body.dark .task13-fact-grid p,
+body.dark .task13-check-grid p,
+body.dark details p,
+body.dark .task13-live-guide details p,
+body.dark .task13-faq-list p,
+body.dark .task13-archive-faq details p,
+body.dark .faq-list p{
+  color:#e4e4e7 !important;
+}
+
+/* House/ending digits and chips */
+html.dark .digit,
+html.dark .chip,
+html.dark .pill,
+html.dark .unlock-badge,
+html.dark .history-item,
+html.dark .mini-chip,
+html.dark .missing-chip,
+html.dark .formula-number-grid span,
+html.dark .formula-round-badge,
+html.dark .modal-number-grid span,
+html.dark .date-badge,
+html.dark .number-chip,
+body.dark .digit,
+body.dark .chip,
+body.dark .pill,
+body.dark .unlock-badge,
+body.dark .history-item,
+body.dark .mini-chip,
+body.dark .missing-chip,
+body.dark .formula-number-grid span,
+body.dark .formula-round-badge,
+body.dark .modal-number-grid span,
+body.dark .date-badge,
+body.dark .number-chip{
+  background:#2a1a12 !important;
+  color:#fed7aa !important;
+  border-color:#9a3412 !important;
+}
+html.dark .chip.cold,
+html.dark .pattern-item,
+body.dark .chip.cold,
+body.dark .pattern-item{
+  background:#0f172a !important;
+  color:#93c5fd !important;
+  border-color:#1d4ed8 !important;
+}
+html.dark .direct,
+html.dark .statnum,
+body.dark .direct,
+body.dark .statnum{
+  background:#111 !important;
+  color:#fb923c !important;
+  border-color:#c2410c !important;
+}
+html.dark .common-side,
+html.dark .accuracy,
+html.dark .source-strip span,
+html.dark .why-strip span,
+html.dark .seo-mini,
+html.dark .missing-col,
+html.dark .formula-block,
+html.dark .formula-gap-card,
+html.dark .group-analysis-panel,
+html.dark .performance-panel,
+html.dark .flow-panel,
+html.dark .performance-table-wrap,
+body.dark .common-side,
+body.dark .accuracy,
+body.dark .source-strip span,
+body.dark .why-strip span,
+body.dark .seo-mini,
+body.dark .missing-col,
+body.dark .formula-block,
+body.dark .formula-gap-card,
+body.dark .group-analysis-panel,
+body.dark .performance-panel,
+body.dark .flow-panel,
+body.dark .performance-table-wrap{
+  background:#151515 !important;
+  border-color:#3f3f46 !important;
+  color:#f4f4f5 !important;
+}
+html.dark .formula-gap-meta dt,
+html.dark .group-analysis-note,
+html.dark .missing-chip i,
+html.dark .source-strip span,
+html.dark .why-strip span,
+html.dark .seo-mini p,
+html.dark .flow-col small,
+html.dark .flow-col-v4 small,
+html.dark .barcol small,
+html.dark .flow-item small,
+html.dark .performance-kicker,
+body.dark .formula-gap-meta dt,
+body.dark .group-analysis-note,
+body.dark .seo-mini p{
+  color:#d4d4d8 !important;
+}
+html.dark .formula-gap-meta dd,
+html.dark .formula-identity>strong,
+html.dark .group-analysis-heading h4,
+html.dark .performance-date,
+html.dark .performance-heading h4,
+html.dark .flow-heading h4,
+html.dark .missing-col b,
+html.dark .formula-block b,
+html.dark .mini-chip b,
+body.dark .formula-gap-meta dd,
+body.dark .formula-identity>strong,
+body.dark .group-analysis-heading h4,
+body.dark .performance-date,
+body.dark .formula-gap-meta dd{
+  color:#fff !important;
+}
+html.dark .flow-col small,
+html.dark .flow-dot small,
+html.dark .flow-col b,
+html.dark .flow-dot b{
+  color:#e4e4e7 !important;
+}
+
+html.dark .status-pill,
+body.dark .status-pill{
+  color:#ffedd5 !important;
+  background:#7c2d12 !important;
+  border-color:#9a3412 !important;
+}
+html.dark .prev-page-link,
+body.dark .prev-page-link{
+  background:#2a1a12 !important;
+  color:#fdba74 !important;
+  border-color:#9a3412 !important;
+}
+html.dark .time-badge,
+body.dark .time-badge{
+  background:#fdba74 !important;
+  color:#111 !important;
+}
+html.dark .fr-box,
+html.dark .sr-box,
+html.dark .mini-history-row,
+html.dark .seo-links a,
+html.dark .related-links a,
+html.dark .related-seo-links a,
+html.dark .task4b-links a,
+body.dark .fr-box,
+body.dark .sr-box,
+body.dark .mini-history-row,
+body.dark .seo-links a,
+body.dark .related-links a,
+body.dark .related-seo-links a,
+body.dark .task4b-links a{
+  background:#151515 !important;
+  color:#fff !important;
+  border-color:#3f3f46 !important;
+}
+html.dark .fr-value,
+html.dark .sr-value,
+html.dark .mini-history-result,
+body.dark .fr-value,
+body.dark .sr-value,
+body.dark .mini-history-result{
+  color:#fff !important;
+}
+html.dark table th,
+html.dark .history-table th,
+html.dark .performance-table th,
+html.dark .saturday-table th,
+body.dark table th,
+body.dark .history-table th,
+body.dark .performance-table th{
+  background:#2a1a12 !important;
+  color:#fed7aa !important;
+  border-color:#3f3f46 !important;
+}
+html.dark table td,
+html.dark .history-table td,
+html.dark .performance-table td,
+html.dark .saturday-table td,
+body.dark table td,
+body.dark .history-table td,
+body.dark .performance-table td{
+  color:#f4f4f5 !important;
+  border-color:#2d2d2d !important;
+}
+html.dark .performance-badge,
+body.dark .performance-badge{
+  color:#fff !important;
+}
+html.dark .performance-both{background:#14532d !important;border-color:#166534 !important;color:#bbf7d0 !important}
+html.dark .performance-fr{background:#7c2d12 !important;border-color:#9a3412 !important;color:#ffedd5 !important}
+html.dark .performance-sr{background:#1e3a8a !important;border-color:#2563eb !important;color:#dbeafe !important}
+html.dark .performance-miss{background:#7f1d1d !important;border-color:#b91c1c !important;color:#fecaca !important}
+
+html.dark .pct-badge{background:#14532d !important;border-color:#166534 !important;color:#bbf7d0 !important}
+html.dark .pct-badge.warn{background:#78350f !important;border-color:#b45309 !important;color:#fde68a !important}
+html.dark .pct-badge.bad{background:#7f1d1d !important;border-color:#b91c1c !important;color:#fecaca !important}
+
+html.dark .task13e-support,
+html.dark .legal-note,
+body.dark .task13e-support{
+  background:#151515 !important;
+  border-color:#3f3f46 !important;
+  color:#f4f4f5 !important;
+}
+
+html.dark input,
+html.dark select,
+html.dark textarea,
+html.dark button:not(.dark-toggle):not(.refresh-btn):not(.modal-close),
+body.dark input,
+body.dark select,
+body.dark textarea{
+  color:inherit;
+}
+html.dark input,
+html.dark select,
+html.dark textarea,
+body.dark input,
+body.dark select,
+body.dark textarea{
+  background:#111;
+  border-color:#3f3f46;
+  color:#f4f4f5;
+}
+
+/* Light-mode polish */
+.sticky-header{
+  backdrop-filter:saturate(1.2) blur(10px);
+}
+.task13-live-guide details,
+.task13-faq-list details,
+.task13-archive-faq details,
+.faq-list details{
+  border-radius:.85rem;
+  padding:.9rem 1.05rem;
+}
+.task13-fact-grid>div{
+  border-radius:.9rem;
+  padding:1rem 1.05rem;
+}
+.dark-toggle{
+  letter-spacing:.01em;
+}
+@media (hover:hover){
+  .task13-live-guide details:hover,
+  .task13-faq-list details:hover,
+  .task13-archive-faq details:hover,
+  .faq-list details:hover{
+    border-color:var(--accent,#c2410c);
+  }
+}

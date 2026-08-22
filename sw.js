@@ -1,9 +1,10 @@
 // sw.js - resilient static caching and last-known-good live result fallback
-const CACHE_NAME = 'teer-v7-api-only-results';
+const CACHE_NAME = 'teer-v8-ux-dark';
 const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/assets/css/game-unified-page.css',
+  '/assets/css/theme-ux.css',
   '/assets/css/task4b-seo.css',
   '/assets/css/task13-homepage.css',
   '/assets/img/logo.webp'
