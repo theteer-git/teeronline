@@ -303,6 +303,7 @@ html body .page-mast .hero h1 {
 html body .page-mast .hero p {
   color: #c9c0b4 !important;
   font-size: 0.9rem !important;
+  max-width: none !important;
   margin: 0.55rem auto 0 !important;
 }
 .more-games { display: none !important; }
@@ -324,7 +325,7 @@ html body .hero {
   box-shadow: none;
   padding: 1.1rem 0 0.2rem;
   margin: 0;
-  text-align: left;
+  text-align: center !important;
 }
 html body .hero h1 {
   font-size: clamp(1.15rem, 2.6vw, 1.45rem);
@@ -332,6 +333,7 @@ html body .hero h1 {
   letter-spacing: -0.03em;
 }
 html body .hero p {
+  max-width: none !important;
   font-size: 0.88rem;
   color: var(--color-text-muted);
 }
@@ -451,8 +453,11 @@ body.dark .result-monitor-ribbon {
 }
 html.dark body .result-monitor-ribbon__title,
 body.dark .result-monitor-ribbon__title { color: #fff !important; }
+html.dark .result-monitor-ribbon__message,
 html.dark body .result-monitor-ribbon__message,
-body.dark .result-monitor-ribbon__message { color: #e8e0d4 !important; }
+body.dark .result-monitor-ribbon__message,
+html.dark [data-rm-message],
+body.dark [data-rm-message] { color: #f6f1ea !important; }
 html.dark body .result-monitor-ribbon__icon,
 body.dark .result-monitor-ribbon__icon { color: #fff !important; }
 

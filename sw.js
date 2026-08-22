@@ -1,5 +1,5 @@
 // sw.js - resilient static caching and last-known-good live result fallback
-const CACHE_NAME = 'teer-v9-ux-redesign';
+const CACHE_NAME = 'teer-v10-ux-redesign';
 const STATIC_ASSETS = [
   '/',
   '/index.html',

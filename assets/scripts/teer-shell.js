@@ -6,16 +6,23 @@
     else fn();
   }
 
+  function injectOverrides() {
+    if (document.getElementById("teer-ux-overrides")) return;
+    const style = document.createElement("style");
+    style.id = "teer-ux-overrides";
+    style.textContent = 'html.dark .result-monitor-ribbon__message,body.dark .result-monitor-ribbon__message,html.dark [data-rm-message],body.dark [data-rm-message]{color:#f6f1ea!important}html body .hero,html body .page-mast .hero{text-align:center!important}html body .hero p,html body .page-mast .hero p{max-width:none!important}';
+    document.head.appendChild(style);
+  }
+
   function layoutChrome() {
+    injectOverrides();
     const header = document.querySelector(".sticky-header");
     const nav = document.querySelector("nav.nav-links, nav.nav, nav.primary-nav");
     const brand = header && header.querySelector(".logo-wrapper");
     const toggle = document.getElementById("darkModeToggle");
     if (brand && toggle && toggle.parentElement !== brand) brand.appendChild(toggle);
     const crumbs = document.querySelector('nav[aria-label="Breadcrumb"], nav.task4-breadcrumb');
-    if (header && crumbs && crumbs.previousElementSibling !== header) {
-      header.insertAdjacentElement("afterend", crumbs);
-    }
+    if (header && crumbs) header.insertAdjacentElement("afterend", crumbs);
     const main = document.querySelector("main");
     const hero = main && main.querySelector(":scope > .hero, .page-mast > .hero");
     if (hero && !hero.closest(".page-mast")) {
