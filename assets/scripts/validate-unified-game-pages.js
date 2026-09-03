@@ -44,11 +44,11 @@ try {
   }
 
   const jwd = read('juwai-teer-results.html');
-  if (!/(2:00\s*PM|14:00)/i.test(jwd) || !/(2:40\s*PM|14:40)/i.test(jwd)) {
-    throw new Error('JWD live page does not contain the corrected 2:00 PM / 2:40 PM schedule');
+  if (!/(2:30\s*PM|14:30)/i.test(jwd) || !/(3:15\s*PM|15:15)/i.test(jwd)) {
+    throw new Error('JWD live page does not contain the corrected 2:30 PM / 3:15 PM schedule');
   }
-  if (/id="jwd-fr-time"[^>]*>[^<]*2:30\s*PM/i.test(jwd) || /id="jwd-sr-time"[^>]*>[^<]*3:15\s*PM/i.test(jwd)) {
-    throw new Error('JWD live page still shows the retired 2:30 PM / 3:15 PM header times');
+  if (/id="jwd-fr-time"[^>]*>[^<]*2:00\s*PM/i.test(jwd) || /id="jwd-sr-time"[^>]*>[^<]*2:40\s*PM/i.test(jwd)) {
+    throw new Error('JWD live page still shows the retired 2:00 PM / 2:40 PM header times');
   }
 
   const shn2 = read('shillong-night-teer-2-results.html');
