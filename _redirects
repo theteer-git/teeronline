@@ -6,6 +6,8 @@
 /shillong-teer-results.html / 301
 /common-numbers / 301
 /common-numbers.html / 301
+/sitemap-pages.xml /sitemap.xml 301
+/sitemap-results.xml /sitemap.xml 301
 
 # Remove .html from public page URLs
 /about.html /about 301

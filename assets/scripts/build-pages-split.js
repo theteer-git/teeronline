@@ -44,8 +44,6 @@ copyFile("sw.js");
 copyFile("site.webmanifest", false);
 copyFile("robots.txt", false);
 copyFile("sitemap.xml", false);
-copyFile("sitemap-pages.xml");
-copyFile("sitemap-results.xml");
 copyDirectory("assets/img");
 copyFile("assets/css/game-unified-page.css");
 copyFile("assets/scripts/game-config.js");
@@ -66,6 +64,8 @@ const redirects = [
   "/shillong-teer-results.html / 301",
   "/common-numbers / 301",
   "/common-numbers.html / 301",
+  "/sitemap-pages.xml /sitemap.xml 301",
+  "/sitemap-results.xml /sitemap.xml 301",
   ...gamePages.map(page => `/${page} /${page.replace(/\.html$/, "")} 301`)
 ];
 fs.writeFileSync(path.join(output, "_redirects"), `${redirects.join("\n")}\n`, "utf8");
