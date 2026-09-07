@@ -60,6 +60,9 @@ fs.writeFileSync(path.join(output, "_headers"), `/*
 
 const redirects = [
   "/index.html / 301",
+  "/Home.htm / 301",
+  "/home.htm / 301",
+  "/index.php / 301",
   "/shillong-teer-results / 301",
   "/shillong-teer-results.html / 301",
   "/common-numbers / 301",

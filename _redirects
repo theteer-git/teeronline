@@ -1,5 +1,8 @@
 # Canonical URL redirects
 /index.html / 301
+/Home.htm / 301
+/home.htm / 301
+/index.php / 301
 /results / 301
 /latest / 301
 /shillong-teer-results / 301
