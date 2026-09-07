@@ -1,0 +1,3 @@
+main.container>*,main.container>.hero,main.container>.page-mast,main.container>#live_result{order:unset!important}html.dark .result-monitor-ribbon__message,body.dark .result-monitor-ribbon__message,html.dark [data-rm-message],body.dark [data-rm-message]{color:#f6f1ea!important}html body .hero,html body .page-mast .hero{text-align:center!important}html body .hero p,html body .page-mast .hero p{max-width:none!important}
+
+.archive-guidance{margin:1.25rem 0 0;padding:1.1rem 1.2rem;border:1px solid var(--border,#d8dee9);border-radius:.85rem;background:var(--card,#fff)}.archive-guidance h2{margin:0 0 .65rem;font-size:clamp(1.15rem,2vw,1.45rem)}.archive-guidance p{margin:.55rem 0;line-height:1.65}
