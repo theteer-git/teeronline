@@ -36,6 +36,13 @@ try {
       throw new Error(`${page} is not a complete HTML page with a main landmark`);
     }
   }
+  for (const page of ARCHIVE_PAGES) {
+    const html = read(page);
+    if (/data-live-monitor|assets\/(?:css|scripts)\/live-monitoring\.(?:css|js)/i.test(html)) {
+      throw new Error(`${page} contains the retired public archive monitoring panel`);
+    }
+  }
+
   for (const page of GAME_PAGES) {
     const html = read(page);
     if (!/game-config\.js/i.test(html)) {
