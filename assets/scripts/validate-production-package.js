@@ -45,6 +45,21 @@ for (const name of htmlFiles) {
   }
 }
 
+const sitemap = fs.readFileSync(path.join(ROOT, 'sitemap.xml'), 'utf8');
+const sitemapUrls = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)].map((match) => match[1]);
+if (!/<urlset\b/i.test(sitemap)) errors.push('sitemap.xml must directly list canonical URLs');
+if (sitemapUrls.length !== 23 || new Set(sitemapUrls).size !== 23) {
+  errors.push(`sitemap.xml must contain 23 unique URLs; found ${sitemapUrls.length}`);
+}
+if (sitemapUrls.some((url) => !url.startsWith('https://teeronline.com/'))) {
+  errors.push('sitemap.xml contains a non-canonical host or protocol');
+}
+
+const robots = fs.readFileSync(path.join(ROOT, 'robots.txt'), 'utf8');
+if (!/^User-agent:\s*\*/mi.test(robots) || !/^Sitemap:\s*https:\/\/teeronline\.com\/sitemap\.xml\s*$/mi.test(robots)) {
+  errors.push('robots.txt must declare the apex sitemap with standard directives');
+}
+
 if (errors.length) fail([...new Set(errors)]);
 else {
   console.log('Production package validation: PASS');
@@ -52,4 +67,5 @@ else {
   console.log(`HTML files checked: ${htmlFiles.length}`);
   console.log('Retired endpoint scan: PASS');
   console.log('Local asset reference scan: PASS');
+  console.log('Canonical 23-URL sitemap and robots scan: PASS');
 }
