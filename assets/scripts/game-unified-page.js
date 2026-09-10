@@ -41,29 +41,34 @@
   }
 
   const prefix = GAME_ID.toLowerCase();
+  const STATIC_RESULTS_ORIGIN = "https://static-results.teeronline.com";
   const API_ORIGIN = "https://results.teeronline.com";
-  // API-only build: legacy public JSON files are intentionally never requested.
-  const LATEST_URL = `${API_ORIGIN}/api/game-result?game=${encodeURIComponent(GAME_ID)}`;
-  const LATEST_VERSION_URL = `${API_ORIGIN}/api/latest-version?game=${encodeURIComponent(GAME_ID)}`;
+  // Hot mutable reads are served directly by the public R2 custom domain.
+  // History remains initial/manual-only on the established public API path.
+  const LATEST_URL = `${STATIC_RESULTS_ORIGIN}/latest-results.json`;
+  const RESULT_VERSION_URL = `${STATIC_RESULTS_ORIGIN}/pointers/result/${encodeURIComponent(GAME_ID)}.json`;
   const RECENT_URL = `${API_ORIGIN}/api/game-history?game=${encodeURIComponent(GAME_ID)}`;
-  const POLLING_PLAN_URL = `${API_ORIGIN}/api/polling-plan?game=${encodeURIComponent(GAME_ID)}`;
-  const COMMON_NUMBERS_URL = `${API_ORIGIN}/api/common-numbers?game=${encodeURIComponent(GAME_ID)}`;
-  const ALL_RESULTS_URL = `${API_ORIGIN}/api/game-history?game=${encodeURIComponent(GAME_ID)}`;
+  const POLLING_PLAN_URL = `${STATIC_RESULTS_ORIGIN}/polling-plan.json`;
+  const COMMON_NUMBERS_URL = `${STATIC_RESULTS_ORIGIN}/common-numbers.json`;
+  const COMMON_NUMBERS_VERSION_URL = `${STATIC_RESULTS_ORIGIN}/pointers/common-numbers/${encodeURIComponent(GAME_ID)}.json`;
 
   let loadingLatest = null;
-  let loadingLatestVersion = null;
-  let latestVersion = null;
+  let loadingResultVersion = null;
+  let resultVersion = null;
+  let loadingCommonNumbersVersion = null;
+  let commonNumbersVersion = null;
   let loadingRecent = null;
+  let historyLoaded = false;
   let timer = null;
   let pollingPlan = null;
   let loadingCommonNumbers = null;
-  let loadingAllResults = null;
   let allResultRecords = [];
   let latestCommonData = null;
   let latestResultRecord = null;
 
   const TASK12_POLL = Object.freeze({
-    HOT_MS: 1000,
+    HOT_MS: 5000,
+    HOT_JITTER_MS: 1000,
     IDLE_MS: 45000,
     PRE_WINDOW_MS: 5 * 60 * 1000,
     POST_WINDOW_MS: 20 * 60 * 1000
@@ -178,28 +183,44 @@
     ...(item || {}),
     gameId: item?.gameId || item?.g || item?.game || "",
     date: item?.date || item?.d || "",
+    businessDate: item?.businessDate || item?.date || item?.d || "",
     fr: item?.fr ?? item?.f ?? "",
     sr: item?.sr ?? item?.s ?? ""
   });
 
 
-  async function fetchLatestVersion() {
-    if (loadingLatestVersion) return loadingLatestVersion;
-    loadingLatestVersion = (async () => {
-      const response = await fetch(LATEST_VERSION_URL, {
+  async function fetchPointer(kind) {
+    const response = await fetch(kind === "result" ? RESULT_VERSION_URL : COMMON_NUMBERS_VERSION_URL, {
         cache: "no-store",
         referrerPolicy: "no-referrer"
-      });
-      if (!response.ok) throw new Error(`Latest version request failed: ${response.status}`);
-      const payload = await response.json();
-      const version = String(payload?.v || "").trim();
-      if (!/^[a-f0-9]{64}$/i.test(version)) throw new Error("Latest version response is invalid");
-      return version;
-    })();
+    });
+    if (!response.ok) throw new Error(`${kind} pointer request failed: ${response.status}`);
+    const pointer = await response.json();
+    if (String(pointer?.gameId || "").toUpperCase() !== GAME_ID ||
+        !/^\d{4}-\d{2}-\d{2}$/.test(String(pointer?.businessDate || "")) ||
+        !/^[a-f0-9]{64}$/i.test(String(pointer?.v || ""))) {
+      throw new Error(`${kind} pointer response is invalid`);
+    }
+    return pointer;
+  }
+
+  async function fetchResultVersion() {
+    if (loadingResultVersion) return loadingResultVersion;
+    loadingResultVersion = fetchPointer("result");
     try {
-      return await loadingLatestVersion;
+      return await loadingResultVersion;
     } finally {
-      loadingLatestVersion = null;
+      loadingResultVersion = null;
+    }
+  }
+
+  async function fetchCommonNumbersVersion() {
+    if (loadingCommonNumbersVersion) return loadingCommonNumbersVersion;
+    loadingCommonNumbersVersion = fetchPointer("common numbers");
+    try {
+      return await loadingCommonNumbersVersion;
+    } finally {
+      loadingCommonNumbersVersion = null;
     }
   }
 
@@ -213,7 +234,6 @@
       if (!response.ok) throw new Error(`Latest results request failed: ${response.status}`);
       const data = await response.json();
       const record = normalizeItem(data?.record ?? data?.records?.[GAME_ID] ?? data?.[GAME_ID] ?? {});
-      latestResultRecord = record?.date ? record : latestResultRecord;
       return record;
     })();
     try {
@@ -659,21 +679,6 @@
     </article>`;
   }
 
-  async function fetchAllResults() {
-    if (loadingAllResults) return loadingAllResults;
-    loadingAllResults = (async () => {
-      const response = await fetch(ALL_RESULTS_URL, { cache: "no-store", referrerPolicy: "no-referrer" });
-      if (!response.ok) throw new Error(`All results request failed: ${response.status}`);
-      const payload = await response.json();
-      return extractGameRecords(payload?.records ?? payload?.results ?? payload?.data ?? payload);
-    })();
-    try {
-      return await loadingAllResults;
-    } finally {
-      loadingAllResults = null;
-    }
-  }
-
   async function fetchCommonNumbers() {
     if (loadingCommonNumbers) return loadingCommonNumbers;
     loadingCommonNumbers = (async () => {
@@ -713,13 +718,20 @@
     return Math.max(TASK12_POLL.HOT_MS, Math.min(TASK12_POLL.IDLE_MS, planned));
   }
 
+  function nextPollDelay() {
+    const base = intervalMs();
+    return base === TASK12_POLL.HOT_MS
+      ? base + Math.floor(Math.random() * (TASK12_POLL.HOT_JITTER_MS + 1))
+      : base;
+  }
+
   function schedule() {
     clearTimeout(timer);
     if (document.hidden) return;
     timer = setTimeout(async () => {
       await refresh(false);
       schedule();
-    }, intervalMs());
+    }, nextPollDelay());
   }
 
   function restoreCachedState() {
@@ -734,82 +746,62 @@
     if (common && typeof common === "object") renderCommonNumbers(common);
   }
 
+  function acceptsCurrentRecord(record, businessDate) {
+    return String(record?.gameId || "").toUpperCase() === GAME_ID &&
+      String(record?.date || "") === businessDate &&
+      String(record?.businessDate || "") === businessDate;
+  }
+
   async function refresh(manual = true) {
-    const initialLoad = latestVersion === null;
-    let versionChanged = manual || initialLoad;
+    const [resultPointer, commonPointer] = await Promise.allSettled([fetchResultVersion(), fetchCommonNumbersVersion()]);
+    const nextResult = resultPointer.status === "fulfilled" ? resultPointer.value : null;
+    const nextCommon = commonPointer.status === "fulfilled" ? commonPointer.value : null;
+    const resultChanged = !!nextResult && nextResult.v !== resultVersion;
+    const commonChanged = !!nextCommon && nextCommon.v !== commonNumbersVersion;
 
-    // Initial rendering should not wait for a version round-trip. The full payload and
-    // fingerprint are requested together, allowing the result card to update first.
-    if (!manual && !initialLoad) {
+    if (resultChanged) {
       try {
-        const nextVersion = await fetchLatestVersion();
-        versionChanged = nextVersion !== latestVersion;
-        latestVersion = nextVersion;
-      } catch (error) {
-        // Safe fallback: preserve live updates even if the tiny version object is unavailable.
-        versionChanged = true;
-        console.warn(`${GAME_ID} latest version check failed; falling back to latest results:`, error);
-      }
-    }
-
-    if (!versionChanged) return;
-
-    const latestPromise = fetchLatest();
-    const recentPromise = fetchRecent();
-    const commonPromise = manual || initialLoad ? fetchCommonNumbers() : null;
-    const allResultsPromise = manual || initialLoad ? fetchAllResults() : null;
-    const versionPromise = manual || initialLoad ? fetchLatestVersion() : null;
-
-    let latestRendered = false;
-    try {
-      const latest = await latestPromise;
-      if (latest && Object.keys(latest).length) {
-        renderResult(latest);
-        writeCache("latest", latest);
-        latestRendered = true;
-      }
-    } catch (error) {
-      console.warn(`${GAME_ID} latest result refresh failed:`, error);
-    }
-
-    try {
-      const recent = await recentPromise;
-      renderHistory(recent);
-      writeCache("recent", recent);
-      if (!latestRendered && recent[0]) {
-        renderResult(recent[0]);
-      }
-    } catch (error) {
-      console.warn(`${GAME_ID} recent result refresh failed:`, error);
-    }
-
-    if (allResultsPromise) {
-      try {
-        allResultRecords = await allResultsPromise;
-        writeCache("all", allResultRecords);
-        if (latestCommonData) renderCommonNumbers(latestCommonData);
-      } catch (error) {
-        console.warn(`${GAME_ID} all-results refresh failed:`, error);
-      }
-    }
-
-    if (commonPromise) {
-      try {
-        const common = await commonPromise;
-        if (common) {
-          renderCommonNumbers(common);
-          writeCache("common", common);
+        const latest = await fetchLatest();
+        if (acceptsCurrentRecord(latest, nextResult.businessDate)) {
+          latestResultRecord = latest;
+          renderResult(latest, { refreshCommon: false });
+          writeCache("latest", latest);
+          resultVersion = nextResult.v;
         }
       } catch (error) {
-        console.warn(`${GAME_ID} common numbers refresh failed:`, error);
+        console.warn(`${GAME_ID} latest result refresh failed:`, error);
       }
     }
 
-    if (versionPromise) {
+    if (commonChanged) {
+      if (nextCommon.available) {
+        try {
+          const common = await fetchCommonNumbers();
+          if (common && String(common.publicationDate || common.sourceDate || "") === nextCommon.businessDate) {
+            renderCommonNumbers(common);
+            writeCache("common", common);
+            commonNumbersVersion = nextCommon.v;
+          }
+        } catch (error) {
+          console.warn(`${GAME_ID} common numbers refresh failed:`, error);
+        }
+      } else {
+        commonNumbersVersion = nextCommon.v;
+      }
+    }
+
+    // History is an initial/manual concern only. A live pointer change must
+    // never cause this full dataset to be requested.
+    if (manual || !historyLoaded) {
+      historyLoaded = true;
       try {
-        latestVersion = await versionPromise;
+        const recent = await fetchRecent();
+        allResultRecords = recent;
+        renderHistory(recent);
+        writeCache("recent", recent);
+        writeCache("all", recent);
       } catch (error) {
-        console.warn(`${GAME_ID} latest version baseline failed:`, error);
+        console.warn(`${GAME_ID} recent result refresh failed:`, error);
       }
     }
   }
@@ -827,7 +819,6 @@
       clearTimeout(timer);
       return;
     }
-    refresh(false);
-    schedule();
+    refresh(false).finally(schedule);
   });
 })();
