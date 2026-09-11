@@ -24,11 +24,15 @@ assert.doesNotMatch(source, /api\/latest-version/);
 assert.match(source, /HOT_MS:\s*5000/);
 assert.match(source, /HOT_JITTER_MS:\s*1000/);
 assert.match(source, /Math\.random\(\) \* \(TASK12_POLL\.HOT_JITTER_MS \+ 1\)/);
-assert.equal((source.match(/api\/game-history/g) || []).length, 1, "one shared history URL");
+assert.match(source, /history\/\$\{encodeURIComponent\(GAME_ID\)\}\.json/);
+assert.doesNotMatch(source, /api\/game-history/);
 assert.match(source, /if \(manual \|\| !historyLoaded\)/);
 assert.match(source, /document\.hidden/);
 assert.match(source, /refresh\(false\)\.finally\(schedule\)/);
 assert.match(source, /acceptsCurrentRecord/);
+assert.match(source, /function currentBusinessDate/);
+assert.match(source, /GAME_ID !== "SHN2"/);
+assert.match(source, /isCurrentCachedResult\(latest\)/);
 assert.doesNotMatch(monitoring, /api\/game-result/);
 assert.doesNotMatch(telemetry, /api\/game-result/);
 

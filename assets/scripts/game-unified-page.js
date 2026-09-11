@@ -42,12 +42,10 @@
 
   const prefix = GAME_ID.toLowerCase();
   const STATIC_RESULTS_ORIGIN = "https://static-results.teeronline.com";
-  const API_ORIGIN = "https://results.teeronline.com";
   // Hot mutable reads are served directly by the public R2 custom domain.
-  // History remains initial/manual-only on the established public API path.
   const LATEST_URL = `${STATIC_RESULTS_ORIGIN}/latest-results.json`;
   const RESULT_VERSION_URL = `${STATIC_RESULTS_ORIGIN}/pointers/result/${encodeURIComponent(GAME_ID)}.json`;
-  const RECENT_URL = `${API_ORIGIN}/api/game-history?game=${encodeURIComponent(GAME_ID)}`;
+  const RECENT_URL = `${STATIC_RESULTS_ORIGIN}/history/${encodeURIComponent(GAME_ID)}.json`;
   const POLLING_PLAN_URL = `${STATIC_RESULTS_ORIGIN}/polling-plan.json`;
   const COMMON_NUMBERS_URL = `${STATIC_RESULTS_ORIGIN}/common-numbers.json`;
   const COMMON_NUMBERS_VERSION_URL = `${STATIC_RESULTS_ORIGIN}/pointers/common-numbers/${encodeURIComponent(GAME_ID)}.json`;
@@ -725,6 +723,24 @@
       : base;
   }
 
+  function currentBusinessDate(now = new Date()) {
+    const parts = new Intl.DateTimeFormat("en-GB", {
+      timeZone: "Asia/Kolkata", year: "numeric", month: "2-digit", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", hourCycle: "h23"
+    }).formatToParts(now);
+    const value = Object.fromEntries(parts.map(part => [part.type, part.value]));
+    const date = `${value.year}-${value.month}-${value.day}`;
+    if (GAME_ID !== "SHN2" || Number(value.hour) * 60 + Number(value.minute) >= 10 * 60 + 30) return date;
+    const previous = new Date(`${date}T00:00:00Z`);
+    previous.setUTCDate(previous.getUTCDate() - 1);
+    return previous.toISOString().slice(0, 10);
+  }
+
+  function isCurrentCachedResult(record) {
+    return String(record?.gameId || "").toUpperCase() === GAME_ID &&
+      String(record?.businessDate || record?.date || "") === currentBusinessDate();
+  }
+
   function schedule() {
     clearTimeout(timer);
     if (document.hidden) return;
@@ -741,7 +757,7 @@
     const all = readCache("all");
 
     if (Array.isArray(all)) allResultRecords = all;
-    if (latest && typeof latest === "object") renderResult(latest);
+    if (latest && typeof latest === "object" && isCurrentCachedResult(latest)) renderResult(latest);
     if (Array.isArray(recent)) renderHistory(recent);
     if (common && typeof common === "object") renderCommonNumbers(common);
   }
