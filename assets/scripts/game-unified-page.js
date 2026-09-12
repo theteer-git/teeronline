@@ -59,15 +59,23 @@
   let historyLoaded = false;
   let timer = null;
   let pollingPlan = null;
+  let loadingPollingPlan = null;
+  let pollingPlanLoadedAt = 0;
   let loadingCommonNumbers = null;
   let allResultRecords = [];
   let latestCommonData = null;
   let latestResultRecord = null;
 
   const TASK12_POLL = Object.freeze({
+    // Five seconds remains the deterministic schedule fallback. Only a
+    // currently-active, public polling-plan round may select the critical
+    // cadence below.
     HOT_MS: 5000,
     HOT_JITTER_MS: 1000,
+    CRITICAL_MS: 1500,
+    CRITICAL_JITTER_MS: 500,
     IDLE_MS: 45000,
+    PLAN_REFRESH_MS: 30000,
     PRE_WINDOW_MS: 5 * 60 * 1000,
     POST_WINDOW_MS: 20 * 60 * 1000
   });
@@ -693,34 +701,54 @@
   }
 
   async function loadPlan() {
-    try {
+    if (loadingPollingPlan) return loadingPollingPlan;
+    if (Date.now() - pollingPlanLoadedAt < TASK12_POLL.PLAN_REFRESH_MS) return pollingPlan;
+    loadingPollingPlan = (async () => {
       const response = await fetch(POLLING_PLAN_URL, {
         cache: "no-store",
         referrerPolicy: "no-referrer"
       });
-      if (response.ok) pollingPlan = await response.json();
+      if (response.ok) {
+        pollingPlan = await response.json();
+        pollingPlanLoadedAt = Date.now();
+      }
+      return pollingPlan;
+    })();
+    try {
+      return await loadingPollingPlan;
     } catch (error) {
       console.warn(`${GAME_ID} polling plan request failed:`, error);
+      return pollingPlan;
+    } finally {
+      loadingPollingPlan = null;
     }
   }
 
   function intervalMs() {
-    const adaptive = adaptivePollingInterval(latestResultRecord);
-    if (adaptive === TASK12_POLL.HOT_MS) return adaptive;
     const gamePlan = pollingPlan?.games?.[GAME_ID];
     const activeIntervals = Object.values(gamePlan?.rounds || {})
       .filter(round => round?.active)
       .map(round => Number(round.intervalMs))
       .filter(value => Number.isFinite(value) && value > 0);
-    const planned = activeIntervals.length ? Math.min(...activeIntervals) : TASK12_POLL.IDLE_MS;
-    return Math.max(TASK12_POLL.HOT_MS, Math.min(TASK12_POLL.IDLE_MS, planned));
+    // A public plan is authoritative only for an active, incomplete round.
+    // Its lower bound preserves the designed 1.5–2.0 second critical window;
+    // absent/invalid plan data falls back to the deterministic 5-second
+    // schedule policy rather than increasing traffic unexpectedly.
+    if (activeIntervals.length) {
+      const planned = Math.min(...activeIntervals);
+      return Math.max(TASK12_POLL.CRITICAL_MS, Math.min(TASK12_POLL.IDLE_MS, planned));
+    }
+    return adaptivePollingInterval(latestResultRecord);
   }
 
   function nextPollDelay() {
     const base = intervalMs();
-    return base === TASK12_POLL.HOT_MS
-      ? base + Math.floor(Math.random() * (TASK12_POLL.HOT_JITTER_MS + 1))
-      : base;
+    const jitter = base <= TASK12_POLL.CRITICAL_MS
+      ? TASK12_POLL.CRITICAL_JITTER_MS
+      : base <= TASK12_POLL.HOT_MS
+        ? TASK12_POLL.HOT_JITTER_MS
+        : 0;
+    return jitter ? base + Math.floor(Math.random() * (jitter + 1)) : base;
   }
 
   function currentBusinessDate(now = new Date()) {
@@ -769,7 +797,7 @@
   }
 
   async function refresh(manual = true) {
-    const [resultPointer, commonPointer] = await Promise.allSettled([fetchResultVersion(), fetchCommonNumbersVersion()]);
+    const [resultPointer, commonPointer] = await Promise.allSettled([fetchResultVersion(), fetchCommonNumbersVersion(), loadPlan()]);
     const nextResult = resultPointer.status === "fulfilled" ? resultPointer.value : null;
     const nextCommon = commonPointer.status === "fulfilled" ? commonPointer.value : null;
     const resultChanged = !!nextResult && nextResult.v !== resultVersion;
