@@ -65,6 +65,8 @@
   let allResultRecords = [];
   let latestCommonData = null;
   let latestResultRecord = null;
+  let cachedResultPointer = null;
+  let cachedCommonNumbersPointer = null;
 
   const TASK12_POLL = Object.freeze({
     // Five seconds remains the deterministic schedule fallback. Only a
@@ -112,12 +114,14 @@
     return TASK12_POLL.IDLE_MS;
   }
 
-  const CACHE_SCHEMA = 2;
+  const CACHE_SCHEMA = 3;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
   const CACHE_TTL = Object.freeze({
     latest: 36 * 60 * 60 * 1000,
+    resultPointer: 36 * 60 * 60 * 1000,
     recent: 7 * 24 * 60 * 60 * 1000,
     common: 7 * 24 * 60 * 60 * 1000,
+    commonNumbersPointer: 7 * 24 * 60 * 60 * 1000,
     all: 7 * 24 * 60 * 60 * 1000
   });
 
@@ -208,6 +212,40 @@
       throw new Error(`${kind} pointer response is invalid`);
     }
     return pointer;
+  }
+
+  function isValidCachedPointer(pointer) {
+    return String(pointer?.gameId || "").toUpperCase() === GAME_ID &&
+      /^\d{4}-\d{2}-\d{2}$/.test(String(pointer?.businessDate || "")) &&
+      /^[a-f0-9]{64}$/i.test(String(pointer?.v || ""));
+  }
+
+  function pointerCacheMatches(pointer, cachedPointer, payloadMatchesPointer) {
+    return isValidCachedPointer(pointer) &&
+      isValidCachedPointer(cachedPointer) &&
+      pointer.v === cachedPointer.v &&
+      pointer.businessDate === cachedPointer.businessDate &&
+      payloadMatchesPointer === true;
+  }
+
+  function commonNumbersPayloadUrl(pointer) {
+    const version = String(pointer?.v || "");
+    const objectKey = String(pointer?.objectKey || "");
+    const expected = `common-numbers/${GAME_ID}/${version}.json`;
+    if (!/^[a-f0-9]{64}$/i.test(version) || objectKey !== expected) {
+      throw new Error("Common numbers pointer object key is invalid");
+    }
+    return `${STATIC_RESULTS_ORIGIN}/${objectKey}`;
+  }
+
+  function isValidImmutableCommonNumbersPayload(payload, pointer) {
+    return !!payload && typeof payload === "object" && !Array.isArray(payload) &&
+      payload.gameId === GAME_ID && payload.businessDate === pointer?.businessDate &&
+      payload.version === pointer?.v && !!payload.game && typeof payload.game === "object";
+  }
+
+  function shouldFetchCommonNumbers(pointer) {
+    return pointer?.available === true;
   }
 
   async function fetchResultVersion() {
@@ -685,13 +723,16 @@
     </article>`;
   }
 
-  async function fetchCommonNumbers() {
+  async function fetchCommonNumbers(pointer = null) {
     if (loadingCommonNumbers) return loadingCommonNumbers;
     loadingCommonNumbers = (async () => {
-      const response = await fetch(COMMON_NUMBERS_URL, { cache: "no-store", referrerPolicy: "no-referrer" });
+      const response = await fetch(commonNumbersPayloadUrl(pointer), { cache: "no-store", referrerPolicy: "no-referrer" });
       if (!response.ok) throw new Error(`Common numbers request failed: ${response.status}`);
       const payload = await response.json();
-      return (payload?.game ?? payload?.games?.[GAME_ID] ?? payload) || null;
+      if (!isValidImmutableCommonNumbersPayload(payload, pointer)) {
+        throw new Error("Common numbers immutable payload is invalid");
+      }
+      return payload.game;
     })();
     try {
       return await loadingCommonNumbers;
@@ -780,8 +821,10 @@
 
   function restoreCachedState() {
     const latest = readCache("latest");
+    cachedResultPointer = readCache("resultPointer");
     const recent = readCache("recent");
     const common = readCache("common");
+    cachedCommonNumbersPointer = readCache("commonNumbersPointer");
     const all = readCache("all");
 
     if (Array.isArray(all)) allResultRecords = all;
@@ -796,6 +839,23 @@
       String(record?.businessDate || "") === businessDate;
   }
 
+  function cachedResultMatchesPointer(pointer) {
+    return pointerCacheMatches(pointer, cachedResultPointer,
+      isCurrentCachedResult(latestResultRecord) && acceptsCurrentRecord(latestResultRecord, pointer?.businessDate));
+  }
+
+  function cachedCommonNumbersMatchPointer(pointer) {
+    const sourceDate = String(latestCommonData?.publicationDate || latestCommonData?.sourceDate || "");
+    return pointer?.available === true && pointerCacheMatches(pointer, cachedCommonNumbersPointer,
+      sourceDate === pointer.businessDate);
+  }
+
+  // Kept inert in production. Local contract tests exercise the exact helper
+  // used by refresh without exposing a runtime endpoint or changing UI state.
+  if (globalThis.__TEER_TEST_HOOKS__) {
+    Object.assign(globalThis.__TEER_TEST_HOOKS__, { pointerCacheMatches, commonNumbersPayloadUrl, isValidImmutableCommonNumbersPayload, shouldFetchCommonNumbers });
+  }
+
   async function refresh(manual = true) {
     const [resultPointer, commonPointer] = await Promise.allSettled([fetchResultVersion(), fetchCommonNumbersVersion(), loadPlan()]);
     const nextResult = resultPointer.status === "fulfilled" ? resultPointer.value : null;
@@ -804,30 +864,42 @@
     const commonChanged = !!nextCommon && nextCommon.v !== commonNumbersVersion;
 
     if (resultChanged) {
-      try {
-        const latest = await fetchLatest();
-        if (acceptsCurrentRecord(latest, nextResult.businessDate)) {
-          latestResultRecord = latest;
-          renderResult(latest, { refreshCommon: false });
-          writeCache("latest", latest);
-          resultVersion = nextResult.v;
+      if (cachedResultMatchesPointer(nextResult)) {
+        resultVersion = nextResult.v;
+      } else {
+        try {
+          const latest = await fetchLatest();
+          if (acceptsCurrentRecord(latest, nextResult.businessDate)) {
+            latestResultRecord = latest;
+            renderResult(latest, { refreshCommon: false });
+            writeCache("latest", latest);
+            cachedResultPointer = { gameId: GAME_ID, businessDate: nextResult.businessDate, v: nextResult.v };
+            writeCache("resultPointer", cachedResultPointer);
+            resultVersion = nextResult.v;
+          }
+        } catch (error) {
+          console.warn(`${GAME_ID} latest result refresh failed:`, error);
         }
-      } catch (error) {
-        console.warn(`${GAME_ID} latest result refresh failed:`, error);
       }
     }
 
     if (commonChanged) {
-      if (nextCommon.available) {
-        try {
-          const common = await fetchCommonNumbers();
-          if (common && String(common.publicationDate || common.sourceDate || "") === nextCommon.businessDate) {
-            renderCommonNumbers(common);
-            writeCache("common", common);
-            commonNumbersVersion = nextCommon.v;
+      if (shouldFetchCommonNumbers(nextCommon)) {
+        if (cachedCommonNumbersMatchPointer(nextCommon)) {
+          commonNumbersVersion = nextCommon.v;
+        } else {
+          try {
+            const common = await fetchCommonNumbers(nextCommon);
+            if (common && String(common.publicationDate || common.sourceDate || "") === nextCommon.businessDate) {
+              renderCommonNumbers(common);
+              writeCache("common", common);
+              cachedCommonNumbersPointer = { gameId: GAME_ID, businessDate: nextCommon.businessDate, v: nextCommon.v };
+              writeCache("commonNumbersPointer", cachedCommonNumbersPointer);
+              commonNumbersVersion = nextCommon.v;
+            }
+          } catch (error) {
+            console.warn(`${GAME_ID} common numbers refresh failed:`, error);
           }
-        } catch (error) {
-          console.warn(`${GAME_ID} common numbers refresh failed:`, error);
         }
       } else {
         commonNumbersVersion = nextCommon.v;

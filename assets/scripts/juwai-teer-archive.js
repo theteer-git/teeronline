@@ -242,12 +242,12 @@
             async function loadData() {
                try {
                   const res = await fetch(
-                     "https://results.teeronline.com/all-results.json",
+                     "https://static-results.teeronline.com/all-results.json",
                      { cache: "default" },
                   );
                   if (!res.ok)
                      throw new Error(
-                        `HTTP ${res.status} - File not found at https://results.teeronline.com/all-results.json`,
+                        `HTTP ${res.status} - File not found at https://static-results.teeronline.com/all-results.json`,
                      );
                   originalData = extractData(await res.json()).sort(
                      (a, b) => parseDate(b.date) - parseDate(a.date),
@@ -273,7 +273,7 @@
                   loadingDiv.style.display = "none";
                   errorDiv.hidden = false;
                   errorDiv.style.display = "block";
-                  errorDiv.innerHTML = `<strong>❌ Failed to load https://results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
+                  errorDiv.innerHTML = `<strong>❌ Failed to load https://static-results.teeronline.com/all-results.json</strong><br><br>${err.message}<br><br>Check that the file exists and contains records with <code>"game": "${GAME_NAME}"</code>.`;
                   resultsCount.textContent = "📊 Error loading data";
                   if (!tbody.querySelector('tr[data-static-archive-row="true"]')) {
                      tbody.innerHTML =

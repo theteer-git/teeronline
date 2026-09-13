@@ -8,6 +8,12 @@ const root = path.resolve(__dirname, "..", "..");
 const source = fs.readFileSync(path.join(__dirname, "game-unified-page.js"), "utf8");
 const monitoring = fs.readFileSync(path.join(__dirname, "result-live-monitoring.js"), "utf8");
 const telemetry = fs.readFileSync(path.join(__dirname, "intent-telemetry.js"), "utf8");
+const archives = [
+  "khanapara-teer-archive.js", "juwai-teer-archive.js", "shillong-teer-archive.js",
+  "shillong-morning-teer-archive.js", "khanapara-morning-teer-archive.js",
+  "juwai-morning-teer-archive.js", "shillong-night-teer-archive.js",
+  "shillong-night-teer-2-archive.js"
+];
 const pages = [
   "index.html", "khanapara-teer-results.html", "juwai-teer-results.html",
   "shillong-morning-teer-results.html", "khanapara-morning-teer-results.html",
@@ -36,8 +42,18 @@ assert.match(source, /acceptsCurrentRecord/);
 assert.match(source, /function currentBusinessDate/);
 assert.match(source, /GAME_ID !== "SHN2"/);
 assert.match(source, /isCurrentCachedResult\(latest\)/);
+assert.match(source, /pointerCacheMatches\(pointer, cachedPointer, payloadMatchesPointer\)/);
+assert.match(source, /cachedResultMatchesPointer\(nextResult\)/);
+assert.match(source, /cachedCommonNumbersMatchPointer\(nextCommon\)/);
+assert.match(source, /common-numbers\/\$\{GAME_ID\}/);
 assert.doesNotMatch(monitoring, /api\/game-result/);
 assert.doesNotMatch(telemetry, /api\/game-result/);
+
+for (const archive of archives) {
+  const archiveSource = fs.readFileSync(path.join(__dirname, archive), "utf8");
+  assert.match(archiveSource, /https:\/\/static-results\.teeronline\.com\/all-results\.json/, archive);
+  assert.doesNotMatch(archiveSource, /https:\/\/results\.teeronline\.com\/all-results\.json/, archive);
+}
 
 for (const page of pages) {
   const html = fs.readFileSync(path.join(root, page), "utf8");
