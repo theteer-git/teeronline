@@ -51,6 +51,9 @@ assert.match(source, /cachedCommonNumbersMatchPointer\(nextCommon\)/);
 assert.match(source, /common-numbers\/\$\{GAME_ID\}/);
 assert.doesNotMatch(monitoring, /api\/game-result/);
 assert.doesNotMatch(telemetry, /api\/game-result/);
+assert.doesNotMatch(telemetry, /live\.teeronline\.com/);
+assert.doesNotMatch(telemetry, /intent-sample/);
+assert.doesNotMatch(telemetry, /sendBeacon\(|fetch\(/);
 
 for (const archive of archives) {
   const archiveSource = fs.readFileSync(path.join(__dirname, archive), "utf8");
@@ -58,9 +61,14 @@ for (const archive of archives) {
   assert.doesNotMatch(archiveSource, /https:\/\/results\.teeronline\.com\/all-results\.json/, archive);
 }
 
+const TELEMETRY_SHA = "9728b7af856c7e1003f72015527cc8e94227ad12bb09e4cd817f63157021bf2e";
+const MONITORING_SHA = "4d1050f4f4eaf884efd12b1fbc4b10101db057e59e8415ac21e511c14a33f412";
+
 for (const page of pages) {
   const html = fs.readFileSync(path.join(root, page), "utf8");
   assert.match(html, /assets\/scripts\/game-unified-page\.js/);
+  assert.match(html, new RegExp(`assets/scripts/intent-telemetry\\.js\\?v=sha256-${TELEMETRY_SHA}`));
+  assert.match(html, new RegExp(`assets/scripts/result-live-monitoring\\.js\\?v=sha256-${MONITORING_SHA}`));
 }
 
 console.log("Traffic hardening frontend validation: PASS");

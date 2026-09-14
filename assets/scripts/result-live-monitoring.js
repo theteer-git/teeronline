@@ -11,7 +11,6 @@
     SHN1:{name:"Shillong Night Teer",fr:1245,sr:1305,off:[]},
     SHN2:{name:"Shillong Night Teer 2",fr:1390,sr:1450,off:[]}
   };
-  const ENDPOINT="https://results.teeronline.com/api/game-result";
   const root=document.querySelector("[data-result-monitor-ribbon]");
   if(!root)return;
   const gameId=String(document.body.dataset.gameId||"").toUpperCase();
@@ -25,7 +24,7 @@
   const title=root.querySelector("[data-rm-title]");
   const message=root.querySelector("[data-rm-message]");
   const badge=root.querySelector("[data-rm-badge]");
-  let record=null, loading=false, lastSignature="";
+  let record=null, lastSignature="";
 
   const set=(state,i,t,m,b)=>{root.dataset.state=state;icon.textContent=i;title.textContent=t;message.textContent=m;badge.textContent=b};
   if(!cfg){set("offline","!","Monitoring unavailable","The page game identifier could not be matched.","CHECK CONFIG");return;}
@@ -35,13 +34,11 @@
   const clock=v=>{if(!v)return"";const d=new Date(v);if(Number.isNaN(d.getTime()))return"";return new Intl.DateTimeFormat("en-IN",{timeZone:"Asia/Kolkata",hour:"numeric",minute:"2-digit",second:"2-digit",hour12:true}).format(d)+" IST"};
   const stamp=round=>clock(round==="fr"?record?.frUpdatedAt:record?.srUpdatedAt);
   const fmt=t=>{const n=t%1440,d=new Date(2000,0,1,Math.floor(n/60),n%60);return new Intl.DateTimeFormat("en-IN",{hour:"numeric",minute:"2-digit",hour12:true}).format(d)};
-  const refreshRecord=async()=>{if(loading)return;loading=true;try{const r=await fetch(ENDPOINT,{cache:"no-store",credentials:"omit",headers:{Accept:"application/json"}});if(r.ok){const j=await r.json();record=j?.record||j?.records?.[gameId]||null}}catch(_){/* banner remains functional without timestamp */}finally{loading=false;evaluate()}};
-
   function evaluate(){
     if(!navigator.onLine){set("offline","!","Connection Interrupted","Your browser is offline. The displayed result remains unchanged until the connection returns.","OFFLINE");return}
     const fr=text(frEl),sr=text(srEl),status=text(statusEl).toLowerCase();
     const sig=`${fr}|${sr}|${status}`;
-    if(sig!==lastSignature){lastSignature=sig;refreshRecord()}
+    lastSignature=sig;
     const frDone=ready(fr),srDone=ready(sr),now=ist();
     if(cfg.off.includes(now.day)||/off|closed|holiday|no game/.test(status)){set("off","▣","Scheduled Off Day",`${cfg.name} is not conducted today. Live monitoring will resume on the next scheduled game day.`,"OFF DAY");return}
 
@@ -63,7 +60,7 @@
 
   const observer=new MutationObserver(evaluate);
   if(card)observer.observe(card,{childList:true,subtree:true,characterData:true});
-  window.addEventListener("online",()=>{refreshRecord();evaluate()});
+  window.addEventListener("online",evaluate);
   window.addEventListener("offline",evaluate);
-  refreshRecord();evaluate();setInterval(evaluate,15000);
+  evaluate();setInterval(evaluate,15000);
 })();
