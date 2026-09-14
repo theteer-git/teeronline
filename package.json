@@ -10,6 +10,7 @@
     "validate:unified-games": "node assets/scripts/validate-unified-game-pages.js",
     "validate:content-quality": "node assets/scripts/validate-content-quality.js",
     "validate:production-package": "node assets/scripts/validate-production-package.js",
+    "validate:traffic-hardening": "node assets/scripts/validate-traffic-hardening.js",
     "gate:production": "npm run validate:game-config && npm run validate:unified-games && npm run validate:content-quality && npm run validate:jsonld && npm run validate:production-package",
     "validate:jsonld": "node assets/scripts/validate-jsonld.js"
   },

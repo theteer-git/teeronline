@@ -57,62 +57,23 @@
   let commonNumbersVersion = null;
   let loadingRecent = null;
   let historyLoaded = false;
-  let timer = null;
   let pollingPlan = null;
   let loadingPollingPlan = null;
-  let pollingPlanLoadedAt = 0;
   let loadingCommonNumbers = null;
   let allResultRecords = [];
   let latestCommonData = null;
   let latestResultRecord = null;
   let cachedResultPointer = null;
   let cachedCommonNumbersPointer = null;
+  let finiteScheduler = null;
+  let commonPostSrBusinessDate = null;
+  const resultResponseGuard = createResponseGuard();
 
-  const TASK12_POLL = Object.freeze({
-    // Five seconds remains the deterministic schedule fallback. Only a
-    // currently-active, public polling-plan round may select the critical
-    // cadence below.
-    HOT_MS: 5000,
-    HOT_JITTER_MS: 1000,
-    CRITICAL_MS: 1500,
-    CRITICAL_JITTER_MS: 500,
-    IDLE_MS: 45000,
-    PLAN_REFRESH_MS: 30000,
-    PRE_WINDOW_MS: 5 * 60 * 1000,
-    POST_WINDOW_MS: 20 * 60 * 1000
+  const FINITE_FRESHNESS = Object.freeze({
+    SECOND_CHECK_MS: 8 * 1000,
+    THIRD_CHECK_MIN_MS: 30 * 1000,
+    THIRD_CHECK_MAX_MS: 45 * 1000
   });
-
-  function istClockMinutes(now = new Date()) {
-    const parts = new Intl.DateTimeFormat("en-GB", {
-      timeZone: "Asia/Kolkata", hour: "2-digit", minute: "2-digit", second: "2-digit", hourCycle: "h23"
-    }).formatToParts(now);
-    const values = Object.fromEntries(parts.map(part => [part.type, part.value]));
-    return Number(values.hour) * 60 + Number(values.minute) + Number(values.second) / 60;
-  }
-
-  function roundDistanceMs(time, now = new Date()) {
-    const match = String(time || "").match(/^(\d{1,2}):(\d{2})$/);
-    if (!match) return Number.POSITIVE_INFINITY;
-    let target = Number(match[1]) * 60 + Number(match[2]);
-    const current = istClockMinutes(now);
-    let minutes = target - current;
-    if (minutes < -12 * 60) minutes += 24 * 60;
-    if (minutes > 12 * 60) minutes -= 24 * 60;
-    return minutes * 60 * 1000;
-  }
-
-  function adaptivePollingInterval(record, now = new Date()) {
-    const rounds = [["fr", game.rounds?.fr], ["sr", game.rounds?.sr]];
-    for (const [key, declaredTime] of rounds) {
-      const published = /^\d{2}$/.test(String(record?.[key] || ""));
-      if (published) continue;
-      const distance = roundDistanceMs(declaredTime, now);
-      if (distance <= TASK12_POLL.PRE_WINDOW_MS && distance >= -TASK12_POLL.POST_WINDOW_MS) {
-        return TASK12_POLL.HOT_MS;
-      }
-    }
-    return TASK12_POLL.IDLE_MS;
-  }
 
   const CACHE_SCHEMA = 3;
   const CACHE_PREFIX = `teeronline:${CACHE_SCHEMA}:${GAME_ID}:`;
@@ -268,9 +229,10 @@
     }
   }
 
-  async function fetchLatest() {
-    if (loadingLatest) return loadingLatest;
-    loadingLatest = (async () => {
+  async function fetchLatest(pointerVersion = "") {
+    pointerVersion = String(pointerVersion);
+    if (loadingLatest?.pointerVersion === pointerVersion) return loadingLatest.promise;
+    const promise = (async () => {
       const response = await fetch(LATEST_URL, {
         cache: "no-store",
         referrerPolicy: "no-referrer"
@@ -280,10 +242,12 @@
       const record = normalizeItem(data?.record ?? data?.records?.[GAME_ID] ?? data?.[GAME_ID] ?? {});
       return record;
     })();
+    const request = { pointerVersion, promise };
+    loadingLatest = request;
     try {
-      return await loadingLatest;
+      return await promise;
     } finally {
-      loadingLatest = null;
+      if (loadingLatest === request) loadingLatest = null;
     }
   }
 
@@ -743,7 +707,6 @@
 
   async function loadPlan() {
     if (loadingPollingPlan) return loadingPollingPlan;
-    if (Date.now() - pollingPlanLoadedAt < TASK12_POLL.PLAN_REFRESH_MS) return pollingPlan;
     loadingPollingPlan = (async () => {
       const response = await fetch(POLLING_PLAN_URL, {
         cache: "no-store",
@@ -751,7 +714,6 @@
       });
       if (response.ok) {
         pollingPlan = await response.json();
-        pollingPlanLoadedAt = Date.now();
       }
       return pollingPlan;
     })();
@@ -763,33 +725,6 @@
     } finally {
       loadingPollingPlan = null;
     }
-  }
-
-  function intervalMs() {
-    const gamePlan = pollingPlan?.games?.[GAME_ID];
-    const activeIntervals = Object.values(gamePlan?.rounds || {})
-      .filter(round => round?.active)
-      .map(round => Number(round.intervalMs))
-      .filter(value => Number.isFinite(value) && value > 0);
-    // A public plan is authoritative only for an active, incomplete round.
-    // Its lower bound preserves the designed 1.5–2.0 second critical window;
-    // absent/invalid plan data falls back to the deterministic 5-second
-    // schedule policy rather than increasing traffic unexpectedly.
-    if (activeIntervals.length) {
-      const planned = Math.min(...activeIntervals);
-      return Math.max(TASK12_POLL.CRITICAL_MS, Math.min(TASK12_POLL.IDLE_MS, planned));
-    }
-    return adaptivePollingInterval(latestResultRecord);
-  }
-
-  function nextPollDelay() {
-    const base = intervalMs();
-    const jitter = base <= TASK12_POLL.CRITICAL_MS
-      ? TASK12_POLL.CRITICAL_JITTER_MS
-      : base <= TASK12_POLL.HOT_MS
-        ? TASK12_POLL.HOT_JITTER_MS
-        : 0;
-    return jitter ? base + Math.floor(Math.random() * (jitter + 1)) : base;
   }
 
   function currentBusinessDate(now = new Date()) {
@@ -810,13 +745,122 @@
       String(record?.businessDate || record?.date || "") === currentBusinessDate();
   }
 
-  function schedule() {
-    clearTimeout(timer);
-    if (document.hidden) return;
-    timer = setTimeout(async () => {
-      await refresh(false);
-      schedule();
-    }, nextPollDelay());
+  function addBusinessDays(date, days) {
+    const value = new Date(`${date}T00:00:00Z`);
+    value.setUTCDate(value.getUTCDate() + days);
+    return value.toISOString().slice(0, 10);
+  }
+
+  function isOffDay(businessDate = currentBusinessDate()) {
+    const weekday = new Date(`${businessDate}T00:00:00Z`).getUTCDay();
+    return Array.isArray(game.weeklyOffDays) && game.weeklyOffDays.includes(weekday);
+  }
+
+  function fallbackRoundTarget(round, businessDate) {
+    const declaredTime = String(game.rounds?.[round] || "");
+    if (!/^\d{2}:\d{2}$/.test(declaredTime)) return null;
+    const calendarDate = game.crossesMidnight && round === "sr"
+      ? addBusinessDays(businessDate, 1)
+      : businessDate;
+    const targetAt = Date.parse(`${calendarDate}T${declaredTime}:00+05:30`);
+    return Number.isFinite(targetAt) ? { targetAt, thirdDelayMs: FINITE_FRESHNESS.THIRD_CHECK_MAX_MS } : null;
+  }
+
+  function parsePlanTimestamp(value) {
+    const text = String(value || "");
+    if (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}(?::\d{2}(?:\.\d{1,3})?)?(?:Z|[+-]\d{2}:\d{2})$/.test(text)) return Number.NaN;
+    return Date.parse(text);
+  }
+
+  function roundTarget(round, businessDate = currentBusinessDate(), plan = pollingPlan) {
+    const planRound = plan?.games?.[GAME_ID]?.rounds?.[round];
+    const planDate = String(planRound?.expectedDate || plan?.businessDate || "");
+    const windowStart = parsePlanTimestamp(planRound?.windowStart);
+    const beforeMinutes = Number(planRound?.beforeMinutes);
+    const predictedOffset = Number(planRound?.predictedOffsetMinutes);
+    const windowEnd = parsePlanTimestamp(planRound?.windowEnd);
+    const validPlan = planDate === businessDate && Number.isFinite(windowStart) &&
+      Number.isFinite(beforeMinutes) && Number.isFinite(predictedOffset) && Number.isFinite(windowEnd) && windowEnd >= windowStart;
+    if (!validPlan) return fallbackRoundTarget(round, businessDate);
+    const targetAt = windowStart + (beforeMinutes + predictedOffset) * 60 * 1000;
+    if (targetAt < windowStart || targetAt > windowEnd) return fallbackRoundTarget(round, businessDate);
+    const afterMs = Math.max(0, windowEnd - targetAt);
+    return {
+      targetAt,
+      thirdDelayMs: Math.max(FINITE_FRESHNESS.THIRD_CHECK_MIN_MS,
+        Math.min(FINITE_FRESHNESS.THIRD_CHECK_MAX_MS, afterMs || FINITE_FRESHNESS.THIRD_CHECK_MIN_MS))
+    };
+  }
+
+  function roundComplete(round) {
+    return valid(latestResultRecord?.[round]) &&
+      String(latestResultRecord?.businessDate || latestResultRecord?.date || "") === currentBusinessDate();
+  }
+
+  function createFiniteRoundScheduler(options) {
+    const timers = new Map();
+    const attempts = { fr: 0, sr: 0 };
+    const complete = { fr: false, sr: false };
+    let reconciliationUsed = false;
+
+    const cancel = round => {
+      for (const timerId of timers.get(round) || []) options.clearTimeout(timerId);
+      timers.delete(round);
+    };
+    const cancelAll = () => ["fr", "sr"].forEach(cancel);
+    const arm = round => {
+      cancel(round);
+      if (!options.canRun() || options.isOffDay() || complete[round] || options.isComplete(round)) return;
+      const schedule = options.target(round);
+      if (!schedule || !Number.isFinite(schedule.targetAt)) return;
+      const points = [schedule.targetAt, schedule.targetAt + FINITE_FRESHNESS.SECOND_CHECK_MS,
+        schedule.targetAt + schedule.thirdDelayMs].filter((point, index, all) => point >= options.now() && all.indexOf(point) === index).slice(0, 3);
+      timers.set(round, points.map(point => options.setTimeout(async () => {
+        if (!options.canRun() || complete[round] || options.isComplete(round) || attempts[round] >= 3) return;
+        attempts[round] += 1;
+        await options.check(round);
+        if (options.isComplete(round)) {
+          complete[round] = true;
+          cancel(round);
+        }
+      }, Math.max(0, point - options.now()))));
+    };
+    return {
+      armAll: () => ["fr", "sr"].forEach(arm),
+      cancelAll,
+      cancel,
+      complete: round => { complete[round] = true; cancel(round); },
+      reconcile: async () => {
+        if (!options.canRun()) return false;
+        // A resume/reconnect gets one bounded current-state request. Later
+        // resumes only restore unexpired original timers; they add no reads.
+        const shouldCheck = !reconciliationUsed;
+        if (shouldCheck) {
+          reconciliationUsed = true;
+          await options.check("reconcile");
+        }
+        // Reconstruct only unexpired points from the original finite schedule.
+        // arm() preserves attempt counts and cannot recreate an exhausted budget.
+        ["fr", "sr"].forEach(arm);
+        return shouldCheck;
+      },
+      state: () => ({ attempts: { ...attempts }, reconciliationUsed, pending: [...timers.entries()].reduce((total, [, values]) => total + values.length, 0) })
+    };
+  }
+
+  function startFiniteSchedule() {
+    if (finiteScheduler || isOffDay()) return;
+    finiteScheduler = createFiniteRoundScheduler({
+      now: () => Date.now(),
+      setTimeout: globalThis.setTimeout.bind(globalThis),
+      clearTimeout: globalThis.clearTimeout.bind(globalThis),
+      canRun: () => !document.hidden && navigator.onLine !== false,
+      isOffDay,
+      isComplete: roundComplete,
+      target: round => roundTarget(round),
+      check: async () => refresh({ result: true })
+    });
+    finiteScheduler.armAll();
   }
 
   function restoreCachedState() {
@@ -830,7 +874,9 @@
     if (Array.isArray(all)) allResultRecords = all;
     if (latest && typeof latest === "object" && isCurrentCachedResult(latest)) renderResult(latest);
     if (Array.isArray(recent)) renderHistory(recent);
-    if (common && typeof common === "object") renderCommonNumbers(common);
+    if (common && typeof common === "object" &&
+        cachedCommonNumbersPointer?.businessDate === currentBusinessDate() &&
+        cachedCommonNumbersPointer?.available === true) renderCommonNumbers(common);
   }
 
   function acceptsCurrentRecord(record, businessDate) {
@@ -850,32 +896,66 @@
       sourceDate === pointer.businessDate);
   }
 
-  // Kept inert in production. Local contract tests exercise the exact helper
-  // used by refresh without exposing a runtime endpoint or changing UI state.
-  if (globalThis.__TEER_TEST_HOOKS__) {
-    Object.assign(globalThis.__TEER_TEST_HOOKS__, { pointerCacheMatches, commonNumbersPayloadUrl, isValidImmutableCommonNumbersPayload, shouldFetchCommonNumbers });
+  function createResponseGuard() {
+    let generation = 0;
+    return Object.freeze({
+      begin: () => ++generation,
+      isCurrent: value => value === generation
+    });
   }
 
-  async function refresh(manual = true) {
-    const [resultPointer, commonPointer] = await Promise.allSettled([fetchResultVersion(), fetchCommonNumbersVersion(), loadPlan()]);
-    const nextResult = resultPointer.status === "fulfilled" ? resultPointer.value : null;
-    const nextCommon = commonPointer.status === "fulfilled" ? commonPointer.value : null;
+  function preservesResultProgress(next, current) {
+    if (!current?.businessDate && !current?.date) return true;
+    const nextDate = String(next?.businessDate || next?.date || "");
+    const currentDate = String(current?.businessDate || current?.date || "");
+    if (nextDate !== currentDate) return nextDate > currentDate;
+    return !["fr", "sr"].some(round => valid(current?.[round]) && !valid(next?.[round]));
+  }
+
+  // Kept inert in production. Local contract tests exercise the exact helper
+  // used by refresh without exposing a runtime endpoint or changing UI state.
+  function renderCommonUnavailable() {
+    renderCommonNumbers({ empty: true });
+  }
+
+  async function refresh(options = {}) {
+    const { result = true, common = false, history = false } = options;
+    const resultGeneration = result ? resultResponseGuard.begin() : null;
+    const tasks = [];
+    if (result) tasks.push(fetchResultVersion());
+    if (common) tasks.push(fetchCommonNumbersVersion());
+    const settled = await Promise.allSettled(tasks);
+    const nextResult = result && settled[0]?.status === "fulfilled" ? settled[0].value : null;
+    const commonIndex = result ? 1 : 0;
+    const nextCommon = common && settled[commonIndex]?.status === "fulfilled" ? settled[commonIndex].value : null;
     const resultChanged = !!nextResult && nextResult.v !== resultVersion;
     const commonChanged = !!nextCommon && nextCommon.v !== commonNumbersVersion;
 
-    if (resultChanged) {
+    if (resultChanged && resultResponseGuard.isCurrent(resultGeneration)) {
       if (cachedResultMatchesPointer(nextResult)) {
         resultVersion = nextResult.v;
+        if (roundComplete("fr")) finiteScheduler?.complete("fr");
+        if (roundComplete("sr")) finiteScheduler?.complete("sr");
       } else {
         try {
-          const latest = await fetchLatest();
-          if (acceptsCurrentRecord(latest, nextResult.businessDate)) {
+          const latest = await fetchLatest(nextResult.v);
+          if (resultResponseGuard.isCurrent(resultGeneration) &&
+              acceptsCurrentRecord(latest, nextResult.businessDate) &&
+              preservesResultProgress(latest, latestResultRecord)) {
             latestResultRecord = latest;
             renderResult(latest, { refreshCommon: false });
             writeCache("latest", latest);
             cachedResultPointer = { gameId: GAME_ID, businessDate: nextResult.businessDate, v: nextResult.v };
             writeCache("resultPointer", cachedResultPointer);
             resultVersion = nextResult.v;
+            if (roundComplete("fr")) finiteScheduler?.complete("fr");
+            if (roundComplete("sr")) {
+              finiteScheduler?.complete("sr");
+              if (commonPostSrBusinessDate !== nextResult.businessDate) {
+                commonPostSrBusinessDate = nextResult.businessDate;
+                await refresh({ result: false, common: true });
+              }
+            }
           }
         } catch (error) {
           console.warn(`${GAME_ID} latest result refresh failed:`, error);
@@ -893,7 +973,10 @@
             if (common && String(common.publicationDate || common.sourceDate || "") === nextCommon.businessDate) {
               renderCommonNumbers(common);
               writeCache("common", common);
-              cachedCommonNumbersPointer = { gameId: GAME_ID, businessDate: nextCommon.businessDate, v: nextCommon.v };
+              cachedCommonNumbersPointer = {
+                gameId: GAME_ID, businessDate: nextCommon.businessDate,
+                v: nextCommon.v, available: true, objectKey: nextCommon.objectKey
+              };
               writeCache("commonNumbersPointer", cachedCommonNumbersPointer);
               commonNumbersVersion = nextCommon.v;
             }
@@ -903,12 +986,15 @@
         }
       } else {
         commonNumbersVersion = nextCommon.v;
+        cachedCommonNumbersPointer = { gameId: GAME_ID, businessDate: nextCommon.businessDate, v: nextCommon.v, available: false };
+        writeCache("commonNumbersPointer", cachedCommonNumbersPointer);
+        renderCommonUnavailable();
       }
     }
 
     // History is an initial/manual concern only. A live pointer change must
     // never cause this full dataset to be requested.
-    if (manual || !historyLoaded) {
+    if (history || !historyLoaded) {
       historyLoaded = true;
       try {
         const recent = await fetchRecent();
@@ -922,19 +1008,33 @@
     }
   }
 
+  // Kept inert in production. Local tests exercise the exact finite scheduler
+  // and pointer validators without exposing a runtime endpoint.
+  if (globalThis.__TEER_TEST_HOOKS__) {
+    Object.assign(globalThis.__TEER_TEST_HOOKS__, {
+      pointerCacheMatches, commonNumbersPayloadUrl, isValidImmutableCommonNumbersPayload,
+      shouldFetchCommonNumbers, createFiniteRoundScheduler, roundTarget, fallbackRoundTarget,
+      isOffDay, currentBusinessDate, parsePlanTimestamp, createResponseGuard, preservesResultProgress
+    });
+  }
+
   document.addEventListener("DOMContentLoaded", async () => {
     bindPopup();
     restoreCachedState();
-    byId("refresh")?.addEventListener("click", () => refresh(true));
-    await Promise.allSettled([loadPlan(), refresh(false)]);
-    schedule();
+    byId("refresh")?.addEventListener("click", () => refresh({ result: true, common: true, history: true }));
+    await loadPlan();
+    await refresh({ result: true, common: true, history: true });
+    startFiniteSchedule();
   });
 
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) {
-      clearTimeout(timer);
+      finiteScheduler?.cancelAll();
       return;
     }
-    refresh(false).finally(schedule);
+    finiteScheduler?.reconcile();
   });
+
+  globalThis.addEventListener?.("offline", () => finiteScheduler?.cancelAll());
+  globalThis.addEventListener?.("online", () => finiteScheduler?.reconcile());
 })();

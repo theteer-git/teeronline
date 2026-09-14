@@ -2,6 +2,7 @@
 
 const fs = require("node:fs");
 const path = require("node:path");
+const crypto = require("node:crypto");
 const cheerio = require("cheerio");
 const config = require("./game-config.js");
 
@@ -14,6 +15,8 @@ if (!fs.existsSync(commonPage)) throw new Error("Missing common-numbers.html.");
 
 const sourceHtml = fs.readFileSync(sourcePage, "utf8");
 const commonHtml = fs.readFileSync(commonPage, "utf8");
+const gameScript = fs.readFileSync(path.join(root, "assets", "scripts", "game-unified-page.js"));
+const gameScriptVersion = `sha256-${crypto.createHash("sha256").update(gameScript).digest("hex")}`;
 const common$ = cheerio.load(commonHtml, { decodeEntities: false });
 
 const outputFiles = {
@@ -206,7 +209,7 @@ for (const gameId of config.gameOrder) {
   $('a[href="/common-numbers"], a[href="/common-numbers.html"], a[href="./common-numbers"], a[href="./common-numbers.html"]').remove();
 
   $("script[src*='jwd-unified-page'], script[src*='game-unified-page'], script[src*='game-config.js']").remove();
-  $("body").append('<script src="/assets/scripts/game-config.js" defer></script><script src="/assets/scripts/game-unified-page.js" defer></script><script src="/assets/scripts/teer-shell.js?v=20260822-ux-v9" defer></script>');
+  $("body").append(`<script src="/assets/scripts/game-config.js" defer></script><script src="/assets/scripts/game-unified-page.js?v=${gameScriptVersion}" defer></script><script src="/assets/scripts/teer-shell.js?v=20260822-ux-v9" defer></script>`);
 
   fs.writeFileSync(path.join(root, outputFiles[gameId]), $.html(), "utf8");
 }
