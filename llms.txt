@@ -1,26 +1,22 @@
 # TeerOnline.com
 
-TeerOnline.com provides structured Teer result pages, previous result archives, common-number statistics, dream-number references, and formula explainers for users in India.
+TeerOnline.com publishes Teer results, previous-result records and reference guides for Shillong, Khanapara and Juwai.
 
-## Important public pages
+## Pages
 
-- [Teer Result Today | Shillong, Khanapara, Juwai, Morning & Night Teer](https://teeronline.com/): Check Teer result today for Shillong, Khanapara, Juwai, Morning Teer and Night Teer with fast FR and SR updates, previous results and common numbers.
-- [Shillong Teer Previous Results | Date Wise FR SR List](https://teeronline.com/shillong-teer-previous-results): View Shillong Teer previous results with date-wise first round and second round records, result list, common number references and archive links.
-- [Khanapara Teer Previous Results | Date Wise FR SR List](https://teeronline.com/khanapara-teer-previous-results): View Khanapara Teer previous results with daily FR and SR records, today result references, previous list and archive information.
-- [Juwai Teer Previous Results | Date Wise FR SR List](https://teeronline.com/juwai-teer-previous-results): View Juwai Teer previous results with date-wise first round and second round records, result list and archive references.
-- [Shillong Morning Teer Previous Results | FR SR Archive](https://teeronline.com/shillong-morning-teer-previous-results): View Shillong Morning Teer previous results with date-wise FR and SR records, morning result list and archive information.
-- [Khanapara Morning Teer Previous Results | FR SR Archive](https://teeronline.com/khanapara-morning-teer-previous-results): View Khanapara Morning Teer previous results with date-wise FR and SR records, morning result list and archive references.
-- [Juwai Morning Teer Previous Results | FR SR Archive](https://teeronline.com/juwai-morning-teer-previous-results): View Juwai Morning Teer previous results with date-wise FR and SR records, morning result list and archive references.
-- [Shillong Night Teer Previous Results | Night FR SR Archive](https://teeronline.com/shillong-night-teer-previous-results): View Shillong Night Teer previous results with date-wise night FR and SR records, result list and archive information.
-- [Shillong Night Teer 2 Previous Results | Second Night Archive](https://teeronline.com/shillong-night-teer-2-previous-results): View Shillong Night Teer 2 previous results with date-wise FR and SR records for the second night result round.
-- [Teer Dream Numbers | Dream Meaning Number List](https://teeronline.com/dream-numbers): Find Teer dream numbers and dream meaning number references for informational use with easy category-based browsing.
-- [Teer Formula | Number Pattern & Calculation Guide](https://teeronline.com/teer-formula): Learn Teer formula concepts, result patterns and informational calculation methods for Shillong, Khanapara and Juwai Teer.
-- [About TeerOnline.com](https://teeronline.com/about): Learn about TeerOnline.com and how we organize Teer result information, previous records, common numbers and archive pages for users.
-- [Contact TeerOnline.com](https://teeronline.com/contact): Contact TeerOnline.com for website questions, corrections, result feedback or content-related enquiries.
-- [Privacy Policy | TeerOnline.com](https://teeronline.com/privacy-policy): Read the privacy policy for TeerOnline.com, including how basic website information and user interactions may be handled.
-- [Terms and Conditions | TeerOnline.com](https://teeronline.com/terms-and-conditions): Read the terms and conditions for using TeerOnline.com result, archive, common number and informational pages.
-- [Disclaimer | TeerOnline.com](https://teeronline.com/disclaimer): Read the disclaimer for TeerOnline.com information, Teer result references, common numbers and educational content.
-
-## Indexing policy
-
-Internal dashboard, raw data files, build assets, CMS config, and admin pages are not intended for search indexing.
+- [Teer Results Today: Shillong, Khanapara & Juwai | TeerOnline](https://teeronline.com/): Today’s Teer results for Shillong, Khanapara and Juwai, with FR and SR times, Common Numbers, schedules and links to each game’s previous results.
+- [Shillong Teer Previous Results – Date-Wise FR & SR](https://teeronline.com/shillong-teer-previous-results): Shillong Teer previous results by date: FR and SR for each recorded day, with filters for number, weekday and round. Sunday is an off day.
+- [Khanapara Teer Previous Results – Date-Wise FR & SR](https://teeronline.com/khanapara-teer-previous-results): Khanapara Teer previous results by date: FR and SR for each recorded day, searchable by number, weekday and round. Sunday is an off day.
+- [Juwai Teer Previous Results – Date-Wise FR & SR](https://teeronline.com/juwai-teer-previous-results): Juwai (Jowai) Teer previous results by date, with FR and SR records you can filter by number, weekday and round. Sunday is an off day.
+- [Shillong Morning Teer Previous Results – FR & SR](https://teeronline.com/shillong-morning-teer-previous-results): Shillong Morning Teer previous results: FR (10:30 AM) and SR (11:30 AM) for each recorded day, searchable by date, number, weekday and round.
+- [Khanapara Morning Teer Previous Results – FR & SR](https://teeronline.com/khanapara-morning-teer-previous-results): Khanapara Morning Teer previous results: FR (11:00 AM) and SR (12:00 PM) for each recorded day, kept separate from the Khanapara Teer game.
+- [Juwai Morning Teer Previous Results – FR & SR](https://teeronline.com/juwai-morning-teer-previous-results): Juwai (Jowai) Morning Teer previous results: FR (10:30 AM) and SR (11:30 AM) for each recorded day, searchable by date, number, weekday and round.
+- [Shillong Night Teer Previous Results – FR & SR](https://teeronline.com/shillong-night-teer-previous-results): Shillong Night Teer previous results: FR (8:45 PM) and SR (9:45 PM) for each recorded evening, searchable by date, number and round.
+- [Shillong Night Teer 2 Previous Results – FR & SR](https://teeronline.com/shillong-night-teer-2-previous-results): Shillong Night Teer 2 previous results: FR at 11:10 PM and SR at 12:10 AM, with the after-midnight SR kept on the same playing date.
+- [Teer Formula: House, Ending & Number Methods Explained](https://teeronline.com/teer-formula): A plain guide to Teer House and Ending, paired values, combining digits and Forecast (FC), and how to check any method against past results. No guarantees.
+- [Teer Dream Numbers Explained: How Dream References Work](https://teeronline.com/dream-numbers): What Teer dream numbers are, how traditional dream-to-number references work, why lists disagree, and why they are not declared results or guarantees.
+- [About TeerOnline: Results, Records and Editorial Standards](https://teeronline.com/about): Learn how TeerOnline publishes Shillong, Khanapara, Juwai, Morning and Night results, maintains historical records and handles corrections.
+- [Contact TeerOnline: Result Corrections and Website Support](https://teeronline.com/contact): Contact TeerOnline about result corrections, missing historical records, page errors, accessibility issues or general website support.
+- [Privacy Policy: Data, Cookies and Analytics | TeerOnline](https://teeronline.com/privacy-policy): Read how TeerOnline handles server logs, analytics, cookies, contact information, third-party services and privacy choices.
+- [Terms and Conditions for Using TeerOnline](https://teeronline.com/terms-and-conditions): Review the conditions for using TeerOnline, including informational content, eligibility, acceptable use, accuracy and user responsibility.
+- [Teer Result and Prediction Disclaimer | TeerOnline](https://teeronline.com/disclaimer): Understand the limits of Teer result information, historical statistics, common numbers, dream references and formula content on TeerOnline.
