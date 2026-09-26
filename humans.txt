@@ -1,0 +1,10 @@
+/* TEAM */
+Site: TeerOnline
+URL: https://teeronline.com
+Purpose: Teer result publishing, historical results, common numbers and teer information.
+
+Owner: TeerOnline
+Contact: https://teeronline.com/contact
+
+/* THANKS */
+Thanks to visitors who use TeerOnline responsibly.

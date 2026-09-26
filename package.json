@@ -1,0 +1,7 @@
+{
+  "name": "teeronline",
+  "private": true,
+  "scripts": {
+    "build:pages": "rm -rf dist-pages && mkdir dist-pages && cp -r assets *.html *.txt *.xml _headers _redirects sw.js dist-pages/"
+  }
+}

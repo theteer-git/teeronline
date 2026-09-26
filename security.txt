@@ -1,0 +1,4 @@
+Contact: https://teeronline.com/contact
+Preferred-Languages: en
+Canonical: https://teeronline.com/security.txt
+Policy: https://teeronline.com/privacy-policy
