@@ -5,12 +5,35 @@
 /index.php / 301
 /results / 301
 /latest / 301
+# 2026-09-28: these 3 lines are now shadowed/unreachable, same situation as
+# /results and /latest above. A new backend route also matches these plural
+# forms via a wildcard suffix, and takes precedence over this file - the
+# backend now handles all 3 explicitly. Left here, harmless, rather than
+# deleted, matching the existing dead-code convention for /results/latest.
+# See seo-audit/11-redirect-audit.md.
 /shillong-teer-results / 301
 /shillong-teer-results.html / 301
+/shillong-teer-results/ / 301
 /common-numbers / 301
 /common-numbers.html / 301
 /sitemap-pages.xml /sitemap.xml 301
 /sitemap-results.xml /sitemap.xml 301
+
+# Historical URLs confirmed via Wayback Machine to have been real Teer
+# content on this domain, mapped to their closest current page - evidence
+# for each is in seo-audit/11-redirect-audit.md. None of these are
+# Worker-routed (confirmed live: Pages' default 404, not the Worker's JSON
+# 404), so the fix belongs here, not in the Worker.
+/night-result /shillong-night-teer-previous-results 301
+/night-result/ /shillong-night-teer-previous-results 301
+/prev-results /shillong-teer-previous-results 301
+/prev-results/ /shillong-teer-previous-results 301
+/common-numbers/common-numbers-2 /shillong-night-teer-previous-results 301
+
+# Legacy CMS filename casing (pre-WordPress-migration)
+/Privacy-Policy.php /privacy-policy 301
+/Term-and-Conditions.php /terms-and-conditions 301
+/Contact.php /contact 301
 
 # Remove .html from public page URLs
 /about.html /about 301
