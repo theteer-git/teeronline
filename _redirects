@@ -43,26 +43,26 @@
 /privacy-policy.html /privacy-policy 301
 /teer-formula.html /teer-formula 301
 /terms-and-conditions.html /terms-and-conditions 301
-/juwai-teer-results / 301
-/juwai-teer-results.html / 301
+/juwai-teer-results /juwai-teer-result 301
+/juwai-teer-results.html /juwai-teer-result 301
 /juwai-teer-previous-results.html /juwai-teer-previous-results 301
-/juwai-morning-teer-results / 301
-/juwai-morning-teer-results.html / 301
+/juwai-morning-teer-results /juwai-morning-teer-result 301
+/juwai-morning-teer-results.html /juwai-morning-teer-result 301
 /juwai-morning-teer-previous-results.html /juwai-morning-teer-previous-results 301
-/khanapara-teer-results / 301
-/khanapara-teer-results.html / 301
+/khanapara-teer-results /khanapara-teer-result 301
+/khanapara-teer-results.html /khanapara-teer-result 301
 /khanapara-teer-previous-results.html /khanapara-teer-previous-results 301
-/khanapara-morning-teer-results / 301
-/khanapara-morning-teer-results.html / 301
+/khanapara-morning-teer-results /khanapara-morning-teer-result 301
+/khanapara-morning-teer-results.html /khanapara-morning-teer-result 301
 /khanapara-morning-teer-previous-results.html /khanapara-morning-teer-previous-results 301
-/shillong-morning-teer-results / 301
-/shillong-morning-teer-results.html / 301
+/shillong-morning-teer-results /shillong-morning-teer-result 301
+/shillong-morning-teer-results.html /shillong-morning-teer-result 301
 /shillong-morning-teer-previous-results.html /shillong-morning-teer-previous-results 301
-/shillong-night-teer-results / 301
-/shillong-night-teer-results.html / 301
+/shillong-night-teer-results /shillong-night-teer-result 301
+/shillong-night-teer-results.html /shillong-night-teer-result 301
 /shillong-night-teer-previous-results.html /shillong-night-teer-previous-results 301
-/shillong-night-teer-2-results / 301
-/shillong-night-teer-2-results.html / 301
+/shillong-night-teer-2-results /shillong-night-teer-2-result 301
+/shillong-night-teer-2-results.html /shillong-night-teer-2-result 301
 /shillong-night-teer-2-previous-results.html /shillong-night-teer-2-previous-results 301
 
 # Renamed images
@@ -77,3 +77,15 @@
 /assets/img/teer/khanapara-teer-results.webp /assets/img/teer-arrows-and-straw-bundle.webp 301
 /assets/img/teer/shillong-night-2-teer-results.webp /assets/img/teer-arrows-and-straw-bundle.webp 301
 /assets/img/teer/teer-results-today-archery.webp /assets/img/hand-holding-teer-arrows-wide.webp 301
+
+# Result pages: the bare singular URL is a real page; only its .html form redirects (Worker handles all variants first)
+/shillong-teer-result / 301
+/shillong-teer-result.html / 301
+/shillong-teer-result/ / 301
+/khanapara-teer-result.html /khanapara-teer-result 301
+/juwai-teer-result.html /juwai-teer-result 301
+/shillong-morning-teer-result.html /shillong-morning-teer-result 301
+/khanapara-morning-teer-result.html /khanapara-morning-teer-result 301
+/juwai-morning-teer-result.html /juwai-morning-teer-result 301
+/shillong-night-teer-result.html /shillong-night-teer-result 301
+/shillong-night-teer-2-result.html /shillong-night-teer-2-result 301
